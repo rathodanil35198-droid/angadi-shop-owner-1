@@ -162,6 +162,26 @@
         let selectedProductSize = 'M';
         let gpsLocation = { lat: '', lng: '' };
 
+        // ಹೊಸ ಆರ್ಡರ್ ಬಂದಾಗ ಜೋರಾದ ಸೈರನ್ ಸೌಂಡ್ ಬಾರಿಸಲು (Web Audio API)
+        function playSiren() {
+            try {
+                let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                let osc = audioCtx.createOscillator();
+                let gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime + 0.5);
+                gain.gain.setValueAtTime(1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.5);
+            } catch (e) {
+                console.log("Audio not supported");
+            }
+        }
+
         function showModal(title, message, icon = '🎉') {
             document.getElementById('modal-title').innerText = title;
             document.getElementById('modal-message').innerText = message;
@@ -297,16 +317,8 @@
 
             compressImage(shopPhotoFile, function(compressedShopPhoto) {
                 currentVendor = { 
-                    name, 
-                    phone, 
-                    shopName, 
-                    category, 
-                    district, 
-                    taluk, 
-                    city, 
-                    pincode, 
-                    shopPhoto: compressedShopPhoto,
-                    gps: gpsLocation 
+                    name, phone, shopName, category, district, taluk, city, pincode, 
+                    shopPhoto: compressedShopPhoto, gps: gpsLocation 
                 };
                 localStorage.setItem('currentVendor', JSON.stringify(currentVendor));
                 showModal("ಯಶಸ್ವಿ!", "ನಿಮ್ಮ ಅಂಗಡಿ ಖಾತೆ ಯಶಸ್ವಿಯಾಗಿ ಸೃಷ್ಟಿಯಾಗಿದೆ!", "🏪");
@@ -410,6 +422,9 @@
             let savedOrders = JSON.parse(localStorage.getItem('market_orders')) || [];
             let myOrders = savedOrders.filter(o => !o.acceptedByVendor || o.acceptedByVendor === currentVendor.shopName);
 
+            // ಹೊಸ ಆರ್ಡರ್‌ಗಳು ಮೊದಲು (ಮೇಲ್ಭಾಗದಲ್ಲಿ) ಕಾಣುವಂತೆ ರಿವರ್ಸ್ ಮಾಡುವುದು
+            myOrders.reverse();
+
             if (myOrders.length === 0) {
                 ordDiv.innerHTML = "ಯಾವುದೇ ಹೊಸ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.";
             } else {
@@ -418,7 +433,11 @@
                         <p><b>ಗ್ರಾಹಕರು:</b> ${o.customerName} (<a href="tel:${o.phone}" class="text-blue-600 underline font-bold">📞 ${o.phone}</a>)</p>
                         <p><b>ವಿಳಾಸ:</b> ${o.district} ಜಿಲ್ಲೆ, ${o.taluk} ತಾಲೂಕು, ${o.city} (Pin: ${o.pincode})</p>
                         <p><b>ಪಾವತಿ ವಿಧಾನ (Payment):</b> <span class="text-indigo-600 font-bold">${o.paymentMethod || 'Cash on Delivery'}</span></p>
+                        <p><b>ಪಾವತಿ ಸ್ಥಿತಿ:</b> <span class="${o.delivered ? 'text-green-600 font-bold' : 'text-orange-600 font-bold'}">${o.delivered ? 'ಪಾವತಿ ಯಶಸ್ವಿ (Success)' : 'ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್ (Pending)'}</span></p>
                         <p><b>ಸ್ಥಿತಿ (Status):</b> <span class="text-orange-600 font-bold">${o.status}</span></p>
+                        
+                        ${o.isReturned ? `<div class="bg-red-100 p-2 rounded text-red-700 font-bold text-xs">🔄 ರಿಟರ್ನ್ ಬಂದಿದೆ: ${o.returnReason}</div>` : ''}
+
                         <div class="flex flex-wrap gap-2 pt-1">
                             <a href="https://maps.google.com/?q=${o.lat ? o.lat + ',' + o.lng : encodeURIComponent(o.address)}" target="_blank" class="bg-indigo-600 text-white px-3 py-1.5 rounded text-xs font-bold">🗺️ ಮ್ಯಾಪ್ ಲೊಕೇಶನ್</a>
                             
@@ -436,6 +455,7 @@
         }
 
         function acceptOrder(id) {
+            playSiren(); // ಸೈರನ್ ಸೌಂಡ್ ಬಾರಿಸುವುದು
             let savedOrders = JSON.parse(localStorage.getItem('market_orders')) || [];
             let o = savedOrders.find(x => x.id === id);
             if (o) {
