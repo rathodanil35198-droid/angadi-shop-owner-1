@@ -172,16 +172,22 @@
         let selectedProductSize = 'M';
         let gpsLocation = { lat: '', lng: '' };
 
-        function showModal(title, message, icon = '🎉') {
+        let modalCallback = null;
+        function showModal(title, message, icon = '🎉', callback = null) {
             document.getElementById('modal-title').innerText = title;
             document.getElementById('modal-message').innerText = message;
             document.getElementById('modal-icon').innerText = icon;
             document.getElementById('custom-modal').classList.remove('hidden');
+            modalCallback = callback;
         }
 
         function closeModal() {
             document.getElementById('custom-modal').classList.add('hidden');
-            checkLogin();
+            if (typeof modalCallback === 'function') {
+                modalCallback();
+            } else {
+                checkLogin();
+            }
         }
 
         function zoomImage(src) {
@@ -365,7 +371,9 @@
                     shopPhoto: compressedShopPhoto, gps: gpsLocation 
                 };
                 localStorage.setItem('currentVendor', JSON.stringify(currentVendor));
-                showModal("ಯಶಸ್ವಿ!", "ನಿಮ್ಮ ಅಂಗಡಿ ಖಾತೆ ಯಶಸ್ವಿಯಾಗಿ ಸೃಷ್ಟಿಯಾಗಿದೆ!", "🏪");
+                showModal("ಯಶಸ್ವಿ!", "ನಿಮ್ಮ ಅಂಗಡಿ ಖಾತೆ ಯಶಸ್ವಿಯಾಗಿ ಸೃಷ್ಟಿಯಾಗಿದೆ!", "🏪", () => {
+                    checkLogin();
+                });
             });
         }
 
