@@ -43,16 +43,16 @@
             
             <div class="space-y-3">
                 <div>
-                    <label class="block text-xs font-medium text-gray-700">ಮಾಲೀಕರ ಹೆಸರು ನಮೂದಿಸಿ</label>
-                    <input type="text" id="reg-name" placeholder="ನಿಮ್ಮ ಹೆಸರು ನಮೂದಿಸಿ" class="w-full p-2 border rounded-lg text-sm mt-1">
+                    <label class="block text-xs font-medium text-gray-700">ನಿಮ್ಮ ಹೆಸರು</label>
+                    <input type="text" id="reg-name" placeholder="ಮಾಲೀಕರ ಹೆಸರು ನಮೂದಿಸಿ" class="w-full p-2 border rounded-lg text-sm mt-1">
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-gray-700">ಮೊಬೈಲ್ ನಂಬರ್ ಹೊಂದಿಸಿ</label>
+                    <label class="block text-xs font-medium text-gray-700">ಮೊಬೈಲ್ ನಂಬರ್</label>
                     <input type="tel" id="reg-phone" placeholder="10 ಅಂಕಿಯ ಮೊಬೈಲ್ ನಂಬರ್" maxlength="10" class="w-full p-2 border rounded-lg text-sm mt-1">
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-gray-700">ಅಂಗಡಿಯ ಹೆಸರು</label>
-                    <input type="text" id="reg-shopname" placeholder="ನಿಮ್ಮ ಅಂಗಡಿಯ ಹೆಸರನ್ನು ಇಲ್ಲಿ ಹಾಕಿ" class="w-full p-2 border rounded-lg text-sm mt-1">
+                    <input type="text" id="reg-shopname" placeholder="ಉದಾ: ಶ್ರೀ ಸಾಯಿ ಬಟ್ಟೆ ಅಂಗಡಿ" class="w-full p-2 border rounded-lg text-sm mt-1">
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-gray-700">ಅಂಗಡಿಯ ವಿಧ (Shop Category)</label>
@@ -65,33 +65,21 @@
                 </div>
 
                 <div>
-                    <label class="block text-xs font-medium text-gray-700 mb-1">ಅಂಗಡಿಯ ಮುಂಭಾಗದ ಫೋಟೋ ಹಾಕಿ (ಕ್ಯಾಮೆರಾ ಅಥವಾ ಗ್ಯಾಲರಿ)</label>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">ಅಂಗಡಿಯ ಮುಂಭಾಗದ ಫೋಟೋ (Shop Photo)</label>
                     <input type="file" id="reg-shopphoto" accept="image/*" capture="environment" class="w-full p-1 border rounded-lg text-xs">
                 </div>
 
                 <div class="grid grid-cols-2 gap-2">
-                    <div>
-                        <label class="block text-[10px] text-gray-600 mb-0.5">ಪಿನ್ ಕೋಡ್ ನಮೂದಿಸಿ</label>
-                        <input type="text" id="reg-pincode" placeholder="ಪಿನ್ ಕೋಡ್" maxlength="6" oninput="autoFillLocationByPincode(this.value)" class="p-2 border rounded-lg text-sm w-full font-bold text-indigo-700" value="585223">
-                    </div>
-                    <div>
-                        <label class="block text-[10px] text-gray-600 mb-0.5">ಊರು ಹೆಸರು</label>
-                        <input type="text" id="reg-city" placeholder="ಊರು / ಗ್ರಾಮ" class="p-2 border rounded-lg text-sm w-full" value="ಶಹಾಪುರ">
-                    </div>
+                    <input type="text" id="reg-district" placeholder="ಜಿಲ್ಲೆ" class="p-2 border rounded-lg text-sm" value="ಯಾದಗಿರಿ">
+                    <input type="text" id="reg-taluk" placeholder="ತಾಲೂಕು" class="p-2 border rounded-lg text-sm" value="ಶಹಾಪುರ">
                 </div>
                 <div class="grid grid-cols-2 gap-2">
-                    <div>
-                        <label class="block text-[10px] text-gray-600 mb-0.5">ತಾಲೂಕು ಹೆಸರು</label>
-                        <input type="text" id="reg-taluk" placeholder="ತಾಲೂಕು" class="p-2 border rounded-lg text-sm w-full" value="ಶಹಾಪುರ">
-                    </div>
-                    <div>
-                        <label class="block text-[10px] text-gray-600 mb-0.5">ನಿಮ್ಮ ಜಿಲ್ಲೆ ಹೆಸರು</label>
-                        <input type="text" id="reg-district" placeholder="ಜಿಲ್ಲೆ" class="p-2 border rounded-lg text-sm w-full" value="ಯಾದಗಿರಿ">
-                    </div>
+                    <input type="text" id="reg-city" placeholder="ಊರು / ಗ್ರಾಮ" class="p-2 border rounded-lg text-sm" value="ಶಹಾಪುರ">
+                    <input type="text" id="reg-pincode" placeholder="ಪಿನ್ ಕೋಡ್" maxlength="6" class="p-2 border rounded-lg text-sm" value="585223">
                 </div>
                 <div>
                     <button onclick="getLocation()" class="w-full bg-teal-600 text-white py-2 rounded-xl text-xs font-bold mb-2">📍 ಜಿಪಿಎಸ್ ಲೊಕೇಶನ್ ಟ್ರ್ಯಾಕ್ ಮಾಡಿ</button>
-                    <p id="loc-status" class="text-[11px] text-gray-500 text-center">ಲೊಕೇಶನ್ ಸಿದ್ಧವಾಗಿದೆ</p>
+                    <p id="loc-status" class="text-[11px] text-gray-500 text-center">ಲೊಕೇಶನ್ ಸಿಕ್ಕಿಲ್ಲ</p>
                 </div>
 
                 <button onclick="registerVendor()" class="w-full bg-indigo-600 text-white py-2.5 rounded-xl font-bold text-sm shadow">ಖಾತೆ ಸೃಷ್ಟಿಸಿ & ಮುಂದುವರಿಸಿ</button>
@@ -112,22 +100,20 @@
                 <div class="bg-white p-4 rounded-xl shadow space-y-3">
                     <h3 class="font-bold text-base text-gray-800 border-b pb-1">➕ ಹೊಸ ವಸ್ತುವಿನ ವಿವರ ಮತ್ತು ಫೋಟೋ ಅಪ್ಲೋಡ್</h3>
                     
-                    <input type="text" id="v-p-name" placeholder="ವಸ್ತುವಿನ ಹೆಸರು (ಉದಾ: ಸೀರೆ / ಜೀನ್ಸ್ ಪ್ಯಾಂಟ್ / ಶೂ)" class="w-full p-2 border rounded-lg text-sm">
+                    <input type="text" id="v-p-name" placeholder="ವಸ್ತುವಿನ ಹೆಸರು (ಉದಾ: ಜೀನ್ಸ್ ಪ್ಯಾಂಟ್ / ಶೂ / ಗಿಫ್ಟ್)" class="w-full p-2 border rounded-lg text-sm">
                     
                     <div class="grid grid-cols-2 gap-2">
                         <input type="number" id="v-p-orig" placeholder="ಹಿಂದಿನ ಬೆಲೆ (₹)" class="p-2 border rounded-lg text-sm">
                         <input type="number" id="v-p-disc" placeholder="ಡಿಸ್ಕೌಂಟ್ ಬೆಲೆ (₹)" class="p-2 border rounded-lg text-sm">
                     </div>
 
+                    <!-- ರಿಟರ್ನ್ ಆಪ್ಷನ್ (ಬಣ್ಣಗಳಿದ್ದ ಜಾಗದಲ್ಲಿ ರಿಟರ್ನ್ ಆಯ್ಕೆ ಇರಿಸಲಾಗಿದೆ) -->
                     <div class="grid grid-cols-2 gap-2">
                         <div>
-                            <label class="block text-[11px] text-gray-600 mb-1 font-semibold">ಎಷ್ಟು ಪೀಸ್‌ಗಳು (Pieces):</label>
-                            <select id="v-p-pieces" class="w-full p-2 border rounded-lg text-xs font-bold bg-gray-50">
-                                <option value="1 ಪೀಸ್">1 ಪೀಸ್</option>
-                                <option value="2 ಪೀಸ್‌ಗಳು">2 ಪೀಸ್‌ಗಳು</option>
-                                <option value="3 ಪೀಸ್‌ಗಳು">3 ಪೀಸ್‌ಗಳು</option>
-                                <option value="4 ಪೀಸ್‌ಗಳು">4 ಪೀಸ್‌ಗಳು</option>
-                                <option value="5 ಪೀಸ್‌ಗಳು ಅಥವಾ ಹೆಚ್ಚು">5 ಪೀಸ್‌ಗಳು ಅಥವಾ ಹೆಚ್ಚು</option>
+                            <label class="block text-[11px] text-gray-600 mb-1 font-semibold">ರಿಟರ್ನ್ ಸೌಲಭ್ಯ (Return):</label>
+                            <select id="v-p-return" class="w-full p-2 border rounded-lg text-xs font-bold text-indigo-700 bg-indigo-50">
+                                <option value="ರಿಟರ್ನ್ ಉಂಟು">✅ ರಿಟರ್ನ್ ಉಂಟು</option>
+                                <option value="ರಿಟರ್ನ್ ಇಲ್ಲ">❌ ರಿಟರ್ನ್ ಇಲ್ಲ</option>
                             </select>
                         </div>
                         <div>
@@ -136,24 +122,15 @@
                         </div>
                     </div>
 
-                    <!-- ರಿಟರ್ನ್ ಆಪ್ಷನ್ -->
-                    <div>
-                        <label class="block text-[11px] text-gray-600 mb-1 font-semibold">ರಿಟರ್ನ್ ಸೌಲಭ್ಯ (Return Policy):</label>
-                        <select id="v-p-return" class="w-full p-2 border rounded-lg text-xs font-bold text-indigo-700 bg-indigo-50">
-                            <option value="ರಿಟರ್ನ್ ಉಂಟು">✅ ರಿಟರ್ನ್ ಉಂಟು</option>
-                            <option value="ರಿಟರ್ನ್ ಇಲ್ಲ">❌ ರಿಟರ್ನ್ ಇಲ್ಲ</option>
-                        </select>
-                    </div>
-
                     <!-- ಅಂಗಡಿ ವರ್ಗಕ್ಕೆ ತಕ್ಕಂತೆ ಡೈನಾಮಿಕ್ ಅಳತೆಗಳು -->
                     <div id="dynamic-size-section" class="space-y-1"></div>
 
                     <div>
-                        <label class="block text-xs text-gray-600 mb-1">ಮುಂಭಾಗದ ಫೋಟೋ (ಕ್ಯಾಮೆರಾ ಅಥವಾ ಗ್ಯಾಲರಿ)</label>
+                        <label class="block text-xs text-gray-600 mb-1">ಮುಂಭಾಗದ ಫೋಟೋ (Front Camera)</label>
                         <input type="file" id="v-p-front" accept="image/*" capture="environment" class="w-full p-1 border rounded-lg text-xs">
                     </div>
                     <div>
-                        <label class="block text-xs text-gray-600 mb-1">ಹಿಂಭಾಗದ ಫೋಟೋ (ಕ್ಯಾಮೆರಾ ಅಥವಾ ಗ್ಯಾಲರಿ)</label>
+                        <label class="block text-xs text-gray-600 mb-1">ಹಿಂಭಾಗದ ಫೋಟೋ (Back Camera)</label>
                         <input type="file" id="v-p-back" accept="image/*" capture="environment" class="w-full p-1 border rounded-lg text-xs">
                     </div>
 
@@ -182,24 +159,18 @@
         let currentVendor = JSON.parse(localStorage.getItem('currentVendor')) || null;
         let products = JSON.parse(localStorage.getItem('market_products')) || [];
         let selectedProductSize = 'M';
-        let gpsLocation = { lat: 16.71, lng: 76.81 };
+        let gpsLocation = { lat: '', lng: '' };
 
-        let modalCallback = null;
-        function showModal(title, message, icon = '🎉', callback = null) {
+        function showModal(title, message, icon = '🎉') {
             document.getElementById('modal-title').innerText = title;
             document.getElementById('modal-message').innerText = message;
             document.getElementById('modal-icon').innerText = icon;
             document.getElementById('custom-modal').classList.remove('hidden');
-            modalCallback = callback;
         }
 
         function closeModal() {
             document.getElementById('custom-modal').classList.add('hidden');
-            if (typeof modalCallback === 'function') {
-                modalCallback();
-            } else {
-                checkLogin();
-            }
+            checkLogin();
         }
 
         function zoomImage(src) {
@@ -211,43 +182,19 @@
             document.getElementById('image-modal').classList.add('hidden');
         }
 
-        // ಪಿನ್ ಕೋಡ್ ಆಧಾರಿತ ಆಟೋಮ್ಯಾಟಿಕ್ ಲೊಕೇಶನ್ ಫಿಲ್ಲಿಂಗ್
-        function autoFillLocationByPincode(pincode) {
-            if (pincode.length === 6) {
-                let pinMap = {
-                    "585223": { city: "ಶಹಾಪುರ", taluk: "ಶಹಾಪುರ", district: "ಯಾದಗಿರಿ" },
-                    "585287": { city: "ಸಗರ", taluk: "ಶಹಾಪುರ", district: "ಯಾದಗಿರಿ" },
-                    "585224": { city: "ವಡಗೇರಾ", taluk: "ವಡಗೇರಾ", district: "ಯಾದಗಿರಿ" },
-                    "585202": { city: "ಯಾದಗಿರಿ", taluk: "ಯಾದಗಿರಿ", district: "ಯಾದಗಿರಿ" },
-                    "585212": { city: "ಸುರಪುರ", taluk: "ಸುರಪುರ", district: "ಯಾದಗಿರಿ" }
-                };
-
-                if (pinMap[pincode]) {
-                    document.getElementById('reg-city').value = pinMap[pincode].city;
-                    document.getElementById('reg-taluk').value = pinMap[pincode].taluk;
-                    document.getElementById('reg-district').value = pinMap[pincode].district;
-                }
-            }
-        }
-
         function getLocation() {
-            let statEl = document.getElementById('loc-status');
-            statEl.innerText = "ಜಿಪಿಎಸ್ ಲೊಕೇಶನ್ ಟ್ರ್ಯಾಕ್ ಮಾಡಲಾಗುತ್ತಿದೆ...";
-            statEl.className = "text-[11px] text-blue-600 text-center font-bold";
-
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(position => {
                     gpsLocation.lat = position.coords.latitude;
                     gpsLocation.lng = position.coords.longitude;
-                    statEl.innerText = `ಜಿಪಿಎಸ್ ಲೊಕೇಶನ್ ಯಶಸ್ವಿಯಾಗಿ ಸಿಕ್ಕಿದೆ! (Lat: ${gpsLocation.lat.toFixed(2)}, Lng: ${gpsLocation.lng.toFixed(2)})`;
+                    let statEl = document.getElementById('loc-status');
+                    statEl.innerText = `ಲೊಕೇಶನ್ ಸಿಕ್ಕಿದೆ (Lat: ${gpsLocation.lat.toFixed(2)}, Lng: ${gpsLocation.lng.toFixed(2)})`;
                     statEl.className = "text-[11px] text-green-600 text-center font-bold";
                 }, error => {
-                    statEl.innerText = `ಶಹಾಪುರ ಜಿಪಿಎಸ್ ಲೊಕೇಶನ್ ಸೆಟ್ ಮಾಡಲಾಗಿದೆ`;
-                    statEl.className = "text-[11px] text-green-600 text-center font-bold";
-                }, { timeout: 10000 });
+                    alert('ಲೊಕೇಶನ್ ಪಡೆಯಲು ಸಾಧ್ಯವಾಗಿಲ್ಲ. ಜಿಪಿಎಸ್ ಆನ್ ಮಾಡಿ.');
+                });
             } else {
-                statEl.innerText = `ಶಹಾಪುರ ಜಿಪಿಎಸ್ ಲೊಕೇಶನ್ ಸೆಟ್ ಮಾಡಲಾಗಿದೆ`;
-                statEl.className = "text-[11px] text-green-600 text-center font-bold";
+                alert('ನಿಮ್ಮ ಬ್ರೌಸರ್ ಜಿಪಿಎಸ್ ಸಪೋರ್ಟ್ ಮಾಡುವುದಿಲ್ಲ.');
             }
         }
 
@@ -392,21 +339,12 @@
             let shopPhotoFile = document.getElementById('reg-shopphoto').files[0];
 
             if (!name || !phone || !shopName || phone.length < 10) {
-                alert('ದಯವಿಟ್ಟು ನಿಮ್ಮ ಹೆಸರು, 10 ಅಂಕಿಯ ಮೊಬೈಲ್ ನಂಬರ್ ಮತ್ತು ಅಂಗಡಿಯ ಹೆಸರನ್ನು ಸರಿಯಾಗಿ ಭರ್ತಿ ಮಾಡಿ!');
+                alert('ದಯವಿಟ್ಟು ಎಲ್ಲಾ ಸರಿಯಾದ ವಿವರಗಳನ್ನು ಭರ್ತಿ ಮಾಡಿ!');
                 return;
             }
 
-            let dummyShopPhoto = "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400";
-
             if (!shopPhotoFile) {
-                currentVendor = { 
-                    name, phone, shopName, category, district, taluk, city, pincode, 
-                    shopPhoto: dummyShopPhoto, gps: gpsLocation 
-                };
-                localStorage.setItem('currentVendor', JSON.stringify(currentVendor));
-                showModal("ಯಶಸ್ವಿ!", "ನಿಮ್ಮ ಅಂಗಡಿ ಖಾತೆ ಯಶಸ್ವಿಯಾಗಿ ಸೃಷ್ಟಿಯಾಗಿದೆ!", "🏪", () => {
-                    checkLogin();
-                });
+                showModal("ಎಚ್ಚರಿಕೆ!", "ದಯವಿಟ್ಟು ನಿಮ್ಮ ಅಂಗಡಿಯ ಫೋಟೋ ಅಪ್ಲೋಡ್ ಮಾಡಿ!", "⚠️");
                 return;
             }
 
@@ -416,9 +354,7 @@
                     shopPhoto: compressedShopPhoto, gps: gpsLocation 
                 };
                 localStorage.setItem('currentVendor', JSON.stringify(currentVendor));
-                showModal("ಯಶಸ್ವಿ!", "ನಿಮ್ಮ ಅಂಗಡಿ ಖಾತೆ ಯಶಸ್ವಿಯಾಗಿ ಸೃಷ್ಟಿಯಾಗಿದೆ!", "🏪", () => {
-                    checkLogin();
-                });
+                showModal("ಯಶಸ್ವಿ!", "ನಿಮ್ಮ ಅಂಗಡಿ ಖಾತೆ ಯಶಸ್ವಿಯಾಗಿ ಸೃಷ್ಟಿಯಾಗಿದೆ!", "🏪");
             });
         }
 
@@ -432,7 +368,6 @@
             let name = document.getElementById('v-p-name').value;
             let origPrice = document.getElementById('v-p-orig').value;
             let discPrice = document.getElementById('v-p-disc').value;
-            let pieces = document.getElementById('v-p-pieces').value;
             let returnPolicy = document.getElementById('v-p-return').value;
             let stock = document.getElementById('v-p-stock').value;
             let frontFile = document.getElementById('v-p-front').files[0];
@@ -456,52 +391,42 @@
                 return;
             }
 
-            let dummyPhoto = "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=400";
-            
-            function saveProductWithPhotos(frontStr, backStr) {
-                let newProd = {
-                    id: Date.now(),
-                    name: name,
-                    category: currentVendor.category,
-                    origPrice: Number(origPrice),
-                    discPrice: Number(discPrice),
-                    pieces: pieces,
-                    returnPolicy: returnPolicy,
-                    size: selectedProductSize,
-                    stock: Number(stock) || 1,
-                    vendorShop: currentVendor.shopName,
-                    vendorPhone: currentVendor.phone,
-                    frontPhoto: frontStr,
-                    backPhoto: backStr
-                };
-
-                products.push(newProd);
-                localStorage.setItem('market_products', JSON.stringify(products));
-                
-                document.getElementById('v-p-name').value = '';
-                document.getElementById('v-p-orig').value = '';
-                document.getElementById('v-p-disc').value = '';
-                document.getElementById('v-p-stock').value = '';
-                document.getElementById('v-p-front').value = '';
-                document.getElementById('v-p-back').value = '';
-
-                renderVendorProducts();
-                showModal("ಯಶಸ್ವಿ!", "ನಿಮ್ಮ ವಸ್ತು ಯಶಸ್ವಿಯಾಗಿ ಅಪ್‌ಲೋಡ್ ಆಗಿದೆ! ಈಗ ಗ್ರಾಹಕರಿಗೆ ಕಾಣಿಸುತ್ತದೆ.", "📸");
+            if (!frontFile || !backFile) {
+                showModal("ಎಚ್ಚರಿಕೆ!", "ದಯವಿಟ್ಟು ಮುಂಭಾಗ ಮತ್ತು ಹಿಂಭಾಗದ ಎರಡೂ ಫೋಟೋಗಳನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ!", "⚠️");
+                return;
             }
 
-            if (frontFile && backFile) {
-                compressImage(frontFile, function(fComp) {
-                    compressImage(backFile, function(bComp) {
-                        saveProductWithPhotos(fComp, bComp);
-                    });
+            compressImage(frontFile, function(frontCompressed) {
+                compressImage(backFile, function(backCompressed) {
+                    let newProd = {
+                        id: Date.now(),
+                        name: name,
+                        category: currentVendor.category,
+                        origPrice: Number(origPrice),
+                        discPrice: Number(discPrice),
+                        returnPolicy: returnPolicy,
+                        size: selectedProductSize,
+                        stock: Number(stock) || 1,
+                        vendorShop: currentVendor.shopName,
+                        vendorPhone: currentVendor.phone,
+                        frontPhoto: frontCompressed,
+                        backPhoto: backCompressed
+                    };
+
+                    products.push(newProd);
+                    localStorage.setItem('market_products', JSON.stringify(products));
+                    
+                    document.getElementById('v-p-name').value = '';
+                    document.getElementById('v-p-orig').value = '';
+                    document.getElementById('v-p-disc').value = '';
+                    document.getElementById('v-p-stock').value = '';
+                    document.getElementById('v-p-front').value = '';
+                    document.getElementById('v-p-back').value = '';
+
+                    renderVendorProducts();
+                    showModal("ಯಶಸ್ವಿ!", "ನಿಮ್ಮ ಫೋಟೋ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್‌ಲೋಡ್ ಆಗಿದೆ! ವಸ್ತು ಗ್ರಾಹಕರಿಗೆ ಲಭ್ಯವಿದೆ.", "📸");
                 });
-            } else if (frontFile) {
-                compressImage(frontFile, function(fComp) {
-                    saveProductWithPhotos(fComp, dummyPhoto);
-                });
-            } else {
-                saveProductWithPhotos(dummyPhoto, dummyPhoto);
-            }
+            });
         }
 
         function renderVendorProducts() {
@@ -521,7 +446,7 @@
                     </div>
                     <div class="flex-1">
                         <p class="font-bold text-xs">${p.name} (${p.size})</p>
-                        <p class="text-[10px] text-indigo-600 font-semibold">${p.pieces || '1 ಪೀಸ್'} | ${p.returnPolicy || 'ರಿಟರ್ನ್ ಉಂಟು'}</p>
+                        <p class="text-[10px] text-indigo-600 font-semibold">ಸ್ಟೇಟಸ್: ${p.returnPolicy || 'ರಿಟರ್ನ್ ಉಂಟು'}</p>
                         <p class="text-[10px] text-green-600 font-bold">₹${p.discPrice} | ಸ್ಟಾಕ್: ${p.stock}</p>
                     </div>
                     <button onclick="deleteProduct(${p.id})" class="bg-red-500 text-white px-2 py-1 rounded text-[10px] font-bold">ಡಿಲೀಟ್</button>
@@ -560,7 +485,7 @@
                                 <img src="${i.frontPhoto}" onclick="zoomImage('${i.frontPhoto}')" class="w-12 h-12 object-cover rounded border cursor-pointer">
                                 <div>
                                     <p class="font-bold text-xs">${i.name} (<span class="text-red-600 font-bold">ಸೈಜ್: ${i.size}</span>) x${i.quantity}</p>
-                                    <p class="text-[11px] text-indigo-600">${i.pieces \vert{}\vert{} '1 ಪೀಸ್'} \vert{} ${i.returnPolicy || 'ರಿಟರ್ನ್ ಉಂಟು'}</p>
+                                    <p class="text-[11px] text-indigo-600">${i.returnPolicy || 'ರಿಟರ್ನ್ ಉಂಟು'}</p>
                                     <p class="text-[11px] text-green-600 font-bold">₹${i.discPrice * i.quantity}</p>
                                 </div>
                             </div>
