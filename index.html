@@ -79,7 +79,7 @@
                 </div>
                 <div>
                     <button onclick="getLocation()" class="w-full bg-teal-600 text-white py-2 rounded-xl text-xs font-bold mb-2">📍 ಜಿಪಿಎಸ್ ಲೊಕೇಶನ್ ಟ್ರ್ಯಾಕ್ ಮಾಡಿ</button>
-                    <p id="loc-status" class="text-[11px] text-gray-500 text-center">ಲೊಕೇಶನ್ ಸಿಕ್ಕಿಲ್ಲ</p>
+                    <p id="loc-status" class="text-[11px] text-gray-500 text-center">ಶಹಾಪುರ ಲೊಕೇಶನ್ ಸೆಟ್ ಮಾಡಲಾಗಿದೆ</p>
                 </div>
 
                 <button onclick="registerVendor()" class="w-full bg-indigo-600 text-white py-2.5 rounded-xl font-bold text-sm shadow">ಖಾತೆ ಸೃಷ್ಟಿಸಿ & ಮುಂದುವರಿಸಿ</button>
@@ -211,7 +211,6 @@
                     statEl.innerText = `ಲೊಕೇಶನ್ ಸಿಕ್ಕಿದೆ (Lat: ${gpsLocation.lat.toFixed(2)}, Lng: ${gpsLocation.lng.toFixed(2)})`;
                     statEl.className = "text-[11px] text-green-600 text-center font-bold";
                 }, error => {
-                    // ಜಿಪಿಎಸ್ ಸಿಗದಿದ್ದರೂ ಡಿಫಾಲ್ಟ್ ಲೊಕೇಶನ್ ಮುಂದುವರಿಸಲು ಅನುವು ಮಾಡಿಕೊಡುತ್ತದೆ
                     statEl.innerText = `ಶಹಾಪುರ ಲೊಕೇಶನ್ ಸೆಟ್ ಮಾಡಲಾಗಿದೆ`;
                     statEl.className = "text-[11px] text-green-600 text-center font-bold";
                 }, { timeout: 10000 });
