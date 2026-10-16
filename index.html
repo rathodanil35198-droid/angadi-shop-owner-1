@@ -112,26 +112,16 @@
                         <input type="number" id="v-p-stock" placeholder="ಸ್ಟಾಕ್ (ಎಷ್ಟು ಪೀಸ್)" class="p-2 border rounded-lg text-xs">
                     </div>
 
-                    <!-- ಅಂಗಡಿ ವರ್ಗಕ್ಕೆ ತಕ್ಕಂತೆ ಡೈನಾಮಿಕ್ ಅಳತೆಗಳು (Dynamic Size/Dimension Options) -->
-                    <div id="dynamic-size-section" class="space-y-1">
-                        <!-- ಜಾವಾಸ್ಕ್ರಿಪ್ಟ್ ಮೂಲಕ ಇಲ್ಲಿ ಬಟ್ಟೆ, ಶೂ ಅಥವಾ ಗಿಫ್ಟ್ ಅಳತೆಗಳು ಲೋಡ್ ಆಗುತ್ತವೆ -->
-                    </div>
+                    <!-- ಅಂಗಡಿ ವರ್ಗಕ್ಕೆ ತಕ್ಕಂತೆ ಡೈನಾಮಿಕ್ ಅಳತೆಗಳು -->
+                    <div id="dynamic-size-section" class="space-y-1"></div>
 
                     <div>
                         <label class="block text-xs text-gray-600 mb-1">ಮುಂಭಾಗದ ಫೋಟೋ (Front Camera)</label>
-                        <input type="file" id="v-p-front" accept="image/*" capture="environment" onchange="previewImage(this, 'front-preview')" class="w-full p-1 border rounded-lg text-xs">
-                        <div id="front-preview" class="mt-2 hidden flex items-center gap-2">
-                            <img id="front-img-tag" src="" class="w-16 h-16 object-cover rounded border">
-                            <button onclick="clearImage('v-p-front', 'front-preview')" class="bg-red-500 text-white px-2 py-1 rounded text-[10px] font-bold">ಫೋಟೋ ಡಿಲೀಟ್ ಮಾಡಿ</button>
-                        </div>
+                        <input type="file" id="v-p-front" accept="image/*" capture="environment" class="w-full p-1 border rounded-lg text-xs">
                     </div>
                     <div>
                         <label class="block text-xs text-gray-600 mb-1">ಹಿಂಭಾಗದ ಫೋಟೋ (Back Camera)</label>
-                        <input type="file" id="v-p-back" accept="image/*" capture="environment" onchange="previewImage(this, 'back-preview')" class="w-full p-1 border rounded-lg text-xs">
-                        <div id="back-preview" class="mt-2 hidden flex items-center gap-2">
-                            <img id="back-img-tag" src="" class="w-16 h-16 object-cover rounded border">
-                            <button onclick="clearImage('v-p-back', 'back-preview')" class="bg-red-500 text-white px-2 py-1 rounded text-[10px] font-bold">ಫೋಟೋ ಡಿಲೀಟ್ ಮಾಡಿ</button>
-                        </div>
+                        <input type="file" id="v-p-back" accept="image/*" capture="environment" class="w-full p-1 border rounded-lg text-xs">
                     </div>
 
                     <button onclick="addVendorProduct()" class="w-full bg-indigo-600 text-white py-2.5 rounded-xl font-bold text-xs shadow">ವಸ್ತು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ</button>
@@ -217,7 +207,6 @@
             }
         }
 
-        // ಅಂಗಡಿಯ ವರ್ಗಕ್ಕೆ ತಕ್ಕಂತೆ ಅಳತೆಗಳ ವಿನ್ಯಾಸವನ್ನು ಲೋಡ್ ಮಾಡುವುದು
         function renderSizeOptionsForCategory(category) {
             let container = document.getElementById('dynamic-size-section');
             if (!container) return;
@@ -281,27 +270,6 @@
                     el.className = s === sz ? "px-3 py-1 border rounded text-xs cursor-pointer bg-indigo-600 text-white" : "px-3 py-1 border rounded text-xs cursor-pointer bg-gray-100";
                 }
             });
-        }
-
-        // ಫೋಟೋ ಪ್ರಿವ್ಯೂ ಮತ್ತು ಡಿಲೀಟ್ ಮಾಡುವ ಫಂಕ್ಷನ್‌ಗಳು
-        function previewImage(input, previewId) {
-            let previewDiv = document.getElementById(previewId);
-            let imgTag = previewDiv.querySelector('img');
-            if (input.files && input.files[0]) {
-                let reader = new FileReader();
-                reader.onload = function(e) {
-                    imgTag.src = e.target.result;
-                    previewDiv.classList.remove('hidden');
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        function clearImage(inputId, previewId) {
-            document.getElementById(inputId).value = '';
-            let previewDiv = document.getElementById(previewId);
-            previewDiv.classList.add('hidden');
-            previewDiv.querySelector('img').src = '';
         }
 
         function switchVendorTab(tab) {
@@ -414,7 +382,6 @@
             let frontFile = document.getElementById('v-p-front').files[0];
             let backFile = document.getElementById('v-p-back').files[0];
 
-            // ಗಿಫ್ಟ್ ಅಂಗಡಿಯಾಗಿದ್ದರೆ ಉದ್ದ ಮತ್ತು ಅಗಲವನ್ನು ಸೈಜ್ ಆಗಿ ತೆಗೆದುಕೊಳ್ಳುವುದು
             if (currentVendor.category === 'Gifts') {
                 let len = document.getElementById('gift-length').value;
                 let wid = document.getElementById('gift-width').value;
@@ -463,11 +430,11 @@
                     document.getElementById('v-p-disc').value = '';
                     document.getElementById('v-p-colors').value = '';
                     document.getElementById('v-p-stock').value = '';
-                    clearImage('v-p-front', 'front-preview');
-                    clearImage('v-p-back', 'back-preview');
+                    document.getElementById('v-p-front').value = '';
+                    document.getElementById('v-p-back').value = '';
 
                     renderVendorProducts();
-                    showModal("ಯಶಸ್ವಿ!", "ನಿಮ್ಮ ಫೋಟೋ ಅಪ್ಲೋಡ್ ಆಗಿದೆ! ವಸ್ತು ಗ್ರಾಹಕರಿಗೆ ಈಗ ಲಭ್ಯವಿದೆ.", "📸");
+                    showModal("ಯಶಸ್ವಿ!", "ನಿಮ್ಮ ಫೋಟೋ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್‌ಲೋಡ್ ಆಗಿದೆ! ವಸ್ತು ಗ್ರಾಹಕರಿಗೆ ಲಭ್ಯವಿದೆ.", "📸");
                 });
             });
         }
