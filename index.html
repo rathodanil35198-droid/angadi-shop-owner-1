@@ -64,7 +64,6 @@
                     </select>
                 </div>
 
-                <!-- ಅಂಗಡಿಯ ಫೋಟೋ ಅಪ್ಲೋಡ್ ಜಾಗ -->
                 <div>
                     <label class="block text-xs font-medium text-gray-700 mb-1">ಅಂಗಡಿಯ ಮುಂಭಾಗದ ಫೋಟೋ (Shop Photo)</label>
                     <input type="file" id="reg-shopphoto" accept="image/*" capture="environment" class="w-full p-1 border rounded-lg text-xs">
@@ -113,7 +112,6 @@
                         <input type="number" id="v-p-stock" placeholder="ಸ್ಟಾಕ್ (ಎಷ್ಟು ಪೀಸ್)" class="p-2 border rounded-lg text-xs">
                     </div>
 
-                    <!-- ಸೈಜ್ ಆಯ್ಕೆಗಳು -->
                     <div>
                         <label class="block text-xs text-gray-600 mb-1">ಲಭ್ಯವಿರುವ ಸೈಜ್‌ಗಳು:</label>
                         <div class="flex gap-1">
@@ -137,7 +135,6 @@
                     <button onclick="addVendorProduct()" class="w-full bg-indigo-600 text-white py-2.5 rounded-xl font-bold text-xs shadow">ವಸ್ತು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ</button>
                 </div>
 
-                <!-- ನೀವು ಅಪ್‌ಲೋಡ್ ಮಾಡಿದ ವಸ್ತುಗಳು -->
                 <div class="bg-white p-4 rounded-xl shadow space-y-3">
                     <h3 class="font-bold text-sm text-gray-800 border-b pb-1">🖼️ ನೀವು ಅಪ್‌ಲೋಡ್ ಮಾಡಿದ ವಸ್ತುಗಳು (ಸ್ಟಾಕ್ / ಡಿಲೀಟ್)</h3>
                     <div id="vendor-my-products" class="space-y-2 text-xs text-gray-600">ಯಾವುದೇ ವಸ್ತುಗಳಿಲ್ಲ.</div>
@@ -162,7 +159,6 @@
         let selectedProductSize = 'M';
         let gpsLocation = { lat: '', lng: '' };
 
-        // ಹೊಸ ಆರ್ಡರ್ ಬಂದಾಗ ಜೋರಾದ ಸೈರನ್ ಸೌಂಡ್ ಬಾರಿಸಲು (Web Audio API)
         function playSiren() {
             try {
                 let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -422,7 +418,6 @@
             let savedOrders = JSON.parse(localStorage.getItem('market_orders')) || [];
             let myOrders = savedOrders.filter(o => !o.acceptedByVendor || o.acceptedByVendor === currentVendor.shopName);
 
-            // ಹೊಸ ಆರ್ಡರ್‌ಗಳು ಮೊದಲು (ಮೇಲ್ಭಾಗದಲ್ಲಿ) ಕಾಣುವಂತೆ ರಿವರ್ಸ್ ಮಾಡುವುದು
             myOrders.reverse();
 
             if (myOrders.length === 0) {
@@ -430,24 +425,43 @@
             } else {
                 ordDiv.innerHTML = myOrders.map(o => `
                     <div class="border p-3 rounded-xl bg-amber-50 space-y-2 mb-2">
-                        <p><b>ಗ್ರಾಹಕರು:</b> ${o.customerName} (<a href="tel:${o.phone}" class="text-blue-600 underline font-bold">📞 ${o.phone}</a>)</p>
-                        <p><b>ವಿಳಾಸ:</b> ${o.district} ಜಿಲ್ಲೆ, ${o.taluk} ತಾಲೂಕು, ${o.city} (Pin: ${o.pincode})</p>
-                        <p><b>ಪಾವತಿ ವಿಧಾನ (Payment):</b> <span class="text-indigo-600 font-bold">${o.paymentMethod || 'Cash on Delivery'}</span></p>
-                        <p><b>ಪಾವತಿ ಸ್ಥಿತಿ:</b> <span class="${o.delivered ? 'text-green-600 font-bold' : 'text-orange-600 font-bold'}">${o.delivered ? 'ಪಾವತಿ ಯಶಸ್ವಿ (Success)' : 'ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್ (Pending)'}</span></p>
+                        <div class="flex justify-between items-center border-b pb-1">
+                            <span class="font-bold text-xs text-indigo-700">ಆರ್ಡರ್ ID: ${o.id}</span>
+                            <span class="text-[10px] bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded font-bold">ಪಾವತಿ: ${o.paymentMethod}</span>
+                        </div>
+
+                        ${o.items.map(i => `
+                            <div class="flex gap-2 items-center">
+                                <img src="${i.frontPhoto}" onclick="zoomImage('${i.frontPhoto}')" class="w-12 h-12 object-cover rounded border cursor-pointer">
+                                <div>
+                                    <p class="font-bold text-xs">${i.name} (<span class="text-red-600 font-bold">ಸೈಜ್: ${i.size}</span>) x${i.quantity}</p>
+                                    <p class="text-[11px] text-green-600 font-bold">₹${i.discPrice * i.quantity}</p>
+                                </div>
+                            </div>
+                        `).join('')}
+
+                        <div class="text-[11px] text-gray-700 space-y-0.5 pt-1 border-t">
+                            <p><b>ಗ್ರಾಹಕರ ಹೆಸರು:</b> ${o.customerName} (<a href="tel:${o.phone}" class="text-blue-600 underline font-bold">📞 ${o.phone}</a>)</p>
+                            <p><b>ಪೂರ್ಣ ವಿಳಾಸ:</b> ${o.city}, ${o.taluk} ತಾಲೂಕು, ${o.district} ಜಿಲ್ಲೆ (Pin: ${o.pincode})</p>
+                        </div>
+
+                        <p><b>ಪಾವತಿ ಸ್ಥಿತಿ:</b> <span class="${o.paymentSuccess ? 'text-green-600 font-bold' : 'text-orange-600 font-bold'}">${o.paymentSuccess ? 'ಪಾವತಿ ಯಶಸ್ವಿ (Success)' : 'ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್ (Pending)'}</span></p>
                         <p><b>ಸ್ಥಿತಿ (Status):</b> <span class="text-orange-600 font-bold">${o.status}</span></p>
                         
                         ${o.isReturned ? `<div class="bg-red-100 p-2 rounded text-red-700 font-bold text-xs">🔄 ರಿಟರ್ನ್ ಬಂದಿದೆ: ${o.returnReason}</div>` : ''}
 
                         <div class="flex flex-wrap gap-2 pt-1">
-                            <a href="https://maps.google.com/?q=${o.lat ? o.lat + ',' + o.lng : encodeURIComponent(o.address)}" target="_blank" class="bg-indigo-600 text-white px-3 py-1.5 rounded text-xs font-bold">🗺️ ಮ್ಯಾಪ್ ಲೊಕೇಶನ್</a>
+                            <a href="https://maps.google.com/?q=${encodeURIComponent(o.address)}" target="_blank" class="bg-indigo-600 text-white px-3 py-1.5 rounded text-xs font-bold">🗺️ ಮ್ಯಾಪ್ ಲೊಕೇಶನ್</a>
                             
                             ${!o.acceptedByVendor ? `<button onclick="acceptOrder(${o.id})" class="bg-green-600 text-white px-3 py-1.5 rounded text-xs font-bold">✅ ಆರ್ಡರ್ ಸ್ವೀಕರಿಸಿ</button>` : ''}
                             
-                            ${o.acceptedByVendor && !o.packingReady ? `<button onclick="markPackingReady(${o.id})" class="bg-blue-600 text-white px-3 py-1.5 rounded text-xs font-bold">📦 ಪ್ಯಾಕಿಂಗ್ ಸಿದ್ಧ (OK)</button>` : ''}
+                            ${o.acceptedByVendor && !o.packingReady ? `<button onclick="markPackingReady(${o.id})" class="bg-blue-600 text-white px-3 py-1.5 rounded text-xs font-bold">📦 ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (OK)</button>` : ''}
                             
-                            ${o.packingReady && !o.delivered ? `<button onclick="markDelivered(${o.id})" class="bg-purple-600 text-white px-3 py-1.5 rounded text-xs font-bold">🚀 ಡೆಲಿವರಿ ಮುಗಿಯಿತು (OK)</button>` : ''}
+                            ${o.packingReady && !o.delivered ? `<button onclick="markDispatched(${o.id})" class="bg-purple-600 text-white px-3 py-1.5 rounded text-xs font-bold">🚀 ಡೆಲಿವರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ (OK)</button>` : ''}
+
+                            ${o.delivered && !o.paymentSuccess ? `<button onclick="markPaymentSuccess(${o.id})" class="bg-green-700 text-white px-3 py-1.5 rounded text-xs font-bold">💰 ಪೇಮೆಂಟ್ ಸಕ್ಸಸ್ (OK)</button>` : ''}
                             
-                            ${o.delivered ? `<span class="text-green-700 font-bold text-xs">✨ ಪಾವತಿ & ಡೆಲಿವರಿ ಯಶಸ್ವಿ (Success)</span>` : ''}
+                            ${o.paymentSuccess ? `<span class="text-green-700 font-bold text-xs">✨ ಪಾವತಿ & ಡೆಲಿವರಿ ಯಶಸ್ವಿ (Success)</span>` : ''}
                         </div>
                     </div>
                 `).join('');
@@ -455,7 +469,7 @@
         }
 
         function acceptOrder(id) {
-            playSiren(); // ಸೈರನ್ ಸೌಂಡ್ ಬಾರಿಸುವುದು
+            playSiren();
             let savedOrders = JSON.parse(localStorage.getItem('market_orders')) || [];
             let o = savedOrders.find(x => x.id === id);
             if (o) {
@@ -463,7 +477,7 @@
                 o.status = 'ಸ್ವೀಕರಿಸಲಾಗಿದೆ - ಪ್ಯಾಕಿಂಗ್ ನಡೆಯುತ್ತಿದೆ';
                 localStorage.setItem('market_orders', JSON.stringify(savedOrders));
                 renderVendorOrders();
-                showModal("ಯಶಸ್ವಿ!", "ಬುಕಿಂಗ್ ಸ್ವೀಕರಿಸಲಾಗಿದೆ! ಗ್ರಾಹಕರಿಗೆ ಸಂದೇಶ ಕಳುಹಿಸಲಾಗಿದೆ.", "👍");
+                showModal("ಯಶಸ್ವಿ!", "ಬುಕಿಂಗ್ ಸ್ವೀಕರಿಸಲಾಗಿದೆ!", "👍");
             }
         }
 
@@ -472,22 +486,33 @@
             let o = savedOrders.find(x => x.id === id);
             if (o) {
                 o.packingReady = true;
-                o.status = 'ಪ್ಯಾಕಿಂಗ್ ಮುಗಿದಿದೆ - ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ನೀಡಲಾಗಿದೆ';
+                o.status = 'ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ - ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ತಿಳಿಸಲಾಗಿದೆ';
                 localStorage.setItem('market_orders', JSON.stringify(savedOrders));
                 renderVendorOrders();
-                showModal("ಸಿದ್ಧವಾಗಿದೆ!", "ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ಅಂಗಡಿ ಲೊಕೇಶನ್ ಮತ್ತು ಪ್ಯಾಕಿಂಗ್ ವಿವರ ಕಳುಹಿಸಲಾಗಿದೆ!", "📦");
+                showModal("ಸಿದ್ಧವಾಗಿದೆ!", "ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ ಎಂದು ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ಸಂದೇಶ ಕಳುಹಿಸಲಾಗಿದೆ!", "📦");
             }
         }
 
-        function markDelivered(id) {
+        function markDispatched(id) {
             let savedOrders = JSON.parse(localStorage.getItem('market_orders')) || [];
             let o = savedOrders.find(x => x.id === id);
             if (o) {
-                o.delivered = true;
-                o.status = 'ಡೆಲಿವರಿ ಯಶಸ್ವಿಯಾಗಿದೆ (Payment Success)';
+                o.status = 'ಡೆಲಿವರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ (Out for Delivery)';
                 localStorage.setItem('market_orders', JSON.stringify(savedOrders));
                 renderVendorOrders();
-                showModal("ಯಶಸ್ವಿ!", "ಪಾವತಿ (Payment) ಮತ್ತು ಡೆಲಿವರಿ ಯಶಸ್ವಿಯಾಗಿದೆ!", "💰");
+                showModal("ಯಶಸ್ವಿ!", "ಡೆಲಿವರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ ಎಂದು ಅಪ್‌ಡೇಟ್ ಮಾಡಲಾಗಿದೆ!", "🚀");
+            }
+        }
+
+        function markPaymentSuccess(id) {
+            let savedOrders = JSON.parse(localStorage.getItem('market_orders')) || [];
+            let o = savedOrders.find(x => x.id === id);
+            if (o) {
+                o.paymentSuccess = true;
+                o.status = 'ಪಾವತಿ & ಡೆಲಿವರಿ ಯಶಸ್ವಿಯಾಗಿದೆ (Success)';
+                localStorage.setItem('market_orders', JSON.stringify(savedOrders));
+                renderVendorOrders();
+                showModal("ಯಶಸ್ವಿ!", "ಪೇಮೆಂಟ್ ಸಕ್ಸಸ್ ಮಾಡಲಾಗಿದೆ!", "💰");
             }
         }
 
