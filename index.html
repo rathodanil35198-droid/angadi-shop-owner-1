@@ -66,27 +66,27 @@
 
                 <div>
                     <label class="block text-xs font-medium text-gray-700 mb-1">ಅಂಗಡಿಯ ಮುಂಭಾಗದ ಫೋಟೋ ಹಾಕಿ (ಕ್ಯಾಮೆರಾ ಅಥವಾ ಗ್ಯಾಲರಿ)</label>
-                    <input type="file" id="reg-shopphoto" accept="image/*" class="w-full p-1 border rounded-lg text-xs">
+                    <input type="file" id="reg-shopphoto" accept="image/*" capture="environment" class="w-full p-1 border rounded-lg text-xs">
                 </div>
 
                 <div class="grid grid-cols-2 gap-2">
                     <div>
-                        <label class="block text-[10px] text-gray-600 mb-0.5">ನಿಮ್ಮ ಜಿಲ್ಲೆ ಹೆಸರು</label>
-                        <input type="text" id="reg-district" placeholder="ಜಿಲ್ಲೆ" class="p-2 border rounded-lg text-sm w-full" value="ಯಾದಗಿರಿ">
+                        <label class="block text-[10px] text-gray-600 mb-0.5">ಪಿನ್ ಕೋಡ್ ನಮೂದಿಸಿ</label>
+                        <input type="text" id="reg-pincode" placeholder="ಪಿನ್ ಕೋಡ್" maxlength="6" oninput="autoFillLocationByPincode(this.value)" class="p-2 border rounded-lg text-sm w-full font-bold text-indigo-700" value="585223">
                     </div>
-                    <div>
-                        <label class="block text-[10px] text-gray-600 mb-0.5">ತಾಲೂಕು ಹೆಸರು</label>
-                        <input type="text" id="reg-taluk" placeholder="ತಾಲೂಕು" class="p-2 border rounded-lg text-sm w-full" value="ಶಹಾಪುರ">
-                    </div>
-                </div>
-                <div class="grid grid-cols-2 gap-2">
                     <div>
                         <label class="block text-[10px] text-gray-600 mb-0.5">ಊರು ಹೆಸರು</label>
                         <input type="text" id="reg-city" placeholder="ಊರು / ಗ್ರಾಮ" class="p-2 border rounded-lg text-sm w-full" value="ಶಹಾಪುರ">
                     </div>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
                     <div>
-                        <label class="block text-[10px] text-gray-600 mb-0.5">ಪಿನ್ ಕೋಡ್ ನಮೂದಿಸಿ</label>
-                        <input type="text" id="reg-pincode" placeholder="ಪಿನ್ ಕೋಡ್" maxlength="6" class="p-2 border rounded-lg text-sm w-full" value="585223">
+                        <label class="block text-[10px] text-gray-600 mb-0.5">ತಾಲೂಕು ಹೆಸರು</label>
+                        <input type="text" id="reg-taluk" placeholder="ತಾಲೂಕು" class="p-2 border rounded-lg text-sm w-full" value="ಶಹಾಪುರ">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] text-gray-600 mb-0.5">ನಿಮ್ಮ ಜಿಲ್ಲೆ ಹೆಸರು</label>
+                        <input type="text" id="reg-district" placeholder="ಜಿಲ್ಲೆ" class="p-2 border rounded-lg text-sm w-full" value="ಯಾದಗಿರಿ">
                     </div>
                 </div>
                 <div>
@@ -149,12 +149,12 @@
                     <div id="dynamic-size-section" class="space-y-1"></div>
 
                     <div>
-                        <label class="block text-xs text-gray-600 mb-1">ಮುಂಭಾಗದ ಫೋಟೋ (Front Photo)</label>
-                        <input type="file" id="v-p-front" accept="image/*" class="w-full p-1 border rounded-lg text-xs">
+                        <label class="block text-xs text-gray-600 mb-1">ಮುಂಭಾಗದ ಫೋಟೋ (ಕ್ಯಾಮೆರಾ ಅಥವಾ ಗ್ಯಾಲರಿ)</label>
+                        <input type="file" id="v-p-front" accept="image/*" capture="environment" class="w-full p-1 border rounded-lg text-xs">
                     </div>
                     <div>
-                        <label class="block text-xs text-gray-600 mb-1">ಹಿಂಭಾಗದ ಫೋಟೋ (Back Photo)</label>
-                        <input type="file" id="v-p-back" accept="image/*" class="w-full p-1 border rounded-lg text-xs">
+                        <label class="block text-xs text-gray-600 mb-1">ಹಿಂಭಾಗದ ಫೋಟೋ (ಕ್ಯಾಮೆರಾ ಅಥವಾ ಗ್ಯಾಲರಿ)</label>
+                        <input type="file" id="v-p-back" accept="image/*" capture="environment" class="w-full p-1 border rounded-lg text-xs">
                     </div>
 
                     <button onclick="addVendorProduct()" class="w-full bg-indigo-600 text-white py-2.5 rounded-xl font-bold text-xs shadow">ವಸ್ತು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ</button>
@@ -211,23 +211,42 @@
             document.getElementById('image-modal').classList.add('hidden');
         }
 
+        // ಪಿನ್ ಕೋಡ್ ಆಧಾರಿತ ಆಟೋಮ್ಯಾಟಿಕ್ ಲೊಕೇಶನ್ ಫಿಲ್ಲಿಂಗ್
+        function autoFillLocationByPincode(pincode) {
+            if (pincode.length === 6) {
+                let pinMap = {
+                    "585223": { city: "ಶಹಾಪುರ", taluk: "ಶಹಾಪುರ", district: "ಯಾದಗಿರಿ" },
+                    "585287": { city: "ಸಗರ", taluk: "ಶಹಾಪುರ", district: "ಯಾದಗಿರಿ" },
+                    "585224": { city: "ವಡಗೇರಾ", taluk: "ವಡಗೇರಾ", district: "ಯಾದಗಿರಿ" },
+                    "585202": { city: "ಯಾದಗಿರಿ", taluk: "ಯಾದಗಿರಿ", district: "ಯಾದಗಿರಿ" },
+                    "585212": { city: "ಸುರಪುರ", taluk: "ಸುರಪುರ", district: "ಯಾದಗಿರಿ" }
+                };
+
+                if (pinMap[pincode]) {
+                    document.getElementById('reg-city').value = pinMap[pincode].city;
+                    document.getElementById('reg-taluk').value = pinMap[pincode].taluk;
+                    document.getElementById('reg-district').value = pinMap[pincode].district;
+                }
+            }
+        }
+
         function getLocation() {
             let statEl = document.getElementById('loc-status');
-            statEl.innerText = "ಲೊಕೇಶನ್ ಪಡೆಯಲಾಗುತ್ತಿದೆ...";
+            statEl.innerText = "ಜಿಪಿಎಸ್ ಲೊಕೇಶನ್ ಟ್ರ್ಯಾಕ್ ಮಾಡಲಾಗುತ್ತಿದೆ...";
             statEl.className = "text-[11px] text-blue-600 text-center font-bold";
 
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(position => {
                     gpsLocation.lat = position.coords.latitude;
                     gpsLocation.lng = position.coords.longitude;
-                    statEl.innerText = `ಲೊಕೇಶನ್ ಸಿಕ್ಕಿದೆ (Lat: ${gpsLocation.lat.toFixed(2)}, Lng: ${gpsLocation.lng.toFixed(2)})`;
+                    statEl.innerText = `ಜಿಪಿಎಸ್ ಲೊಕೇಶನ್ ಯಶಸ್ವಿಯಾಗಿ ಸಿಕ್ಕಿದೆ! (Lat: ${gpsLocation.lat.toFixed(2)}, Lng: ${gpsLocation.lng.toFixed(2)})`;
                     statEl.className = "text-[11px] text-green-600 text-center font-bold";
                 }, error => {
-                    statEl.innerText = `ಲೊಕೇಶನ್ ಸಿದ್ಧವಾಗಿದೆ`;
+                    statEl.innerText = `ಶಹಾಪುರ ಜಿಪಿಎಸ್ ಲೊಕೇಶನ್ ಸೆಟ್ ಮಾಡಲಾಗಿದೆ`;
                     statEl.className = "text-[11px] text-green-600 text-center font-bold";
                 }, { timeout: 10000 });
             } else {
-                statEl.innerText = `ಲೊಕೇಶನ್ ಸಿದ್ಧವಾಗಿದೆ`;
+                statEl.innerText = `ಶಹಾಪುರ ಜಿಪಿಎಸ್ ಲೊಕೇಶನ್ ಸೆಟ್ ಮಾಡಲಾಗಿದೆ`;
                 statEl.className = "text-[11px] text-green-600 text-center font-bold";
             }
         }
@@ -377,11 +396,12 @@
                 return;
             }
 
+            let dummyShopPhoto = "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400";
+
             if (!shopPhotoFile) {
-                // ಫೋಟೋ ಇಲ್ಲದಿದ್ದರೂ ಡಿಫಾಲ್ಟ್ ಫೋಟೋ ತೆಗೆದುಕೊಂಡು ಲಾಗಿನ್ ಆಗಲು ಅನುವು ಮಾಡಿಕೊಡುತ್ತದೆ
                 currentVendor = { 
                     name, phone, shopName, category, district, taluk, city, pincode, 
-                    shopPhoto: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400", gps: gpsLocation 
+                    shopPhoto: dummyShopPhoto, gps: gpsLocation 
                 };
                 localStorage.setItem('currentVendor', JSON.stringify(currentVendor));
                 showModal("ಯಶಸ್ವಿ!", "ನಿಮ್ಮ ಅಂಗಡಿ ಖಾತೆ ಯಶಸ್ವಿಯಾಗಿ ಸೃಷ್ಟಿಯಾಗಿದೆ!", "🏪", () => {
