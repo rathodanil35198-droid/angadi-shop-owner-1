@@ -100,7 +100,7 @@
                 <div class="bg-white p-4 rounded-xl shadow space-y-3">
                     <h3 class="font-bold text-base text-gray-800 border-b pb-1">➕ ಹೊಸ ವಸ್ತುವಿನ ವಿವರ ಮತ್ತು ಫೋಟೋ ಅಪ್ಲೋಡ್</h3>
                     
-                    <input type="text" id="v-p-name" placeholder="ವಸ್ತುವಿನ ಹೆಸರು (ಉದಾ: ಜೀನ್ಸ್ ಪ್ಯಾಂಟ್ / ಶೂ)" class="w-full p-2 border rounded-lg text-sm">
+                    <input type="text" id="v-p-name" placeholder="ವಸ್ತುವಿನ ಹೆಸರು (ಉದಾ: ಜೀನ್ಸ್ ಪ್ಯಾಂಟ್ / ಶೂ / ಗಿಫ್ಟ್)" class="w-full p-2 border rounded-lg text-sm">
                     
                     <div class="grid grid-cols-2 gap-2">
                         <input type="number" id="v-p-orig" placeholder="ಹಿಂದಿನ ಬೆಲೆ (₹)" class="p-2 border rounded-lg text-sm">
@@ -112,24 +112,26 @@
                         <input type="number" id="v-p-stock" placeholder="ಸ್ಟಾಕ್ (ಎಷ್ಟು ಪೀಸ್)" class="p-2 border rounded-lg text-xs">
                     </div>
 
-                    <div>
-                        <label class="block text-xs text-gray-600 mb-1">ಲಭ್ಯವಿರುವ ಸೈಜ್‌ಗಳು:</label>
-                        <div class="flex gap-1">
-                            <span onclick="toggleSize('XS')" id="sz-XS" class="px-3 py-1 border rounded text-xs cursor-pointer bg-gray-100">XS</span>
-                            <span onclick="toggleSize('S')" id="sz-S" class="px-3 py-1 border rounded text-xs cursor-pointer bg-gray-100">S</span>
-                            <span onclick="toggleSize('M')" id="sz-M" class="px-3 py-1 border rounded text-xs cursor-pointer bg-indigo-600 text-white">M</span>
-                            <span onclick="toggleSize('L')" id="sz-L" class="px-3 py-1 border rounded text-xs cursor-pointer bg-gray-100">L</span>
-                            <span onclick="toggleSize('XL')" id="sz-XL" class="px-3 py-1 border rounded text-xs cursor-pointer bg-gray-100">XL</span>
-                        </div>
+                    <!-- ಅಂಗಡಿ ವರ್ಗಕ್ಕೆ ತಕ್ಕಂತೆ ಡೈನಾಮಿಕ್ ಅಳತೆಗಳು (Dynamic Size/Dimension Options) -->
+                    <div id="dynamic-size-section" class="space-y-1">
+                        <!-- ಜಾವಾಸ್ಕ್ರಿಪ್ಟ್ ಮೂಲಕ ಇಲ್ಲಿ ಬಟ್ಟೆ, ಶೂ ಅಥವಾ ಗಿಫ್ಟ್ ಅಳತೆಗಳು ಲೋಡ್ ಆಗುತ್ತವೆ -->
                     </div>
 
                     <div>
                         <label class="block text-xs text-gray-600 mb-1">ಮುಂಭಾಗದ ಫೋಟೋ (Front Camera)</label>
-                        <input type="file" id="v-p-front" accept="image/*" capture="environment" class="w-full p-1 border rounded-lg text-xs">
+                        <input type="file" id="v-p-front" accept="image/*" capture="environment" onchange="previewImage(this, 'front-preview')" class="w-full p-1 border rounded-lg text-xs">
+                        <div id="front-preview" class="mt-2 hidden flex items-center gap-2">
+                            <img id="front-img-tag" src="" class="w-16 h-16 object-cover rounded border">
+                            <button onclick="clearImage('v-p-front', 'front-preview')" class="bg-red-500 text-white px-2 py-1 rounded text-[10px] font-bold">ಫೋಟೋ ಡಿಲೀಟ್ ಮಾಡಿ</button>
+                        </div>
                     </div>
                     <div>
                         <label class="block text-xs text-gray-600 mb-1">ಹಿಂಭಾಗದ ಫೋಟೋ (Back Camera)</label>
-                        <input type="file" id="v-p-back" accept="image/*" capture="environment" class="w-full p-1 border rounded-lg text-xs">
+                        <input type="file" id="v-p-back" accept="image/*" capture="environment" onchange="previewImage(this, 'back-preview')" class="w-full p-1 border rounded-lg text-xs">
+                        <div id="back-preview" class="mt-2 hidden flex items-center gap-2">
+                            <img id="back-img-tag" src="" class="w-16 h-16 object-cover rounded border">
+                            <button onclick="clearImage('v-p-back', 'back-preview')" class="bg-red-500 text-white px-2 py-1 rounded text-[10px] font-bold">ಫೋಟೋ ಡಿಲೀಟ್ ಮಾಡಿ</button>
+                        </div>
                     </div>
 
                     <button onclick="addVendorProduct()" class="w-full bg-indigo-600 text-white py-2.5 rounded-xl font-bold text-xs shadow">ವಸ್ತು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ</button>
@@ -215,16 +217,91 @@
             }
         }
 
-        function toggleSize(size) {
+        // ಅಂಗಡಿಯ ವರ್ಗಕ್ಕೆ ತಕ್ಕಂತೆ ಅಳತೆಗಳ ವಿನ್ಯಾಸವನ್ನು ಲೋಡ್ ಮಾಡುವುದು
+        function renderSizeOptionsForCategory(category) {
+            let container = document.getElementById('dynamic-size-section');
+            if (!container) return;
+
+            if (category === 'Clothing') {
+                container.innerHTML = `
+                    <label class="block text-xs text-gray-600 mb-1">ಲಭ್ಯವಿರುವ ಸೈಜ್‌ಗಳು (Clothing Sizes):</label>
+                    <div class="flex gap-1">
+                        <span onclick="selectClothingSize('XS')" id="sz-XS" class="px-3 py-1 border rounded text-xs cursor-pointer bg-gray-100">XS</span>
+                        <span onclick="selectClothingSize('S')" id="sz-S" class="px-3 py-1 border rounded text-xs cursor-pointer bg-gray-100">S</span>
+                        <span onclick="selectClothingSize('M')" id="sz-M" class="px-3 py-1 border rounded text-xs cursor-pointer bg-indigo-600 text-white">M</span>
+                        <span onclick="selectClothingSize('L')" id="sz-L" class="px-3 py-1 border rounded text-xs cursor-pointer bg-gray-100">L</span>
+                        <span onclick="selectClothingSize('XL')" id="sz-XL" class="px-3 py-1 border rounded text-xs cursor-pointer bg-gray-100">XL</span>
+                    </div>
+                `;
+                selectedProductSize = 'M';
+            } else if (category === 'Footwear') {
+                let shoeSizes = [5, 6, 7, 8, 9, 10, 11];
+                container.innerHTML = `
+                    <label class="block text-xs text-gray-600 mb-1">ಚಪ್ಪಲಿ / ಶೂಸ್ ನಂಬರ್ (Footwear Size):</label>
+                    <div class="flex flex-wrap gap-1">
+                        ${shoeSizes.map((sz, idx) => `
+                            <span onclick="selectFootwearSize(${sz})" id="sz-${sz}" class="px-3 py-1 border rounded text-xs cursor-pointer ${idx === 2 ? 'bg-indigo-600 text-white' : 'bg-gray-100'}">${sz} No</span>
+                        `).join('')}
+                    </div>
+                `;
+                selectedProductSize = '7 No';
+            } else if (category === 'Gifts') {
+                container.innerHTML = `
+                    <label class="block text-xs text-gray-600 mb-1">ಗಿಫ್ಟ್ ಅಳತೆ (ಉದ್ದ ಹಾಗೂ ಅಗಲ ಅಡಿಗಳಲ್ಲಿ):</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <input type="text" id="gift-length" placeholder="ಉದ್ದ (Length - e.g. 2 ft)" class="p-2 border rounded-lg text-xs">
+                        <input type="text" id="gift-width" placeholder="ಅಗಲ (Width - e.g. 1.5 ft)" class="p-2 border rounded-lg text-xs">
+                    </div>
+                `;
+                selectedProductSize = 'Standard Gift';
+            } else {
+                container.innerHTML = `
+                    <label class="block text-xs text-gray-600 mb-1">ಅಳತೆ / ವಿವರಣೆ:</label>
+                    <input type="text" id="general-size" placeholder="ಅಳತೆ ಅಥವಾ ವಿವರಣೆ ನಮೂದಿಸಿ" class="w-full p-2 border rounded-lg text-xs" value="Standard">
+                `;
+                selectedProductSize = 'Standard';
+            }
+        }
+
+        function selectClothingSize(size) {
             selectedProductSize = size;
             ['XS', 'S', 'M', 'L', 'XL'].forEach(s => {
                 let el = document.getElementById(`sz-${s}`);
-                if (s === size) {
-                    el.className = "px-3 py-1 border rounded text-xs cursor-pointer bg-indigo-600 text-white";
-                } else {
-                    el.className = "px-3 py-1 border rounded text-xs cursor-pointer bg-gray-100";
+                if (el) {
+                    el.className = s === size ? "px-3 py-1 border rounded text-xs cursor-pointer bg-indigo-600 text-white" : "px-3 py-1 border rounded text-xs cursor-pointer bg-gray-100";
                 }
             });
+        }
+
+        function selectFootwearSize(sz) {
+            selectedProductSize = sz + ' No';
+            [5, 6, 7, 8, 9, 10, 11].forEach(s => {
+                let el = document.getElementById(`sz-${s}`);
+                if (el) {
+                    el.className = s === sz ? "px-3 py-1 border rounded text-xs cursor-pointer bg-indigo-600 text-white" : "px-3 py-1 border rounded text-xs cursor-pointer bg-gray-100";
+                }
+            });
+        }
+
+        // ಫೋಟೋ ಪ್ರಿವ್ಯೂ ಮತ್ತು ಡಿಲೀಟ್ ಮಾಡುವ ಫಂಕ್ಷನ್‌ಗಳು
+        function previewImage(input, previewId) {
+            let previewDiv = document.getElementById(previewId);
+            let imgTag = previewDiv.querySelector('img');
+            if (input.files && input.files[0]) {
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    imgTag.src = e.target.result;
+                    previewDiv.classList.remove('hidden');
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function clearImage(inputId, previewId) {
+            document.getElementById(inputId).value = '';
+            let previewDiv = document.getElementById(previewId);
+            previewDiv.classList.add('hidden');
+            previewDiv.querySelector('img').src = '';
         }
 
         function switchVendorTab(tab) {
@@ -252,6 +329,7 @@
                 document.getElementById('dashboard-vendor').classList.remove('hidden');
                 document.getElementById('user-info').classList.remove('hidden');
                 document.getElementById('logged-user-name').innerText = `${currentVendor.name} (${currentVendor.shopName})`;
+                renderSizeOptionsForCategory(currentVendor.category);
                 renderVendorProducts();
             }
         }
@@ -336,6 +414,20 @@
             let frontFile = document.getElementById('v-p-front').files[0];
             let backFile = document.getElementById('v-p-back').files[0];
 
+            // ಗಿಫ್ಟ್ ಅಂಗಡಿಯಾಗಿದ್ದರೆ ಉದ್ದ ಮತ್ತು ಅಗಲವನ್ನು ಸೈಜ್ ಆಗಿ ತೆಗೆದುಕೊಳ್ಳುವುದು
+            if (currentVendor.category === 'Gifts') {
+                let len = document.getElementById('gift-length').value;
+                let wid = document.getElementById('gift-width').value;
+                if (len && wid) {
+                    selectedProductSize = `ಉದ್ದ: ${len}, ಅಗಲ: ${wid}`;
+                }
+            } else if (currentVendor.category === 'General') {
+                let genSz = document.getElementById('general-size').value;
+                if (genSz) {
+                    selectedProductSize = genSz;
+                }
+            }
+
             if (!name || !origPrice || !discPrice) {
                 alert('ದಯವಿಟ್ಟು ವಸ್ತುವಿನ ಹೆಸರು ಮತ್ತು ಬೆಲೆಗಳನ್ನು ಭರ್ತಿ ಮಾಡಿ!');
                 return;
@@ -371,8 +463,8 @@
                     document.getElementById('v-p-disc').value = '';
                     document.getElementById('v-p-colors').value = '';
                     document.getElementById('v-p-stock').value = '';
-                    document.getElementById('v-p-front').value = '';
-                    document.getElementById('v-p-back').value = '';
+                    clearImage('v-p-front', 'front-preview');
+                    clearImage('v-p-back', 'back-preview');
 
                     renderVendorProducts();
                     showModal("ಯಶಸ್ವಿ!", "ನಿಮ್ಮ ಫೋಟೋ ಅಪ್ಲೋಡ್ ಆಗಿದೆ! ವಸ್ತು ಗ್ರಾಹಕರಿಗೆ ಈಗ ಲಭ್ಯವಿದೆ.", "📸");
