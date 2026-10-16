@@ -35,7 +35,7 @@
         </div>
     </header>
 
-    <main class="container mx-auto p-4 max-w-md">
+    <main class="container mx-auto p-4 max-w-md pb-20">
 
         <!-- ೧. ನೋಂದಣಿ ಅಥವಾ ಲಾಗಿನ್ ಪೇಜ್ -->
         <div id="auth-screen" class="bg-white p-6 rounded-2xl shadow-lg space-y-4 page-section">
@@ -56,7 +56,7 @@
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-gray-700">ಅಂಗಡಿಯ ವಿಧ (Shop Category)</label>
-                    <select id="reg-category" class="w-full p-2 border rounded-lg text-sm mt-1">
+                    <select id="reg-category" class="w-full p-2 border rounded-lg text-sm mt-1" onchange="renderSizeOptionsForCategory(this.value)">
                         <option value="Clothing">ಬಟ್ಟೆ ಅಂಗಡಿ (Clothing)</option>
                         <option value="Footwear">ಶೂಸ್ & ಚಪ್ಪಲಿ ಅಂಗಡಿ (Footwear)</option>
                         <option value="Gifts">ಗಿಫ್ಟ್ ಅಂಗಡಿ (Gift Shop)</option>
@@ -108,8 +108,33 @@
                     </div>
 
                     <div class="grid grid-cols-2 gap-2">
-                        <input type="text" id="v-p-colors" placeholder="ಬಣ್ಣಗಳು (ಉದಾ: Red, Blue)" class="p-2 border rounded-lg text-xs">
-                        <input type="number" id="v-p-stock" placeholder="ಸ್ಟಾಕ್ (ಎಷ್ಟು ಪೀಸ್)" class="p-2 border rounded-lg text-xs">
+                        <!-- ಬದಲಾಯಿಸಲಾಗಿದೆ: ಬಣ್ಣಗಳ ಬದಲಿಗೆ ಎಷ್ಟು ಪೀಸ್ ನೀಡುತ್ತೀರಿ ಎಂಬುದನ್ನು ಆಯ್ಕೆ ಮಾಡಲು -->
+                        <div>
+                            <label class="block text-[11px] text-gray-600 mb-1 font-semibold">ಎಷ್ಟು ಪೀಸ್‌ಗಳು (Pieces):</label>
+                            <select id="v-p-pieces" class="w-full p-2 border rounded-lg text-xs">
+                                <option value="1 ಪೀಸ್">1 ಪೀಸ್</option>
+                                <option value="2 ಪೀಸ್‌ಗಳು">2 ಪೀಸ್‌ಗಳು</option>
+                                <option value="3 ಪೀಸ್‌ಗಳು">3 ಪೀಸ್‌ಗಳು</option>
+                                <option value="4 ಪೀಸ್‌ಗಳು">4 ಪೀಸ್‌ಗಳು</option>
+                                <option value="5 ಪೀಸ್‌ಗಳು ಅಥವಾ ಅದಕ್ಕಿಂತ ಹೆಚ್ಚು">5 ಪೀಸ್‌ಗಳು ಅಥವಾ ಹೆಚ್ಚು</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-gray-600 mb-1 font-semibold">ಸ್ಟಾಕ್ (Stock Count):</label>
+                            <input type="number" id="v-p-stock" placeholder="ಸ್ಟಾಕ್ ಪೀಸ್" class="w-full p-2 border rounded-lg text-xs" value="10">
+                        </div>
+                    </div>
+
+                    <!-- ರಿಟರ್ನ್ ಆಪ್ಷನ್ (Return Available / No Return) -->
+                    <div class="bg-indigo-50 p-3 rounded-xl border border-indigo-100 flex items-center justify-between">
+                        <div>
+                            <p class="font-bold text-xs text-gray-800">ರಿಟರ್ನ್ ಸೌಲಭ್ಯವಿದೆಯೇ?</p>
+                            <p class="text-[10px] text-gray-500">ಗ್ರಾಹಕರಿಗೆ ಆಪ್‌ನಲ್ಲಿ ತೋರಿಸಲು ಆಯ್ಕೆ ಮಾಡಿ</p>
+                        </div>
+                        <select id="v-p-return" class="p-1.5 border rounded-lg text-xs font-bold bg-white text-indigo-700">
+                            <option value="ಉಂಟು (Return Available)">✅ ರಿಟರ್ನ್ ಉಂಟು</option>
+                            <option value="ಇಲ್ಲ (No Return)">❌ ರಿಟರ್ನ್ ಇಲ್ಲ</option>
+                        </select>
                     </div>
 
                     <!-- ಅಂಗಡಿ ವರ್ಗಕ್ಕೆ ತಕ್ಕಂತೆ ಡೈನಾಮಿಕ್ ಅಳತೆಗಳು -->
@@ -150,25 +175,6 @@
         let products = JSON.parse(localStorage.getItem('market_products')) || [];
         let selectedProductSize = 'M';
         let gpsLocation = { lat: '', lng: '' };
-
-        function playSiren() {
-            try {
-                let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                let osc = audioCtx.createOscillator();
-                let gain = audioCtx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(880, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime + 0.5);
-                gain.gain.setValueAtTime(1, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.5);
-            } catch (e) {
-                console.log("Audio not supported");
-            }
-        }
 
         function showModal(title, message, icon = '🎉') {
             document.getElementById('modal-title').innerText = title;
@@ -377,7 +383,8 @@
             let name = document.getElementById('v-p-name').value;
             let origPrice = document.getElementById('v-p-orig').value;
             let discPrice = document.getElementById('v-p-disc').value;
-            let colors = document.getElementById('v-p-colors').value;
+            let pieces = document.getElementById('v-p-pieces').value;
+            let returnPolicy = document.getElementById('v-p-return').value;
             let stock = document.getElementById('v-p-stock').value;
             let frontFile = document.getElementById('v-p-front').files[0];
             let backFile = document.getElementById('v-p-back').files[0];
@@ -413,7 +420,8 @@
                         category: currentVendor.category,
                         origPrice: Number(origPrice),
                         discPrice: Number(discPrice),
-                        colors: colors || 'Standard',
+                        colors: pieces, // ಈಗ ಇದು ಪೀಸ್‌ಗಳನ್ನು ಪ್ರತಿನಿಧಿಸುತ್ತದೆ
+                        returnPolicy: returnPolicy,
                         size: selectedProductSize,
                         stock: Number(stock) || 1,
                         vendorShop: currentVendor.shopName,
@@ -428,7 +436,6 @@
                     document.getElementById('v-p-name').value = '';
                     document.getElementById('v-p-orig').value = '';
                     document.getElementById('v-p-disc').value = '';
-                    document.getElementById('v-p-colors').value = '';
                     document.getElementById('v-p-stock').value = '';
                     document.getElementById('v-p-front').value = '';
                     document.getElementById('v-p-back').value = '';
@@ -456,7 +463,8 @@
                     </div>
                     <div class="flex-1">
                         <p class="font-bold text-xs">${p.name} (${p.size})</p>
-                        <p class="text-[10px] text-green-600">₹${p.discPrice} | ಸ್ಟಾಕ್: ${p.stock}</p>
+                        <p class="text-[10px] text-indigo-600">ಪೀಸ್: ${p.colors} | ರಿಟರ್ನ್: ${p.returnPolicy || 'ಉಂಟು'}</p>
+                        <p class="text-[10px] text-green-600 font-bold">₹${p.discPrice} | ಸ್ಟಾಕ್: ${p.stock}</p>
                     </div>
                     <button onclick="deleteProduct(${p.id})" class="bg-red-500 text-white px-2 py-1 rounded text-[10px] font-bold">ಡಿಲೀಟ್</button>
                 </div>
@@ -494,6 +502,7 @@
                                 <img src="${i.frontPhoto}" onclick="zoomImage('${i.frontPhoto}')" class="w-12 h-12 object-cover rounded border cursor-pointer">
                                 <div>
                                     <p class="font-bold text-xs">${i.name} (<span class="text-red-600 font-bold">ಸೈಜ್: ${i.size}</span>) x${i.quantity}</p>
+                                    <p class="text-[11px] text-indigo-600">ಪೀಸ್: ${i.colors} \vert{} ರಿಟರ್ನ್: ${i.returnPolicy || 'ಉಂಟು'}</p>
                                     <p class="text-[11px] text-green-600 font-bold">₹${i.discPrice * i.quantity}</p>
                                 </div>
                             </div>
@@ -506,8 +515,6 @@
 
                         <p><b>ಪಾವತಿ ಸ್ಥಿತಿ:</b> <span class="${o.paymentSuccess ? 'text-green-600 font-bold' : 'text-orange-600 font-bold'}">${o.paymentSuccess ? 'ಪಾವತಿ ಯಶಸ್ವಿ (Success)' : 'ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್ (Pending)'}</span></p>
                         <p><b>ಸ್ಥಿತಿ (Status):</b> <span class="text-orange-600 font-bold">${o.status}</span></p>
-                        
-                        ${o.isReturned ? `<div class="bg-red-100 p-2 rounded text-red-700 font-bold text-xs">🔄 ರಿಟರ್ನ್ ಬಂದಿದೆ: ${o.returnReason}</div>` : ''}
 
                         <div class="flex flex-wrap gap-2 pt-1">
                             <a href="https://maps.google.com/?q=${encodeURIComponent(o.address)}" target="_blank" class="bg-indigo-600 text-white px-3 py-1.5 rounded text-xs font-bold">🗺️ ಮ್ಯಾಪ್ ಲೊಕೇಶನ್</a>
@@ -528,7 +535,6 @@
         }
 
         function acceptOrder(id) {
-            playSiren();
             let savedOrders = JSON.parse(localStorage.getItem('market_orders')) || [];
             let o = savedOrders.find(x => x.id === id);
             if (o) {
