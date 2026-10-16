@@ -253,11 +253,9 @@
             let dummyPhoto = "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400";
 
             if (photoFile) {
-                let reader = new FileReader();
-                reader.onload = function(e) {
-                    saveVendorData(name, phone, shopName, category, pincode, city, taluk, district, e.target.result);
-                };
-                reader.readAsDataURL(photoFile);
+                compressImageFile(photoFile, 500, 500, (compressedBase64) => {
+                    saveVendorData(name, phone, shopName, category, pincode, city, taluk, district, compressedBase64);
+                });
             } else {
                 saveVendorData(name, phone, shopName, category, pincode, city, taluk, district, dummyPhoto);
             }
@@ -277,6 +275,39 @@
             checkVendorLogin();
         }
 
+        // ಫೋಟೋ ಆಟೋಮ್ಯಾಟಿಕ್ ಕಂಪ್ರೆಸ್ ಹಾಗೂ ಸೈಜ್ ಫಿಟ್ ಮಾಡುವ ಫಂಕ್ಷನ್
+        function compressImageFile(file, maxWidth, maxHeight, callback) {
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                let img = new Image();
+                img.onload = function () {
+                    let canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > maxWidth) {
+                            height *= maxWidth / width;
+                            width = maxWidth;
+                        }
+                    } else {
+                        if (height > maxHeight) {
+                            width *= maxHeight / height;
+                            height = maxHeight;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    let ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    callback(canvas.toDataURL('image/jpeg', 0.8));
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
         function uploadProduct() {
             let name = document.getElementById('p-name').value;
             let origPrice = document.getElementById('p-orig').value;
@@ -287,13 +318,13 @@
             let backFile = document.getElementById('p-back').files[0];
 
             if (!name || !origPrice || !discPrice) {
-                alert('ವಸ್ತುವಿನ ಹೆಸರು ಮತ್ತು ಬೆಲೆಗಳನ್ನು ಭರ್ತಿ ಮಾಡಿ!');
+                alert('ದಯವಿಟ್ಟು ವಸ್ತುವಿನ ಹೆಸರು ಹಾಗೂ ಬೆಲೆಗಳನ್ನು ಭರ್ತಿ ಮಾಡಿ!');
                 return;
             }
 
             let dummyImg = "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=400";
 
-            function saveProd(frontImg, backImg) {
+            function saveProductData(frontStr, backStr) {
                 let newProduct = {
                     id: Date.now(),
                     name: name,
@@ -305,8 +336,8 @@
                     returnPolicy: 'ರಿಟರ್ನ್ ಉಂಟು',
                     vendorShop: currentVendor.shopName,
                     vendorPhone: currentVendor.phone,
-                    frontPhoto: frontImg,
-                    backPhoto: backImg
+                    frontPhoto: frontStr,
+                    backPhoto: backStr
                 };
 
                 products.push(newProduct);
@@ -323,23 +354,17 @@
             }
 
             if (frontFile && backFile) {
-                let r1 = new FileReader();
-                r1.onload = function(e1) {
-                    let r2 = new FileReader();
-                    r2.onload = function(e2) {
-                        saveProd(e1.target.result, e2.target.result);
-                    };
-                    r2.readAsDataURL(backFile);
-                };
-                r1.readAsDataURL(frontFile);
+                compressImageFile(frontFile, 600, 600, function(fComp) {
+                    compressImageFile(backFile, 600, 600, function(bComp) {
+                        saveProductData(fComp, bComp);
+                    });
+                });
             } else if (frontFile) {
-                let r1 = new FileReader();
-                r1.onload = function(e1) {
-                    saveProd(e1.target.result, dummyImg);
-                };
-                r1.readAsDataURL(frontFile);
+                compressImageFile(frontFile, 600, 600, function(fComp) {
+                    saveProductData(fComp, dummyImg);
+                });
             } else {
-                saveProd(dummyImg, dummyImg);
+                saveProductData(dummyImg, dummyImg);
             }
         }
 
@@ -381,7 +406,6 @@
             let orders = JSON.parse(localStorage.getItem('market_orders')) || [];
             let myOrders = orders.filter(o => !o.acceptedByVendor || o.acceptedByVendor === currentVendor.shopName);
 
-            // ಹೊಸ ಆರ್ಡರ್‌ಗಳು ಮೇಲೆ ಬರುವಂತೆ ರಿವರ್ಸ್ ಮಾಡಲಾಗಿದೆ
             myOrders.reverse();
 
             if (myOrders.length === 0) {
@@ -414,7 +438,6 @@
                             <p><b>ವಿಳಾಸ:</b> ${o.city}, ${o.taluk} ತಾಲೂಕು, ${o.district} ಜಿಲ್ಲೆ - ${o.pincode}</p>
                         </div>
 
-                        <!-- 4 ಹಂತದ ರೂಟ್ ಟ್ರ್ಯಾಕರ್ ಮತ್ತು ಜಿಪಿಎಸ್ ಲೊಕೇಶನ್ -->
                         <div class="bg-indigo-50 p-3 rounded-xl space-y-2">
                             <p class="text-[11px] font-bold text-indigo-900">📍 ಲೈವ್ ರೂಟ್ ಟ್ರ್ಯಾಕರ್ ಹಾಗೂ ಜಿಪಿಎಸ್ ಮ್ಯಾಪ್:</p>
                             <div class="flex justify-between items-center px-2 relative">
@@ -432,7 +455,6 @@
                             <a href="tel:${o.phone}" class="flex-1 bg-teal-600 text-white text-center py-2 rounded-lg text-xs font-bold shadow">📞 ಗ್ರಾಹಕರಿಗೆ ಕಾಲ್ ಮಾಡಿ</a>
                         </div>
 
-                        <!-- ಸ್ಟೇಟಸ್ ಅಪ್‌ಡೇಟ್ ಬಟನ್‌ಗಳು -->
                         <div class="space-y-1.5 pt-2 border-t">
                             ${!o.acceptedByVendor ? `<button type="button" onclick="updateOrderStatus(${o.id}, 2, '2. ವಸ್ತು ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ - ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ತಿಳಿಸಲಾಗಿದೆ')" class="w-full bg-blue-600 text-white py-2 rounded-lg font-bold text-xs shadow cursor-pointer">📦 ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (OK)</button>` : ''}
                             
