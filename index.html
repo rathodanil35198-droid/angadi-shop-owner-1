@@ -170,7 +170,7 @@
         let currentVendor = JSON.parse(localStorage.getItem('currentVendor')) || null;
         let products = JSON.parse(localStorage.getItem('market_products')) || [];
         let selectedProductSize = 'M';
-        let gpsLocation = { lat: '', lng: '' };
+        let gpsLocation = { lat: 16.71, lng: 76.81 }; // ಶಹಾಪುರ ಡಿಫಾಲ್ಟ್ ಕೋಆರ್ಡಿನೇಟ್ಸ್
 
         let modalCallback = null;
         function showModal(title, message, icon = '🎉', callback = null) {
@@ -200,18 +200,24 @@
         }
 
         function getLocation() {
+            let statEl = document.getElementById('loc-status');
+            statEl.innerText = "ಲೊಕೇಶನ್ ಪಡೆಯಲಾಗುತ್ತಿದೆ...";
+            statEl.className = "text-[11px] text-blue-600 text-center font-bold";
+
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(position => {
                     gpsLocation.lat = position.coords.latitude;
                     gpsLocation.lng = position.coords.longitude;
-                    let statEl = document.getElementById('loc-status');
                     statEl.innerText = `ಲೊಕೇಶನ್ ಸಿಕ್ಕಿದೆ (Lat: ${gpsLocation.lat.toFixed(2)}, Lng: ${gpsLocation.lng.toFixed(2)})`;
                     statEl.className = "text-[11px] text-green-600 text-center font-bold";
                 }, error => {
-                    alert('ಲೊಕೇಶನ್ ಪಡೆಯಲು ಸಾಧ್ಯವಾಗಿಲ್ಲ. ಜಿಪಿಎಸ್ ಆನ್ ಮಾಡಿ.');
-                });
+                    // ಜಿಪಿಎಸ್ ಸಿಗದಿದ್ದರೂ ಡಿಫಾಲ್ಟ್ ಲೊಕೇಶನ್ ಮುಂದುವರಿಸಲು ಅನುವು ಮಾಡಿಕೊಡುತ್ತದೆ
+                    statEl.innerText = `ಶಹಾಪುರ ಲೊಕೇಶನ್ ಸೆಟ್ ಮಾಡಲಾಗಿದೆ`;
+                    statEl.className = "text-[11px] text-green-600 text-center font-bold";
+                }, { timeout: 10000 });
             } else {
-                alert('ನಿಮ್ಮ ಬ್ರೌಸರ್ ಜಿಪಿಎಸ್ ಸಪೋರ್ಟ್ ಮಾಡುವುದಿಲ್ಲ.');
+                statEl.innerText = `ಶಹಾಪುರ ಲೊಕೇಶನ್ ಸೆಟ್ ಮಾಡಲಾಗಿದೆ`;
+                statEl.className = "text-[11px] text-green-600 text-center font-bold";
             }
         }
 
@@ -356,12 +362,12 @@
             let shopPhotoFile = document.getElementById('reg-shopphoto').files[0];
 
             if (!name || !phone || !shopName || phone.length < 10) {
-                alert('ದಯವಿಟ್ಟು ಎಲ್ಲಾ ಸರಿಯಾದ ವಿವರಗಳನ್ನು ಭರ್ತಿ ಮಾಡಿ!');
+                alert('ದಯವಿಟ್ಟು ನಿಮ್ಮ ಹೆಸರು, 10 ಅಂಕಿಯ ಮೊಬೈಲ್ ನಂಬರ್ ಮತ್ತು ಅಂಗಡಿಯ ಹೆಸರನ್ನು ಸರಿಯಾಗಿ ಭರ್ತಿ ಮಾಡಿ!');
                 return;
             }
 
             if (!shopPhotoFile) {
-                showModal("ಎಚ್ಚರಿಕೆ!", "ದಯವಿಟ್ಟು ನಿಮ್ಮ ಅಂಗಡಿಯ ಫೋಟೋ ಅಪ್ಲೋಡ್ ಮಾಡಿ!", "⚠️");
+                showModal("ಎಚ್ಚರಿಕೆ!", "ದಯವಿಟ್ಟು ನಿಮ್ಮ ಅಂಗಡಿಯ ಮುಂಭಾಗದ ಫೋಟೋ ಅಪ್ಲೋಡ್ ಮಾಡಿ!", "⚠️");
                 return;
             }
 
