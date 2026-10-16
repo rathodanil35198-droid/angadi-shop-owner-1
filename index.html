@@ -107,19 +107,30 @@
                         <input type="number" id="v-p-disc" placeholder="ಡಿಸ್ಕೌಂಟ್ ಬೆಲೆ (₹)" class="p-2 border rounded-lg text-sm">
                     </div>
 
-                    <!-- ರಿಟರ್ನ್ ಆಪ್ಷನ್ (ಬಣ್ಣಗಳಿದ್ದ ಜಾಗದಲ್ಲಿ ರಿಟರ್ನ್ ಆಯ್ಕೆ ಇರಿಸಲಾಗಿದೆ) -->
                     <div class="grid grid-cols-2 gap-2">
                         <div>
-                            <label class="block text-[11px] text-gray-600 mb-1 font-semibold">ರಿಟರ್ನ್ ಸೌಲಭ್ಯ (Return):</label>
-                            <select id="v-p-return" class="w-full p-2 border rounded-lg text-xs font-bold text-indigo-700 bg-indigo-50">
-                                <option value="ರಿಟರ್ನ್ ಉಂಟು">✅ ರಿಟರ್ನ್ ಉಂಟು</option>
-                                <option value="ರಿಟರ್ನ್ ಇಲ್ಲ">❌ ರಿಟರ್ನ್ ಇಲ್ಲ</option>
+                            <label class="block text-[11px] text-gray-600 mb-1 font-semibold">ಎಷ್ಟು ಪೀಸ್‌ಗಳು (Pieces):</label>
+                            <select id="v-p-pieces" class="w-full p-2 border rounded-lg text-xs font-bold bg-gray-50">
+                                <option value="1 ಪೀಸ್">1 ಪೀಸ್</option>
+                                <option value="2 ಪೀಸ್‌ಗಳು">2 ಪೀಸ್‌ಗಳು</option>
+                                <option value="3 ಪೀಸ್‌ಗಳು">3 ಪೀಸ್‌ಗಳು</option>
+                                <option value="4 ಪೀಸ್‌ಗಳು">4 ಪೀಸ್‌ಗಳು</option>
+                                <option value="5 ಪೀಸ್‌ಗಳು ಅಥವಾ ಹೆಚ್ಚು">5 ಪೀಸ್‌ಗಳು ಅಥವಾ ಹೆಚ್ಚು</option>
                             </select>
                         </div>
                         <div>
                             <label class="block text-[11px] text-gray-600 mb-1 font-semibold">ಸ್ಟಾಕ್ (Stock Count):</label>
                             <input type="number" id="v-p-stock" placeholder="ಸ್ಟಾಕ್ ಪೀಸ್" class="w-full p-2 border rounded-lg text-xs" value="10">
                         </div>
+                    </div>
+
+                    <!-- ರಿಟರ್ನ್ ಆಪ್ಷನ್ (Return Available / No Return) -->
+                    <div>
+                        <label class="block text-[11px] text-gray-600 mb-1 font-semibold">ರಿಟರ್ನ್ ಸೌಲಭ್ಯ (Return Policy):</label>
+                        <select id="v-p-return" class="w-full p-2 border rounded-lg text-xs font-bold text-indigo-700 bg-indigo-50">
+                            <option value="ರಿಟರ್ನ್ ಉಂಟು">✅ ರಿಟರ್ನ್ ಉಂಟು</option>
+                            <option value="ರಿಟರ್ನ್ ಇಲ್ಲ">❌ ರಿಟರ್ನ್ ಇಲ್ಲ</option>
+                        </select>
                     </div>
 
                     <!-- ಅಂಗಡಿ ವರ್ಗಕ್ಕೆ ತಕ್ಕಂತೆ ಡೈನಾಮಿಕ್ ಅಳತೆಗಳು -->
@@ -368,6 +379,7 @@
             let name = document.getElementById('v-p-name').value;
             let origPrice = document.getElementById('v-p-orig').value;
             let discPrice = document.getElementById('v-p-disc').value;
+            let pieces = document.getElementById('v-p-pieces').value;
             let returnPolicy = document.getElementById('v-p-return').value;
             let stock = document.getElementById('v-p-stock').value;
             let frontFile = document.getElementById('v-p-front').files[0];
@@ -404,6 +416,7 @@
                         category: currentVendor.category,
                         origPrice: Number(origPrice),
                         discPrice: Number(discPrice),
+                        pieces: pieces,
                         returnPolicy: returnPolicy,
                         size: selectedProductSize,
                         stock: Number(stock) || 1,
@@ -446,7 +459,7 @@
                     </div>
                     <div class="flex-1">
                         <p class="font-bold text-xs">${p.name} (${p.size})</p>
-                        <p class="text-[10px] text-indigo-600 font-semibold">ಸ್ಟೇಟಸ್: ${p.returnPolicy || 'ರಿಟರ್ನ್ ಉಂಟು'}</p>
+                        <p class="text-[10px] text-indigo-600 font-semibold">${p.pieces || '1 ಪೀಸ್'} | ${p.returnPolicy || 'ರಿಟರ್ನ್ ಉಂಟು'}</p>
                         <p class="text-[10px] text-green-600 font-bold">₹${p.discPrice} | ಸ್ಟಾಕ್: ${p.stock}</p>
                     </div>
                     <button onclick="deleteProduct(${p.id})" class="bg-red-500 text-white px-2 py-1 rounded text-[10px] font-bold">ಡಿಲೀಟ್</button>
@@ -485,7 +498,7 @@
                                 <img src="${i.frontPhoto}" onclick="zoomImage('${i.frontPhoto}')" class="w-12 h-12 object-cover rounded border cursor-pointer">
                                 <div>
                                     <p class="font-bold text-xs">${i.name} (<span class="text-red-600 font-bold">ಸೈಜ್: ${i.size}</span>) x${i.quantity}</p>
-                                    <p class="text-[11px] text-indigo-600">${i.returnPolicy || 'ರಿಟರ್ನ್ ಉಂಟು'}</p>
+                                    <p class="text-[11px] text-indigo-600">${i.pieces \vert{}\vert{} '1 ಪೀಸ್'} \vert{} ${i.returnPolicy || 'ರಿಟರ್ನ್ ಉಂಟು'}</p>
                                     <p class="text-[11px] text-green-600 font-bold">₹${i.discPrice * i.quantity}</p>
                                 </div>
                             </div>
