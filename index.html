@@ -67,8 +67,8 @@
                     </select>
                 </div>
                 <div>
-                    <label class="font-bold text-gray-700">ಅಂಗಡಿ ಮುಂಭಾಗದ ಫೋಟೋ:</label>
-                    <input type="file" id="v-photo" accept="image/*" class="w-full p-1 border rounded-lg mt-1">
+                    <label class="font-bold text-gray-700">ಅಂಗಡಿ ಮುಂಭಾಗದ ಫೋಟೋ (ಕ್ಯಾಮೆರಾ):</label>
+                    <input type="file" id="v-photo" accept="image/*" capture="environment" class="w-full p-1 border rounded-lg mt-1">
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                     <input type="text" id="v-pincode" placeholder="ಪಿನ್ ಕೋಡ್" value="585223" class="p-2 border rounded-lg">
@@ -125,12 +125,12 @@
                     </div>
 
                     <div>
-                        <label class="font-bold text-gray-700">ಮುಂಭಾಗದ ಫೋಟೋ ಅಪ್ಲೋಡ್ ಮಾಡಿ:</label>
-                        <input type="file" id="p-front" accept="image/*" class="w-full p-1 border rounded-lg mt-1">
+                        <label class="font-bold text-gray-700">ಮುಂಭಾಗದ ಫೋಟೋ (ನೇರ ಕ್ಯಾಮೆರಾ):</label>
+                        <input type="file" id="p-front" accept="image/*" capture="environment" class="w-full p-1 border rounded-lg mt-1">
                     </div>
                     <div>
-                        <label class="font-bold text-gray-700">ಹಿಂಭಾಗದ ಫೋಟೋ ಅಪ್ಲೋಡ್ ಮಾಡಿ:</label>
-                        <input type="file" id="p-back" accept="image/*" class="w-full p-1 border rounded-lg mt-1">
+                        <label class="font-bold text-gray-700">ಹಿಂಭಾಗದ ಫೋಟೋ (ನೇರ ಕ್ಯಾಮೆರಾ):</label>
+                        <input type="file" id="p-back" accept="image/*" capture="environment" class="w-full p-1 border rounded-lg mt-1">
                     </div>
 
                     <button type="button" onclick="uploadProduct()" class="w-full bg-green-600 text-white py-2.5 rounded-xl font-bold shadow mt-2 cursor-pointer">ವಸ್ತು ಪ್ರಕಟಿಸಿ (Publish)</button>
