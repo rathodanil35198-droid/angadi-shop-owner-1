@@ -119,8 +119,14 @@
                             <input type="text" id="p-pieces" placeholder="ಉದಾ: 1 ಪೀಸ್ / 2 ಪೀಸ್" class="w-full p-2 border rounded-lg mt-1" value="1 ಪೀಸ್">
                         </div>
                         <div id="size-field-container">
-                            <label class="font-bold text-gray-700">ಸೈಜ್ / ನಂಬರ್ / ಅಳತೆ:</label>
-                            <input type="text" id="p-size" placeholder="ಉದಾ: M / 7 No / 2 ಅಡಿ" class="w-full p-2 border rounded-lg mt-1" value="M">
+                            <label class="font-bold text-gray-700">ಸೈಜ್ / ನಂಬರ್ ಆಯ್ಕೆ:</label>
+                            <select id="p-size" class="w-full p-2 border rounded-lg mt-1 font-bold bg-gray-50">
+                                <option value="S">S (Small)</option>
+                                <option value="M" selected>M (Medium)</option>
+                                <option value="L">L (Large)</option>
+                                <option value="XL">XL</option>
+                                <option value="XXL">XXL</option>
+                            </select>
                         </div>
                     </div>
 
@@ -147,7 +153,7 @@
 
             <!-- ಗ್ರಾಹಕರ ಆರ್ಡರ್‌ಗಳು ಮತ್ತು ಲೈವ್ ಟ್ರ್ಯಾಕರ್ -->
             <div id="section-orders" class="bg-white p-4 rounded-2xl shadow-sm border space-y-3 hidden">
-                <h3 class="font-bold text-sm text-gray-800 border-b pb-1">📦 ಗ್ರಾಹಕರ ಆರ್ಡರ್‌ಗಳು ಹಾಗೂ ರೂಟ್ ಟ್ರ್ಯಾಕರ್</h3>
+                <h3 class="font-bold text-sm text-gray-800 border-b pb-1">📦 ಗ್ರಾಹಕರ ಆರ್ಡರ್‌ಗಳು ಹಾಗೂ ಪೇಮೆಂಟ್ ಟ್ರ್ಯಾಕರ್</h3>
                 <div id="vendor-orders-container" class="space-y-3 text-xs text-gray-700">
                     ಯಾವುದೇ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.
                 </div>
@@ -203,19 +209,42 @@
 
         function updateSizeCategoryFields() {
             let cat = document.getElementById('v-category').value;
-            let sizeInput = document.getElementById('p-size');
+            let sizeContainer = document.getElementById('size-field-container');
+            
             if (cat === 'Clothing') {
-                sizeInput.placeholder = "ಉದಾ: S, M, L, XL, XXL";
-                sizeInput.value = "M";
+                sizeContainer.innerHTML = `
+                    <label class="font-bold text-gray-700">ಸೈಜ್ ಆಯ್ಕೆ (ಬಟ್ಟೆಗಳು):</label>
+                    <select id="p-size" class="w-full p-2 border rounded-lg mt-1 font-bold bg-gray-50">
+                        <option value="S">S (Small)</option>
+                        <option value="M" selected>M (Medium)</option>
+                        <option value="L">L (Large)</option>
+                        <option value="XL">XL</option>
+                        <option value="XXL">XXL</option>
+                    </select>
+                `;
             } else if (cat === 'Footwear') {
-                sizeInput.placeholder = "ಉದಾ: 5 No ರಿಂದ 12 No";
-                sizeInput.value = "7 No";
+                sizeContainer.innerHTML = `
+                    <label class="font-bold text-gray-700">ಚಪ್ಪಲಿ ನಂಬರ್ (6 ರಿಂದ 12):</label>
+                    <select id="p-size" class="w-full p-2 border rounded-lg mt-1 font-bold bg-gray-50">
+                        <option value="6 No">6 No</option>
+                        <option value="7 No" selected>7 No</option>
+                        <option value="8 No">8 No</option>
+                        <option value="9 No">9 No</option>
+                        <option value="10 No">10 No</option>
+                        <option value="11 No">11 No</option>
+                        - <option value="12 No">12 No</option>
+                    </select>
+                `;
             } else if (cat === 'Gifts') {
-                sizeInput.placeholder = "ಉದಾ: ಉದ್ದ 2 ಅಡಿ, ಅಗಲ 1.5 ಅಡಿ";
-                sizeInput.value = "ಉದ್ದ 2 ಅಡಿ x ಅಗಲ 1.5 ಅಡಿ";
+                sizeContainer.innerHTML = `
+                    <label class="font-bold text-gray-700">ಅಳತೆ / ವಿವರಣೆ:</label>
+                    <input type="text" id="p-size" class="w-full p-2 border rounded-lg mt-1" value="Standard Gift" readonly>
+                `;
             } else {
-                sizeInput.placeholder = "ಅಳತೆ ಅಥವಾ ವಿವರಣೆ";
-                sizeInput.value = "Standard";
+                sizeContainer.innerHTML = `
+                    <label class="font-bold text-gray-700">ಸೈಜ್ / ಅಳತೆ:</label>
+                    <input type="text" id="p-size" class="w-full p-2 border rounded-lg mt-1" value="Standard">
+                `;
             }
         }
 
@@ -275,7 +304,6 @@
             checkVendorLogin();
         }
 
-        // ಫೋಟೋ ಆಟೋಮ್ಯಾಟಿಕ್ ಕಂಪ್ರೆಸ್ ಹಾಗೂ ಸೈಜ್ ಫಿಟ್ ಮಾಡುವ ಫಂಕ್ಷನ್
         function compressImageFile(file, maxWidth, maxHeight, callback) {
             let reader = new FileReader();
             reader.onload = function (e) {
