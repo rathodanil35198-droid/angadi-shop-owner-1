@@ -167,7 +167,7 @@
             window.location.reload();
         }
 
-        // ಫೋಟೋಗಳನ್ನು ಕಂಪ್ರೆಸ್ ಮಾಡಿ ಬೇಸ್‌64 ಗೆ ಬದಲಾಯಿಸುವ ಫಂಕ್ಷನ್
+        // ಫೋಟೋಗಳನ್ನು ಕಂಪ್ರೆಸ್ ಮಾಡಿ ಬೇಸ್‌64 ಗೆ ಬದಲಾಯಿಸುವ ಸುರಕ್ಷಿತ ಫಂಕ್ಷನ್
         function convertImageToBase64(file, callback) {
             if (!file) {
                 callback("");
@@ -354,7 +354,7 @@
                 order.confirmed = true;
                 localStorage.setItem('market_orders', JSON.stringify(orders));
                 loadVendorOrders();
-                showModal("ಯಶಸ್ವಿ!", "ಆರ್ಡರ್ ಪ್ಯಾಕಿಂಗ್ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್‌ಡೇಟ್ ಆಗಿದೆ!", "📦");
+                showModal("ಯಶಸ್ವಿ!", "ಆರ್ಡರ್ ಪ್ಯಾಕಿಂಗ್ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್‌ಡೇಟ್ ಆಗಿದೆ ಮತ್ತು ಡೆಲಿವರಿ ಬಾಯ್ ಪ್ಯಾನಲ್‌ಗೆ ರವಾನೆಯಾಗಿದೆ!", "📦");
             }
         }
 
