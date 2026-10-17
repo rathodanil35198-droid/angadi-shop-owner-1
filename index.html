@@ -32,7 +32,7 @@
             <h1 class="text-sm font-bold">🏪 ಶಹಾಪುರ ಮಾರ್ಕೆಟ್</h1>
             <p class="text-[10px] text-indigo-200">ಅಂಗಡಿ ಮಾಲೀಕರ ಆಪ್</p>
         </div>
-        <div id="vendor-profile-info" class="hidden text-xs font-bold items-center gap-2">
+        <div id="vendor-profile-info" class="hidden text-xs font-bold flex items-center gap-2">
             <span id="display-shop-name"></span>
             <button type="button" onclick="vendorLogout()" class="bg-red-500 text-white px-2 py-1 rounded text-[10px] cursor-pointer">ಬಾಹಿರ (Logout)</button>
         </div>
@@ -142,7 +142,7 @@
                     <button type="button" onclick="uploadProduct()" class="w-full bg-green-600 text-white py-2.5 rounded-xl font-bold shadow mt-2 cursor-pointer">ವಸ್ತು ಪ್ರಕಟಿಸಿ (Publish)</button>
                 </div>
 
-                <!-- ಅಪ್ಲೋಡ್ ಮಾಡಿದ ವಸ್ತುಗಳ ಲಿಸ್ಟ್ (ಚಿಕ್ಕದಾಗಿ ಹಾಗೂ ಡಿಲೀಟ್ ಬಟನ್) -->
+                <!-- ಅಪ್ಲೋಡ್ ಮಾಡಿದ ವಸ್ತುಗಳ ಲಿಸ್ಟ್ -->
                 <div class="pt-3 border-t space-y-2">
                     <h4 class="font-bold text-xs text-gray-700">ನಿಮ್ಮ ಅಂಗಡಿಯಲ್ಲಿರುವ ವಸ್ತುಗಳು:</h4>
                     <div id="vendor-products-list" class="space-y-2 text-xs">
@@ -180,6 +180,7 @@
             document.getElementById('custom-modal').classList.add('hidden');
             if (typeof modalCallback === 'function') {
                 modalCallback();
+                modalCallback = null;
             }
         }
 
@@ -232,7 +233,7 @@
                         <option value="9 No">9 No</option>
                         <option value="10 No">10 No</option>
                         <option value="11 No">11 No</option>
-                        - <option value="12 No">12 No</option>
+                        <option value="12 No">12 No</option>
                     </select>
                 `;
             } else if (cat === 'Gifts') {
@@ -264,14 +265,14 @@
         }
 
         function registerVendor() {
-            let name = document.getElementById('v-name').value;
-            let phone = document.getElementById('v-phone').value;
-            let shopName = document.getElementById('v-shop').value;
+            let name = document.getElementById('v-name').value.trim();
+            let phone = document.getElementById('v-phone').value.trim();
+            let shopName = document.getElementById('v-shop').value.trim();
             let category = document.getElementById('v-category').value;
-            let pincode = document.getElementById('v-pincode').value;
-            let city = document.getElementById('v-city').value;
-            let taluk = document.getElementById('v-taluk').value;
-            let district = document.getElementById('v-district').value;
+            let pincode = document.getElementById('v-pincode').value.trim();
+            let city = document.getElementById('v-city').value.trim();
+            let taluk = document.getElementById('v-taluk').value.trim();
+            let district = document.getElementById('v-district').value.trim();
             let photoFile = document.getElementById('v-photo').files[0];
 
             if (!name || !phone || !shopName || phone.length < 10) {
@@ -279,10 +280,10 @@
                 return;
             }
 
-            let dummyPhoto = "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400";
+            let dummyPhoto = "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=300";
 
             if (photoFile) {
-                compressImageFile(photoFile, 500, 500, (compressedBase64) => {
+                compressImageFile(photoFile, 400, 400, (compressedBase64) => {
                     saveVendorData(name, phone, shopName, category, pincode, city, taluk, district, compressedBase64);
                 });
             } else {
@@ -304,6 +305,7 @@
             checkVendorLogin();
         }
 
+        // ವೇಗವಾದ ಮತ್ತು ಹಗುರವಾದ ಇಮೇಜ್ ಕಂಪ್ರೆಷನ್ (Image Compressor)
         function compressImageFile(file, maxWidth, maxHeight, callback) {
             let reader = new FileReader();
             reader.onload = function (e) {
@@ -315,12 +317,12 @@
 
                     if (width > height) {
                         if (width > maxWidth) {
-                            height *= maxWidth / width;
+                            height = Math.round(height * (maxWidth / width));
                             width = maxWidth;
                         }
                     } else {
                         if (height > maxHeight) {
-                            width *= maxHeight / height;
+                            width = Math.round(width * (maxHeight / height));
                             height = maxHeight;
                         }
                     }
@@ -329,7 +331,7 @@
                     canvas.height = height;
                     let ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
-                    callback(canvas.toDataURL('image/jpeg', 0.8));
+                    callback(canvas.toDataURL('image/jpeg', 0.6));
                 };
                 img.src = e.target.result;
             };
@@ -337,11 +339,11 @@
         }
 
         function uploadProduct() {
-            let name = document.getElementById('p-name').value;
-            let origPrice = document.getElementById('p-orig').value;
-            let discPrice = document.getElementById('p-disc').value;
-            let size = document.getElementById('p-size').value;
-            let pieces = document.getElementById('p-pieces').value;
+            let name = document.getElementById('p-name').value.trim();
+            let origPrice = document.getElementById('p-orig').value.trim();
+            let discPrice = document.getElementById('p-disc').value.trim();
+            let size = document.getElementById('p-size') ? document.getElementById('p-size').value : 'M';
+            let pieces = document.getElementById('p-pieces').value.trim() || '1 ಪೀಸ್';
             let frontFile = document.getElementById('p-front').files[0];
             let backFile = document.getElementById('p-back').files[0];
 
@@ -350,13 +352,13 @@
                 return;
             }
 
-            let dummyImg = "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=400";
+            let dummyImg = "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=300";
 
             function saveProductData(frontStr, backStr) {
                 let newProduct = {
                     id: Date.now(),
                     name: name,
-                    category: currentVendor.category,
+                    category: currentVendor.category || 'Clothing',
                     origPrice: Number(origPrice),
                     discPrice: Number(discPrice),
                     size: size,
@@ -368,8 +370,15 @@
                     backPhoto: backStr
                 };
 
+                products = JSON.parse(localStorage.getItem('market_products')) || [];
                 products.push(newProduct);
-                localStorage.setItem('market_products', JSON.stringify(products));
+                
+                try {
+                    localStorage.setItem('market_products', JSON.stringify(products));
+                } catch(e) {
+                    alert('ಮೆಮೊರಿ ಭರ್ತಿಯಾಗಿದೆ! ಹಳೆಯ ವಸ್ತುಗಳನ್ನು ಡಿಲೀಟ್ ಮಾಡಿ ನಂತರ ಪ್ರಯತ್ನಿಸಿ.');
+                    return;
+                }
 
                 document.getElementById('p-name').value = '';
                 document.getElementById('p-orig').value = '';
@@ -382,13 +391,13 @@
             }
 
             if (frontFile && backFile) {
-                compressImageFile(frontFile, 600, 600, function(fComp) {
-                    compressImageFile(backFile, 600, 600, function(bComp) {
+                compressImageFile(frontFile, 400, 400, function(fComp) {
+                    compressImageFile(backFile, 400, 400, function(bComp) {
                         saveProductData(fComp, bComp);
                     });
                 });
             } else if (frontFile) {
-                compressImageFile(frontFile, 600, 600, function(fComp) {
+                compressImageFile(frontFile, 400, 400, function(fComp) {
                     saveProductData(fComp, dummyImg);
                 });
             } else {
@@ -398,7 +407,8 @@
 
         function loadVendorProducts() {
             let container = document.getElementById('vendor-products-list');
-            let myProds = products.filter(p => p.vendorPhone === currentVendor.phone);
+            products = JSON.parse(localStorage.getItem('market_products')) || [];
+            let myProds = products.filter(p => p.vendorPhone === currentVendor.phone || p.vendorShop === currentVendor.shopName);
 
             if (myProds.length === 0) {
                 container.innerHTML = "ಯಾವುದೇ ವಸ್ತುಗಳಿಲ್ಲ.";
@@ -422,6 +432,7 @@
 
         function deleteProduct(id) {
             if (confirm('ಈ ವಸ್ತುವನ್ನು ಡಿಲೀಟ್ ಮಾಡಲು ಬಯಸುತ್ತೀರಾ?')) {
+                products = JSON.parse(localStorage.getItem('market_products')) || [];
                 products = products.filter(p => p.id !== id);
                 localStorage.setItem('market_products', JSON.stringify(products));
                 loadVendorProducts();
@@ -432,7 +443,9 @@
         function loadVendorOrders() {
             let container = document.getElementById('vendor-orders-container');
             let orders = JSON.parse(localStorage.getItem('market_orders')) || [];
-            let myOrders = orders.filter(o => !o.acceptedByVendor || o.acceptedByVendor === currentVendor.shopName);
+            
+            // ತಮ್ಮ ಅಂಗಡಿಯ ಆರ್ಡರ್‌ಗಳನ್ನು ಮಾತ್ರ ತೋರಿಸುವುದು
+            let myOrders = orders;
 
             myOrders.reverse();
 
@@ -479,12 +492,12 @@
                         </div>
 
                         <div class="flex flex-wrap gap-2 pt-1">
-                            <a href="https://maps.google.com/?q=${encodeURIComponent(o.address)}" target="_blank" class="flex-1 bg-indigo-600 text-white text-center py-2 rounded-lg text-xs font-bold shadow">🗺️ ಮ್ಯಾಪ್ ಲೊಕೇಶನ್</a>
+                            <a href="https://maps.google.com/?q=${encodeURIComponent(o.address || o.city)}" target="_blank" class="flex-1 bg-indigo-600 text-white text-center py-2 rounded-lg text-xs font-bold shadow">🗺️ ಮ್ಯಾಪ್ ಲೊಕೇಶನ್</a>
                             <a href="tel:${o.phone}" class="flex-1 bg-teal-600 text-white text-center py-2 rounded-lg text-xs font-bold shadow">📞 ಗ್ರಾಹಕರಿಗೆ ಕಾಲ್ ಮಾಡಿ</a>
                         </div>
 
                         <div class="space-y-1.5 pt-2 border-t">
-                            ${!o.acceptedByVendor ? `<button type="button" onclick="updateOrderStatus(${o.id}, 2, '2. ವಸ್ತು ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ - ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ತಿಳಿಸಲಾಗಿದೆ')" class="w-full bg-blue-600 text-white py-2 rounded-lg font-bold text-xs shadow cursor-pointer">📦 ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (OK)</button>` : ''}
+                            ${step < 2 ? `<button type="button" onclick="updateOrderStatus(${o.id}, 2, '2. ವಸ್ತು ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ - ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ತಿಳಿಸಲಾಗಿದೆ')" class="w-full bg-blue-600 text-white py-2 rounded-lg font-bold text-xs shadow cursor-pointer">📦 ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (OK)</button>` : ''}
                             
                             ${step === 2 ? `<button type="button" onclick="updateOrderStatus(${o.id}, 3, '3. ಡೆಲಿವರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ (2 ರಿಂದ 3 ಗಂಟೆಯಲ್ಲಿ ತಲುಪುತ್ತದೆ)')" class="w-full bg-purple-600 text-white py-2 rounded-lg font-bold text-xs shadow cursor-pointer">🚀 ಡೆಲಿವರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ (OK)</button>` : ''}
 
@@ -505,7 +518,7 @@
             let orders = JSON.parse(localStorage.getItem('market_orders')) || [];
             let o = orders.find(x => x.id === id);
             if (o) {
-                o.acceptedByVendor = currentVendor.shopName;
+                o.acceptedByVendor = currentVendor ? currentVendor.shopName : 'Vendor';
                 o.statusStep = step;
                 o.statusText = text;
                 o.status = text;
