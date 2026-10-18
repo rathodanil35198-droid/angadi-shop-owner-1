@@ -79,7 +79,7 @@
                     </select>
                 </div>
                 <div>
-                    <label class="font-bold text-gray-700">ಅಂಗಡಿ ಮುಂಭಾಗದ ಫೋಟೋ (ನೇರ ಕ್ಯಾಮೆರಾ):</label>
+                    <label class="font-bold text-gray-700">ಅಂಗಡಿ ಮುಂಭಾಗದ ಫೋಟೋ (ಕ್ಯಾಮೆರಾ / ಗ್ಯಾಲರಿ):</label>
                     <input type="file" id="v-photo" accept="image/*" capture="environment" class="w-full p-1 border rounded-lg mt-1">
                 </div>
                 <div class="grid grid-cols-2 gap-2">
@@ -137,11 +137,11 @@
                     </div>
 
                     <div>
-                        <label class="font-bold text-gray-700">ಮುಂಭಾಗದ ಫೋಟೋ (ನೇರ ಕ್ಯಾಮೆರಾ):</label>
+                        <label class="font-bold text-gray-700">ಮುಂಭಾಗದ ಫೋಟೋ (ಕಡ್ಡಾಯವಾಗಿ ಹಾಕಿ):</label>
                         <input type="file" id="p-front" accept="image/*" capture="environment" class="w-full p-1 border rounded-lg mt-1">
                     </div>
                     <div>
-                        <label class="font-bold text-gray-700">ಹಿಂಭಾಗದ ಫೋಟೋ (ನೇರ ಕ್ಯಾಮೆರಾ):</label>
+                        <label class="font-bold text-gray-700">ಹಿಂಭಾಗದ ಫೋಟೋ (ಕಡ್ಡಾಯವಾಗಿ ಹಾಕಿ):</label>
                         <input type="file" id="p-back" accept="image/*" capture="environment" class="w-full p-1 border rounded-lg mt-1">
                     </div>
 
@@ -305,7 +305,7 @@
             lockPanel();
         }
 
-        // ಫೋಟೋ ಕಂಪ್ರೆಷನ್ ಫಂಕ್ಷನ್ (ಯಾವ ಸೈಜ್ ಲಿಮಿಟ್ ಇಲ್ಲದೆ ವರ್ಕ್ ಆಗುತ್ತದೆ)
+        // ಫೋಟೋ ಕಂಪ್ರೆಷನ್ ಫಂಕ್ಷನ್
         function compressImageAsync(file) {
             return new Promise((resolve) => {
                 if (!file) {
@@ -355,11 +355,15 @@
             let backFile = document.getElementById('p-back').files[0];
 
             if (!name || !origPrice || !discPrice) {
-                alert('ವಸ್ತುವಿನ ಹೆಸರು ಮತ್ತು ಬೆಲೆಗಳನ್ನು ಭರ್ತಿ ಮಾಡಿ!');
+                alert('ದಯವಿಟ್ಟು ವಸ್ತುವಿನ ಹೆಸರು ಮತ್ತು ಬೆಲೆಗಳನ್ನು ಭರ್ತಿ ಮಾಡಿ!');
                 return;
             }
 
-            let dummyImg = "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=400";
+            // ಕಡ್ಡಾಯವಾಗಿ ಫೋಟೋ ಹಾಕಿದೆಯೇ ಎಂದು ಪರಿಶೀಲಿಸುವುದು
+            if (!frontFile && !backFile) {
+                alert('ದಯವಿಟ್ಟು ಮುಂಭಾಗ ಅಥವಾ ಹಿಂಭಾಗದ ಫೋಟೋವನ್ನು ಕಡ್ಡಾಯವಾಗಿ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ!');
+                return;
+            }
 
             let frontImg = await compressImageAsync(frontFile);
             let backImg = await compressImageAsync(backFile);
@@ -375,8 +379,8 @@
                 returnPolicy: 'ರಿಟರ್ನ್ ಉಂಟು',
                 vendorShop: currentVendor.shop,
                 vendorPhone: currentVendor.phone,
-                frontPhoto: frontImg || dummyImg,
-                backPhoto: backImg || dummyImg
+                frontPhoto: frontImg || backImg,
+                backPhoto: backImg || frontImg
             };
 
             products.push(newProduct);
@@ -391,7 +395,7 @@
 
             loadVendorProducts();
             
-            // ನೀವು ಕೇಳಿದ ಪಾಪ್‌ಅಪ್ ಸಂದೇಶ
+            // ನೀವು ಕೇಳಿದ ಯಶಸ್ವಿ ಪಾಪ್‌ಅಪ್ ಸಂದೇಶ[span_8](start_span)[span_8](end_span)
             showModal("ಯಶಸ್ವಿ!", "ನಿಮ್ಮ ಫೋಟೋಗಳು ಅಪ್‌ಲೋಡ್ ಆಗಿವೆ ಮತ್ತು ಗ್ರಾಹಕರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ!", "🎉");
         }
 
