@@ -253,11 +253,9 @@
             let dummyPhoto = "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400";
 
             if (photoFile) {
-                let reader = new FileReader();
-                reader.onload = function(e) {
-                    saveVendorData(name, phone, shop, category, pincode, city, taluk, district, e.target.result);
-                };
-                reader.readAsDataURL(photoFile);
+                compressImageToBasePath(photoFile, (res) => {
+                    saveVendorData(name, phone, shop, category, pincode, city, taluk, district, res);
+                });
             } else {
                 saveVendorData(name, phone, shop, category, pincode, city, taluk, district, dummyPhoto);
             }
@@ -275,6 +273,44 @@
             localStorage.removeItem('currentVendor');
             currentVendor = null;
             checkVendorLogin();
+        }
+
+        // ಫೋಟೋಗಳನ್ನು ಆಟೋಮ್ಯಾಟಿಕ್ ಆಗಿ ಕಂಪ್ರೆಸ್ ಮಾಡಿ ಸೈಜ್ ಸರಿಪಡಿಸುವ ಫಂಕ್ಷನ್
+        function compressImageToBasePath(file, callback) {
+            if (!file) {
+                callback("");
+                return;
+            }
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                let img = new Image();
+                img.onload = function() {
+                    let canvas = document.createElement('canvas');
+                    let ctx = canvas.getContext('2d');
+                    let max_size = 800;
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > max_size) { height *= max_size / width; width = max_size; }
+                    } else {
+                        if (height > max_size) { width *= max_size / height; height = max_size; }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    ctx.drawImage(img, 0, 0, width, height);
+                    callback(canvas.toDataURL('image/jpeg', 0.7));
+                };
+                img.onerror = function() {
+                    callback(e.target.result);
+                };
+                img.src = e.target.result;
+            };
+            reader.onerror = function() {
+                callback("");
+            };
+            reader.readAsDataURL(file);
         }
 
         function uploadProduct() {
@@ -322,25 +358,11 @@
                 showModal("ಯಶಸ್ವಿ!", "ನಿಮ್ಮ ಫೋಟೋ ಹಾಗೂ ವಸ್ತು ಯಶಸ್ವಿಯಾಗಿ ಅಪ್‌ಲೋಡ್ ಆಗಿದೆ!", "📸");
             }
 
-            if (frontFile && backFile) {
-                let r1 = new FileReader();
-                r1.onload = function(e1) {
-                    let r2 = new FileReader();
-                    r2.onload = function(e2) {
-                        saveProd(e1.target.result, e2.target.result);
-                    };
-                    r2.readAsDataURL(backFile);
-                };
-                r1.readAsDataURL(frontFile);
-            } else if (frontFile) {
-                let r1 = new FileReader();
-                r1.onload = function(e1) {
-                    saveProd(e1.target.result, dummyImg);
-                };
-                r1.readAsDataURL(frontFile);
-            } else {
-                saveProd(dummyImg, dummyImg);
-            }
+            compressImageToBasePath(frontFile, (frontImg) => {
+                compressImageToBasePath(backFile, (backImg) => {
+                    saveProd(frontImg || dummyImg, backImg || dummyImg);
+                });
+            });
         }
 
         function loadVendorProducts() {
@@ -434,7 +456,7 @@
 
                         <!-- ಸ್ಟೇಟಸ್ ಅಪ್‌ಡೇಟ್ ಬಟನ್‌ಗಳು -->
                         <div class="space-y-1.5 pt-2 border-t">
-                            ${!o.acceptedByVendor ? `<button onclick="updateOrderStatus(${o.id}, 2, '2. ವಸ್ತು ಪ್ಯಾಕಿంగ్ ಆಗಿದೆ - ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ತಿಳಿಸಲಾಗಿದೆ')" class="w-full bg-blue-600 text-white py-2 rounded-lg font-bold text-xs shadow">📦 ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (OK)</button>` : ''}
+                            ${!o.acceptedByVendor ? `<button onclick="updateOrderStatus(${o.id}, 2, '2. ವಸ್ತು ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ - ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ತಿಳಿಸಲಾಗಿದೆ')" class="w-full bg-blue-600 text-white py-2 rounded-lg font-bold text-xs shadow">📦 ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (OK)</button>` : ''}
                             
                             ${step === 2 ? `<button onclick="updateOrderStatus(${o.id}, 3, '3. ಡೆಲಿವರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ (2 ರಿಂದ 3 ಗಂಟೆಯಲ್ಲಿ ತಲುಪುತ್ತದೆ)')" class="w-full bg-purple-600 text-white py-2 rounded-lg font-bold text-xs shadow">🚀 ಡೆಲಿವರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ (OK)</button>` : ''}
 
