@@ -8,31 +8,20 @@
 </head>
 <body class="bg-gray-100 font-sans pb-20">
 
-    <!-- 🔐 4 ಅಂಕಿಯ ಕೋಡ್ ಲಾಕ್ ಸ್ಕ್ರೀನ್ -->
-    <div id="lock-screen" class="fixed inset-0 bg-indigo-900 z-50 flex items-center justify-center p-4">
-        <div class="bg-white p-6 rounded-2xl shadow-2xl max-w-sm w-full text-center space-y-4">
-            <div class="text-4xl">🔐</div>
-            <h3 class="text-base font-bold text-gray-800">ಅಂಗಡಿ ಮಾಲೀಕರ ಪ್ಯಾನಲ್ ಲಾಕ್ ಆಗಿದೆ</h3>
-            <p class="text-xs text-gray-600">ಮುಂದುವರಿಯಲು ದಯವಿಟ್ಟು ನಿಮ್ಮ 4 ಅಂಕಿಯ ರಹಸ್ಯ ಕೋಡ್ ನಮೂದಿಸಿ:</p>
-            <input type="password" id="unlock-code-input" placeholder="4 ಅಂಕಿಯ ಕೋಡ್" maxlength="4" class="w-full p-3 border rounded-xl text-center text-lg font-bold tracking-widest bg-gray-50">
-            <button onclick="verifyMasterCode()" class="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold text-xs shadow cursor-pointer">ಅನ್‌ಲಾಕ್ ಮಾಡಿ (Unlock)</button>
-        </div>
-    </div>
-
     <!-- ಪಾಪ್‌ಅಪ್ ಸಂದೇಶ (Modal) -->
     <div id="custom-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white p-6 rounded-2xl shadow-2xl max-w-sm w-full text-center space-y-3">
             <div id="modal-icon" class="text-4xl">🎉</div>
             <h3 id="modal-title" class="text-lg font-bold text-gray-800">ಯಶಸ್ವಿ!</h3>
             <p id="modal-message" class="text-xs text-gray-600"></p>
-            <button onclick="closeModal()" class="w-full bg-indigo-600 text-white py-2 rounded-xl font-bold text-xs cursor-pointer">ಸರಿ (OK)</button>
+            <button type="button" onclick="closeModal()" class="w-full bg-indigo-600 text-white py-2 rounded-xl font-bold text-xs cursor-pointer">ಸರಿ (OK)</button>
         </div>
     </div>
 
     <!-- ಫೋಟೋ ಜೂಮ್ ಪಾಪ್‌ಅಪ್ -->
     <div id="image-modal" class="fixed inset-0 bg-black bg-opacity-80 z-50 hidden flex items-center justify-center p-4">
         <div class="relative bg-white p-2 rounded-2xl max-w-sm w-full text-center">
-            <button onclick="closeImageModal()" class="absolute top-2 right-2 bg-red-500 text-white w-8 h-8 rounded-full font-bold cursor-pointer">✕</button>
+            <button type="button" onclick="closeImageModal()" class="absolute top-2 right-2 bg-red-500 text-white w-8 h-8 rounded-full font-bold cursor-pointer">✕</button>
             <img id="zoomed-img" src="" class="w-full h-96 object-contain rounded-xl">
         </div>
     </div>
@@ -45,8 +34,7 @@
         </div>
         <div id="vendor-profile-info" class="hidden text-xs font-bold items-center gap-2">
             <span id="display-shop-name"></span>
-            <button onclick="lockPanel()" class="bg-amber-500 text-white px-2 py-1 rounded text-[10px] font-bold cursor-pointer">🔒 ಲಾಕ್</button>
-            <button onclick="vendorLogout()" class="bg-red-500 text-white px-2 py-1 rounded text-[10px] font-bold cursor-pointer">ಬಾಹಿರ (Logout)</button>
+            <button type="button" onclick="vendorLogout()" class="bg-red-500 text-white px-2 py-1 rounded text-[10px] cursor-pointer">ಬಾಹಿರ (Logout)</button>
         </div>
     </header>
 
@@ -54,7 +42,7 @@
 
         <!-- ೧. ಅಂಗಡಿ ನೋಂದಣಿ / ಲಾಗಿನ್ ಫಾರ್ಮ್ -->
         <div id="vendor-auth-box" class="bg-white p-5 rounded-2xl shadow-sm border space-y-3">
-            <h2 class="font-bold text-sm text-gray-800 border-b pb-2">ಅಂಗಡಿ ಮಾಲೀಕರ ನೋಂದಣಿ / ಲಾಗಿನ್</h2>
+            <h2 class="font-bold text-sm text-gray-800 border-b pb-2">ಅಂಗಡಿ ಮಾಲೀಕರ ನೋಂದಣಿ</h2>
             
             <div class="space-y-2 text-xs">
                 <div>
@@ -79,7 +67,7 @@
                     </select>
                 </div>
                 <div>
-                    <label class="font-bold text-gray-700">ಅಂಗಡಿ ಮುಂಭಾಗದ ಫೋಟೋ (ಕ್ಯಾಮೆರಾ / ಗ್ಯಾಲರಿ):</label>
+                    <label class="font-bold text-gray-700">ಅಂಗಡಿ ಮುಂಭಾಗದ ಫೋಟೋ (ಕ್ಯಾಮೆರಾ):</label>
                     <input type="file" id="v-photo" accept="image/*" capture="environment" class="w-full p-1 border rounded-lg mt-1">
                 </div>
                 <div class="grid grid-cols-2 gap-2">
@@ -91,7 +79,7 @@
                     <input type="text" id="v-district" placeholder="ಜಿಲ್ಲೆ" value="ಯಾದಗಿರಿ" class="p-2 border rounded-lg">
                 </div>
 
-                <button onclick="registerVendor()" class="w-full bg-indigo-600 text-white py-2.5 rounded-xl font-bold shadow mt-2 cursor-pointer">ಖಾತೆ ಸೃಷ್ಟಿಸಿ ಮತ್ತು ಒಳಹೋಗಿ</button>
+                <button type="button" onclick="registerVendor()" class="w-full bg-indigo-600 text-white py-2.5 rounded-xl font-bold shadow mt-2 cursor-pointer">ಖಾತೆ ಸೃಷ್ಟಿಸಿ ಮತ್ತು ಒಳಹೋಗಿ</button>
             </div>
         </div>
 
@@ -100,8 +88,8 @@
             
             <!-- ನ್ಯಾವಿಗೇಷನ್ ಬಟನ್‌ಗಳು -->
             <div class="flex gap-2">
-                <button onclick="switchTab('upload')" id="btn-tab-upload" class="flex-1 bg-indigo-600 text-white py-2 rounded-xl text-xs font-bold shadow cursor-pointer">➕ ವಸ್ತು ಅಪ್ಲೋಡ್</button>
-                <button onclick="switchTab('orders')" id="btn-tab-orders" class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-xl text-xs font-bold shadow cursor-pointer">📦 ಆರ್ಡರ್ ನೋಡಿ</button>
+                <button type="button" onclick="switchTab('upload')" id="btn-tab-upload" class="flex-1 bg-indigo-600 text-white py-2 rounded-xl text-xs font-bold shadow cursor-pointer">➕ ವಸ್ತು ಅಪ್ಲೋಡ್</button>
+                <button type="button" onclick="switchTab('orders')" id="btn-tab-orders" class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-xl text-xs font-bold shadow cursor-pointer">📦 ಆರ್ಡರ್ ನೋಡಿ</button>
             </div>
 
             <!-- ವಸ್ತು ಅಪ್ಲೋಡ್ ಬಾಕ್ಸ್ -->
@@ -131,21 +119,27 @@
                             <input type="text" id="p-pieces" placeholder="ಉದಾ: 1 ಪೀಸ್ / 2 ಪೀಸ್" class="w-full p-2 border rounded-lg mt-1" value="1 ಪೀಸ್">
                         </div>
                         <div id="size-field-container">
-                            <label class="font-bold text-gray-700">ಸೈಜ್ / ನಂಬರ್ / ಅಳತೆ:</label>
-                            <input type="text" id="p-size" placeholder="ಉದಾ: M / 7 No / 2 ಅಡಿ" class="w-full p-2 border rounded-lg mt-1" value="M">
+                            <label class="font-bold text-gray-700">ಸೈಜ್ / ನಂಬರ್ ಆಯ್ಕೆ:</label>
+                            <select id="p-size" class="w-full p-2 border rounded-lg mt-1 font-bold bg-gray-50">
+                                <option value="S">S (Small)</option>
+                                <option value="M" selected>M (Medium)</option>
+                                <option value="L">L (Large)</option>
+                                <option value="XL">XL</option>
+                                <option value="XXL">XXL</option>
+                            </select>
                         </div>
                     </div>
 
                     <div>
-                        <label class="font-bold text-gray-700">ಮುಂಭಾಗದ ಫೋಟೋ (ಕಡ್ಡಾಯವಾಗಿ ಹಾಕಿ):</label>
+                        <label class="font-bold text-gray-700">ಮುಂಭಾಗದ ಫೋಟೋ (ನೇರ ಕ್ಯಾಮೆರಾ):</label>
                         <input type="file" id="p-front" accept="image/*" capture="environment" class="w-full p-1 border rounded-lg mt-1">
                     </div>
                     <div>
-                        <label class="font-bold text-gray-700">ಹಿಂಭಾಗದ ಫೋಟೋ (ಕಡ್ಡಾಯವಾಗಿ ಹಾಕಿ):</label>
+                        <label class="font-bold text-gray-700">ಹಿಂಭಾಗದ ಫೋಟೋ (ನೇರ ಕ್ಯಾಮೆರಾ):</label>
                         <input type="file" id="p-back" accept="image/*" capture="environment" class="w-full p-1 border rounded-lg mt-1">
                     </div>
 
-                    <button onclick="uploadProduct()" class="w-full bg-green-600 text-white py-2.5 rounded-xl font-bold shadow mt-2 cursor-pointer">ವಸ್ತು ಪ್ರಕಟಿಸಿ (Publish)</button>
+                    <button type="button" onclick="uploadProduct()" class="w-full bg-green-600 text-white py-2.5 rounded-xl font-bold shadow mt-2 cursor-pointer">ವಸ್ತು ಪ್ರಕಟಿಸಿ (Publish)</button>
                 </div>
 
                 <!-- ಅಪ್ಲೋಡ್ ಮಾಡಿದ ವಸ್ತುಗಳ ಲಿಸ್ಟ್ (ಚಿಕ್ಕದಾಗಿ ಹಾಗೂ ಡಿಲೀಟ್ ಬಟನ್) -->
@@ -159,7 +153,7 @@
 
             <!-- ಗ್ರಾಹಕರ ಆರ್ಡರ್‌ಗಳು ಮತ್ತು ಲೈವ್ ಟ್ರ್ಯಾಕರ್ -->
             <div id="section-orders" class="bg-white p-4 rounded-2xl shadow-sm border space-y-3 hidden">
-                <h3 class="font-bold text-sm text-gray-800 border-b pb-1">📦 ಗ್ರಾಹಕರ ಆರ್ಡರ್‌ಗಳು ಹಾಗೂ ರೂಟ್ ಟ್ರ್ಯಾಕರ್</h3>
+                <h3 class="font-bold text-sm text-gray-800 border-b pb-1">📦 ಗ್ರಾಹಕರ ಆರ್ಡರ್‌ಗಳು ಹಾಗೂ ಪೇಮೆಂಟ್ ಟ್ರ್ಯಾಕರ್</h3>
                 <div id="vendor-orders-container" class="space-y-3 text-xs text-gray-700">
                     ಯಾವುದೇ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.
                 </div>
@@ -170,25 +164,8 @@
     </main>
 
     <script>
-        const MASTER_SECRET_CODE = "9353"; // 4 ಅಂಕಿಯ ರಹಸ್ಯ ಕೋಡ್
         let currentVendor = JSON.parse(localStorage.getItem('currentVendor')) || null;
         let products = JSON.parse(localStorage.getItem('market_products')) || [];
-
-        function verifyMasterCode() {
-            let inputCode = document.getElementById('unlock-code-input').value.trim();
-            if (inputCode === MASTER_SECRET_CODE) {
-                document.getElementById('lock-screen').classList.add('hidden');
-                document.getElementById('unlock-code-input').value = '';
-                checkVendorLogin();
-            } else {
-                alert('ತಪ್ಪು ಕೋಡ್! ದಯವಿಟ್ಟು ಸರಿಯಾದ 4 ಅಂಕಿಯ ಕೋಡ್ ನಮೂದಿಸಿ.');
-                document.getElementById('unlock-code-input').value = '';
-            }
-        }
-
-        function lockPanel() {
-            document.getElementById('lock-screen').classList.remove('hidden');
-        }
 
         let modalCallback = null;
         function showModal(title, message, icon = '🎉', callback = null) {
@@ -232,19 +209,42 @@
 
         function updateSizeCategoryFields() {
             let cat = document.getElementById('v-category').value;
-            let sizeInput = document.getElementById('p-size');
+            let sizeContainer = document.getElementById('size-field-container');
+            
             if (cat === 'Clothing') {
-                sizeInput.placeholder = "ಉದಾ: S, M, L, XL, XXL";
-                sizeInput.value = "M";
+                sizeContainer.innerHTML = `
+                    <label class="font-bold text-gray-700">ಸೈಜ್ ಆಯ್ಕೆ (ಬಟ್ಟೆಗಳು):</label>
+                    <select id="p-size" class="w-full p-2 border rounded-lg mt-1 font-bold bg-gray-50">
+                        <option value="S">S (Small)</option>
+                        <option value="M" selected>M (Medium)</option>
+                        <option value="L">L (Large)</option>
+                        <option value="XL">XL</option>
+                        <option value="XXL">XXL</option>
+                    </select>
+                `;
             } else if (cat === 'Footwear') {
-                sizeInput.placeholder = "ಉದಾ: 5 No ರಿಂದ 12 No";
-                sizeInput.value = "7 No";
+                sizeContainer.innerHTML = `
+                    <label class="font-bold text-gray-700">ಚಪ್ಪಲಿ ನಂಬರ್ (6 ರಿಂದ 12):</label>
+                    <select id="p-size" class="w-full p-2 border rounded-lg mt-1 font-bold bg-gray-50">
+                        <option value="6 No">6 No</option>
+                        <option value="7 No" selected>7 No</option>
+                        <option value="8 No">8 No</option>
+                        <option value="9 No">9 No</option>
+                        <option value="10 No">10 No</option>
+                        <option value="11 No">11 No</option>
+                        - <option value="12 No">12 No</option>
+                    </select>
+                `;
             } else if (cat === 'Gifts') {
-                sizeInput.placeholder = "ಉದಾ: ಉದ್ದ 2 ಅಡಿ, ಅಗಲ 1.5 ಅಡಿ";
-                sizeInput.value = "ಉದ್ದ 2 ಅಡಿ x ಅಗಲ 1.5 ಅಡಿ";
+                sizeContainer.innerHTML = `
+                    <label class="font-bold text-gray-700">ಅಳತೆ / ವಿವರಣೆ:</label>
+                    <input type="text" id="p-size" class="w-full p-2 border rounded-lg mt-1" value="Standard Gift" readonly>
+                `;
             } else {
-                sizeInput.placeholder = "ಅಳತೆ ಅಥವಾ ವಿವರಣೆ";
-                sizeInput.value = "Standard";
+                sizeContainer.innerHTML = `
+                    <label class="font-bold text-gray-700">ಸೈಜ್ / ಅಳತೆ:</label>
+                    <input type="text" id="p-size" class="w-full p-2 border rounded-lg mt-1" value="Standard">
+                `;
             }
         }
 
@@ -253,7 +253,7 @@
                 document.getElementById('vendor-auth-box').classList.add('hidden');
                 document.getElementById('vendor-dashboard').classList.remove('hidden');
                 document.getElementById('vendor-profile-info').classList.remove('hidden');
-                document.getElementById('display-shop-name').innerText = `${currentVendor.shop} (${currentVendor.name})`;
+                document.getElementById('display-shop-name').innerText = `${currentVendor.shopName} (${currentVendor.name})`;
                 loadVendorProducts();
                 loadVendorOrders();
             } else {
@@ -266,7 +266,7 @@
         function registerVendor() {
             let name = document.getElementById('v-name').value;
             let phone = document.getElementById('v-phone').value;
-            let shop = document.getElementById('v-shop').value;
+            let shopName = document.getElementById('v-shop').value;
             let category = document.getElementById('v-category').value;
             let pincode = document.getElementById('v-pincode').value;
             let city = document.getElementById('v-city').value;
@@ -274,7 +274,7 @@
             let district = document.getElementById('v-district').value;
             let photoFile = document.getElementById('v-photo').files[0];
 
-            if (!name || !phone || !shop || phone.length < 10) {
+            if (!name || !phone || !shopName || phone.length < 10) {
                 alert('ದಯವಿಟ್ಟು ನಿಮ್ಮ ಹೆಸರು, ಸರಿಯಾದ ಮೊಬೈಲ್ ನಂಬರ್ ಮತ್ತು ಅಂಗಡಿಯ ಹೆಸರು ನಮೂದಿಸಿ!');
                 return;
             }
@@ -282,16 +282,16 @@
             let dummyPhoto = "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400";
 
             if (photoFile) {
-                compressImageAsync(photoFile).then(res => {
-                    saveVendorData(name, phone, shop, category, pincode, city, taluk, district, res);
+                compressImageFile(photoFile, 500, 500, (compressedBase64) => {
+                    saveVendorData(name, phone, shopName, category, pincode, city, taluk, district, compressedBase64);
                 });
             } else {
-                saveVendorData(name, phone, shop, category, pincode, city, taluk, district, dummyPhoto);
+                saveVendorData(name, phone, shopName, category, pincode, city, taluk, district, dummyPhoto);
             }
         }
 
-        function saveVendorData(name, phone, shop, category, pincode, city, taluk, district, photo) {
-            currentVendor = { name, phone, shop, category, pincode, city, taluk, district, photo };
+        function saveVendorData(name, phone, shopName, category, pincode, city, taluk, district, photo) {
+            currentVendor = { name, phone, shopName, category, pincode, city, taluk, district, photo };
             localStorage.setItem('currentVendor', JSON.stringify(currentVendor));
             showModal("ಯಶಸ್ವಿ!", "ಅಂಗಡಿ ನೋಂದಣಿ ಯಶಸ್ವಿಯಾಗಿದೆ!", "🏪", () => {
                 checkVendorLogin();
@@ -302,50 +302,41 @@
             localStorage.removeItem('currentVendor');
             currentVendor = null;
             checkVendorLogin();
-            lockPanel();
         }
 
-        // ಫೋಟೋ ಕಂಪ್ರೆಷನ್ ಫಂಕ್ಷನ್
-        function compressImageAsync(file) {
-            return new Promise((resolve) => {
-                if (!file) {
-                    resolve("");
-                    return;
-                }
-                let reader = new FileReader();
-                reader.onload = function(e) {
-                    let img = new Image();
-                    img.onload = function() {
-                        let canvas = document.createElement('canvas');
-                        let ctx = canvas.getContext('2d');
-                        let max_size = 1000;
-                        let width = img.width;
-                        let height = img.height;
+        function compressImageFile(file, maxWidth, maxHeight, callback) {
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                let img = new Image();
+                img.onload = function () {
+                    let canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
 
-                        if (width > height) {
-                            if (width > max_size) { height *= max_size / width; width = max_size; }
-                        } else {
-                            if (height > max_size) { width *= max_size / height; height = max_size; }
+                    if (width > height) {
+                        if (width > maxWidth) {
+                            height *= maxWidth / width;
+                            width = maxWidth;
                         }
+                    } else {
+                        if (height > maxHeight) {
+                            width *= maxHeight / height;
+                            height = maxHeight;
+                        }
+                    }
 
-                        canvas.width = width;
-                        canvas.height = height;
-                        ctx.drawImage(img, 0, 0, width, height);
-                        resolve(canvas.toDataURL('image/jpeg', 0.8));
-                    };
-                    img.onerror = function() {
-                        resolve(e.target.result);
-                    };
-                    img.src = e.target.result;
+                    canvas.width = width;
+                    canvas.height = height;
+                    let ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    callback(canvas.toDataURL('image/jpeg', 0.8));
                 };
-                reader.onerror = function() {
-                    resolve("");
-                };
-                reader.readAsDataURL(file);
-            });
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
         }
 
-        async function uploadProduct() {
+        function uploadProduct() {
             let name = document.getElementById('p-name').value;
             let origPrice = document.getElementById('p-orig').value;
             let discPrice = document.getElementById('p-disc').value;
@@ -355,48 +346,54 @@
             let backFile = document.getElementById('p-back').files[0];
 
             if (!name || !origPrice || !discPrice) {
-                alert('ದಯವಿಟ್ಟು ವಸ್ತುವಿನ ಹೆಸರು ಮತ್ತು ಬೆಲೆಗಳನ್ನು ಭರ್ತಿ ಮಾಡಿ!');
+                alert('ದಯವಿಟ್ಟು ವಸ್ತುವಿನ ಹೆಸರು ಹಾಗೂ ಬೆಲೆಗಳನ್ನು ಭರ್ತಿ ಮಾಡಿ!');
                 return;
             }
 
-            // ಕಡ್ಡಾಯವಾಗಿ ಫೋಟೋ ಹಾಕಿದೆಯೇ ಎಂದು ಪರಿಶೀಲಿಸುವುದು
-            if (!frontFile && !backFile) {
-                alert('ದಯವಿಟ್ಟು ಮುಂಭಾಗ ಅಥವಾ ಹಿಂಭಾಗದ ಫೋಟೋವನ್ನು ಕಡ್ಡಾಯವಾಗಿ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ!');
-                return;
+            let dummyImg = "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=400";
+
+            function saveProductData(frontStr, backStr) {
+                let newProduct = {
+                    id: Date.now(),
+                    name: name,
+                    category: currentVendor.category,
+                    origPrice: Number(origPrice),
+                    discPrice: Number(discPrice),
+                    size: size,
+                    pieces: pieces,
+                    returnPolicy: 'ರಿಟರ್ನ್ ಉಂಟು',
+                    vendorShop: currentVendor.shopName,
+                    vendorPhone: currentVendor.phone,
+                    frontPhoto: frontStr,
+                    backPhoto: backStr
+                };
+
+                products.push(newProduct);
+                localStorage.setItem('market_products', JSON.stringify(products));
+
+                document.getElementById('p-name').value = '';
+                document.getElementById('p-orig').value = '';
+                document.getElementById('p-disc').value = '';
+                document.getElementById('p-front').value = '';
+                document.getElementById('p-back').value = '';
+
+                loadVendorProducts();
+                showModal("ಯಶಸ್ವಿ!", "ನಿಮ್ಮ ಫೋಟೋ ಹಾಗೂ ವಸ್ತು ಯಶಸ್ವಿಯಾಗಿ ಅಪ್‌ಲೋಡ್ ಆಗಿದೆ!", "📸");
             }
 
-            let frontImg = await compressImageAsync(frontFile);
-            let backImg = await compressImageAsync(backFile);
-
-            let newProduct = {
-                id: Date.now(),
-                name: name,
-                category: currentVendor.category,
-                origPrice: Number(origPrice),
-                discPrice: Number(discPrice),
-                size: size,
-                pieces: pieces,
-                returnPolicy: 'ರಿಟರ್ನ್ ಉಂಟು',
-                vendorShop: currentVendor.shop,
-                vendorPhone: currentVendor.phone,
-                frontPhoto: frontImg || backImg,
-                backPhoto: backImg || frontImg
-            };
-
-            products.push(newProduct);
-            localStorage.setItem('market_products', JSON.stringify(products));
-
-            // ಫಾರ್ಮ್ ಅನ್ನು ಸಂಪೂರ್ಣವಾಗಿ ಖಾಲಿ ಮಾಡಿ ಹೊಸ ಫೋಟೋ ಹಾಕಲು ಸಿದ್ಧಪಡಿಸುವುದು
-            document.getElementById('p-name').value = '';
-            document.getElementById('p-orig').value = '';
-            document.getElementById('p-disc').value = '';
-            document.getElementById('p-front').value = '';
-            document.getElementById('p-back').value = '';
-
-            loadVendorProducts();
-            
-            // ನೀವು ಕೇಳಿದ ಯಶಸ್ವಿ ಪಾಪ್‌ಅಪ್ ಸಂದೇಶ[span_8](start_span)[span_8](end_span)
-            showModal("ಯಶಸ್ವಿ!", "ನಿಮ್ಮ ಫೋಟೋಗಳು ಅಪ್‌ಲೋಡ್ ಆಗಿವೆ ಮತ್ತು ಗ್ರಾಹಕರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ!", "🎉");
+            if (frontFile && backFile) {
+                compressImageFile(frontFile, 600, 600, function(fComp) {
+                    compressImageFile(backFile, 600, 600, function(bComp) {
+                        saveProductData(fComp, bComp);
+                    });
+                });
+            } else if (frontFile) {
+                compressImageFile(frontFile, 600, 600, function(fComp) {
+                    saveProductData(fComp, dummyImg);
+                });
+            } else {
+                saveProductData(dummyImg, dummyImg);
+            }
         }
 
         function loadVendorProducts() {
@@ -418,7 +415,7 @@
                         <p class="font-bold text-xs">${p.name} (${p.size})</p>
                         <p class="text-[10px] text-green-600 font-bold">₹${p.discPrice} (${p.pieces})</p>
                     </div>
-                    <button onclick="deleteProduct(${p.id})" class="bg-red-500 text-white px-2 py-1 rounded text-[10px] font-bold cursor-pointer">ಡಿಲೀಟ್</button>
+                    <button type="button" onclick="deleteProduct(${p.id})" class="bg-red-500 text-white px-2 py-1 rounded text-[10px] font-bold cursor-pointer">ಡಿಲೀಟ್</button>
                 </div>
             `).join('');
         }
@@ -435,7 +432,7 @@
         function loadVendorOrders() {
             let container = document.getElementById('vendor-orders-container');
             let orders = JSON.parse(localStorage.getItem('market_orders')) || [];
-            let myOrders = orders.filter(o => !o.acceptedByVendor || o.acceptedByVendor === currentVendor.shop);
+            let myOrders = orders.filter(o => !o.acceptedByVendor || o.acceptedByVendor === currentVendor.shopName);
 
             myOrders.reverse();
 
@@ -469,7 +466,6 @@
                             <p><b>ವಿಳಾಸ:</b> ${o.city}, ${o.taluk} ತಾಲೂಕು, ${o.district} ಜಿಲ್ಲೆ - ${o.pincode}</p>
                         </div>
 
-                        <!-- 4 ಹಂತದ ರೂಟ್ ಟ್ರ್ಯಾಕರ್ ಮತ್ತು ಜಿಪಿಎಸ್ ಲೊಕೇಶನ್ -->
                         <div class="bg-indigo-50 p-3 rounded-xl space-y-2">
                             <p class="text-[11px] font-bold text-indigo-900">📍 ಲೈವ್ ರೂಟ್ ಟ್ರ್ಯಾಕರ್ ಹಾಗೂ ಜಿಪಿಎಸ್ ಮ್ಯಾಪ್:</p>
                             <div class="flex justify-between items-center px-2 relative">
@@ -487,14 +483,13 @@
                             <a href="tel:${o.phone}" class="flex-1 bg-teal-600 text-white text-center py-2 rounded-lg text-xs font-bold shadow">📞 ಗ್ರಾಹಕರಿಗೆ ಕಾಲ್ ಮಾಡಿ</a>
                         </div>
 
-                        <!-- ಸ್ಟೇಟಸ್ ಅಪ್‌ಡೇಟ್ ಬಟನ್‌ಗಳು -->
                         <div class="space-y-1.5 pt-2 border-t">
-                            ${!o.acceptedByVendor ? `<button onclick="updateOrderStatus(${o.id}, 2, '2. ವಸ್ತು ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ - ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ತಿಳಿಸಲಾಗಿದೆ')" class="w-full bg-blue-600 text-white py-2 rounded-lg font-bold text-xs shadow cursor-pointer">📦 ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (OK)</button>` : ''}
+                            ${!o.acceptedByVendor ? `<button type="button" onclick="updateOrderStatus(${o.id}, 2, '2. ವಸ್ತು ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ - ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ತಿಳಿಸಲಾಗಿದೆ')" class="w-full bg-blue-600 text-white py-2 rounded-lg font-bold text-xs shadow cursor-pointer">📦 ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (OK)</button>` : ''}
                             
-                            ${step === 2 ? `<button onclick="updateOrderStatus(${o.id}, 3, '3. ಡೆಲಿವರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ (2 ರಿಂದ 3 ಗಂಟೆಯಲ್ಲಿ ತಲುಪುತ್ತದೆ)')" class="w-full bg-purple-600 text-white py-2 rounded-lg font-bold text-xs shadow cursor-pointer">🚀 ಡೆಲಿವರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ (OK)</button>` : ''}
+                            ${step === 2 ? `<button type="button" onclick="updateOrderStatus(${o.id}, 3, '3. ಡೆಲಿವರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ (2 ರಿಂದ 3 ಗಂಟೆಯಲ್ಲಿ ತಲುಪುತ್ತದೆ)')" class="w-full bg-purple-600 text-white py-2 rounded-lg font-bold text-xs shadow cursor-pointer">🚀 ಡೆಲಿವರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ (OK)</button>` : ''}
 
                             ${!o.paymentSuccess ? `
-                                <button onclick="markPaymentReceived(${o.id})" class="w-full bg-green-600 text-white py-2 rounded-lg font-bold text-xs shadow cursor-pointer">💰 ಪೇಮೆಂಟ್ ಬಂದಿದೆ - ಚೆಕ್ ಮಾಡಿ ಸಕ್ಸಸ್ ಮಾಡಿ (OK)</button>
+                                <button type="button" onclick="markPaymentReceived(${o.id})" class="w-full bg-green-600 text-white py-2 rounded-lg font-bold text-xs shadow cursor-pointer">💰 ಪೇಮೆಂಟ್ ಬಂದಿದೆ - ಚೆಕ್ ಮಾಡಿ ಸಕ್ಸಸ್ ಮಾಡಿ (OK)</button>
                             ` : `
                                 <div class="bg-green-100 p-2 rounded-lg text-green-800 font-bold text-center text-xs">
                                     ✅ ಪಾವತಿ ಯಶಸ್ವಿಯಾಗಿದೆ (Payment Success)
@@ -510,7 +505,7 @@
             let orders = JSON.parse(localStorage.getItem('market_orders')) || [];
             let o = orders.find(x => x.id === id);
             if (o) {
-                o.acceptedByVendor = currentVendor.shop;
+                o.acceptedByVendor = currentVendor.shopName;
                 o.statusStep = step;
                 o.statusText = text;
                 o.status = text;
@@ -534,6 +529,8 @@
                 showModal("ಯಶಸ್ವಿ!", "ಪೇಮೆಂಟ್ ಸಕ್ಸಸ್ ಫುಲ್ ಎಂದು ಕನ್‌ಫರ್ಮ್ ಮಾಡಲಾಗಿದೆ!", "💰");
             }
         }
+
+        checkVendorLogin();
     </script>
 </body>
 </html>
