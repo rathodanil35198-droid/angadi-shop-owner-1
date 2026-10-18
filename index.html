@@ -67,7 +67,7 @@
                     </select>
                 </div>
                 <div>
-                    <label class="font-bold text-gray-700">ಅಂಗಡಿ ಮುಂಭಾಗದ ಫೋಟೋ:</label>
+                    <label class="font-bold text-gray-700">ಅಂಗಡಿ ಮುಂಭಾಗದ ಫೋಟೋ (ಗ್ಯಾಲರಿ ಅಥವಾ ಕ್ಯಾಮೆರಾ):</label>
                     <input type="file" id="v-photo" accept="image/*" class="w-full p-1 border rounded-lg mt-1">
                 </div>
                 <div class="grid grid-cols-2 gap-2">
@@ -125,11 +125,11 @@
                     </div>
 
                     <div>
-                        <label class="font-bold text-gray-700">ಮುಂಭಾಗದ ಫೋಟೋ ಅಪ್ಲೋಡ್ ಮಾಡಿ:</label>
+                        <label class="font-bold text-gray-700">ಮುಂಭಾಗದ ಫೋಟೋ (ಕ್ಯಾಮೆರಾ ಅಥವಾ ಗ್ಯಾಲರಿ):</label>
                         <input type="file" id="p-front" accept="image/*" class="w-full p-1 border rounded-lg mt-1">
                     </div>
                     <div>
-                        <label class="font-bold text-gray-700">ಹಿಂಭಾಗದ ಫೋಟೋ ಅಪ್ಲೋಡ್ ಮಾಡಿ:</label>
+                        <label class="font-bold text-gray-700">ಹಿಂಭಾಗದ ಫೋಟೋ (ಕ್ಯಾಮೆರಾ ಅಥವಾ ಗ್ಯಾಲರಿ):</label>
                         <input type="file" id="p-back" accept="image/*" class="w-full p-1 border rounded-lg mt-1">
                     </div>
 
@@ -275,7 +275,7 @@
             checkVendorLogin();
         }
 
-        // ಸೂಪರ್ ಫಾಸ್ಟ್ ಹಾಗೂ ಪರ್ಫೆಕ್ಟ್ ಫೋಟೋ ಕಂಪ್ರೆಷನ್ ಫಂಕ್ಷನ್ (Promise ಆಧಾರಿತ)
+        // ಫೋಟೋ ಕಂಪ್ರೆಷನ್ ಫಂಕ್ಷನ್
         function compressImageAsync(file) {
             return new Promise((resolve) => {
                 if (!file) {
@@ -331,7 +331,6 @@
 
             let dummyImg = "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=400";
 
-            // ಫೋಟೋಗಳು ಆಟೋಮ್ಯಾಟಿಕ್ ಆಗಿ ಕಂಪ್ರೆಸ್ ಆಗಿ ಮುಂದಕ್ಕೆ ಹೋಗುತ್ತವೆ
             let frontImg = await compressImageAsync(frontFile);
             let backImg = await compressImageAsync(backFile);
 
@@ -353,6 +352,7 @@
             products.push(newProduct);
             localStorage.setItem('market_products', JSON.stringify(products));
 
+            // ಫಾರ್ಮ್ ಅನ್ನು ಸಂಪೂರ್ಣವಾಗಿ ಖಾಲಿ ಮಾಡುವುದು (ಹೊಸ ಫೋಟೋ ಹಾಕಲು ಸಿದ್ಧವಾಗಲು)
             document.getElementById('p-name').value = '';
             document.getElementById('p-orig').value = '';
             document.getElementById('p-disc').value = '';
@@ -360,7 +360,9 @@
             document.getElementById('p-back').value = '';
 
             loadVendorProducts();
-            showModal("ಯಶಸ್ವಿ!", "ನಿಮ್ಮ ಫೋಟೋ ಹಾಗೂ ವಸ್ತು ಯಶಸ್ವಿಯಾಗಿ ಅಪ್‌ಲೋಡ್ ಆಗಿದೆ!", "📸");
+            
+            // ನೀವು ಕೇಳಿದ ಪಾಪ್‌ಅಪ್ ಸಂದೇಶ
+            showModal("ಯಶಸ್ವಿ!", "ನಿಮ್ಮ ಫೋಟೋಗಳು ಅಪ್‌ಲೋಡ್ ಆಗಿವೆ ಮತ್ತು ಗ್ರಾಹಕರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ!", "🎉");
         }
 
         function loadVendorProducts() {
