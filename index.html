@@ -258,19 +258,20 @@
             if (category === 'Clothing') {
                 container.innerHTML = `
                     <label class="block text-xs text-gray-600 mb-1">ಲಭ್ಯವಿರುವ ಸೈಜ್‌ಗಳು (Clothing Sizes):</label>
-                    <div class="flex gap-1">
+                    <div class="flex gap-1 flex-wrap">
                         <span onclick="selectClothingSize('XS')" id="sz-XS" class="px-3 py-1 border rounded text-xs cursor-pointer bg-gray-100">XS</span>
                         <span onclick="selectClothingSize('S')" id="sz-S" class="px-3 py-1 border rounded text-xs cursor-pointer bg-gray-100">S</span>
                         <span onclick="selectClothingSize('M')" id="sz-M" class="px-3 py-1 border rounded text-xs cursor-pointer bg-indigo-600 text-white">M</span>
                         <span onclick="selectClothingSize('L')" id="sz-L" class="px-3 py-1 border rounded text-xs cursor-pointer bg-gray-100">L</span>
                         <span onclick="selectClothingSize('XL')" id="sz-XL" class="px-3 py-1 border rounded text-xs cursor-pointer bg-gray-100">XL</span>
+                        <span onclick="selectClothingSize('XXL')" id="sz-XXL" class="px-3 py-1 border rounded text-xs cursor-pointer bg-gray-100">XXL</span>
                     </div>
                 `;
                 selectedProductSize = 'M';
             } else if (category === 'Footwear') {
-                let shoeSizes = [5, 6, 7, 8, 9, 10, 11];
+                let shoeSizes = [5, 6, 7, 8, 9, 10, 11, 12];
                 container.innerHTML = `
-                    <label class="block text-xs text-gray-600 mb-1">ಚಪ್ಪಲಿ / ಶೂಸ್ ನಂಬರ್ (Footwear Size):</label>
+                    <label class="block text-xs text-gray-600 mb-1">ಚಪ್ಪಲಿ / ಶೂಸ್ ನಂಬರ್ (Footwear Size 5 ರಿಂದ 12):</label>
                     <div class="flex flex-wrap gap-1">
                         ${shoeSizes.map((sz, idx) => `
                             <span onclick="selectFootwearSize(${sz})" id="sz-${sz}" class="px-3 py-1 border rounded text-xs cursor-pointer ${idx === 2 ? 'bg-indigo-600 text-white' : 'bg-gray-100'}">${sz} No</span>
@@ -282,8 +283,8 @@
                 container.innerHTML = `
                     <label class="block text-xs text-gray-600 mb-1">ಗಿಫ್ಟ್ ಅಳತೆ (ಉದ್ದ ಹಾಗೂ ಅಗಲ ಅಡಿಗಳಲ್ಲಿ):</label>
                     <div class="grid grid-cols-2 gap-2">
-                        <input type="text" id="gift-length" placeholder="ಉದ್ದ (Length - e.g. 2 ft)" class="p-2 border rounded-lg text-xs">
-                        <input type="text" id="gift-width" placeholder="ಅಗಲ (Width - e.g. 1.5 ft)" class="p-2 border rounded-lg text-xs">
+                        <input type="text" id="gift-length" placeholder="ಉದ್ದ (e.g. 2 ft)" class="p-2 border rounded-lg text-xs">
+                        <input type="text" id="gift-width" placeholder="ಅಗಲ (e.g. 1.5 ft)" class="p-2 border rounded-lg text-xs">
                     </div>
                 `;
                 selectedProductSize = 'Standard Gift';
@@ -298,7 +299,7 @@
 
         function selectClothingSize(size) {
             selectedProductSize = size;
-            ['XS', 'S', 'M', 'L', 'XL'].forEach(s => {
+            ['XS', 'S', 'M', 'L', 'XL', 'XXL'].forEach(s => {
                 let el = document.getElementById(`sz-${s}`);
                 if (el) {
                     el.className = s === size ? "px-3 py-1 border rounded text-xs cursor-pointer bg-indigo-600 text-white" : "px-3 py-1 border rounded text-xs cursor-pointer bg-gray-100";
@@ -308,7 +309,7 @@
 
         function selectFootwearSize(sz) {
             selectedProductSize = sz + ' No';
-            [5, 6, 7, 8, 9, 10, 11].forEach(s => {
+            [5, 6, 7, 8, 9, 10, 11, 12].forEach(s => {
                 let el = document.getElementById(`sz-${s}`);
                 if (el) {
                     el.className = s === sz ? "px-3 py-1 border rounded text-xs cursor-pointer bg-indigo-600 text-white" : "px-3 py-1 border rounded text-xs cursor-pointer bg-gray-100";
@@ -571,21 +572,27 @@
                             <p><b>ಪೂರ್ಣ ವಿಳಾಸ:</b> ${o.city}, ${o.taluk} ತಾಲೂಕು, ${o.district} ಜಿಲ್ಲೆ (Pin: ${o.pincode})</p>
                         </div>
 
+                        ${o.returned ? `
+                            <div class="bg-red-100 p-2 rounded-lg text-red-800 border border-red-300">
+                                <p class="font-bold text-xs">⚠️ ಗ್ರಾಹಕರು ರಿಟರ್ನ್ ವಿನಂತಿ ಮಾಡಿದ್ದಾರೆ:</p>
+                                <p class="text-[11px]"><b>ಕಾರಣ:</b> ${o.returnReason || 'ವಿವರಣೆ ಇಲ್ಲ'}</p>
+                                ${o.returnPhoto ? `<img src="${o.returnPhoto}" onclick="zoomImage('${o.returnPhoto}')" class="w-16 h-16 object-cover rounded border mt-1 cursor-pointer">` : ''}
+                            </div>
+                        ` : ''}
+
                         <p><b>ಪಾವತಿ ಸ್ಥಿತಿ:</b> <span class="${o.paymentSuccess ? 'text-green-600 font-bold' : 'text-orange-600 font-bold'}">${o.paymentSuccess ? 'ಪಾವತಿ ಯಶಸ್ವಿ (Success)' : 'ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್ (Pending)'}</span></p>
-                        <p><b>ಸ್ಥಿತಿ (Status):</b> <span class="text-orange-600 font-bold">${o.status}</span></p>
+                        <p><b>ಪ್ರಸ್ತುತ ಸ್ಟೇಟಸ್:</b> <span class="text-indigo-700 font-bold">${o.statusText || o.status}</span></p>
 
                         <div class="flex flex-wrap gap-2 pt-1">
                             <a href="https://maps.google.com/?q=${encodeURIComponent(o.address)}" target="_blank" class="bg-indigo-600 text-white px-3 py-1.5 rounded text-xs font-bold">🗺️ ಮ್ಯಾಪ್ ಲೊಕೇಶನ್</a>
                             
-                            ${!o.acceptedByVendor ? `<button onclick="acceptOrder(${o.id})" class="bg-green-600 text-white px-3 py-1.5 rounded text-xs font-bold">✅ ಆರ್ಡರ್ ಸ್ವೀಕರಿಸಿ</button>` : ''}
+                            ${!o.acceptedByVendor ? `<button onclick="acceptOrder(${o.id})" class="bg-green-600 text-white px-3 py-1.5 rounded text-xs font-bold">✅ 1. ಆರ್ಡರ್ ಸ್ವೀಕರಿಸಿ</button>` : ''}
                             
-                            ${o.acceptedByVendor && !o.packingReady ? `<button onclick="markPackingReady(${o.id})" class="bg-blue-600 text-white px-3 py-1.5 rounded text-xs font-bold">📦 ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (OK)</button>` : ''}
+                            ${o.acceptedByVendor && !o.packingReady ? `<button onclick="markPackingReady(${o.id})" class="bg-blue-600 text-white px-3 py-1.5 rounded text-xs font-bold">📦 2. ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (OK)</button>` : ''}
                             
-                            ${o.packingReady && !o.delivered ? `<button onclick="markDispatched(${o.id})" class="bg-purple-600 text-white px-3 py-1.5 rounded text-xs font-bold">🚀 ಡೆಲಿವರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ (OK)</button>` : ''}
+                            ${o.packingReady && !o.delivered ? `<button onclick="markDispatched(${o.id})" class="bg-purple-600 text-white px-3 py-1.5 rounded text-xs font-bold">🚀 3. ಡೆಲಿವರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ</button>` : ''}
 
-                            ${o.delivered && !o.paymentSuccess ? `<button onclick="markPaymentSuccess(${o.id})" class="bg-green-700 text-white px-3 py-1.5 rounded text-xs font-bold">💰 ಪೇಮೆಂಟ್ ಸಕ್ಸಸ್ (OK)</button>` : ''}
-                            
-                            ${o.paymentSuccess ? `<span class="text-green-700 font-bold text-xs">✨ ಪಾವತಿ & ಡೆಲಿವರಿ ಯಶಸ್ವಿ (Success)</span>` : ''}
+                            ${o.delivered && !o.paymentSuccess ? `<button onclick="markPaymentSuccess(${o.id})" class="bg-green-700 text-white px-3 py-1.5 rounded text-xs font-bold">💰 4. ಪೇಮೆಂಟ್ ಸಕ್ಸಸ್</button>` : ''}
                         </div>
                     </div>
                 `).join('');
@@ -597,10 +604,12 @@
             let o = savedOrders.find(x => x.id === id);
             if (o) {
                 o.acceptedByVendor = currentVendor.shopName;
-                o.status = 'ಸ್ವೀಕರಿಸಲಾಗಿದೆ - ಪ್ಯಾಕಿಂಗ್ ನಡೆಯುತ್ತಿದೆ';
+                o.statusStep = 1;
+                o.statusText = '1. ಆರ್ಡರ್ ಸ್ವೀಕರಿಸಲಾಗಿದೆ - ಅಂಗಡಿಯಲ್ಲಿ ಪ್ರಕ್ರಿಯೆ ನಡೆಯುತ್ತಿದೆ';
+                o.status = o.statusText;
                 localStorage.setItem('market_orders', JSON.stringify(savedOrders));
                 renderVendorOrders();
-                showModal("ಯಶಸ್ವಿ!", "ಬುಕಿಂಗ್ ಸ್ವೀಕರಿಸಲಾಗಿದೆ!", "👍");
+                showModal("ಯಶಸ್ವಿ!", "ಆರ್ಡರ್ ಸ್ವೀಕರಿಸಲಾಗಿದೆ!", "👍");
             }
         }
 
@@ -609,10 +618,12 @@
             let o = savedOrders.find(x => x.id === id);
             if (o) {
                 o.packingReady = true;
-                o.status = 'ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ - ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ತಿಳಿಸಲಾಗಿದೆ';
+                o.statusStep = 2;
+                o.statusText = '2. ವಸ್ತು ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ - ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ತಿಳಿಸಲಾಗಿದೆ';
+                o.status = o.statusText;
                 localStorage.setItem('market_orders', JSON.stringify(savedOrders));
                 renderVendorOrders();
-                showModal("ಸಿದ್ಧವಾಗಿದೆ!", "ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ ಎಂದು ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ಸಂದೇಶ ಕಳುಹಿಸಲಾಗಿದೆ!", "📦");
+                showModal("ಸಿದ್ಧವಾಗಿದೆ!", "ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ ಎಂದು ಅಪ್‌ಡೇಟ್ ಮಾಡಲಾಗಿದೆ!", "📦");
             }
         }
 
@@ -620,7 +631,9 @@
             let savedOrders = JSON.parse(localStorage.getItem('market_orders')) || [];
             let o = savedOrders.find(x => x.id === id);
             if (o) {
-                o.status = 'ಡೆಲಿವರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ (Out for Delivery)';
+                o.statusStep = 3;
+                o.statusText = '3. ಡೆಲಿವರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ (Out for Delivery)';
+                o.status = o.statusText;
                 localStorage.setItem('market_orders', JSON.stringify(savedOrders));
                 renderVendorOrders();
                 showModal("ಯಶಸ್ವಿ!", "ಡೆಲಿವರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ ಎಂದು ಅಪ್‌ಡೇಟ್ ಮಾಡಲಾಗಿದೆ!", "🚀");
@@ -632,7 +645,10 @@
             let o = savedOrders.find(x => x.id === id);
             if (o) {
                 o.paymentSuccess = true;
-                o.status = 'ಪಾವತಿ & ಡೆಲಿವರಿ ಯಶಸ್ವಿಯಾಗಿದೆ (Success)';
+                o.delivered = true;
+                o.statusStep = 4;
+                o.statusText = '4. ಪಾವತಿ & ಡೆಲಿವರಿ ಯಶಸ್ವಿಯಾಗಿದೆ (Success)';
+                o.status = o.statusText;
                 localStorage.setItem('market_orders', JSON.stringify(savedOrders));
                 renderVendorOrders();
                 showModal("ಯಶಸ್ವಿ!", "ಪೇಮೆಂಟ್ ಸಕ್ಸಸ್ ಮಾಡಲಾಗಿದೆ!", "💰");
