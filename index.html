@@ -28,12 +28,7 @@
 
     <!-- ಹೆಡರ್ -->
     <header class="bg-indigo-700 text-white p-4 shadow-md flex justify-between items-center sticky top-0 z-40">
-        <div class="flex items-center gap-2">
-            <div id="header-avatar" class="w-8 h-8 rounded-full bg-indigo-500 border border-white overflow-hidden hidden">
-                <img id="header-selfie-img" src="" class="w-full h-full object-cover">
-            </div>
-            <h1 class="text-sm font-bold">🛵 ಡೆಲಿವರಿ ಬಾಯ್ ಆಪ್</h1>
-        </div>
+        <h1 class="text-sm font-bold">🛵 ಡೆಲಿವರಿ ಬಾಯ್ ಆಪ್</h1>
         <div id="user-info" class="text-xs hidden items-center gap-2">
             <span id="logged-user-name" class="font-semibold"></span>
             <button type="button" onclick="logout()" class="bg-red-500 px-2 py-1 rounded text-[10px] cursor-pointer">ಲಾಗ್‌ಔಟ್</button>
@@ -42,16 +37,11 @@
 
     <main class="container mx-auto p-4 max-w-md">
 
-        <!-- ೧. ಲಾಗಿನ್ / ನೋಂದಣಿ ಪೇಜ್ (ಹೊಸ & ಹಳೆಯ ಲಾಗಿನ್) -->
-        <div id="auth-screen" class="bg-white p-6 rounded-2xl shadow-lg space-y-4">
-            <div class="flex border-b pb-2 gap-2">
-                <button type="button" onclick="switchAuthMode('new')" id="auth-tab-new" class="flex-1 bg-indigo-600 text-white py-2 rounded-xl text-xs font-bold cursor-pointer">ಹೊಸ ನೋಂದಣಿ</button>
-                <button type="button" onclick="switchAuthMode('old')" id="auth-tab-old" class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-xl text-xs font-bold cursor-pointer">ಹಳೆಯ ಲಾಗಿನ್ (ID)</button>
-            </div>
-
-            <!-- ಹೊಸ ನೋಂದಣಿ ಫಾರ್ಮ್ -->
-            <div id="form-new" class="space-y-3 text-xs">
-                <h2 class="text-sm font-bold text-gray-800">ಹೊಸ ಡೆಲಿವರಿ ಬಾಯ್ ನೋಂದಣಿ</h2>
+        <!-- ೧. ಡೆಲಿವರಿ ಬಾಯ್ ನೋಂದಣಿ ಪೇಜ್ -->
+        <div id="auth-screen" class="bg-white p-6 rounded-2xl shadow-lg space-y-4 page-section">
+            <h2 class="text-xl font-bold text-gray-800 border-b pb-2">ಡೆಲಿವರಿ ಬಾಯ್ ನೋಂದಣಿ</h2>
+            
+            <div class="space-y-3 text-xs">
                 <div>
                     <label class="block font-medium text-gray-700">ನಿಮ್ಮ ಹೆಸರು</label>
                     <input type="text" id="reg-name" placeholder="ಹೆಸರು ನಮೂದಿಸಿ" class="w-full p-2 border rounded-lg text-sm mt-1">
@@ -70,7 +60,7 @@
                 </div>
 
                 <div>
-                    <label class="block font-medium text-gray-700 mb-1">ಸೆಲ್ಫಿ ಫೋಟೋ (Selfie - ID ಹತ್ತಿರ ಕಾಣಿಸುತ್ತದೆ)</label>
+                    <label class="block font-medium text-gray-700 mb-1">ಸೆಲ್ಫಿ ಫೋಟೋ (Selfie)</label>
                     <input type="file" id="reg-selfie" accept="image/*" capture="user" class="w-full p-1 border rounded-lg text-xs">
                 </div>
                 <div>
@@ -84,20 +74,10 @@
 
                 <button type="button" onclick="registerDelivery()" class="w-full bg-indigo-600 text-white py-2.5 rounded-xl font-bold text-sm shadow cursor-pointer">ಖಾತೆ ಸೃಷ್ಟಿಸಿ & 4 ಅಂಕಿಯ ID ಪಡೆದುಕೊಳ್ಳಿ</button>
             </div>
-
-            <!-- ಹಳೆಯ ಲಾಗಿನ್ ಫಾರ್ಮ್ (4 ಅಂಕಿಯ ID) -->
-            <div id="form-old" class="space-y-3 text-xs hidden">
-                <h2 class="text-sm font-bold text-gray-800">ಹಳೆಯ ಡೆಲಿವರಿ ಬಾಯ್ ಲಾಗಿನ್</h2>
-                <div>
-                    <label class="block font-medium text-gray-700">ನಿಮ್ಮ 4 ಅಂಕಿಯ ಡಿಜಿಟಲ್ ID ನಮೂದಿಸಿ</label>
-                    <input type="tel" id="login-id-input" placeholder="ಉದಾ: 4821" maxlength="4" class="w-full p-3 border rounded-lg text-base mt-1 text-center font-bold tracking-widest">
-                </div>
-                <button type="button" onclick="loginWithId()" class="w-full bg-green-600 text-white py-3 rounded-xl font-bold text-sm shadow cursor-pointer">ಲಾಗಿನ್ ಆಗಿ (Login)</button>
-            </div>
         </div>
 
         <!-- ೨. ಡೆಲಿವರಿ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ -->
-        <div id="dashboard-delivery" class="space-y-4 hidden">
+        <div id="dashboard-delivery" class="space-y-4 hidden page-section">
             
             <!-- ಟ್ಯಾಬ್ ಬಟನ್‌ಗಳು -->
             <div class="flex gap-1 mb-2">
@@ -108,14 +88,9 @@
             </div>
 
             <div class="bg-white p-4 rounded-xl shadow space-y-3">
-                <div class="bg-indigo-50 p-3 rounded-xl flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <img id="dash-selfie-img" src="" class="w-12 h-12 rounded-full object-cover border-2 border-indigo-600 shadow">
-                        <div>
-                            <p id="delivery-id-badge" class="text-xs font-bold text-indigo-800 bg-indigo-200 inline-block px-3 py-0.5 rounded-full"></p>
-                            <h3 id="dash-delivery-name" class="font-bold text-sm text-gray-800 mt-0.5"></h3>
-                        </div>
-                    </div>
+                <div class="bg-indigo-50 p-3 rounded-xl text-center space-y-1">
+                    <p id="delivery-id-badge" class="text-xs font-bold text-indigo-800 bg-indigo-200 inline-block px-3 py-1 rounded-full"></p>
+                    <h3 class="font-bold text-sm text-gray-800 pt-1">🛵 ಡೆಲಿವರಿ ಕಾರ್ಯಗಳು & ವರದಿ</h3>
                 </div>
 
                 <div class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded-xl text-center border">
@@ -131,7 +106,7 @@
 
                 <!-- ಸೆಕ್ಷನ್ 1: ಹೊಸ ಆರ್ಡರ್‌ಗಳು -->
                 <div id="deliv-orders-section" class="space-y-2">
-                    <h4 class="font-bold text-xs text-gray-700 pt-1">ಅಂಗಡಿಯಿಂದ ಪ್ಯಾಕ್ ಆಗಿರುವ ಲೈವ್ ಆರ್ಡರ್‌ಗಳು:</h4>
+                    <h4 class="font-bold text-xs text-gray-700 pt-1">ಅಂಗಡಿಯಿಂದ ಪ್ಯಾಕ್ ಆಗಿರುವ ಆರ್ಡರ್‌ಗಳು:</h4>
                     <div id="delivery-orders-list" class="text-xs text-gray-600">ಯಾವುದೇ ಹೊಸ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</div>
                 </div>
 
@@ -186,20 +161,6 @@
             document.getElementById('image-modal').classList.add('hidden');
         }
 
-        function switchAuthMode(mode) {
-            if (mode === 'new') {
-                document.getElementById('form-new').classList.remove('hidden');
-                document.getElementById('form-old').classList.add('hidden');
-                document.getElementById('auth-tab-new').className = "flex-1 bg-indigo-600 text-white py-2 rounded-xl text-xs font-bold cursor-pointer";
-                document.getElementById('auth-tab-old').className = "flex-1 bg-gray-200 text-gray-700 py-2 rounded-xl text-xs font-bold cursor-pointer";
-            } else {
-                document.getElementById('form-new').classList.add('hidden');
-                document.getElementById('form-old').classList.remove('hidden');
-                document.getElementById('auth-tab-old').className = "flex-1 bg-indigo-600 text-white py-2 rounded-xl text-xs font-bold cursor-pointer";
-                document.getElementById('auth-tab-new').className = "flex-1 bg-gray-200 text-gray-700 py-2 rounded-xl text-xs font-bold cursor-pointer";
-            }
-        }
-
         function switchDeliveryTab(tab) {
             ['orders', 'history', 'payments', 'returns'].forEach(t => {
                 let sec = document.getElementById(`deliv-${t}-section`);
@@ -219,30 +180,16 @@
         }
 
         function checkLogin() {
-            let authScreen = document.getElementById('auth-screen');
-            let dashScreen = document.getElementById('dashboard-delivery');
-            let userInfo = document.getElementById('user-info');
-            let headerAvatar = document.getElementById('header-avatar');
-
             if (!currentDelivery) {
-                authScreen.classList.remove('hidden');
-                dashScreen.classList.add('hidden');
-                userInfo.classList.add('hidden');
-                headerAvatar.classList.add('hidden');
+                document.getElementById('auth-screen').classList.remove('hidden');
+                document.getElementById('dashboard-delivery').classList.add('hidden');
+                document.getElementById('user-info').classList.add('hidden');
             } else {
-                authScreen.classList.add('hidden');
-                dashScreen.classList.remove('hidden');
-                userInfo.classList.remove('hidden');
-                headerAvatar.classList.remove('hidden');
-                
+                document.getElementById('auth-screen').classList.add('hidden');
+                document.getElementById('dashboard-delivery').classList.remove('hidden');
+                document.getElementById('user-info').classList.remove('hidden');
                 document.getElementById('logged-user-name').innerText = `${currentDelivery.name} (ID: ${currentDelivery.deliveryId})`;
                 document.getElementById('delivery-id-badge').innerText = `ಡಿಜಿಟಲ್ ID: ${currentDelivery.deliveryId}`;
-                document.getElementById('dash-delivery-name').innerText = currentDelivery.name;
-                
-                if (currentDelivery.selfie) {
-                    document.getElementById('header-selfie-img').src = currentDelivery.selfie;
-                    document.getElementById('dash-selfie-img').src = currentDelivery.selfie;
-                }
                 renderDeliveryOrders();
             }
         }
@@ -254,10 +201,10 @@
                 img.onload = function () {
                     let canvas = document.createElement('canvas');
                     let ctx = canvas.getContext('2d');
-                    canvas.width = 250;
-                    canvas.height = 250;
-                    ctx.drawImage(img, 0, 0, 250, 250);
-                    callback(canvas.toDataURL('image/jpeg', 0.6));
+                    canvas.width = 300;
+                    canvas.height = 300;
+                    ctx.drawImage(img, 0, 0, 300, 300);
+                    callback(canvas.toDataURL('image/jpeg', 0.7));
                 };
                 img.src = e.target.result;
             };
@@ -285,7 +232,7 @@
                 return;
             }
 
-            let deliveryId = Math.floor(1000 + Math.random() * 9000).toString();
+            let deliveryId = Math.floor(1000 + Math.random() * 9000);
 
             compressImage(selfieFile, function(selfieUrl) {
                 compressImage(aadharFront, function(frontUrl) {
@@ -294,41 +241,11 @@
                             name, phone, district, taluk, city, pincode, deliveryId,
                             selfie: selfieUrl, aadharFront: frontUrl, aadharBack: backUrl
                         };
-                        
-                        let allBoys = JSON.parse(localStorage.getItem('all_delivery_boys')) || [];
-                        allBoys.push(currentDelivery);
-                        localStorage.setItem('all_delivery_boys', JSON.stringify(allBoys));
-
                         localStorage.setItem('currentDelivery', JSON.stringify(currentDelivery));
-                        
-                        showModal("ಯಶಸ್ವಿ!", `ಡೆಲಿವರಿ ಬಾಯ್ ಖಾತೆ ಸೃಷ್ಟಿಯಾಗಿದೆ!<br><b>ನಿಮ್ಮ 4 ಅಂಕಿಯ ಡಿಜಿಟಲ್ ID: ${deliveryId}</b>`, "🛵", () => {
-                            checkLogin();
-                        });
+                        showModal("ಯಶಸ್ವಿ!", `ಡೆಲಿವರಿ ಬಾಯ್ ಖಾತೆ ಸೃಷ್ಟಿಯಾಗಿದೆ!<br><b>ನಿಮ್ಮ 4 ಅಂಕಿಯ ಡಿಜಿಟಲ್ ID: ${deliveryId}</b>`, "🛵");
+                        checkLogin();
                     });
                 });
-            });
-        }
-
-        function loginWithId() {
-            let inputId = document.getElementById('login-id-input').value.trim();
-            if (!inputId || inputId.length !== 4) {
-                alert('ದಯವಿಟ್ಟು ಸರಿಯಾದ 4 ಅಂಕಿಯ ಡಿಜಿಟಲ್ ID ನಮೂದಿಸಿ!');
-                return;
-            }
-
-            let allBoys = JSON.parse(localStorage.getItem('all_delivery_boys')) || [];
-            let foundBoy = allBoys.find(b => b.deliveryId === inputId);
-
-            if (!foundBoy) {
-                alert('ಈ ಡಿಜಿಟಲ್ ID ಗೆ ಯಾವುದೇ ಖಾತೆ ಕಂಡುಬಂದಿಲ್ಲ! ದಯವಿಟ್ಟು ಹೊಸ ನೋಂದಣಿ ಮಾಡಿ.');
-                return;
-            }
-
-            currentDelivery = foundBoy;
-            localStorage.setItem('currentDelivery', JSON.stringify(currentDelivery));
-            
-            showModal("ಯಶಸ್ವಿ!", `ಸ್ವಾಗತ ${foundBoy.name}! ನಿಮ್ಮ ಖಾತೆಗೆ ಯಶಸ್ವಿಯಾಗಿ ಲಾಗಿನ್ ಆಗಲಾಗಿದೆ.`, "✅", () => {
-                checkLogin();
             });
         }
 
@@ -339,29 +256,27 @@
         }
 
         function renderDeliveryOrders() {
-            if (!currentDelivery) return;
             let dDiv = document.getElementById('delivery-orders-list');
             let savedOrders = JSON.parse(localStorage.getItem('market_orders')) || [];
             
-            let deliveredOrders = savedOrders.filter(o => o.delivered && o.acceptedBy === currentDelivery.deliveryId);
+            // ಪ್ಯಾಕಿಂಗ್ ಆಗಿರುವ ಮತ್ತು ಇನ್ನೂ ಡೆಲಿವರಿ/ಕ್ಯಾನ್ಸಲ್ ಆಗದಿರುವ ಆರ್ಡರ್‌ಗಳು
+            let readyOrders = savedOrders.filter(o => (o.statusStep >= 2 || o.packingReady) && !o.delivered && !o.cancelled);
+            let deliveredOrders = savedOrders.filter(o => o.delivered);
             let totalAmount = deliveredOrders.reduce((sum, ord) => sum + (ord.total || ord.totalAmount || 0), 0);
             let commission = Math.round(totalAmount * 0.10);
+
+            readyOrders.reverse();
 
             document.getElementById('today-total-orders').innerText = deliveredOrders.length;
             document.getElementById('today-commission').innerText = `₹${commission}`;
 
-            let availableOrders = savedOrders.filter(o => (o.statusStep >= 2 || o.packingReady) && !o.delivered && !o.cancelled);
-            let myLiveOrders = availableOrders.filter(o => o.acceptedBy === currentDelivery.deliveryId || !o.acceptedBy);
-
-            if (myLiveOrders.length === 0) {
+            if (readyOrders.length === 0) {
                 dDiv.innerHTML = "<p class='text-gray-500 text-xs mt-2'>ಯಾವುದೇ ಹೊಸ ಡೆಲಿವರಿ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>";
                 return;
             }
 
-            dDiv.innerHTML = myLiveOrders.map(o => {
-                let isAcceptedByMe = (o.acceptedBy === currentDelivery.deliveryId);
+            dDiv.innerHTML = readyOrders.map(o => {
                 let isPickedUp = (o.statusStep >= 3);
-
                 return `
                     <div class="border p-3 rounded-xl bg-teal-50 mb-3 space-y-2">
                         <div class="flex justify-between items-center border-b pb-1">
@@ -387,40 +302,20 @@
                         <div class="flex gap-2 pt-1 flex-wrap">
                             <a href="https://maps.google.com/?q=${encodeURIComponent(o.address)}" target="_blank" class="w-full text-center bg-indigo-600 text-white py-1.5 rounded-lg text-xs font-bold shadow">🗺️ ಜಿಪಿಎಸ್ ಮ್ಯಾಪ್ ರೂಟ್ (GPS Route)</a>
                             
-                            ${!o.acceptedBy ? `
-                                <button type="button" onclick="acceptAndPickupOrder(${o.id})" class="w-full bg-amber-500 text-gray-900 py-2 rounded-lg text-xs font-bold shadow cursor-pointer">📦 ಅಂಗಡಿಯಿಂದ ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ - ಪಿಕಪ್ ತಗೊಳ್ಳಿ (Accept & Pickup)</button>
-                            ` : isAcceptedByMe && !isPickedUp ? `
-                                <button type="button" onclick="pickupOrder(${o.id})" class="w-full bg-amber-600 text-white py-2 rounded-lg text-xs font-bold shadow cursor-pointer">🛵 ಪಿಕಪ್ ಕನ್ಫರ್ಮ್ ಮಾಡಿ (Confirm Pickup)</button>
+                            <!-- ಪಿಕಪ್ ಬಟನ್: ಒಮ್ಮೆ ಒತ್ತಿದರೆ ಈ ಆರ್ಡರ್‌ಗೆ ಇದು ಶಾಶ್ವತವಾಗಿ ಮಾಯವಾಗುತ್ತದೆ -->
+                            ${!isPickedUp ? `
+                                <button type="button" onclick="pickupOrder(${o.id})" class="w-full bg-amber-500 text-gray-900 py-2 rounded-lg text-xs font-bold shadow cursor-pointer">📦 ಅಂಗಡಿಯಿಂದ ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ - ಪಿಕಪ್ ತಗೊಳ್ಳಿ (Pickup)</button>
                             ` : ''}
 
-                            ${isAcceptedByMe ? `
-                                <button type="button" onclick="markDelivered(${o.id})" class="w-full bg-green-600 text-white py-2 rounded-lg text-xs font-bold shadow cursor-pointer">✅ ಡೆಲಿವರಿ ಮುಗಿಯಿತು & ಡೆಲಿವರಿ ತಲುಪಿದೆ</button>
-                                <button type="button" onclick="cancelDeliveryOrder(${o.id})" class="w-full bg-red-500 text-white py-1.5 rounded-lg text-xs font-bold shadow cursor-pointer">❌ ಆರ್ಡರ್ ಕ್ಯಾನ್ಸಲ್ ಮಾಡಿ (Cancel)</button>
-                            ` : ''}
+                            <!-- ಡೆಲಿವರಿ ಮುಗಿಯಿತು ಬಟನ್ -->
+                            <button type="button" onclick="markDelivered(${o.id})" class="w-full bg-green-600 text-white py-2 rounded-lg text-xs font-bold shadow cursor-pointer">✅ ಡೆಲಿವರಿ ಮುಗಿಯಿತು & ಡೆಲಿವರಿ ತಲುಪಿದೆ</button>
+
+                            <!-- ಕ್ಯಾನ್ಸಲ್ ಬಟನ್ -->
+                            <button type="button" onclick="cancelDeliveryOrder(${o.id})" class="w-full bg-red-500 text-white py-1.5 rounded-lg text-xs font-bold shadow cursor-pointer">❌ ಆರ್ಡರ್ ಕ್ಯಾನ್ಸಲ್ ಮಾಡಿ (Cancel)</button>
                         </div>
                     </div>
                 `;
             }).join('');
-        }
-
-        function acceptAndPickupOrder(id) {
-            let savedOrders = JSON.parse(localStorage.getItem('market_orders')) || [];
-            let o = savedOrders.find(x => x.id === id);
-            if (o) {
-                if (o.acceptedBy) {
-                    alert('ಕ್ಷಮಿಸಿ! ಈ ಆರ್ಡರ್ ಅನ್ನು ಈಗಾಗಲೇ ಬೇರೆ ಡೆಲಿವರಿ ಬಾಯ್ ಸ್ವೀಕರಿಸಿದ್ದಾರೆ.');
-                    renderDeliveryOrders();
-                    return;
-                }
-                o.acceptedBy = currentDelivery.deliveryId;
-                o.acceptedByName = currentDelivery.name;
-                o.statusStep = 3;
-                o.statusText = '3. ಡೆಲಿವರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ - 2 ರಿಂದ 3 ಗಂಟೆಯಲ್ಲಿ ಡೆಲಿವರಿ ಆಗುತ್ತದೆ';
-                o.status = o.statusText;
-                localStorage.setItem('market_orders', JSON.stringify(savedOrders));
-                renderDeliveryOrders();
-                showModal("ಯಶಸ್ವಿ!", "ನೀವು ಈ ಆರ್ಡರ್ ಅನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಸ್ವೀಕರಿಸಿದ್ದೀರಿ!", "🛵");
-            }
         }
 
         function pickupOrder(id) {
@@ -432,7 +327,9 @@
                 o.status = o.statusText;
                 localStorage.setItem('market_orders', JSON.stringify(savedOrders));
                 renderDeliveryOrders();
-                showModal("ಯಶಸ್ವಿ!", "ಪಿಕಪ್ ಕನ್ಫರ್ಮ್ ಆಗಿದೆ!", "🛵");
+                showModal("ಯಶಸ್ವಿ!", "ಪಿಕಪ್ ಸ್ವೀಕರಿಸಲಾಗಿದೆ! ಗ್ರಾಹಕರಿಗೆ ಹಾಗೂ ಅಂಗಡಿ ಮಾಲೀಕರಿಗೆ 3ನೇ ಹಂತದ ಸ್ಟೇಟಸ್ ಅಪ್‌ಡೇಟ್ ಆಗಿದೆ.", "🛵", () => {
+                    renderDeliveryOrders();
+                });
             }
         }
 
@@ -447,7 +344,7 @@
                 o.status = o.statusText;
                 localStorage.setItem('market_orders', JSON.stringify(savedOrders));
                 renderDeliveryOrders();
-                showModal("ಯಶಸ್ವಿ!", "ಡೆಲಿವರಿ ಯಶಸ್ವಿಯಾಗಿ ತಲುಪಿದೆ!", "💰");
+                showModal("ಯಶಸ್ವಿ!", "ಡೆಲಿವರಿ ಯಶಸ್ವಿಯಾಗಿ ತಲುಪಿದೆ! ಹಳೆಯ ಆರ್ಡರ್‌ಗಳ ಪಟ್ಟಿಗೆ ಸೇರಿಸಲಾಗಿದೆ.", "💰");
             }
         }
 
@@ -457,22 +354,20 @@
             let o = savedOrders.find(x => x.id === id);
             if (o) {
                 o.cancelled = true;
-                o.acceptedBy = null;
                 o.statusText = '❌ ಡೆಲಿವರಿ ರದ್ದುಗೊಳಿಸಲಾಗಿದೆ (Cancelled)';
                 localStorage.setItem('market_orders', JSON.stringify(savedOrders));
                 renderDeliveryOrders();
-                showModal("ಕ್ಯಾನ್ಸಲ್", "ಆರ್ಡರ್ ಕ್ಯಾನ್ಸಲ್ ಮಾಡಲಾಗಿದೆ.", "❌");
+                showModal("ಕ್ಯಾನ್ಸಲ್", "ಆರ್ಡರ್ ಯಶಸ್ವಿಯಾಗಿ ಕ್ಯಾನ್ಸಲ್ ಮಾಡಲಾಗಿದೆ.", "❌");
             }
         }
 
         function renderDeliveryHistory() {
-            if (!currentDelivery) return;
             let hDiv = document.getElementById('delivery-history-list');
             let savedOrders = JSON.parse(localStorage.getItem('market_orders')) || [];
             let currentTime = Date.now();
             let oneMonthMs = 30 * 24 * 60 * 60 * 1000;
 
-            let historyOrders = savedOrders.filter(o => o.acceptedBy === currentDelivery.deliveryId && (o.delivered || o.cancelled) && (currentTime - (o.deliveredTime || o.orderTime || currentTime)) <= oneMonthMs);
+            let historyOrders = savedOrders.filter(o => (o.delivered || o.cancelled) && (currentTime - (o.deliveredTime || o.orderTime || currentTime)) <= oneMonthMs);
 
             historyOrders.reverse();
 
@@ -495,10 +390,9 @@
         }
 
         function renderDeliveryPayments() {
-            if (!currentDelivery) return;
             let pDiv = document.getElementById('delivery-payments-list');
             let savedOrders = JSON.parse(localStorage.getItem('market_orders')) || [];
-            let deliveredOrders = savedOrders.filter(o => o.acceptedBy === currentDelivery.deliveryId && o.delivered);
+            let deliveredOrders = savedOrders.filter(o => o.delivered);
 
             deliveredOrders.reverse();
 
@@ -520,7 +414,6 @@
         }
 
         function renderDeliveryReturns() {
-            if (!currentDelivery) return;
             let rDiv = document.getElementById('delivery-returns-list');
             let savedOrders = JSON.parse(localStorage.getItem('market_orders')) || [];
             let returnOrders = savedOrders.filter(o => o.returned && !o.returnPickedUp);
@@ -554,7 +447,7 @@
                 o.status = o.statusText;
                 localStorage.setItem('market_orders', JSON.stringify(savedOrders));
                 renderDeliveryReturns();
-                showModal("ಯಶಸ್ವಿ!", "ರಿಟರ್ನ್ ಪಿಕಪ್ ಸ್ವೀಕರಿಸಲಾಗಿದೆ!", "🔄");
+                showModal("ಯಶಸ್ವಿ!", "ರಿಟರ್ನ್ ಪಿಕಪ್ ಸ್ವೀಕರಿಸಲಾಗಿದೆ! ಅಂಗಡಿ ಮಾಲೀಕರಿಗೆ ಸಂದೇಶ ಕಳುಹಿಸಲಾಗಿದೆ.", "🔄");
             }
         }
 
