@@ -54,7 +54,7 @@
 
         <!-- ೧. ಅಂಗಡಿ ನೋಂದಣಿ / ಲಾಗಿನ್ ಫಾರ್ಮ್ -->
         <div id="vendor-auth-box" class="bg-white p-5 rounded-2xl shadow-sm border space-y-3">
-            <h2 class="font-bold text-sm text-gray-800 border-b pb-2">ಅಂಗಡಿ ಮಾಲೀಕರ ನೋಂದಣಿ</h2>
+            <h2 class="font-bold text-sm text-gray-800 border-b pb-2">ಅಂಗಡಿ ಮಾಲೀಕರ ನೋಂದಣಿ / ಲಾಗಿನ್</h2>
             
             <div class="space-y-2 text-xs">
                 <div>
@@ -79,8 +79,8 @@
                     </select>
                 </div>
                 <div>
-                    <label class="font-bold text-gray-700">ಅಂಗಡಿ ಮುಂಭಾಗದ ಫೋಟೋ (ಕ್ಯಾಮೆರಾ ಅಥವಾ ಗ್ಯಾಲರಿ):</label>
-                    <input type="file" id="v-photo" accept="image/*" class="w-full p-1 border rounded-lg mt-1">
+                    <label class="font-bold text-gray-700">ಅಂಗಡಿ ಮುಂಭಾಗದ ಫೋಟೋ (ನೇರ ಕ್ಯಾಮೆರಾ):</label>
+                    <input type="file" id="v-photo" accept="image/*" capture="environment" class="w-full p-1 border rounded-lg mt-1">
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                     <input type="text" id="v-pincode" placeholder="ಪಿನ್ ಕೋಡ್" value="585223" class="p-2 border rounded-lg">
@@ -137,12 +137,12 @@
                     </div>
 
                     <div>
-                        <label class="font-bold text-gray-700">ಮುಂಭಾಗದ ಫೋಟೋ (ಕ್ಯಾಮೆರಾ ಅಥವಾ ಗ್ಯಾಲರಿ):</label>
-                        <input type="file" id="p-front" accept="image/*" class="w-full p-1 border rounded-lg mt-1">
+                        <label class="font-bold text-gray-700">ಮುಂಭಾಗದ ಫೋಟೋ (ನೇರ ಕ್ಯಾಮೆರಾ):</label>
+                        <input type="file" id="p-front" accept="image/*" capture="environment" class="w-full p-1 border rounded-lg mt-1">
                     </div>
                     <div>
-                        <label class="font-bold text-gray-700">ಹಿಂಭಾಗದ ಫೋಟೋ (ಕ್ಯಾಮೆರಾ ಅಥವಾ ಗ್ಯಾಲರಿ):</label>
-                        <input type="file" id="p-back" accept="image/*" class="w-full p-1 border rounded-lg mt-1">
+                        <label class="font-bold text-gray-700">ಹಿಂಭಾಗದ ಫೋಟೋ (ನೇರ ಕ್ಯಾಮೆರಾ):</label>
+                        <input type="file" id="p-back" accept="image/*" capture="environment" class="w-full p-1 border rounded-lg mt-1">
                     </div>
 
                     <button onclick="uploadProduct()" class="w-full bg-green-600 text-white py-2.5 rounded-xl font-bold shadow mt-2 cursor-pointer">ವಸ್ತು ಪ್ರಕಟಿಸಿ (Publish)</button>
@@ -170,7 +170,7 @@
     </main>
 
     <script>
-        const MASTER_SECRET_CODE = "9353"; // ನಿಮ್ಮ ರಹಸ್ಯ 4 ಅಂಕಿಯ ಕೋಡ್
+        const MASTER_SECRET_CODE = "9353"; // 4 ಅಂಕಿಯ ರಹಸ್ಯ ಕೋಡ್
         let currentVendor = JSON.parse(localStorage.getItem('currentVendor')) || null;
         let products = JSON.parse(localStorage.getItem('market_products')) || [];
 
@@ -305,7 +305,7 @@
             lockPanel();
         }
 
-        // ಫೋಟೋ ಕಂಪ್ರೆಷನ್ ಫಂಕ್ಷನ್
+        // ಫೋಟೋ ಕಂಪ್ರೆಷನ್ ಫಂಕ್ಷನ್ (ಯಾವ ಸೈಜ್ ಲಿಮಿಟ್ ಇಲ್ಲದೆ ವರ್ಕ್ ಆಗುತ್ತದೆ)
         function compressImageAsync(file) {
             return new Promise((resolve) => {
                 if (!file) {
@@ -318,7 +318,7 @@
                     img.onload = function() {
                         let canvas = document.createElement('canvas');
                         let ctx = canvas.getContext('2d');
-                        let max_size = 800;
+                        let max_size = 1000;
                         let width = img.width;
                         let height = img.height;
 
@@ -331,7 +331,7 @@
                         canvas.width = width;
                         canvas.height = height;
                         ctx.drawImage(img, 0, 0, width, height);
-                        resolve(canvas.toDataURL('image/jpeg', 0.7));
+                        resolve(canvas.toDataURL('image/jpeg', 0.8));
                     };
                     img.onerror = function() {
                         resolve(e.target.result);
@@ -382,7 +382,7 @@
             products.push(newProduct);
             localStorage.setItem('market_products', JSON.stringify(products));
 
-            // ಫಾರ್ಮ್ ಅನ್ನು ಸಂಪೂರ್ಣವಾಗಿ ಖಾಲಿ ಮಾಡುವುದು (ಹೊಸ ಫೋಟೋ ಹಾಕಲು ಸಿದ್ಧವಾಗಲು)
+            // ಫಾರ್ಮ್ ಅನ್ನು ಸಂಪೂರ್ಣವಾಗಿ ಖಾಲಿ ಮಾಡಿ ಹೊಸ ಫೋಟೋ ಹಾಕಲು ಸಿದ್ಧಪಡಿಸುವುದು
             document.getElementById('p-name').value = '';
             document.getElementById('p-orig').value = '';
             document.getElementById('p-disc').value = '';
@@ -530,9 +530,6 @@
                 showModal("ಯಶಸ್ವಿ!", "ಪೇಮೆಂಟ್ ಸಕ್ಸಸ್ ಫುಲ್ ಎಂದು ಕನ್‌ಫರ್ಮ್ ಮಾಡಲಾಗಿದೆ!", "💰");
             }
         }
-
-        // ಆರಂಭದಲ್ಲಿ ಲಾಕ್ ಸ್ಕ್ರೀನ್ ತೋರಿಸುವುದು (ಕೋಡ್: 9353)
-        // ಲಾಗಿನ್ ಆಗಿದ್ದರೆ ನೇರವಾಗಿ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ತೋರಿಸಲು checkVendorLogin() ಬಳಸಬಹುದು
     </script>
 </body>
 </html>
