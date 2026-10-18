@@ -8,20 +8,31 @@
 </head>
 <body class="bg-gray-100 font-sans pb-20">
 
+    <!-- 🔐 4 ಅಂಕಿಯ ಕೋಡ್ ಲಾಕ್ ಸ್ಕ್ರೀನ್ -->
+    <div id="lock-screen" class="fixed inset-0 bg-indigo-900 z-50 flex items-center justify-center p-4">
+        <div class="bg-white p-6 rounded-2xl shadow-2xl max-w-sm w-full text-center space-y-4">
+            <div class="text-4xl">🔐</div>
+            <h3 class="text-base font-bold text-gray-800">ಅಂಗಡಿ ಮಾಲೀಕರ ಪ್ಯಾನಲ್ ಲಾಕ್ ಆಗಿದೆ</h3>
+            <p class="text-xs text-gray-600">ಮುಂದುವರಿಯಲು ದಯವಿಟ್ಟು ನಿಮ್ಮ 4 ಅಂಕಿಯ ರಹಸ್ಯ ಕೋಡ್ ನಮೂದಿಸಿ:</p>
+            <input type="password" id="unlock-code-input" placeholder="4 ಅಂಕಿಯ ಕೋಡ್" maxlength="4" class="w-full p-3 border rounded-xl text-center text-lg font-bold tracking-widest bg-gray-50">
+            <button onclick="verifyMasterCode()" class="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold text-xs shadow cursor-pointer">ಅನ್‌ಲಾಕ್ ಮಾಡಿ (Unlock)</button>
+        </div>
+    </div>
+
     <!-- ಪಾಪ್‌ಅಪ್ ಸಂದೇಶ (Modal) -->
     <div id="custom-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white p-6 rounded-2xl shadow-2xl max-w-sm w-full text-center space-y-3">
             <div id="modal-icon" class="text-4xl">🎉</div>
             <h3 id="modal-title" class="text-lg font-bold text-gray-800">ಯಶಸ್ವಿ!</h3>
             <p id="modal-message" class="text-xs text-gray-600"></p>
-            <button onclick="closeModal()" class="w-full bg-indigo-600 text-white py-2 rounded-xl font-bold text-xs">ಸರಿ (OK)</button>
+            <button onclick="closeModal()" class="w-full bg-indigo-600 text-white py-2 rounded-xl font-bold text-xs cursor-pointer">ಸರಿ (OK)</button>
         </div>
     </div>
 
     <!-- ಫೋಟೋ ಜೂಮ್ ಪಾಪ್‌ಅಪ್ -->
     <div id="image-modal" class="fixed inset-0 bg-black bg-opacity-80 z-50 hidden flex items-center justify-center p-4">
         <div class="relative bg-white p-2 rounded-2xl max-w-sm w-full text-center">
-            <button onclick="closeImageModal()" class="absolute top-2 right-2 bg-red-500 text-white w-8 h-8 rounded-full font-bold">✕</button>
+            <button onclick="closeImageModal()" class="absolute top-2 right-2 bg-red-500 text-white w-8 h-8 rounded-full font-bold cursor-pointer">✕</button>
             <img id="zoomed-img" src="" class="w-full h-96 object-contain rounded-xl">
         </div>
     </div>
@@ -34,7 +45,8 @@
         </div>
         <div id="vendor-profile-info" class="hidden text-xs font-bold items-center gap-2">
             <span id="display-shop-name"></span>
-            <button onclick="vendorLogout()" class="bg-red-500 text-white px-2 py-1 rounded text-[10px]">ಬಾಹಿರ (Logout)</button>
+            <button onclick="lockPanel()" class="bg-amber-500 text-white px-2 py-1 rounded text-[10px] font-bold cursor-pointer">🔒 ಲಾಕ್</button>
+            <button onclick="vendorLogout()" class="bg-red-500 text-white px-2 py-1 rounded text-[10px] font-bold cursor-pointer">ಬಾಹಿರ (Logout)</button>
         </div>
     </header>
 
@@ -67,7 +79,7 @@
                     </select>
                 </div>
                 <div>
-                    <label class="font-bold text-gray-700">ಅಂಗಡಿ ಮುಂಭಾಗದ ಫೋಟೋ (ಗ್ಯಾಲರಿ ಅಥವಾ ಕ್ಯಾಮೆರಾ):</label>
+                    <label class="font-bold text-gray-700">ಅಂಗಡಿ ಮುಂಭಾಗದ ಫೋಟೋ (ಕ್ಯಾಮೆರಾ ಅಥವಾ ಗ್ಯಾಲರಿ):</label>
                     <input type="file" id="v-photo" accept="image/*" class="w-full p-1 border rounded-lg mt-1">
                 </div>
                 <div class="grid grid-cols-2 gap-2">
@@ -79,7 +91,7 @@
                     <input type="text" id="v-district" placeholder="ಜಿಲ್ಲೆ" value="ಯಾದಗಿರಿ" class="p-2 border rounded-lg">
                 </div>
 
-                <button onclick="registerVendor()" class="w-full bg-indigo-600 text-white py-2.5 rounded-xl font-bold shadow mt-2">ಖಾತೆ ಸೃಷ್ಟಿಸಿ ಮತ್ತು ಒಳಹೋಗಿ</button>
+                <button onclick="registerVendor()" class="w-full bg-indigo-600 text-white py-2.5 rounded-xl font-bold shadow mt-2 cursor-pointer">ಖಾತೆ ಸೃಷ್ಟಿಸಿ ಮತ್ತು ಒಳಹೋಗಿ</button>
             </div>
         </div>
 
@@ -88,8 +100,8 @@
             
             <!-- ನ್ಯಾವಿಗೇಷನ್ ಬಟನ್‌ಗಳು -->
             <div class="flex gap-2">
-                <button onclick="switchTab('upload')" id="btn-tab-upload" class="flex-1 bg-indigo-600 text-white py-2 rounded-xl text-xs font-bold shadow">➕ ವಸ್ತು ಅಪ್ಲೋಡ್</button>
-                <button onclick="switchTab('orders')" id="btn-tab-orders" class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-xl text-xs font-bold shadow">📦 ಆರ್ಡರ್ ನೋಡಿ</button>
+                <button onclick="switchTab('upload')" id="btn-tab-upload" class="flex-1 bg-indigo-600 text-white py-2 rounded-xl text-xs font-bold shadow cursor-pointer">➕ ವಸ್ತು ಅಪ್ಲೋಡ್</button>
+                <button onclick="switchTab('orders')" id="btn-tab-orders" class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-xl text-xs font-bold shadow cursor-pointer">📦 ಆರ್ಡರ್ ನೋಡಿ</button>
             </div>
 
             <!-- ವಸ್ತು ಅಪ್ಲೋಡ್ ಬಾಕ್ಸ್ -->
@@ -133,7 +145,7 @@
                         <input type="file" id="p-back" accept="image/*" class="w-full p-1 border rounded-lg mt-1">
                     </div>
 
-                    <button onclick="uploadProduct()" class="w-full bg-green-600 text-white py-2.5 rounded-xl font-bold shadow mt-2">ವಸ್ತು ಪ್ರಕಟಿಸಿ (Publish)</button>
+                    <button onclick="uploadProduct()" class="w-full bg-green-600 text-white py-2.5 rounded-xl font-bold shadow mt-2 cursor-pointer">ವಸ್ತು ಪ್ರಕಟಿಸಿ (Publish)</button>
                 </div>
 
                 <!-- ಅಪ್ಲೋಡ್ ಮಾಡಿದ ವಸ್ತುಗಳ ಲಿಸ್ಟ್ (ಚಿಕ್ಕದಾಗಿ ಹಾಗೂ ಡಿಲೀಟ್ ಬಟನ್) -->
@@ -158,8 +170,25 @@
     </main>
 
     <script>
+        const MASTER_SECRET_CODE = "9353"; // ನಿಮ್ಮ ರಹಸ್ಯ 4 ಅಂಕಿಯ ಕೋಡ್
         let currentVendor = JSON.parse(localStorage.getItem('currentVendor')) || null;
         let products = JSON.parse(localStorage.getItem('market_products')) || [];
+
+        function verifyMasterCode() {
+            let inputCode = document.getElementById('unlock-code-input').value.trim();
+            if (inputCode === MASTER_SECRET_CODE) {
+                document.getElementById('lock-screen').classList.add('hidden');
+                document.getElementById('unlock-code-input').value = '';
+                checkVendorLogin();
+            } else {
+                alert('ತಪ್ಪು ಕೋಡ್! ದಯವಿಟ್ಟು ಸರಿಯಾದ 4 ಅಂಕಿಯ ಕೋಡ್ ನಮೂದಿಸಿ.');
+                document.getElementById('unlock-code-input').value = '';
+            }
+        }
+
+        function lockPanel() {
+            document.getElementById('lock-screen').classList.remove('hidden');
+        }
 
         let modalCallback = null;
         function showModal(title, message, icon = '🎉', callback = null) {
@@ -190,13 +219,13 @@
             if (tab === 'upload') {
                 document.getElementById('section-upload').classList.remove('hidden');
                 document.getElementById('section-orders').classList.add('hidden');
-                document.getElementById('btn-tab-upload').className = "flex-1 bg-indigo-600 text-white py-2 rounded-xl text-xs font-bold shadow";
-                document.getElementById('btn-tab-orders').className = "flex-1 bg-gray-200 text-gray-700 py-2 rounded-xl text-xs font-bold shadow";
+                document.getElementById('btn-tab-upload').className = "flex-1 bg-indigo-600 text-white py-2 rounded-xl text-xs font-bold shadow cursor-pointer";
+                document.getElementById('btn-tab-orders').className = "flex-1 bg-gray-200 text-gray-700 py-2 rounded-xl text-xs font-bold shadow cursor-pointer";
             } else {
                 document.getElementById('section-upload').classList.add('hidden');
                 document.getElementById('section-orders').classList.remove('hidden');
-                document.getElementById('btn-tab-orders').className = "flex-1 bg-indigo-600 text-white py-2 rounded-xl text-xs font-bold shadow";
-                document.getElementById('btn-tab-upload').className = "flex-1 bg-gray-200 text-gray-700 py-2 rounded-xl text-xs font-bold shadow";
+                document.getElementById('btn-tab-orders').className = "flex-1 bg-indigo-600 text-white py-2 rounded-xl text-xs font-bold shadow cursor-pointer";
+                document.getElementById('btn-tab-upload').className = "flex-1 bg-gray-200 text-gray-700 py-2 rounded-xl text-xs font-bold shadow cursor-pointer";
                 loadVendorOrders();
             }
         }
@@ -273,6 +302,7 @@
             localStorage.removeItem('currentVendor');
             currentVendor = null;
             checkVendorLogin();
+            lockPanel();
         }
 
         // ಫೋಟೋ ಕಂಪ್ರೆಷನ್ ಫಂಕ್ಷನ್
@@ -384,7 +414,7 @@
                         <p class="font-bold text-xs">${p.name} (${p.size})</p>
                         <p class="text-[10px] text-green-600 font-bold">₹${p.discPrice} (${p.pieces})</p>
                     </div>
-                    <button onclick="deleteProduct(${p.id})" class="bg-red-500 text-white px-2 py-1 rounded text-[10px] font-bold">ಡಿಲೀಟ್</button>
+                    <button onclick="deleteProduct(${p.id})" class="bg-red-500 text-white px-2 py-1 rounded text-[10px] font-bold cursor-pointer">ಡಿಲೀಟ್</button>
                 </div>
             `).join('');
         }
@@ -455,12 +485,12 @@
 
                         <!-- ಸ್ಟೇಟಸ್ ಅಪ್‌ಡೇಟ್ ಬಟನ್‌ಗಳು -->
                         <div class="space-y-1.5 pt-2 border-t">
-                            ${!o.acceptedByVendor ? `<button onclick="updateOrderStatus(${o.id}, 2, '2. ವಸ್ತು ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ - ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ತಿಳಿಸಲಾಗಿದೆ')" class="w-full bg-blue-600 text-white py-2 rounded-lg font-bold text-xs shadow">📦 ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (OK)</button>` : ''}
+                            ${!o.acceptedByVendor ? `<button onclick="updateOrderStatus(${o.id}, 2, '2. ವಸ್ತು ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ - ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ತಿಳಿಸಲಾಗಿದೆ')" class="w-full bg-blue-600 text-white py-2 rounded-lg font-bold text-xs shadow cursor-pointer">📦 ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (OK)</button>` : ''}
                             
-                            ${step === 2 ? `<button onclick="updateOrderStatus(${o.id}, 3, '3. ಡೆಲಿವರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ (2 ರಿಂದ 3 ಗಂಟೆಯಲ್ಲಿ ತಲುಪುತ್ತದೆ)')" class="w-full bg-purple-600 text-white py-2 rounded-lg font-bold text-xs shadow">🚀 ಡೆಲಿವರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ (OK)</button>` : ''}
+                            ${step === 2 ? `<button onclick="updateOrderStatus(${o.id}, 3, '3. ಡೆಲಿವರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ (2 ರಿಂದ 3 ಗಂಟೆಯಲ್ಲಿ ತಲುಪುತ್ತದೆ)')" class="w-full bg-purple-600 text-white py-2 rounded-lg font-bold text-xs shadow cursor-pointer">🚀 ಡೆಲಿವರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ (OK)</button>` : ''}
 
                             ${!o.paymentSuccess ? `
-                                <button onclick="markPaymentReceived(${o.id})" class="w-full bg-green-600 text-white py-2 rounded-lg font-bold text-xs shadow">💰 ಪೇಮೆಂಟ್ ಬಂದಿದೆ - ಚೆಕ್ ಮಾಡಿ ಸಕ್ಸಸ್ ಮಾಡಿ (OK)</button>
+                                <button onclick="markPaymentReceived(${o.id})" class="w-full bg-green-600 text-white py-2 rounded-lg font-bold text-xs shadow cursor-pointer">💰 ಪೇಮೆಂಟ್ ಬಂದಿದೆ - ಚೆಕ್ ಮಾಡಿ ಸಕ್ಸಸ್ ಮಾಡಿ (OK)</button>
                             ` : `
                                 <div class="bg-green-100 p-2 rounded-lg text-green-800 font-bold text-center text-xs">
                                     ✅ ಪಾವತಿ ಯಶಸ್ವಿಯಾಗಿದೆ (Payment Success)
@@ -501,7 +531,8 @@
             }
         }
 
-        checkVendorLogin();
+        // ಆರಂಭದಲ್ಲಿ ಲಾಕ್ ಸ್ಕ್ರೀನ್ ತೋರಿಸುವುದು (ಕೋಡ್: 9353)
+        // ಲಾಗಿನ್ ಆಗಿದ್ದರೆ ನೇರವಾಗಿ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ತೋರಿಸಲು checkVendorLogin() ಬಳಸಬಹುದು
     </script>
 </body>
 </html>
