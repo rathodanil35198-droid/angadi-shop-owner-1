@@ -253,7 +253,7 @@
             let dummyPhoto = "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400";
 
             if (photoFile) {
-                compressImageToBasePath(photoFile, (res) => {
+                compressImageAsync(photoFile).then(res => {
                     saveVendorData(name, phone, shop, category, pincode, city, taluk, district, res);
                 });
             } else {
@@ -275,45 +275,47 @@
             checkVendorLogin();
         }
 
-        // ಫೋಟೋಗಳನ್ನು ಆಟೋಮ್ಯಾಟಿಕ್ ಆಗಿ ಕಂಪ್ರೆಸ್ ಮಾಡಿ ಸೈಜ್ ಸರಿಪಡಿಸುವ ಫಂಕ್ಷನ್
-        function compressImageToBasePath(file, callback) {
-            if (!file) {
-                callback("");
-                return;
-            }
-            let reader = new FileReader();
-            reader.onload = function(e) {
-                let img = new Image();
-                img.onload = function() {
-                    let canvas = document.createElement('canvas');
-                    let ctx = canvas.getContext('2d');
-                    let max_size = 800;
-                    let width = img.width;
-                    let height = img.height;
+        // ಸೂಪರ್ ಫಾಸ್ಟ್ ಹಾಗೂ ಪರ್ಫೆಕ್ಟ್ ಫೋಟೋ ಕಂಪ್ರೆಷನ್ ಫಂಕ್ಷನ್ (Promise ಆಧಾರಿತ)
+        function compressImageAsync(file) {
+            return new Promise((resolve) => {
+                if (!file) {
+                    resolve("");
+                    return;
+                }
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    let img = new Image();
+                    img.onload = function() {
+                        let canvas = document.createElement('canvas');
+                        let ctx = canvas.getContext('2d');
+                        let max_size = 800;
+                        let width = img.width;
+                        let height = img.height;
 
-                    if (width > height) {
-                        if (width > max_size) { height *= max_size / width; width = max_size; }
-                    } else {
-                        if (height > max_size) { width *= max_size / height; height = max_size; }
-                    }
+                        if (width > height) {
+                            if (width > max_size) { height *= max_size / width; width = max_size; }
+                        } else {
+                            if (height > max_size) { width *= max_size / height; height = max_size; }
+                        }
 
-                    canvas.width = width;
-                    canvas.height = height;
-                    ctx.drawImage(img, 0, 0, width, height);
-                    callback(canvas.toDataURL('image/jpeg', 0.7));
+                        canvas.width = width;
+                        canvas.height = height;
+                        ctx.drawImage(img, 0, 0, width, height);
+                        resolve(canvas.toDataURL('image/jpeg', 0.7));
+                    };
+                    img.onerror = function() {
+                        resolve(e.target.result);
+                    };
+                    img.src = e.target.result;
                 };
-                img.onerror = function() {
-                    callback(e.target.result);
+                reader.onerror = function() {
+                    resolve("");
                 };
-                img.src = e.target.result;
-            };
-            reader.onerror = function() {
-                callback("");
-            };
-            reader.readAsDataURL(file);
+                reader.readAsDataURL(file);
+            });
         }
 
-        function uploadProduct() {
+        async function uploadProduct() {
             let name = document.getElementById('p-name').value;
             let origPrice = document.getElementById('p-orig').value;
             let discPrice = document.getElementById('p-disc').value;
@@ -329,40 +331,36 @@
 
             let dummyImg = "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=400";
 
-            function saveProd(frontImg, backImg) {
-                let newProduct = {
-                    id: Date.now(),
-                    name: name,
-                    category: currentVendor.category,
-                    origPrice: Number(origPrice),
-                    discPrice: Number(discPrice),
-                    size: size,
-                    pieces: pieces,
-                    returnPolicy: 'ರಿಟರ್ನ್ ಉಂಟು',
-                    vendorShop: currentVendor.shop,
-                    vendorPhone: currentVendor.phone,
-                    frontPhoto: frontImg,
-                    backPhoto: backImg
-                };
+            // ಫೋಟೋಗಳು ಆಟೋಮ್ಯಾಟಿಕ್ ಆಗಿ ಕಂಪ್ರೆಸ್ ಆಗಿ ಮುಂದಕ್ಕೆ ಹೋಗುತ್ತವೆ
+            let frontImg = await compressImageAsync(frontFile);
+            let backImg = await compressImageAsync(backFile);
 
-                products.push(newProduct);
-                localStorage.setItem('market_products', JSON.stringify(products));
+            let newProduct = {
+                id: Date.now(),
+                name: name,
+                category: currentVendor.category,
+                origPrice: Number(origPrice),
+                discPrice: Number(discPrice),
+                size: size,
+                pieces: pieces,
+                returnPolicy: 'ರಿಟರ್ನ್ ಉಂಟು',
+                vendorShop: currentVendor.shop,
+                vendorPhone: currentVendor.phone,
+                frontPhoto: frontImg || dummyImg,
+                backPhoto: backImg || dummyImg
+            };
 
-                document.getElementById('p-name').value = '';
-                document.getElementById('p-orig').value = '';
-                document.getElementById('p-disc').value = '';
-                document.getElementById('p-front').value = '';
-                document.getElementById('p-back').value = '';
+            products.push(newProduct);
+            localStorage.setItem('market_products', JSON.stringify(products));
 
-                loadVendorProducts();
-                showModal("ಯಶಸ್ವಿ!", "ನಿಮ್ಮ ಫೋಟೋ ಹಾಗೂ ವಸ್ತು ಯಶಸ್ವಿಯಾಗಿ ಅಪ್‌ಲೋಡ್ ಆಗಿದೆ!", "📸");
-            }
+            document.getElementById('p-name').value = '';
+            document.getElementById('p-orig').value = '';
+            document.getElementById('p-disc').value = '';
+            document.getElementById('p-front').value = '';
+            document.getElementById('p-back').value = '';
 
-            compressImageToBasePath(frontFile, (frontImg) => {
-                compressImageToBasePath(backFile, (backImg) => {
-                    saveProd(frontImg || dummyImg, backImg || dummyImg);
-                });
-            });
+            loadVendorProducts();
+            showModal("ಯಶಸ್ವಿ!", "ನಿಮ್ಮ ಫೋಟೋ ಹಾಗೂ ವಸ್ತು ಯಶಸ್ವಿಯಾಗಿ ಅಪ್‌ಲೋಡ್ ಆಗಿದೆ!", "📸");
         }
 
         function loadVendorProducts() {
@@ -403,7 +401,6 @@
             let orders = JSON.parse(localStorage.getItem('market_orders')) || [];
             let myOrders = orders.filter(o => !o.acceptedByVendor || o.acceptedByVendor === currentVendor.shop);
 
-            // ಹೊಸ ಆರ್ಡರ್‌ಗಳು ಮೇಲೆ ಬರುವಂತೆ ರಿವರ್ಸ್ ಮಾಡಲಾಗಿದೆ
             myOrders.reverse();
 
             if (myOrders.length === 0) {
