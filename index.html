@@ -82,7 +82,6 @@
             <!-- ಟ್ಯಾಬ್ ಬಟನ್‌ಗಳು -->
             <div class="flex gap-1 mb-2">
                 <button type="button" onclick="switchDeliveryTab('orders')" id="tab-orders" class="flex-1 bg-indigo-600 text-white py-2 rounded-xl text-[11px] font-bold cursor-pointer">📦 ಹೊಸ ಆರ್ಡರ್‌ಗಳು</button>
-                <button type="button" onclick="switchDeliveryTab('history')" id="tab-history" class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-xl text-[11px] font-bold cursor-pointer">📜 ಹಳೆಯ ಆರ್ಡರ್‌ಗಳು</button>
                 <button type="button" onclick="switchDeliveryTab('payments')" id="tab-payments" class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-xl text-[11px] font-bold cursor-pointer">💳 ಪೇಮೆಂಟ್ಸ್</button>
                 <button type="button" onclick="switchDeliveryTab('returns')" id="tab-returns" class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-xl text-[11px] font-bold cursor-pointer">🔄 ರಿಟರ್ನ್ಸ್</button>
             </div>
@@ -106,23 +105,17 @@
 
                 <!-- ಸೆಕ್ಷನ್ 1: ಹೊಸ ಆರ್ಡರ್‌ಗಳು -->
                 <div id="deliv-orders-section" class="space-y-2">
-                    <h4 class="font-bold text-xs text-gray-700 pt-1">ಅಂಗಡಿಯಿಂದ ಪ್ಯಾಕ್ ಆಗಿರುವ ಆರ್ಡರ್‌ಗಳು:</h4>
-                    <div id="delivery-orders-list" class="text-xs text-gray-600">ಯಾವುದೇ ಹೊಸ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</div>
+                    <h4 class="font-bold text-xs text-gray-700 pt-1">ಅಂಗಡಿಯಿಂದ ಡೆಲಿವರಿಗೆ ಬಂದಿರುವ ಆರ್ಡರ್‌ಗಳು:</h4>
+                    <div id="delivery-orders-list" class="text-xs text-gray-600">ಯಾವುದೇ ಡೆಲಿವರಿ ಬಾಕಿ ಇಲ್ಲ.</div>
                 </div>
 
-                <!-- ಸೆಕ್ಷನ್ 2: ಹಳೆಯ ಆರ್ಡರ್‌ಗಳು (History) -->
-                <div id="deliv-history-section" class="space-y-2 hidden">
-                    <h4 class="font-bold text-xs text-gray-700 pt-1">ಪೂರ್ಣಗೊಂಡ / ಹಳೆಯ ಆರ್ಡರ್‌ಗಳ ಇತಿಹಾಸ (1 ತಿಂಗಳು):</h4>
-                    <div id="delivery-history-list" class="text-xs text-gray-600">ಯಾವುದೇ ಹಳೆಯ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</div>
-                </div>
-
-                <!-- ಸೆಕ್ಷನ್ 3: ಪೇಮೆಂಟ್ಸ್ -->
+                <!-- ಸೆಕ್ಷನ್ 2: ಪೇಮೆಂಟ್ಸ್ -->
                 <div id="deliv-payments-section" class="space-y-2 hidden">
                     <h4 class="font-bold text-xs text-gray-700 pt-1">ಪೇಮೆಂಟ್ಸ್ & ಕಲೆಕ್ಷನ್ ವಿವರ:</h4>
                     <div id="delivery-payments-list" class="text-xs text-gray-600">ಯಾವುದೇ ಪೇಮೆಂಟ್ ಬಾಕಿ ಇಲ್ಲ.</div>
                 </div>
 
-                <!-- ಸೆಕ್ಷನ್ 4: ರಿಟರ್ನ್ಸ್ -->
+                <!-- ಸೆಕ್ಷನ್ 3: ರಿಟರ್ನ್ಸ್ -->
                 <div id="deliv-returns-section" class="space-y-2 hidden">
                     <h4 class="font-bold text-xs text-gray-700 pt-1">ಗ್ರಾಹಕರಿಂದ ಬಂದ ರಿಟರ್ನ್ ವಿನಂತಿಗಳು:</h4>
                     <div id="delivery-returns-list" class="text-xs text-gray-600">ಯಾವುದೇ ರಿಟರ್ನ್ ಇಲ್ಲ.</div>
@@ -136,20 +129,15 @@
     <script>
         let currentDelivery = JSON.parse(localStorage.getItem('currentDelivery')) || null;
 
-        function showModal(title, message, icon = '🎉', callback = null) {
+        function showModal(title, message, icon = '🎉') {
             document.getElementById('modal-title').innerText = title;
             document.getElementById('modal-message').innerHTML = message;
             document.getElementById('modal-icon').innerText = icon;
             document.getElementById('custom-modal').classList.remove('hidden');
-            window.modalCallback = callback;
         }
 
         function closeModal() {
             document.getElementById('custom-modal').classList.add('hidden');
-            if (typeof window.modalCallback === 'function') {
-                window.modalCallback();
-                window.modalCallback = null;
-            }
         }
 
         function zoomImage(src) {
@@ -162,19 +150,14 @@
         }
 
         function switchDeliveryTab(tab) {
-            ['orders', 'history', 'payments', 'returns'].forEach(t => {
-                let sec = document.getElementById(`deliv-${t}-section`);
-                let btn = document.getElementById(`tab-${t}`);
-                if (sec) sec.classList.add('hidden');
-                if (btn) btn.className = "flex-1 bg-gray-200 text-gray-700 py-2 rounded-xl text-[11px] font-bold cursor-pointer";
+            ['orders', 'payments', 'returns'].forEach(t => {
+                document.getElementById(`deliv-${t}-section`).classList.add('hidden');
+                document.getElementById(`tab-${t}`).className = "flex-1 bg-gray-200 text-gray-700 py-2 rounded-xl text-[11px] font-bold cursor-pointer";
             });
-            let activeSec = document.getElementById(`deliv-${tab}-section`);
-            let activeBtn = document.getElementById(`tab-${tab}`);
-            if (activeSec) activeSec.classList.remove('hidden');
-            if (activeBtn) activeBtn.className = "flex-1 bg-indigo-600 text-white py-2 rounded-xl text-[11px] font-bold cursor-pointer";
+            document.getElementById(`deliv-${tab}-section`).classList.remove('hidden');
+            document.getElementById(`tab-${tab}`).className = "flex-1 bg-indigo-600 text-white py-2 rounded-xl text-[11px] font-bold cursor-pointer";
             
             if (tab === 'orders') renderDeliveryOrders();
-            if (tab === 'history') renderDeliveryHistory();
             if (tab === 'payments') renderDeliveryPayments();
             if (tab === 'returns') renderDeliveryReturns();
         }
@@ -259,8 +242,8 @@
             let dDiv = document.getElementById('delivery-orders-list');
             let savedOrders = JSON.parse(localStorage.getItem('market_orders')) || [];
             
-            // ಪ್ಯಾಕಿಂಗ್ ಆಗಿರುವ ಮತ್ತು ಇನ್ನೂ ಡೆಲಿವರಿ/ಕ್ಯಾನ್ಸಲ್ ಆಗದಿರುವ ಆರ್ಡರ್‌ಗಳು
-            let readyOrders = savedOrders.filter(o => (o.statusStep >= 2 || o.packingReady) && !o.delivered && !o.cancelled);
+            // ಅಂಗಡಿ ಮಾಲೀಕರು ಪ್ಯಾಕಿಂಗ್ ಅಥವಾ ಡೆಲಿವರಿಗೆ ಕಳುಹಿಸಿದ ಆರ್ಡರ್‌ಗಳು (statusStep >= 2) ಮತ್ತು ಇನ್ನೂ ಡೆಲಿವರಿ ಆಗದಿರುವವು
+            let readyOrders = savedOrders.filter(o => (o.statusStep >= 2 || o.packingReady) && !o.delivered);
             let deliveredOrders = savedOrders.filter(o => o.delivered);
             let totalAmount = deliveredOrders.reduce((sum, ord) => sum + (ord.total || ord.totalAmount || 0), 0);
             let commission = Math.round(totalAmount * 0.10);
@@ -275,62 +258,35 @@
                 return;
             }
 
-            dDiv.innerHTML = readyOrders.map(o => {
-                let isPickedUp = (o.statusStep >= 3);
-                return `
-                    <div class="border p-3 rounded-xl bg-teal-50 mb-3 space-y-2">
-                        <div class="flex justify-between items-center border-b pb-1">
-                            <span class="font-bold text-xs text-indigo-700">ಆರ್ಡರ್ ID: ${o.id}</span>
-                            <span class="text-[10px] bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded font-bold">ಪಾವತಿ: ${o.paymentMethod}</span>
-                        </div>
-
-                        ${o.items.map(i => `
-                            <div class="flex gap-2 items-center">
-                                <img src="${i.frontPhoto}" onclick="zoomImage('${i.frontPhoto}')" class="w-12 h-12 object-cover rounded border cursor-pointer">
-                                <div>
-                                    <p class="font-bold text-xs">${i.name} (${i.size}) x${i.quantity}</p>
-                                    <p class="text-[11px] text-green-600 font-bold">₹${i.discPrice * i.quantity}</p>
-                                </div>
-                            </div>
-                        `).join('')}
-
-                        <div class="text-[11px] text-gray-700 space-y-0.5 pt-1">
-                            <p><b>ಗ್ರಾಹಕರು:</b> ${o.customerName} (<a href="tel:${o.phone}" class="text-blue-600 underline font-bold">📞 ${o.phone}</a>)</p>
-                            <p><b>ವಿಳಾಸ:</b> ${o.city}, ${o.taluk} (Pin: ${o.pincode})</p>
-                        </div>
-
-                        <div class="flex gap-2 pt-1 flex-wrap">
-                            <a href="https://maps.google.com/?q=${encodeURIComponent(o.address)}" target="_blank" class="w-full text-center bg-indigo-600 text-white py-1.5 rounded-lg text-xs font-bold shadow">🗺️ ಜಿಪಿಎಸ್ ಮ್ಯಾಪ್ ರೂಟ್ (GPS Route)</a>
-                            
-                            <!-- ಪಿಕಪ್ ಬಟನ್: ಒಮ್ಮೆ ಒತ್ತಿದರೆ ಈ ಆರ್ಡರ್‌ಗೆ ಇದು ಶಾಶ್ವತವಾಗಿ ಮಾಯವಾಗುತ್ತದೆ -->
-                            ${!isPickedUp ? `
-                                <button type="button" onclick="pickupOrder(${o.id})" class="w-full bg-amber-500 text-gray-900 py-2 rounded-lg text-xs font-bold shadow cursor-pointer">📦 ಅಂಗಡಿಯಿಂದ ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ - ಪಿಕಪ್ ತಗೊಳ್ಳಿ (Pickup)</button>
-                            ` : ''}
-
-                            <!-- ಡೆಲಿವರಿ ಮುಗಿಯಿತು ಬಟನ್ -->
-                            <button type="button" onclick="markDelivered(${o.id})" class="w-full bg-green-600 text-white py-2 rounded-lg text-xs font-bold shadow cursor-pointer">✅ ಡೆಲಿವರಿ ಮುಗಿಯಿತು & ಡೆಲಿವರಿ ತಲುಪಿದೆ</button>
-
-                            <!-- ಕ್ಯಾನ್ಸಲ್ ಬಟನ್ -->
-                            <button type="button" onclick="cancelDeliveryOrder(${o.id})" class="w-full bg-red-500 text-white py-1.5 rounded-lg text-xs font-bold shadow cursor-pointer">❌ ಆರ್ಡರ್ ಕ್ಯಾನ್ಸಲ್ ಮಾಡಿ (Cancel)</button>
-                        </div>
+            dDiv.innerHTML = readyOrders.map(o => `
+                <div class="border p-3 rounded-xl bg-teal-50 mb-3 space-y-2">
+                    <div class="flex justify-between items-center border-b pb-1">
+                        <span class="font-bold text-xs text-indigo-700">ಆರ್ಡರ್ ID: ${o.id}</span>
+                        <span class="text-[10px] bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded font-bold">ಪಾವತಿ: ${o.paymentMethod}</span>
                     </div>
-                `;
-            }).join('');
-        }
 
-        function pickupOrder(id) {
-            let savedOrders = JSON.parse(localStorage.getItem('market_orders')) || [];
-            let o = savedOrders.find(x => x.id === id);
-            if (o) {
-                o.statusStep = 3;
-                o.statusText = '3. ಡೆಲಿವರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ - 2 ರಿಂದ 3 ಗಂಟೆಯಲ್ಲಿ ಡೆಲಿವರಿ ಆಗುತ್ತದೆ';
-                o.status = o.statusText;
-                localStorage.setItem('market_orders', JSON.stringify(savedOrders));
-                renderDeliveryOrders();
-                showModal("ಯಶಸ್ವಿ!", "ಪಿಕಪ್ ಸ್ವೀಕರಿಸಲಾಗಿದೆ! ಗ್ರಾಹಕರಿಗೆ ಹಾಗೂ ಅಂಗಡಿ ಮಾಲೀಕರಿಗೆ 3ನೇ ಹಂತದ ಸ್ಟೇಟಸ್ ಅಪ್‌ಡೇಟ್ ಆಗಿದೆ.", "🛵", () => {
-                    renderDeliveryOrders();
-                });
-            }
+                    ${o.items.map(i => `
+                        <div class="flex gap-2 items-center">
+                            <img src="${i.frontPhoto}" onclick="zoomImage('${i.frontPhoto}')" class="w-12 h-12 object-cover rounded border cursor-pointer">
+                            <div>
+                                <p class="font-bold text-xs">${i.name} (${i.size}) x${i.quantity}</p>
+                                <p class="text-[11px] text-green-600 font-bold">₹${i.discPrice * i.quantity}</p>
+                            </div>
+                        </div>
+                    `).join('')}
+
+                    <div class="text-[11px] text-gray-700 space-y-0.5 pt-1">
+                        <p><b>ಗ್ರಾಹಕರು:</b> ${o.customerName} (<a href="tel:${o.phone}" class="text-blue-600 underline font-bold">📞 ${o.phone}</a>)</p>
+                        <p><b>ವಿಳಾಸ:</b> ${o.city}, ${o.taluk} (Pin: ${o.pincode})</p>
+                    </div>
+
+                    <div class="flex gap-2 pt-1 flex-wrap">
+                        <a href="https://maps.google.com/?q=${encodeURIComponent(o.address)}" target="_blank" class="w-full text-center bg-indigo-600 text-white py-1.5 rounded-lg text-xs font-bold shadow">🗺️ ಜಿಪಿಎಸ್ ಮ್ಯಾಪ್ ರೂಟ್ (GPS Route)</a>
+                        
+                        <button type="button" onclick="markDelivered(${o.id})" class="w-full bg-green-600 text-white py-2 rounded-lg text-xs font-bold shadow cursor-pointer">✅ ಡೆಲಿವರಿ ಮುಗಿಯಿತು & ಪೇಮೆಂಟ್ ಕನ್ಫರ್ಮ್ (OK)</button>
+                    </div>
+                </div>
+            `).join('');
         }
 
         function markDelivered(id) {
@@ -338,55 +294,13 @@
             let o = savedOrders.find(x => x.id === id);
             if (o) {
                 o.delivered = true;
-                o.deliveredTime = Date.now();
-                o.statusStep = 4;
-                o.statusText = '4. ಡೆಲಿವರಿ ತಲುಪಿದೆ - ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್ (ಅಂಗಡಿ ಮಾಲೀಕರು ಚೆಕ್ ಮಾಡಬೇಕು)';
+                o.statusStep = 3;
+                o.statusText = '3. ಡೆಲಿವರಿ ಮುಗಿದಿದೆ - ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್ (ಅಂಗಡಿ ಮಾಲೀಕರು ಚೆಕ್ ಮಾಡಬೇಕು)';
                 o.status = o.statusText;
                 localStorage.setItem('market_orders', JSON.stringify(savedOrders));
                 renderDeliveryOrders();
-                showModal("ಯಶಸ್ವಿ!", "ಡೆಲಿವರಿ ಯಶಸ್ವಿಯಾಗಿ ತಲುಪಿದೆ! ಹಳೆಯ ಆರ್ಡರ್‌ಗಳ ಪಟ್ಟಿಗೆ ಸೇರಿಸಲಾಗಿದೆ.", "💰");
+                showModal("ಯಶಸ್ವಿ!", "ಡೆಲಿವರಿ ಯಶಸ್ವಿಯಾಗಿದೆ! ಅಂಗಡಿ ಮಾಲೀಕರು ಪೇಮೆಂಟ್ ಚೆಕ್ ಮಾಡಿ ಸಕ್ಸಸ್ ಮಾಡಿದ ಮೇಲೆ ನಿಮ್ಮಲ್ಲಿ ಪೇಮೆಂಟ್ ಸಕ್ಸಸ್ ಆಗುತ್ತದೆ.", "💰");
             }
-        }
-
-        function cancelDeliveryOrder(id) {
-            if (!confirm('ಖಂಡಿತವಾಗಿ ನೀವು ಈ ಆರ್ಡರ್ ಅನ್ನು ಕ್ಯಾನ್ಸಲ್ ಮಾಡಲು ಬಯಸುತ್ತೀರಾ?')) return;
-            let savedOrders = JSON.parse(localStorage.getItem('market_orders')) || [];
-            let o = savedOrders.find(x => x.id === id);
-            if (o) {
-                o.cancelled = true;
-                o.statusText = '❌ ಡೆಲಿವರಿ ರದ್ದುಗೊಳಿಸಲಾಗಿದೆ (Cancelled)';
-                localStorage.setItem('market_orders', JSON.stringify(savedOrders));
-                renderDeliveryOrders();
-                showModal("ಕ್ಯಾನ್ಸಲ್", "ಆರ್ಡರ್ ಯಶಸ್ವಿಯಾಗಿ ಕ್ಯಾನ್ಸಲ್ ಮಾಡಲಾಗಿದೆ.", "❌");
-            }
-        }
-
-        function renderDeliveryHistory() {
-            let hDiv = document.getElementById('delivery-history-list');
-            let savedOrders = JSON.parse(localStorage.getItem('market_orders')) || [];
-            let currentTime = Date.now();
-            let oneMonthMs = 30 * 24 * 60 * 60 * 1000;
-
-            let historyOrders = savedOrders.filter(o => (o.delivered || o.cancelled) && (currentTime - (o.deliveredTime || o.orderTime || currentTime)) <= oneMonthMs);
-
-            historyOrders.reverse();
-
-            if (historyOrders.length === 0) {
-                hDiv.innerHTML = "<p class='text-gray-500 text-xs mt-2'>ಯಾವುದೇ ಹಳೆಯ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>";
-                return;
-            }
-
-            hDiv.innerHTML = historyOrders.map(o => `
-                <div class="border p-3 rounded-xl bg-gray-50 mb-3 space-y-1 shadow-sm">
-                    <p class="font-bold text-xs text-indigo-700">ಆರ್ಡರ್ ID: ${o.id} ${o.cancelled ? '<span class="text-red-600">(ಕ್ಯಾನ್ಸಲ್)</span>' : ''}</p>
-                    <p class="text-[11px] text-gray-700"><b>ಗ್ರಾಹಕರು:</b> ${o.customerName} (${o.phone})</p>
-                    <p class="text-[11px] text-gray-700"><b>ಸ್ಥಳ:</b> ${o.city}, ${o.taluk}</p>
-                    <p class="text-[11px] text-gray-700"><b>ಮೊತ್ತ:</b> ₹${o.total || o.totalAmount || 0} (${o.paymentMethod})</p>
-                    <p class="text-[11px] font-bold ${o.paymentSuccess ? 'text-green-700' : 'text-orange-600'}">
-                        ${o.paymentSuccess ? '✨ ಪೇಮೆಂಟ್ ಯಶಸ್ವಿ (Success)' : '⏳ ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್'}
-                    </p>
-                </div>
-            `).join('');
         }
 
         function renderDeliveryPayments() {
