@@ -280,7 +280,7 @@
             loadVendorProducts();
         }
 
-        // ಆರ್ಡರ್ಸ್ ಮ್ಯಾನೇಜ್‌ಮೆಂಟ್ & ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ ಬಟನ್ ಫಿಕ್ಸ್
+        // ಆರ್ಡರ್ಸ್ ಮ್ಯಾನೇಜ್‌ಮೆಂಟ್ & ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ ಬಟನ್
         function loadVendorOrders() {
             let container = document.getElementById('vendor-orders-list');
             let orders = JSON.parse(localStorage.getItem('market_orders')) || [];
@@ -332,7 +332,7 @@
                         <a href="tel:${o.phone}" class="flex-1 bg-teal-600 text-white py-2 rounded-xl text-center font-bold text-[11px]">📞 ಗ್ರಾಹಕರಿಗೆ ಕಾಲ್ ಮಾಡಿ</a>
                     </div>
 
-                    <!-- ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ ಬಟನ್ (ಸಂಪೂರ್ಣ ವರ್ಕ್ ಆಗುತ್ತದೆ) -->
+                    <!-- ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ ಬಟನ್ -->
                     <div class="space-y-2 pt-1">
                         <button type="button" onclick="markOrderPacked('${o.id}')" class="w-full ${o.packed ? 'bg-gray-400 cursor-not-allowed' : 'bg-amber-600 hover:bg-amber-700'} text-white py-2.5 rounded-xl font-bold text-xs shadow cursor-pointer">
                             📦 ${o.packed ? 'ಪ್ಯಾಕಿಂಗ್ ಪೂರ್ಣಗೊಂಡಿದೆ (Packed)' : 'ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (OK)'}
@@ -369,7 +369,7 @@
             }
         }
 
-        // ಆಪ್ ಲೋಡ್ ಆದ ತಕ್ಷಣ ವಸ್ತುಗಳ ಪಟ್ಟಿ ಲೋಡ್ ಮಾಡುವುದು
+        // ಆಪ್ ಓಪನ್ ಆದ ತಕ್ಷಣ ವಸ್ತುಗಳ ಪಟ್ಟಿ ಲೋಡ್ ಮಾಡುವುದು
         loadVendorProducts();
     </script>
 </body>
