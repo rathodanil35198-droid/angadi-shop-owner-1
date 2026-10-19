@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ಶಹಾಪುರ ಮಾರ್ಕೆಟ್ - ಬಹುಪಯೋಗಿ ಆಪ್</title>
+    <title>ಶಹಾಪುರ ಮಾರ್ಕೆಟ್ - ಅಂಗಡಿ ಮಾಲೀಕರ ಪೇಜ್</title>
     <style>
         * {
             box-sizing: border-box;
@@ -119,7 +119,7 @@
             color: white;
         }
 
-        /* Top Navigation Buttons for Dashboard */
+        /* Top Navigation Buttons */
         .dashboard-nav {
             display: flex;
             gap: 10px;
@@ -145,31 +145,7 @@
             color: white;
         }
 
-        /* Nav Tab Options for Auth */
-        .tab-buttons {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .tab-btn {
-            flex: 1;
-            padding: 10px;
-            background: #e4e7eb;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 13px;
-            color: #555;
-        }
-
-        .tab-btn.active {
-            background: #4a3aff;
-            color: white;
-        }
-
-        /* Product Card Styles - Fixed Layout & Clean Thumbnail */
+        /* Product Grid */
         .product-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -193,11 +169,6 @@
             object-fit: cover;
             border-radius: 6px;
             cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .product-card img:hover {
-            transform: scale(1.02);
         }
 
         .product-title {
@@ -254,12 +225,6 @@
             text-align: center;
             max-width: 400px;
             width: 100%;
-            position: relative;
-        }
-
-        .modal-content h3 {
-            color: #2ed573;
-            margin-bottom: 10px;
         }
 
         .id-badge {
@@ -273,7 +238,7 @@
             letter-spacing: 2px;
         }
 
-        /* Full Image Zoom Modal */
+        /* Image Zoom */
         .zoom-modal {
             display: none;
             position: fixed;
@@ -297,7 +262,6 @@
             color: white;
             font-size: 30px;
             cursor: pointer;
-            font-weight: bold;
         }
     </style>
 </head>
@@ -305,21 +269,14 @@
 
     <div class="header">
         <h2>🏪 ಶಹಾಪುರ ಮಾರ್ಕೆಟ್</h2>
-        <p style="font-size: 12px;" id="headerSubtitle">ಅಂಗಡಿ ಮಾಲೀಕರ & ಗ್ರಾಹಕರ ಆಪ್</p>
+        <p style="font-size: 12px;" id="headerSubtitle">ಅಂಗಡಿ ಮಾಲೀಕರ ಆಪ್</p>
         <button class="logout-btn" id="logoutBtn" onclick="logout()">ಬಾಹಿರ (Logout)</button>
     </div>
 
     <div class="container">
 
-        <!-- SECTION 1: AUTHENTICATION -->
+        <!-- SECTION 1: VENDOR LOGIN / REGISTRATION -->
         <div id="authSection">
-            <div class="tab-buttons">
-                <button class="tab-btn active" onclick="switchAuthTab('vendor')">ಅಂಗಡಿ ಮಾಲೀಕ</button>
-                <button class="tab-btn" onclick="switchAuthTab('customer')">ಗ್ರಾಹಕ (Customer)</button>
-                <button class="tab-btn" onclick="switchAuthTab('delivery')">ಡೆಲಿವರಿ ಬಾಯ್</button>
-            </div>
-
-            <!-- VENDOR -->
             <div id="vendorAuthBox" class="card">
                 <h3 class="card-title">ಅಂಗಡಿ ಮಾಲೀಕರ ನೋಂದಣಿ / ಲಾಗಿನ್</h3>
                 
@@ -356,26 +313,6 @@
                     <input type="number" id="vendorLoginId" placeholder="4 ಅಂಕಿಗಳ ವೆಂಡರ್ ಕೋಡ್" style="margin-bottom: 8px; padding: 8px; width: 100%; border: 1px solid #ccc; border-radius: 6px;">
                     <button class="btn btn-success" style="padding: 8px;" onclick="handleVendorLogin()">ವೆಂಡರ್ ಕೋಡ್ ಮೂಲಕ ಲಾಗಿನ್</button>
                 </div>
-            </div>
-
-            <!-- CUSTOMER -->
-            <div id="customerAuthBox" class="card" style="display: none;">
-                <h3 class="card-title">🛍️ ಗ್ರಾಹಕರ ಕೋಡ್ ಲಾಗಿನ್</h3>
-                <div class="form-group">
-                    <label>ಗ್ರಾಹಕರ 4 ಅಂಕಿಗಳ ಕೋಡ್:</label>
-                    <input type="number" id="customerCodeInput" placeholder="ಉದಾ: 5012">
-                </div>
-                <button class="btn btn-primary" onclick="handleCustomerLogin()">ಮಾರುಕಟ್ಟೆಗೆ ಪ್ರವೇಶಿಸಿ</button>
-            </div>
-
-            <!-- DELIVERY -->
-            <div id="deliveryAuthBox" class="card" style="display: none;">
-                <h3 class="card-title">🛵 ಡೆಲಿವರಿ ಬಾಯ್ ಕೋಡ್ ಲಾಗಿನ್</h3>
-                <div class="form-group">
-                    <label>ಡೆಲಿವರಿ 4 ಅಂಕಿಗಳ ಕೋಡ್:</label>
-                    <input type="number" id="deliveryCodeInput" placeholder="ಉದಾ: 8820">
-                </div>
-                <button class="btn btn-success" onclick="handleDeliveryLogin()">ಡೆಲಿವರಿ ಪ್ಯಾನಲ್ ತೆರೆಯಿರಿ</button>
             </div>
         </div>
 
@@ -442,30 +379,12 @@
             </div>
         </div>
 
-        <!-- SECTION 3: CUSTOMER VIEW PANEL -->
-        <div id="customerDashboardSection" style="display: none;">
-            <div class="card">
-                <h3 class="card-title">🛍️ ಶಹಾಪುರ ಮಾರುಕಟ್ಟೆ - ಗ್ರಾಹಕರ ಸ್ಟೋರ್</h3>
-                <div id="customerProductGrid" class="product-grid"></div>
-            </div>
-        </div>
-
-        <!-- SECTION 4: DELIVERY BOY PANEL -->
-        <div id="deliveryDashboardSection" style="display: none;">
-            <div class="card">
-                <h3 class="card-title">🛵 ಡೆಲಿವರಿ ಬಾಯ್ ರೂಟ್ ಟ್ರ್ಯಾಕರ್</h3>
-                <div id="deliveryOrdersList">
-                    <p style="text-align: center; color: #777; padding: 20px;">ಯಾವುದೇ ಡೆಲಿವರಿ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>
-                </div>
-            </div>
-        </div>
-
     </div>
 
     <!-- POPUP MODAL -->
     <div id="customModal" class="modal">
         <div class="modal-content">
-            <h3 id="modalTitle">ಸಂದೇಶ</h3>
+            <h3 id="modalTitle" style="color: #2ed573; margin-bottom: 10px;">ಸಂದೇಶ</h3>
             <p id="modalMessage"></p>
             <div id="modalExtra"></div>
             <button class="btn btn-primary" style="margin-top: 15px;" onclick="closeModal()">ಸರಿ (OK)</button>
@@ -479,34 +398,13 @@
     </div>
 
     <script>
-        let currentRole = localStorage.getItem('userRole') || null;
-        let currentId = localStorage.getItem('activeCode') || null;
-        let products = JSON.parse(localStorage.getItem('products')) || [];
-        let orders = JSON.parse(localStorage.getItem('orders')) || [];
+        let currentVendorId = localStorage.getItem('activeVendorCode') || null;
 
         window.onload = function() {
-            if (currentRole && currentId) {
-                restoreSession();
+            if (currentVendorId) {
+                showDashboard();
             }
         };
-
-        function switchAuthTab(role) {
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById('vendorAuthBox').style.display = 'none';
-            document.getElementById('customerAuthBox').style.display = 'none';
-            document.getElementById('deliveryAuthBox').style.display = 'none';
-
-            if(role === 'vendor') {
-                document.querySelectorAll('.tab-btn')[0].classList.add('active');
-                document.getElementById('vendorAuthBox').style.display = 'block';
-            } else if(role === 'customer') {
-                document.querySelectorAll('.tab-btn')[1].classList.add('active');
-                document.getElementById('customerAuthBox').style.display = 'block';
-            } else {
-                document.querySelectorAll('.tab-btn')[2].classList.add('active');
-                document.getElementById('deliveryAuthBox').style.display = 'block';
-            }
-        }
 
         function switchDashboardTab(tab) {
             const btnUpload = document.getElementById('btnUploadTab');
@@ -539,10 +437,8 @@
             }
 
             const vendorCode = Math.floor(1000 + Math.random() * 9000);
-            localStorage.setItem('userRole', 'vendor');
-            localStorage.setItem('activeCode', vendorCode);
-            currentRole = 'vendor';
-            currentId = vendorCode;
+            localStorage.setItem('activeVendorCode', vendorCode);
+            currentVendorId = vendorCode;
 
             showModal(
                 "ನೋಂದಣಿ ಯಶಸ್ವಿಯಾಗಿದೆ! 🎉",
@@ -557,61 +453,21 @@
                 alert("ಸರಿಯಾದ 4 ಅಂಕಿಗಳ ಕೋಡ್ ಹಾಕಿ!");
                 return;
             }
-            localStorage.setItem('userRole', 'vendor');
-            localStorage.setItem('activeCode', code);
-            currentRole = 'vendor';
-            currentId = code;
-            restoreSession();
+            localStorage.setItem('activeVendorCode', code);
+            currentVendorId = code;
+            showDashboard();
         }
 
-        function handleCustomerLogin() {
-            const code = document.getElementById('customerCodeInput').value;
-            if(!code || code.length !== 4) {
-                alert("ಸರಿಯಾದ 4 ಅಂಕಿಗಳ ಕೋಡ್ ಹಾಕಿ!");
-                return;
-            }
-            localStorage.setItem('userRole', 'customer');
-            localStorage.setItem('activeCode', code);
-            currentRole = 'customer';
-            currentId = code;
-            restoreSession();
-        }
-
-        function handleDeliveryLogin() {
-            const code = document.getElementById('deliveryCodeInput').value;
-            if(!code || code.length !== 4) {
-                alert("ಸರಿಯಾದ 4 ಅಂಕಿಗಳ ಕೋಡ್ ಹಾಕಿ!");
-                return;
-            }
-            localStorage.setItem('userRole', 'delivery');
-            localStorage.setItem('activeCode', code);
-            currentRole = 'delivery';
-            currentId = code;
-            restoreSession();
-        }
-
-        function restoreSession() {
+        function showDashboard() {
             document.getElementById('authSection').style.display = 'none';
+            document.getElementById('vendorDashboardSection').style.display = 'block';
             document.getElementById('logoutBtn').style.display = 'block';
-
-            if(currentRole === 'vendor') {
-                document.getElementById('vendorDashboardSection').style.display = 'block';
-                document.getElementById('headerSubtitle').innerText = "ಅಂಗಡಿ ಮಾಲೀಕರ ಆಪ್ (ಕೋಡ್: " + currentId + ")";
-                renderVendorProducts();
-            } else if(currentRole === 'customer') {
-                document.getElementById('customerDashboardSection').style.display = 'block';
-                document.getElementById('headerSubtitle').innerText = "ಗ್ರಾಹಕರ ಸ್ಟೋರ್ (ಕೋಡ್: " + currentId + ")";
-                renderCustomerProducts();
-            } else if(currentRole === 'delivery') {
-                document.getElementById('deliveryDashboardSection').style.display = 'block';
-                document.getElementById('headerSubtitle').innerText = "ಡೆಲಿವರಿ ಬಾಯ್ ಪ್ಯಾನಲ್ (ಕೋಡ್: " + currentId + ")";
-                renderDeliveryOrders();
-            }
+            document.getElementById('headerSubtitle').innerText = "ಅಂಗಡಿ ಮಾಲೀಕರ ಆಪ್ (ಕೋಡ್: " + currentVendorId + ")";
+            renderVendorProducts();
         }
 
         function logout() {
-            localStorage.removeItem('userRole');
-            localStorage.removeItem('activeCode');
+            localStorage.removeItem('activeVendorCode');
             location.reload();
         }
 
@@ -634,7 +490,7 @@
 
             const newProduct = {
                 id: Date.now(),
-                vendorCode: currentId,
+                vendorCode: currentVendorId,
                 name: name,
                 oldPrice: oldPrice,
                 newPrice: newPrice,
@@ -642,6 +498,7 @@
                 img: imgSrc
             };
 
+            let products = JSON.parse(localStorage.getItem('products')) || [];
             products.push(newProduct);
             localStorage.setItem('products', JSON.stringify(products));
 
@@ -662,7 +519,8 @@
         function renderVendorProducts() {
             const grid = document.getElementById('productGrid');
             grid.innerHTML = '';
-            const myProds = products.filter(p => p.vendorCode == currentId);
+            let products = JSON.parse(localStorage.getItem('products')) || [];
+            const myProds = products.filter(p => p.vendorCode == currentVendorId);
 
             if(myProds.length === 0) {
                 grid.innerHTML = '<p style="grid-column: span 2; text-align: center; color: #777;">ಯಾವುದೇ ವಸ್ತುಗಳಿಲ್ಲ.</p>';
@@ -685,49 +543,11 @@
             });
         }
 
-        function renderCustomerProducts() {
-            const grid = document.getElementById('customerProductGrid');
-            grid.innerHTML = '';
-
-            if(products.length === 0) {
-                grid.innerHTML = '<p style="grid-column: span 2; text-align: center; color: #777;">ಸದ್ಯಕ್ಕೆ ಯಾವುದೇ ವಸ್ತುಗಳು ಲಭ್ಯವಿಲ್ಲ.</p>';
-                return;
-            }
-
-            products.forEach(p => {
-                grid.innerHTML += `
-                    <div class="product-card">
-                        <img src="${p.img}" alt="Product" onclick="openZoom('${p.img}')">
-                        <div class="product-title">${p.name}</div>
-                        <div>
-                            ${p.oldPrice ? `<span class="product-old-price">₹${p.oldPrice}</span>` : ''}
-                            <span class="product-price">₹${p.newPrice}</span>
-                        </div>
-                        <div style="font-size: 11px; color: #555;">(${p.qty})</div>
-                        <button class="btn btn-success" style="padding: 6px; font-size: 12px; margin-top: 8px;" onclick="placeOrder('${p.name}', '${p.newPrice}', '${p.vendorCode}')">ಆರ್ಡರ್ ಮಾಡಿ</button>
-                    </div>
-                `;
-            });
-        }
-
-        function placeOrder(prodName, price, vCode) {
-            const newOrder = {
-                id: Date.now(),
-                vendorCode: vCode,
-                customerCode: currentId,
-                productName: prodName,
-                price: price,
-                status: 'ಹೊಸ ಆರ್ಡರ್'
-            };
-            orders.push(newOrder);
-            localStorage.setItem('orders', JSON.stringify(orders));
-            alert("ನಿಮ್ಮ ಆರ್ಡರ್ ಯಶಸ್ವಿಯಾಗಿ ಅಂಗಡಿ ಮಾಲೀಕರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ! ✅");
-        }
-
         function renderVendorOrders() {
             const container = document.getElementById('ordersListContainer');
             container.innerHTML = '';
-            const myOrders = orders.filter(o => o.vendorCode == currentId);
+            let orders = JSON.parse(localStorage.getItem('orders')) || [];
+            const myOrders = orders.filter(o => o.vendorCode == currentVendorId);
 
             if(myOrders.length === 0) {
                 container.innerHTML = '<p style="text-align: center; color: #777; padding: 20px;">ಸದ್ಯಕ್ಕೆ ಯಾವುದೇ ಹೊಸ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>';
@@ -740,44 +560,33 @@
                         <p><b>ವಸ್ತು:</b> ${o.productName}</p>
                         <p><b>ಬೆಲೆ:</b> ₹${o.price}</p>
                         <p><b>ಗ್ರಾಹಕ ಕೋಡ್:</b> ${o.customerCode}</p>
-                        <button class="btn btn-primary" style="padding: 6px; font-size: 12px; margin-top: 8px;" onclick="sendToDelivery(${o.id})">ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ಕಳುಹಿಸಿ</button>
+                        <p><b>ಆರ್ಡರ್ ಸ್ಥಿತಿ:</b> <span style="color: #4a3aff; font-weight: bold;">${o.status || 'ಹೊಸ ಆರ್ಡರ್'}</span></p>
+                        <button class="btn btn-primary" style="padding: 8px; font-size: 13px; margin-top: 8px;" onclick="sendToDelivery(${o.id})">🛵 ಪ್ಯಾಕ್ ಮಾಡಿ ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ತಲುಪಿಸಿ</button>
                     </div>
                 `;
             });
         }
 
         function sendToDelivery(orderId) {
-            alert("ಆರ್ಡರ್ ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ಯಶಸ್ವಿಯಾಗಿ ಕಳುಹಿಸಲಾಗಿದೆ! 🛵");
-        }
-
-        function renderDeliveryOrders() {
-            const container = document.getElementById('deliveryOrdersList');
-            container.innerHTML = '';
-            
-            if(orders.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: #777; padding: 20px;">ಯಾವುದೇ ಡೆಲಿವರಿ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>';
-                return;
-            }
-
-            orders.forEach(o => {
-                container.innerHTML += `
-                    <div style="background: #f9f9f9; padding: 12px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #2ed573;">
-                        <p><b>ವಸ್ತು:</b> ${o.productName}</p>
-                        <p><b>ವೆಂಡರ್ ಕೋಡ್:</b> ${o.vendorCode}</p>
-                        <p><b>ಗ್ರಾಹಕ ಕೋಡ್:</b> ${o.customerCode}</p>
-                        <span style="color: #2ed573; font-weight: bold; font-size: 12px;">ಡೆಲಿವರಿ ಪ್ರಗತಿಯಲ್ಲಿದೆ 🛵</span>
-                    </div>
-                `;
+            let orders = JSON.parse(localStorage.getItem('orders')) || [];
+            orders = orders.map(o => {
+                if(o.id === orderId) {
+                    o.status = "ಪ್ಯಾಕ್ ಆಗಿದೆ - ಡೆಲಿವರಿ ಬಾಯ್ 3:00 ಗಂಟೆಗೆ ತಲುಪಿಸುತ್ತಾರೆ 🛵";
+                }
+                return o;
             });
+            localStorage.setItem('orders', JSON.stringify(orders));
+            alert("ಆರ್ಡರ್ ಯಶಸ್ವಿಯಾಗಿ ಪ್ಯಾಕ್ ಮಾಡಿ ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ರವಾನಿಸಲಾಗಿದೆ! 🛵");
+            renderVendorOrders();
         }
 
         function deleteProduct(id) {
+            let products = JSON.parse(localStorage.getItem('products')) || [];
             products = products.filter(p => p.id !== id);
             localStorage.setItem('products', JSON.stringify(products));
             renderVendorProducts();
         }
 
-        // Image Zoom Functions
         function openZoom(imgSrc) {
             document.getElementById('zoomImage').src = imgSrc;
             document.getElementById('zoomModal').style.display = 'flex';
@@ -789,6 +598,7 @@
 
         function closeModal() {
             document.getElementById('customModal').style.display = 'none';
+            if(currentVendorId) showDashboard();
         }
 
         function showModal(title, message, extraHtml) {
