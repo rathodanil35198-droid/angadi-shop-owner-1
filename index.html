@@ -119,13 +119,33 @@
             color: white;
         }
 
-        .btn-secondary {
-            background-color: #747d8c;
-            color: white;
-            margin-top: 10px;
+        /* Top Navigation Buttons for Dashboard */
+        .dashboard-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
         }
 
-        /* Nav Tab Options */
+        .nav-action-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+            background: #e4e7eb;
+            color: #333;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: 0.2s;
+        }
+
+        .nav-action-btn.active {
+            background: #4a3aff;
+            color: white;
+        }
+
+        /* Nav Tab Options for Auth */
         .tab-buttons {
             display: flex;
             gap: 10px;
@@ -331,54 +351,74 @@
         <!-- SECTION 2: DASHBOARD & PRODUCT UPLOAD (AFTER LOGIN) -->
         <div id="dashboardSection" style="display: none;">
             
-            <div class="card">
-                <h3 class="card-title">➕ ಹೊಸ ವಸ್ತುವಿನ ಹೆಸರು ಮತ್ತು ಬೆಲೆ ಹಾಕಿ</h3>
-
-                <div class="form-group">
-                    <label>ವಸ್ತುವಿನ ಹೆಸರು:</label>
-                    <input type="text" id="prodName" placeholder="ಉದಾ: ಶರ್ಟ್, ಚಪ್ಪಲಿ, ವಾಚ್">
-                </div>
-
-                <div class="row">
-                    <div class="form-group">
-                        <label>ಹಳೆಯ ರೇಟ್ (₹):</label>
-                        <input type="number" id="prodOldPrice" placeholder="500">
-                    </div>
-                    <div class="form-group">
-                        <label>ಈಗಿನ ರೇಟ್ (₹):</label>
-                        <input type="number" id="prodNewPrice" placeholder="350">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>ಎಷ್ಟು ಪೀಸ್ ಕೊಡ್ತಾ ಇದ್ದೀರಾ (ಕ್ವಾಂಟಿಟಿ)?</label>
-                    <select id="prodQuantity">
-                        <option value="1 ಪೀಸ್">1 ಪೀಸ್</option>
-                        <option value="2 ಪೀಸ್">2 ಪೀಸ್</option>
-                        <option value="3 ಪೀಸ್">3 ಪೀಸ್</option>
-                        <option value="4 ಪೀಸ್">4 ಪೀಸ್</option>
-                        <option value="10 ಪೀಸ್">10 ಪೀಸ್</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>ಮುಂಭಾಗದ ಫೋಟೋ (Front):</label>
-                    <input type="file" id="prodFrontImg" accept="image/*">
-                </div>
-
-                <div class="form-group">
-                    <label>ಹಿಂಭಾಗದ ಫೋಟೋ (Back):</label>
-                    <input type="file" id="prodBackImg" accept="image/*">
-                </div>
-
-                <button class="btn btn-success" onclick="uploadProduct()">ವಸ್ತು ಪ್ರಕಟಿಸಿ (Publish)</button>
+            <!-- Top Toggle Buttons: Upload vs Orders -->
+            <div class="dashboard-nav">
+                <button class="nav-action-btn active" id="btnUploadTab" onclick="switchDashboardTab('upload')">➕ ವಸ್ತು ಅಪ್ಲೋಡ್</button>
+                <button class="nav-action-btn" id="btnOrdersTab" onclick="switchDashboardTab('orders')">📦 ಆರ್ಡರ್ ನೋಡಿ</button>
             </div>
 
-            <!-- Uploaded Products List -->
-            <div class="card">
-                <h3 class="card-title">📦 ನಿಮ್ಮ ಅಂಗಡಿಯಲ್ಲಿರುವ ವಸ್ತುಗಳು</h3>
-                <div id="productGrid" class="product-grid">
-                    <!-- Dynamic items will appear here -->
+            <!-- TAB 1: UPLOAD PRODUCT & LIST -->
+            <div id="uploadTabContent">
+                <div class="card">
+                    <h3 class="card-title">➕ ಹೊಸ ವಸ್ತುವಿನ ಹೆಸರು ಮತ್ತು ಬೆಲೆ ಹಾಕಿ</h3>
+
+                    <div class="form-group">
+                        <label>ವಸ್ತುವಿನ ಹೆಸರು:</label>
+                        <input type="text" id="prodName" placeholder="ಉದಾ: ಶರ್ಟ್, ಚಪ್ಪಲಿ, ವಾಚ್">
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group">
+                            <label>ಹಳೆಯ ರೇಟ್ (₹):</label>
+                            <input type="number" id="prodOldPrice" placeholder="500">
+                        </div>
+                        <div class="form-group">
+                            <label>ಈಗಿನ ರೇಟ್ (₹):</label>
+                            <input type="number" id="prodNewPrice" placeholder="350">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>ಎಷ್ಟು ಪೀಸ್ ಕೊಡ್ತಾ ಇದ್ದೀರಾ (ಕ್ವಾಂಟಿಟಿ)?</label>
+                        <select id="prodQuantity">
+                            <option value="1 ಪೀಸ್">1 ಪೀಸ್</option>
+                            <option value="2 ಪೀಸ್">2 ಪೀಸ್</option>
+                            <option value="3 ಪೀಸ್">3 ಪೀಸ್</option>
+                            <option value="4 ಪೀಸ್">4 ಪೀಸ್</option>
+                            <option value="10 ಪೀಸ್">10 ಪೀಸ್</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>ಮುಂಭಾಗದ ಫೋಟೋ (Front):</label>
+                        <input type="file" id="prodFrontImg" accept="image/*">
+                    </div>
+
+                    <div class="form-group">
+                        <label>ಹಿಂಭಾಗದ ಫೋಟೋ (Back):</label>
+                        <input type="file" id="prodBackImg" accept="image/*">
+                    </div>
+
+                    <button class="btn btn-success" onclick="uploadProduct()">ವಸ್ತು ಪ್ರಕಟಿಸಿ (Publish)</button>
+                </div>
+
+                <!-- Uploaded Products List -->
+                <div class="card">
+                    <h3 class="card-title">📦 ನಿಮ್ಮ ಅಂಗಡಿಯಲ್ಲಿರುವ ವಸ್ತುಗಳು</h3>
+                    <div id="productGrid" class="product-grid">
+                        <!-- Dynamic items will appear here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: VIEW ORDERS -->
+            <div id="ordersTabContent" style="display: none;">
+                <div class="card">
+                    ಸಹಾಯ ಸಂದೇಶ
+                    <h3 class="card-title">📥 ಗ್ರಾಹಕರಿಂದ ಬಂದಿರುವ ಹೊಸ ಆರ್ಡರ್‌ಗಳು</h3>
+                    <div id="ordersListContainer">
+                        <p style="text-align: center; color: #777; padding: 20px;">ಸದ್ಯಕ್ಕೆ ಯಾವುದೇ ಹೊಸ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>
+                    </div>
                 </div>
             </div>
 
@@ -418,6 +458,26 @@
                 document.querySelectorAll('.tab-btn')[1].classList.add('active');
                 document.getElementById('registerForm').style.display = 'none';
                 document.getElementById('loginForm').style.display = 'block';
+            }
+        }
+
+        // Switch Dashboard Tabs (Upload vs Orders)
+        function switchDashboardTab(tab) {
+            const btnUpload = document.getElementById('btnUploadTab');
+            const btnOrders = document.getElementById('btnOrdersTab');
+            const uploadContent = document.getElementById('uploadTabContent');
+            const ordersContent = document.getElementById('ordersTabContent');
+
+            if(tab === 'upload') {
+                btnUpload.classList.add('active');
+                btnOrders.classList.remove('active');
+                uploadContent.style.display = 'block';
+                ordersContent.style.display = 'none';
+            } else {
+                btnOrders.classList.add('active');
+                btnUpload.classList.remove('active');
+                uploadContent.style.display = 'none';
+                ordersContent.style.display = 'block';
             }
         }
 
