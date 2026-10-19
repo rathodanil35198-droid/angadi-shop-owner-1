@@ -168,7 +168,7 @@
             color: white;
         }
 
-        /* Product Card Styles - ಸಂಪೂರ್ಣ ಫೋಟೋ ಕಾಣಿಸಲು ಸರಿಪಡಿಸಲಾಗಿದೆ */
+        /* Product Card Styles - ಕತ್ತರಿಸದಂತೆ ಸಂಪೂರ್ಣ ಫೋಟೋ ವಿನ್ಯಾಸ */
         .product-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -191,7 +191,7 @@
 
         .img-box {
             width: 100%;
-            height: 120px;
+            height: 130px;
             background-color: #f8fafc;
             border-radius: 6px;
             display: flex;
@@ -199,12 +199,13 @@
             justify-content: center;
             overflow: hidden;
             margin-bottom: 6px;
+            border: 1px dashed #cbd5e1;
         }
 
         .product-card img {
             max-width: 100%;
             max-height: 100%;
-            object-fit: contain; /* ಫೋಟೋ ಕತ್ತರಿಸದೆ ಪೂರ್ತಿಯಾಗಿ ಕಾಣಿಸಲು */
+            object-fit: contain; /* ಫೋಟೋ ಕತ್ತರಿಸದಂತೆ ಸಂಪೂರ್ಣ ಕಾಣಿಸುತ್ತದೆ */
             border-radius: 4px;
         }
 
@@ -417,7 +418,7 @@
                         <input type="file" id="prodBackImg" accept="image/*">
                     </div>
 
-                    <button class="btn btn-success" onclick="uploadProduct()">ವಸ್ತು ಪ್ರಕಟಿಸಿ (Publish)</button>
+                    <button class="btn btn-success" id="publishBtn" onclick="uploadProduct()">ವಸ್ತು ಪ್ರಕಟಿಸಿ (Publish)</button>
                 </div>
 
                 <!-- Uploaded Products List -->
@@ -552,7 +553,30 @@
             document.getElementById('logoutBtn').style.display = 'none';
         }
 
-        // Upload Product (Base64 ಬಳಸಲಾಗಿದೆ - ಫೋಟೋ ಖಾಯಂ ಉಳಿಯಲು)
+        // ಫೋಟೋ ಕಂಪ್ರೆಸ್ ಮಾಡುವ ಫಂಕ್ಷನ್ (ಆಪ್ ಹ್ಯಾಂಗ್ ಆಗದಂತೆ ಸಣ್ಣ ಮಾಡುವುದು)
+        function compressAndConvertImage(file, callback) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 400;
+                    const scaleSize = MAX_WIDTH / img.width;
+                    canvas.width = MAX_WIDTH;
+                    canvas.height = img.height * scaleSize;
+
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                    const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+                    callback(compressedBase64);
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Upload Product Logic
         function uploadProduct() {
             const name = document.getElementById('prodName').value;
             const oldPrice = document.getElementById('prodOldPrice').value;
@@ -565,7 +589,7 @@
                 return;
             }
 
-            const saveAndRender = (imgData) => {
+            const saveAndFinish = (imgData) => {
                 const newProduct = {
                     id: Date.now(),
                     shopId: currentShopId,
@@ -576,34 +600,36 @@
                     img: imgData
                 };
 
-                products.push(newProduct);
-                localStorage.setItem('products', JSON.stringify(products));
+                try {
+                    products.push(newProduct);
+                    localStorage.setItem('products', JSON.stringify(products));
 
-                // Clear Form
-                document.getElementById('prodName').value = '';
-                document.getElementById('prodOldPrice').value = '';
-                document.getElementById('prodNewPrice').value = '';
-                document.getElementById('prodFrontImg').value = '';
-                document.getElementById('prodBackImg').value = '';
+                    // Clear Form
+                    document.getElementById('prodName').value = '';
+                    document.getElementById('prodOldPrice').value = '';
+                    document.getElementById('prodNewPrice').value = '';
+                    document.getElementById('prodFrontImg').value = '';
+                    document.getElementById('prodBackImg').value = '';
 
-                // Show Alert Pop-up
-                showModal(
-                    "ಸಕ್ಸೆಸ್‌ಫುಲ್! 🟢",
-                    "ನಿಮ್ಮ ಫೋಟೋ ಹಾಗೂ ವಸ್ತುವಿನ ವಿವರಗಳನ್ನು ಅಪ್ಲೋಡ್ ಮಾಡಲಾಗಿದೆ ಮತ್ತು ಗ್ರಾಹಕರಿಗೆ/ಗ್ರಾಹಕ ಸಿಸ್ಟಮ್‌ಗೆ ಕಳುಹಿಸಲಾಗಿದೆ.",
-                    ""
-                );
+                    // Show Alert Pop-up
+                    showModal(
+                        "ಸಕ್ಸೆಸ್‌ಫುಲ್! 🟢",
+                        "ನಿಮ್ಮ ಫೋಟೋ ಹಾಗೂ ವಸ್ತುವಿನ ವಿವರಗಳನ್ನು ಅಪ್ಲೋಡ್ ಮಾಡಲಾಗಿದೆ ಮತ್ತು ಗ್ರಾಹಕರಿಗೆ/ಗ್ರಾಹಕ ಸಿಸ್ಟಮ್‌ಗೆ ಕಳುಹಿಸಲಾಗಿದೆ.",
+                        ""
+                    );
 
-                renderProducts();
+                    renderProducts();
+                } catch (e) {
+                    alert("ಮೆಮೊರಿ ಫುಲ್ ಆಗಿದೆ. ದಯವಿಟ್ಟು ಕೆಲವು ಹಳೆಯ ವಸ್ತುಗಳನ್ನು ಡಿಲೀಟ್ ಮಾಡಿ!");
+                }
             };
 
             if (frontImgInput.files && frontImgInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    saveAndRender(e.target.result); // Base64 ಫೋಟೋ ಸೇವ್
-                };
-                reader.readAsDataURL(frontImgInput.files[0]);
+                compressAndConvertImage(frontImgInput.files[0], function(compressedBase64) {
+                    saveAndFinish(compressedBase64);
+                });
             } else {
-                saveAndRender("https://via.placeholder.com/150");
+                saveAndFinish("https://via.placeholder.com/150");
             }
         }
 
