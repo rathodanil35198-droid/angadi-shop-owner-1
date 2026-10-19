@@ -119,7 +119,7 @@
             color: white;
         }
 
-        /* Top Navigation Buttons for Dashboard */
+        /* Nav Buttons */
         .dashboard-nav {
             display: flex;
             gap: 10px;
@@ -145,7 +145,6 @@
             color: white;
         }
 
-        /* Nav Tab Options for Auth */
         .tab-buttons {
             display: flex;
             gap: 10px;
@@ -168,7 +167,7 @@
             color: white;
         }
 
-        /* Product Card Styles - ಕತ್ತರಿಸದಂತೆ ಸಂಪೂರ್ಣ ಫೋಟೋ ವಿನ್ಯಾಸ */
+        /* Product Cards */
         .product-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -205,7 +204,7 @@
         .product-card img {
             max-width: 100%;
             max-height: 100%;
-            object-fit: contain; /* ಫೋಟೋ ಕತ್ತರಿಸದಂತೆ ಸಂಪೂರ್ಣ ಕಾಣಿಸುತ್ತದೆ */
+            object-fit: contain;
             border-radius: 4px;
         }
 
@@ -233,7 +232,7 @@
             background: #ff4757;
             color: white;
             border: none;
-            padding: 6px 8px;
+            padding: 8px;
             border-radius: 4px;
             cursor: pointer;
             font-size: 12px;
@@ -242,7 +241,7 @@
             font-weight: bold;
         }
 
-        /* Modal / Popup */
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -289,7 +288,7 @@
 
     <div class="container">
 
-        <!-- SECTION 1: AUTHENTICATION (REGISTER / LOGIN) -->
+        <!-- SECTION 1: LOGIN & REGISTRATION -->
         <div id="authSection">
             <div class="tab-buttons">
                 <button class="tab-btn active" onclick="switchAuthTab('register')">ಹೊಸ ನೋಂದಣಿ</button>
@@ -367,16 +366,15 @@
             </div>
         </div>
 
-        <!-- SECTION 2: DASHBOARD & PRODUCT UPLOAD (AFTER LOGIN) -->
+        <!-- SECTION 2: DASHBOARD -->
         <div id="dashboardSection" style="display: none;">
             
-            <!-- Top Toggle Buttons: Upload vs Orders -->
             <div class="dashboard-nav">
                 <button class="nav-action-btn active" id="btnUploadTab" onclick="switchDashboardTab('upload')">➕ ವಸ್ತು ಅಪ್ಲೋಡ್</button>
                 <button class="nav-action-btn" id="btnOrdersTab" onclick="switchDashboardTab('orders')">📦 ಆರ್ಡರ್ ನೋಡಿ</button>
             </div>
 
-            <!-- TAB 1: UPLOAD PRODUCT & LIST -->
+            <!-- UPLOAD TAB -->
             <div id="uploadTabContent">
                 <div class="card">
                     <h3 class="card-title">➕ ಹೊಸ ವಸ್ತುವಿನ ಹೆಸರು ಮತ್ತು ಬೆಲೆ ಹಾಕಿ</h3>
@@ -421,16 +419,13 @@
                     <button class="btn btn-success" id="publishBtn" onclick="uploadProduct()">ವಸ್ತು ಪ್ರಕಟಿಸಿ (Publish)</button>
                 </div>
 
-                <!-- Uploaded Products List -->
                 <div class="card">
                     <h3 class="card-title">📦 ನಿಮ್ಮ ಅಂಗಡಿಯಲ್ಲಿರುವ ವಸ್ತುಗಳು</h3>
-                    <div id="productGrid" class="product-grid">
-                        <!-- Dynamic items will appear here -->
-                    </div>
+                    <div id="productGrid" class="product-grid"></div>
                 </div>
             </div>
 
-            <!-- TAB 2: VIEW ORDERS -->
+            <!-- ORDERS TAB -->
             <div id="ordersTabContent" style="display: none;">
                 <div class="card">
                     <h3 class="card-title">📥 ಗ್ರಾಹಕರಿಂದ ಬಂದಿರುವ ಹೊಸ ಆರ್ಡರ್‌ಗಳು</h3>
@@ -455,17 +450,30 @@
     </div>
 
     <script>
-        // Global variables
         let currentShopId = localStorage.getItem('activeShopId');
-        let products = JSON.parse(localStorage.getItem('products')) || [];
+        let db = null;
 
-        window.onload = function() {
+        // INDEXEDDB SETUP FOR UNLIMITED STORAGE
+        const dbRequest = indexedDB.open("ShahapurMarketDB", 1);
+
+        dbRequest.onupgradeneeded = function(e) {
+            db = e.target.result;
+            if (!db.objectStoreNames.contains("products")) {
+                db.createObjectStore("products", { keyPath: "id" });
+            }
+        };
+
+        dbRequest.onsuccess = function(e) {
+            db = e.target.result;
             if (currentShopId) {
                 showDashboard();
             }
         };
 
-        // Switch Register / Login Tabs
+        dbRequest.onerror = function(e) {
+            console.error("IndexedDB Error: ", e);
+        };
+
         function switchAuthTab(tab) {
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             if(tab === 'register') {
@@ -479,7 +487,6 @@
             }
         }
 
-        // Switch Dashboard Tabs (Upload vs Orders)
         function switchDashboardTab(tab) {
             const btnUpload = document.getElementById('btnUploadTab');
             const btnOrders = document.getElementById('btnOrdersTab');
@@ -499,7 +506,6 @@
             }
         }
 
-        // Handle Registration
         function handleRegister() {
             const name = document.getElementById('regName').value;
             const phone = document.getElementById('regPhone').value;
@@ -510,12 +516,10 @@
                 return;
             }
 
-            // Generate 4 digit ID
             const digitalId = Math.floor(1000 + Math.random() * 9000);
             localStorage.setItem('activeShopId', digitalId);
             currentShopId = digitalId;
 
-            // Show Popup
             showModal(
                 "ನೋಂದಣಿ ಯಶಸ್ವಿಯಾಗಿದೆ! 🎉",
                 "ನಿಮ್ಮ ಸಕ್ಸೆಸ್‌ಫುಲ್ ಡಿಜಿಟಲ್ ಐಡಿಯಾಗಿದೆ. ಈ ೪ ಅಂಕಿಗಳ ಐಡಿಯನ್ನು ಗಮನದಲ್ಲಿ ಇಟ್ಟುಕೊಳ್ಳಿ:",
@@ -523,7 +527,6 @@
             );
         }
 
-        // Handle Login
         function handleLogin() {
             const enteredId = document.getElementById('loginId').value;
             if(!enteredId || enteredId.length !== 4) {
@@ -536,7 +539,6 @@
             showDashboard();
         }
 
-        // Dashboard Display
         function showDashboard() {
             document.getElementById('authSection').style.display = 'none';
             document.getElementById('dashboardSection').style.display = 'block';
@@ -544,7 +546,6 @@
             renderProducts();
         }
 
-        // Logout
         function logout() {
             localStorage.removeItem('activeShopId');
             currentShopId = null;
@@ -553,7 +554,7 @@
             document.getElementById('logoutBtn').style.display = 'none';
         }
 
-        // ಫೋಟೋ ಕಂಪ್ರೆಸ್ ಮಾಡುವ ಫಂಕ್ಷನ್ (ಆಪ್ ಹ್ಯಾಂಗ್ ಆಗದಂತೆ ಸಣ್ಣ ಮಾಡುವುದು)
+        // Image Compressor
         function compressAndConvertImage(file, callback) {
             const reader = new FileReader();
             reader.onload = function(e) {
@@ -576,7 +577,7 @@
             reader.readAsDataURL(file);
         }
 
-        // Upload Product Logic
+        // Upload Product via IndexedDB (Unlimited)
         function uploadProduct() {
             const name = document.getElementById('prodName').value;
             const oldPrice = document.getElementById('prodOldPrice').value;
@@ -589,7 +590,7 @@
                 return;
             }
 
-            const saveAndFinish = (imgData) => {
+            const saveToDatabase = (imgData) => {
                 const newProduct = {
                     id: Date.now(),
                     shopId: currentShopId,
@@ -600,78 +601,87 @@
                     img: imgData
                 };
 
-                try {
-                    products.push(newProduct);
-                    localStorage.setItem('products', JSON.stringify(products));
+                const tx = db.transaction("products", "readwrite");
+                const store = tx.objectStore("products");
+                store.add(newProduct);
 
-                    // Clear Form
+                tx.oncomplete = function() {
                     document.getElementById('prodName').value = '';
                     document.getElementById('prodOldPrice').value = '';
                     document.getElementById('prodNewPrice').value = '';
                     document.getElementById('prodFrontImg').value = '';
                     document.getElementById('prodBackImg').value = '';
 
-                    // Show Alert Pop-up
                     showModal(
                         "ಸಕ್ಸೆಸ್‌ಫುಲ್! 🟢",
-                        "ನಿಮ್ಮ ಫೋಟೋ ಹಾಗೂ ವಸ್ತುವಿನ ವಿವರಗಳನ್ನು ಅಪ್ಲೋಡ್ ಮಾಡಲಾಗಿದೆ ಮತ್ತು ಗ್ರಾಹಕರಿಗೆ/ಗ್ರಾಹಕ ಸಿಸ್ಟಮ್‌ಗೆ ಕಳುಹಿಸಲಾಗಿದೆ.",
+                        "ನಿಮ್ಮ ಫೋಟೋ ಹಾಗೂ ವಸ್ತುವಿನ ವಿವರಗಳನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಅಪ್ಲೋಡ್ ಮಾಡಲಾಗಿದೆ ಮತ್ತು ಗ್ರಾಹಕರ ಪೇಜ್‌ಗೆ ಕಳುಹಿಸಲಾಗಿದೆ.",
                         ""
                     );
 
                     renderProducts();
-                } catch (e) {
-                    alert("ಮೆಮೊರಿ ಫುಲ್ ಆಗಿದೆ. ದಯವಿಟ್ಟು ಕೆಲವು ಹಳೆಯ ವಸ್ತುಗಳನ್ನು ಡಿಲೀಟ್ ಮಾಡಿ!");
-                }
+                };
             };
 
             if (frontImgInput.files && frontImgInput.files[0]) {
                 compressAndConvertImage(frontImgInput.files[0], function(compressedBase64) {
-                    saveAndFinish(compressedBase64);
+                    saveToDatabase(compressedBase64);
                 });
             } else {
-                saveAndFinish("https://via.placeholder.com/150");
+                saveToDatabase("https://via.placeholder.com/150");
             }
         }
 
-        // Render Product List
+        // Fetch & Render Products from IndexedDB
         function renderProducts() {
+            if (!db) return;
+
             const grid = document.getElementById('productGrid');
             grid.innerHTML = '';
 
-            const shopProducts = products.filter(p => p.shopId == currentShopId);
+            const tx = db.transaction("products", "readonly");
+            const store = tx.objectStore("products");
+            const request = store.getAll();
 
-            if(shopProducts.length === 0) {
-                grid.innerHTML = '<p style="grid-column: span 2; text-align: center; color: #777;">ಯಾವ ವಸ್ತುಗಳೂ ಅಪ್ಲೋಡ್ ಆಗಿಲ್ಲ.</p>';
-                return;
-            }
+            request.onsuccess = function() {
+                const allProducts = request.result;
+                const shopProducts = allProducts.filter(p => p.shopId == currentShopId);
 
-            shopProducts.forEach(p => {
-                const card = document.createElement('div');
-                card.className = 'product-card';
-                card.innerHTML = `
-                    <div class="img-box">
-                        <img src="${p.img}" alt="${p.name}">
-                    </div>
-                    <div class="product-title">${p.name}</div>
-                    <div>
-                        ${p.oldPrice ? `<span class="product-old-price">₹${p.oldPrice}</span>` : ''}
-                        <span class="product-price">₹${p.newPrice}</span>
-                    </div>
-                    <div style="font-size: 11px; color: #555; margin-top:2px;">(${p.qty})</div>
-                    <button class="delete-btn" onclick="deleteProduct(${p.id})">ಡಿಲೀಟ್ (Delete)</button>
-                `;
-                grid.appendChild(card);
-            });
+                if(shopProducts.length === 0) {
+                    grid.innerHTML = '<p style="grid-column: span 2; text-align: center; color: #777;">ಯಾವ ವಸ್ತುಗಳೂ ಅಪ್ಲೋಡ್ ಆಗಿಲ್ಲ.</p>';
+                    return;
+                }
+
+                shopProducts.forEach(p => {
+                    const card = document.createElement('div');
+                    card.className = 'product-card';
+                    card.innerHTML = `
+                        <div class="img-box">
+                            <img src="${p.img}" alt="${p.name}">
+                        </div>
+                        <div class="product-title">${p.name}</div>
+                        <div>
+                            ${p.oldPrice ? `<span class="product-old-price">₹${p.oldPrice}</span>` : ''}
+                            <span class="product-price">₹${p.newPrice}</span>
+                        </div>
+                        <div style="font-size: 11px; color: #555; margin-top:2px;">(${p.qty})</div>
+                        <button class="delete-btn" onclick="deleteProduct(${p.id})">ಡಿಲೀಟ್ (Delete)</button>
+                    `;
+                    grid.appendChild(card);
+                });
+            };
         }
 
-        // Delete Product
+        // Delete Product from IndexedDB
         function deleteProduct(id) {
-            products = products.filter(p => p.id !== id);
-            localStorage.setItem('products', JSON.stringify(products));
-            renderProducts();
+            const tx = db.transaction("products", "readwrite");
+            const store = tx.objectStore("products");
+            store.delete(id);
+
+            tx.oncomplete = function() {
+                renderProducts();
+            };
         }
 
-        // Modal Helpers
         function showModal(title, msg, extraHtml) {
             document.getElementById('modalTitle').innerText = title;
             document.getElementById('modalMessage').innerText = msg;
