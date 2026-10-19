@@ -168,7 +168,7 @@
             color: white;
         }
 
-        /* Product Card Styles */
+        /* Product Card Styles - ಸಂಪೂರ್ಣ ಫೋಟೋ ಕಾಣಿಸಲು ಸರಿಪಡಿಸಲಾಗಿದೆ */
         .product-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -183,19 +183,36 @@
             box-shadow: 0 2px 6px rgba(0,0,0,0.1);
             position: relative;
             text-align: center;
+            border: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .img-box {
+            width: 100%;
+            height: 120px;
+            background-color: #f8fafc;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-bottom: 6px;
         }
 
         .product-card img {
-            width: 100%;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 6px;
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain; /* ಫೋಟೋ ಕತ್ತರಿಸದೆ ಪೂರ್ತಿಯಾಗಿ ಕಾಣಿಸಲು */
+            border-radius: 4px;
         }
 
         .product-title {
             font-weight: bold;
             font-size: 14px;
             margin: 5px 0;
+            word-break: break-word;
         }
 
         .product-price {
@@ -215,12 +232,13 @@
             background: #ff4757;
             color: white;
             border: none;
-            padding: 4px 8px;
+            padding: 6px 8px;
             border-radius: 4px;
             cursor: pointer;
             font-size: 12px;
             margin-top: 8px;
             width: 100%;
+            font-weight: bold;
         }
 
         /* Modal / Popup */
@@ -414,7 +432,6 @@
             <!-- TAB 2: VIEW ORDERS -->
             <div id="ordersTabContent" style="display: none;">
                 <div class="card">
-                    ಸಹಾಯ ಸಂದೇಶ
                     <h3 class="card-title">📥 ಗ್ರಾಹಕರಿಂದ ಬಂದಿರುವ ಹೊಸ ಆರ್ಡರ್‌ಗಳು</h3>
                     <div id="ordersListContainer">
                         <p style="text-align: center; color: #777; padding: 20px;">ಸದ್ಯಕ್ಕೆ ಯಾವುದೇ ಹೊಸ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>
@@ -535,7 +552,7 @@
             document.getElementById('logoutBtn').style.display = 'none';
         }
 
-        // Upload Product
+        // Upload Product (Base64 ಬಳಸಲಾಗಿದೆ - ಫೋಟೋ ಖಾಯಂ ಉಳಿಯಲು)
         function uploadProduct() {
             const name = document.getElementById('prodName').value;
             const oldPrice = document.getElementById('prodOldPrice').value;
@@ -548,40 +565,46 @@
                 return;
             }
 
-            // Default image placeholder if not chosen
-            let imgSrc = "https://via.placeholder.com/150";
-            if (frontImgInput.files && frontImgInput.files[0]) {
-                imgSrc = URL.createObjectURL(frontImgInput.files[0]);
-            }
+            const saveAndRender = (imgData) => {
+                const newProduct = {
+                    id: Date.now(),
+                    shopId: currentShopId,
+                    name: name,
+                    oldPrice: oldPrice,
+                    newPrice: newPrice,
+                    qty: qty,
+                    img: imgData
+                };
 
-            const newProduct = {
-                id: Date.now(),
-                shopId: currentShopId,
-                name: name,
-                oldPrice: oldPrice,
-                newPrice: newPrice,
-                qty: qty,
-                img: imgSrc
+                products.push(newProduct);
+                localStorage.setItem('products', JSON.stringify(products));
+
+                // Clear Form
+                document.getElementById('prodName').value = '';
+                document.getElementById('prodOldPrice').value = '';
+                document.getElementById('prodNewPrice').value = '';
+                document.getElementById('prodFrontImg').value = '';
+                document.getElementById('prodBackImg').value = '';
+
+                // Show Alert Pop-up
+                showModal(
+                    "ಸಕ್ಸೆಸ್‌ಫುಲ್! 🟢",
+                    "ನಿಮ್ಮ ಫೋಟೋ ಹಾಗೂ ವಸ್ತುವಿನ ವಿವರಗಳನ್ನು ಅಪ್ಲೋಡ್ ಮಾಡಲಾಗಿದೆ ಮತ್ತು ಗ್ರಾಹಕರಿಗೆ/ಗ್ರಾಹಕ ಸಿಸ್ಟಮ್‌ಗೆ ಕಳುಹಿಸಲಾಗಿದೆ.",
+                    ""
+                );
+
+                renderProducts();
             };
 
-            products.push(newProduct);
-            localStorage.setItem('products', JSON.stringify(products));
-
-            // Clear Form
-            document.getElementById('prodName').value = '';
-            document.getElementById('prodOldPrice').value = '';
-            document.getElementById('prodNewPrice').value = '';
-            document.getElementById('prodFrontImg').value = '';
-            document.getElementById('prodBackImg').value = '';
-
-            // Show Alert Pop-up
-            showModal(
-                "ಸಕ್ಸೆಸ್‌ಫುಲ್! 🟢",
-                "ನಿಮ್ಮ ಫೋಟೋ ಹಾಗೂ ವಸ್ತುವಿನ ವಿವರಗಳನ್ನು ಅಪ್ಲೋಡ್ ಮಾಡಲಾಗಿದೆ ಮತ್ತು ಗ್ರಾಹಕರಿಗೆ/ಗ್ರಾಹಕ ಸಿಸ್ಟಮ್‌ಗೆ ಕಳುಹಿಸಲಾಗಿದೆ.",
-                ""
-            );
-
-            renderProducts();
+            if (frontImgInput.files && frontImgInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    saveAndRender(e.target.result); // Base64 ಫೋಟೋ ಸೇವ್
+                };
+                reader.readAsDataURL(frontImgInput.files[0]);
+            } else {
+                saveAndRender("https://via.placeholder.com/150");
+            }
         }
 
         // Render Product List
@@ -600,7 +623,9 @@
                 const card = document.createElement('div');
                 card.className = 'product-card';
                 card.innerHTML = `
-                    <img src="${p.img}" alt="${p.name}">
+                    <div class="img-box">
+                        <img src="${p.img}" alt="${p.name}">
+                    </div>
                     <div class="product-title">${p.name}</div>
                     <div>
                         ${p.oldPrice ? `<span class="product-old-price">₹${p.oldPrice}</span>` : ''}
