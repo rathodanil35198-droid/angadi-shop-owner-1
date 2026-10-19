@@ -39,8 +39,13 @@
         }
 
         header h1 {
-            font-size: 18px;
+            font-size: 16px;
             color: var(--primary-yellow);
+        }
+
+        .header-btns {
+            display: flex;
+            gap: 6px;
         }
 
         .screen {
@@ -143,13 +148,21 @@
 </head>
 <body>
 
-    <!-- 1. ಶಾಪ್ ಓನರ್ ಲಾಗಿನ್ ಪೇಜ್ (ಮೊದಲ ಪುಟ) -->
+    <!-- 1. ಶಾಪ್ ಓನರ್ ಲಾಗಿನ್ / ಐಡಿ ಪರಿಶೀಲನೆ ಪೇಜ್ -->
     <div id="screen-owner-login" class="screen active">
         <header>
             <h1>ಅಕ್ವಿಕ್ - ಶಾಪ್ ಓನರ್ ನೋಂದಣಿ</h1>
         </header>
         <div class="card-box">
-            <h3 style="margin-bottom: 15px;">ಅಂಗಡಿ ಮಾಲೀಕರ ವಿವರಗಳು</h3>
+            <div style="background:#e3f2fd; padding:12px; border-radius:8px; margin-bottom:15px;">
+                <h4 style="font-size:14px; color:#0d47a1; margin-bottom:6px;">ಹಳೆಯ 4-ಡಿಜಿಟ್ ಐಡಿ ಇದ್ದರೆ ಇಲ್ಲಿ ಹಾಕಿ:</h4>
+                <div style="display:flex; gap:8px;">
+                    <input type="text" id="login-old-id" placeholder="ಉದಾ: 4829" maxlength="4">
+                    <button onclick="loginWithOldId()" style="background:#007bff; color:white; border:none; padding:0 15px; border-radius:6px; font-weight:bold; cursor:pointer;">ಲಾಗಿನ್</button>
+                </div>
+            </div>
+
+            <h3 style="margin-bottom: 15px; font-size:15px;">ಅಥವಾ ಹೊಸ ಮಾಲೀಕರ ವಿವರಗಳನ್ನು ಭರ್ತಿ ಮಾಡಿ:</h3>
             <form id="owner-login-form" onsubmit="registerOwner(event)">
                 <div class="form-group">
                     <label>ಮಾಲೀಕರ ಹೆಸರು:</label>
@@ -216,26 +229,35 @@
         </div>
     </div>
 
-    <!-- 3. ಶಾಪ್ ಓನರ್ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ (ಹೊಸ ಫೋಟೋ ಅಪ್‌ಲೋಡ್ ಹಾಗೂ ಆರ್ಡರ್ ವೀಕ್ಷಣೆ) -->
+    <!-- 3. ಶಾಪ್ ಓನರ್ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ -->
     <div id="screen-owner-dashboard" class="screen">
         <header>
             <h1 id="header-shop-title">ಶಾಪ್ ಓನರ್ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್</h1>
-            <button onclick="openUploadModal()" style="background:var(--primary-yellow); border:none; padding:6px 12px; border-radius:4px; font-weight:bold; cursor:pointer;">+ ಹೊಸ ಫೋಟೋ ಅಪ್ಲೋಡ್</button>
+            <div class="header-btns">
+                <button onclick="openOrdersListModal()" style="background:#28a745; color:white; border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:12px;">📦 ಆರ್ಡರ್ ನೋಡಿ</button>
+                <button onclick="openUploadModal()" style="background:var(--primary-yellow); border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:12px;">+ ಹೊಸ ಫೋಟೋ</button>
+            </div>
         </header>
         <div style="padding: 16px;">
-            <h3 style="font-size: 16px; margin-bottom: 10px;">📦 ಗ್ರಾಹಕರಿಂದ ಬಂದ ಆರ್ಡರ್‌ಗಳು:</h3>
-            <div id="owner-incoming-orders">
-                <p style="color:#666; font-size:13px;">ಯಾವುದೇ ಹೊಸ ಆರ್ಡರ್‌ಗಳು ಬಂದಿಲ್ಲ.</p>
-            </div>
-
-            <h3 style="font-size: 16px; margin: 20px 0 10px 0;">🖼️ ಅಪ್‌ಲೋಡ್ ಮಾಡಿದ ವಸ್ತುಗಳು:</h3>
+            <h3 style="font-size: 16px; margin-bottom: 10px;">🖼️ ಅಪ್‌ಲೋಡ್ ಮಾಡಿದ ವಸ್ತುಗಳು:</h3>
             <div id="owner-uploaded-products-grid" class="product-grid" style="padding:0;">
                 <!-- Uploaded products list with delete option -->
             </div>
         </div>
     </div>
 
-    <!-- 4. ಹೊಸ ವಸ್ತು/ಫೋಟೋ ಅಪ್‌ಲೋಡ್ ಮಾಡುವ ಫಾರ್ಮ್ (Modal) -->
+    <!-- 4. ಆರ್ಡರ್‌ಗಳನ್ನು ವೀಕ್ಷಿಸುವ ಮತ್ತು ಕನ್ಫರ್ಮ್/ಪ್ಯಾಕಿಂಗ್ ಮಾಡುವ ಪೇಜ್ (Modal) -->
+    <div id="orders-list-modal" class="screen" style="position:fixed; top:0; left:0; right:0; bottom:0; z-index:200; background:white; display:none; max-width:500px; margin:0 auto; overflow-y:auto;">
+        <header>
+            <h1>ಬಂದಿರುವ ಆರ್ಡರ್‌ಗಳು</h1>
+            <button onclick="closeOrdersListModal()" style="background:none; border:none; color:white; font-size:22px; cursor:pointer;">&times;</button>
+        </header>
+        <div style="padding: 16px;" id="owner-incoming-orders-list">
+            <!-- Incoming orders will show here -->
+        </div>
+    </div>
+
+    <!-- 5. ಹೊಸ ವಸ್ತು/ಫೋಟೋ ಅಪ್‌ಲೋಡ್ ಮಾಡುವ ಫಾರ್ಮ್ (Modal) -->
     <div id="upload-modal" class="screen" style="position:fixed; top:0; left:0; right:0; bottom:0; z-index:200; background:white; display:none; max-width:500px; margin:0 auto; overflow-y:auto;">
         <header>
             <h1>ಹೊಸ ಫೋಟೋ ಅಪ್ಲೋಡ್</h1>
@@ -283,9 +305,18 @@
         let ownerData = null;
         let shopProducts = [];
         let ownerOrders = [];
+        let savedShopId = localStorage.getItem('ar_shop_id') || "4829";
 
         window.onload = function() {
-            // Auto capture GPS for Shop Owner
+            // Check if already logged in
+            let savedOwner = localStorage.getItem('ar_owner_data');
+            if (savedOwner) {
+                ownerData = JSON.parse(savedOwner);
+                document.getElementById('header-shop-title').innerText = ownerData.shopName;
+                switchScreen('screen-owner-dashboard');
+            }
+
+            // Auto capture GPS
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function(pos) {
                     let gpsStr = `Lat: ${pos.coords.latitude.toFixed(4)}, Lng: ${pos.coords.longitude.toFixed(4)}`;
@@ -297,6 +328,23 @@
                 });
             }
         };
+
+        function loginWithOldId() {
+            let inputId = document.getElementById('login-old-id').value;
+            if (inputId.length === 4) {
+                localStorage.setItem('ar_shop_id', inputId);
+                let savedOwner = localStorage.getItem('ar_owner_data');
+                if (savedOwner) {
+                    ownerData = JSON.parse(savedOwner);
+                    document.getElementById('header-shop-title').innerText = ownerData.shopName;
+                } else {
+                    ownerData = { shopName: "ನನ್ನ ಅಂಗಡಿ (" + inputId + ")" };
+                }
+                switchScreen('screen-owner-dashboard');
+            } else {
+                alert("ದಯವಿಟ್ಟು ಸರಿಯಾದ 4 ಡಿಜಿಟ್ ಐಡಿ ನಮೂದಿಸಿ!");
+            }
+        }
 
         function registerOwner(event) {
             event.preventDefault();
@@ -312,8 +360,10 @@
                 category: document.getElementById('shop-category').value
             };
 
-            // Generate random 4 digit ID
-            let randomId = Math.floor(1000 + Math.random() * 9000);
+            localStorage.setItem('ar_owner_data', JSON.stringify(ownerData));
+            let randomId = Math.floor(1000 + Math.random() * 9000).toString();
+            localStorage.setItem('ar_shop_id', randomId);
+            
             document.getElementById('generated-4digit-id').innerText = randomId;
             document.getElementById('header-shop-title').innerText = ownerData.shopName;
 
@@ -334,6 +384,15 @@
             document.getElementById('upload-modal').style.display = 'none';
         }
 
+        function openOrdersListModal() {
+            renderIncomingOrders();
+            document.getElementById('orders-list-modal').style.display = 'block';
+        }
+
+        function closeOrdersListModal() {
+            document.getElementById('orders-list-modal').style.display = 'none';
+        }
+
         function submitNewProduct(event) {
             event.preventDefault();
             let name = document.getElementById('prod-name').value;
@@ -341,7 +400,6 @@
             let currPrice = document.getElementById('prod-curr-price').value;
             let maxPieces = document.getElementById('prod-max-pieces').value;
 
-            // Handling local image preview for demo
             let frontFile = document.getElementById('prod-front-img').files[0];
             let frontImgUrl = frontFile ? URL.createObjectURL(frontFile) : 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=600';
 
@@ -375,7 +433,7 @@
                         <img src="${p.image}" alt="${p.name}">
                         <div style="font-weight:bold; font-size:15px; margin-bottom:4px;">${p.name}</div>
                         <div style="color:#b12704; font-weight:bold;">₹${p.currPrice} <span style="text-decoration:line-through; color:#777; font-size:12px;">₹${p.oldPrice}</span></div>
-                        <div style="font-size:12px; color:#555; margin-top:4px;">ಗರಿಷ್ಠ ಪೀಸ್ ಲಭ್ಯತೆ: ${p.maxPieces}</div>
+                        <div style="font-size:12px; color:#555; margin-top:4px;">ಗರಿಷ್ಠ ಪೀಸ್: ${p.maxPieces}</div>
                     </div>
                 `;
             });
@@ -387,6 +445,36 @@
                 renderOwnerProducts();
                 alert("ವಸ್ತು ಯಶಸ್ವಿಯಾಗಿ ಡಿಲೀಟ್ ಆಗಿದೆ.");
             }
+        }
+
+        function renderIncomingOrders() {
+            let container = document.getElementById('owner-incoming-orders-list');
+            container.innerHTML = '';
+            if (ownerOrders.length === 0) {
+                container.innerHTML = '<p style="color:#666; font-size:13px;">ಯಾವುದೇ ಹೊಸ ಆರ್ಡರ್‌ಗಳು ಬಂದಿಲ್ಲ.</p>';
+                return;
+            }
+            ownerOrders.forEach((ord, index) => {
+                container.innerHTML += `
+                    <div class="owner-order-card">
+                        <strong>ಗ್ರಾಹಕರು: ${ord.customer.name} (${ord.customer.phone})</strong><br>
+                        <span style="font-size:13px;">ವಿಳಾಸ: ${ord.customer.village}, ${ord.customer.taluk}, ${ord.customer.district}</span><br>
+                        <span style="font-size:13px; color:#007bff;">GPS: ${ord.customer.gps}</span><br>
+                        <span style="font-size:13px; font-weight:bold;">ವಸ್ತು: ${ord.title} (ಸೈಜ್: ${ord.size}, ಪೀಸ್: ${ord.qty})</span><br>
+                        <span style="font-size:13px; color:var(--green-success); font-weight:bold;">ಪ್ರಸ್ತುತ ಸ್ಥಿತಿ: ${ord.status}</span><br>
+                        <div style="margin-top:10px; display:flex; gap:6px;">
+                            <button onclick="updateOrderStatus(${index}, 'ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಆಗಿದೆ')" style="background:#ffc107; border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:12px;">ಕನ್ಫರ್ಮ್ ಮಾಡಿ</button>
+                            <button onclick="updateOrderStatus(${index}, 'ನಿಮ್ಮ ಆರ್ಡರ್ ಪ್ಯಾಕಿಂಗ್ ಆಗಿ ಕಳುಹಿಸಲಾಗಿದೆ, 2 ರಿಂದ 3 ಗಂಟೆಯ ಒಳಗೆ ಡೆಲಿವರಿ ತಲುಪುತ್ತದೆ')" style="background:#28a745; color:white; border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:12px;">ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (ಬಾಯಿಗೆ ಕಳುಹಿಸಿ)</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function updateOrderStatus(index, statusText) {
+            ownerOrders[index].status = statusText;
+            alert("ಸ್ಥಿತಿಯನ್ನು ಅಪ್‌ಡೇಟ್ ಮಾಡಲಾಗಿದೆ ಹಾಗೂ ಗ್ರಾಹಕರಿಗೆ ಸಂದೇಶ ಕಳುಹಿಸಲಾಗಿದೆ!");
+            renderIncomingOrders();
         }
     </script>
 </body>
