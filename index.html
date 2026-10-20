@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ಶಹಾಪುರ ಮಾರ್ಕೆಟ್ - ಶಾಪ್ ಓನರ್ & ಗ್ರಾಹಕ ಆ್ಯಪ್</title>
+    <title>ಅಕ್ವಿಕ್ ಇ-ಶಾಪ್ & ಶಾಪ್ ಓನರ್ ಆ್ಯಪ್</title>
     <style>
         :root {
             --primary-yellow: #ffd814;
@@ -39,7 +39,7 @@
         }
 
         header h1 {
-            font-size: 15px;
+            font-size: 16px;
             color: var(--primary-yellow);
         }
 
@@ -87,7 +87,7 @@
             font-size: 14px;
         }
 
-        .btn-primary {
+        .btn-publish {
             background-color: #2e7d32;
             width: 100%;
             padding: 14px;
@@ -96,11 +96,22 @@
             font-weight: bold;
             border: none;
             cursor: pointer;
-            margin-top: 15px;
+            margin-top: 10px;
             color: white;
         }
 
-        /* Owner Uploaded Item Row */
+        /* Full Product Image display without cropping */
+        .product-full-img {
+            width: 100%;
+            max-height: 380px;
+            object-fit: contain;
+            background: #fafafa;
+            border-radius: 6px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        /* Owner Item Row */
         .item-row {
             display: flex;
             align-items: center;
@@ -119,11 +130,12 @@
         }
 
         .item-imgs img {
-            width: 45px;
-            height: 45px;
-            object-fit: cover;
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
             border-radius: 4px;
             border: 1px solid #ccc;
+            background: #f9f9f9;
         }
 
         .item-info {
@@ -141,34 +153,26 @@
             font-weight: bold;
         }
 
-        /* Customer Product Grid */
-        .cust-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 15px;
-            padding: 15px;
-        }
-
-        .cust-card {
+        /* Customer View */
+        .cust-product-card {
             background: #fff;
             border: 1px solid #ddd;
             border-radius: 8px;
             padding: 12px;
-            text-align: center;
+            margin-bottom: 16px;
         }
 
-        .cust-card-imgs {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-            margin-bottom: 8px;
-        }
-
-        .cust-card-imgs img {
-            width: 48%;
-            height: 180px;
-            object-fit: cover;
-            border-radius: 6px;
+        .btn-buy-now {
+            background-color: var(--primary-yellow);
+            color: #111;
+            width: 100%;
+            padding: 12px;
+            border-radius: 20px;
+            font-size: 15px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            margin-top: 8px;
         }
 
         .owner-order-card {
@@ -182,31 +186,46 @@
 </head>
 <body>
 
-    <!-- 1. ಶಾಪ್ ಓನರ್ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ (ಮುಖ್ಯ ಪುಟ) -->
-    <div id="screen-owner-dashboard" class="screen active">
+    <!-- 1. ಗ್ರಾಹಕರ ಅಕ್ವಿಕ್ ಇ-ಶಾಪ್ ಪುಟ (ಮುಖ್ಯ ಪುಟ) -->
+    <div id="screen-customer-shop" class="screen active">
         <header>
-            <h1 id="header-shop-title">ಶಹಾಪುರ ಮಾರ್ಕೆಟ್ (ಅಂಗಡಿ ಮಾಲೀಕರ ಆ್ಯಪ್)</h1>
+            <h1 onclick="switchScreen('screen-customer-shop')">ಅಕ್ವಿಕ್ ಇ-ಶಾಪ್</h1>
+            <div class="header-btns">
+                <button onclick="switchScreen('screen-owner-app')" style="background:#232f3e; color:white; border:1px solid #485769; padding:5px 8px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:11px;">👨‍💼 ಶಾಪ್ ಓನರ್ ಆ್ಯಪ್</button>
+                <button onclick="openMyOrders()" style="background:#232f3e; color:white; border:1px solid #485769; padding:5px 8px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:11px;">📦 ನನ್ನ ಆರ್ಡರ್‌ಗಳು</button>
+            </div>
+        </header>
+
+        <div style="padding: 16px;" id="customer-products-container">
+            <!-- Dynamic products published by shop owner will show here -->
+        </div>
+    </div>
+
+    <!-- 2. ಶಾಪ್ ಓನರ್ ಆ್ಯಪ್ ಪೇಜ್ -->
+    <div id="screen-owner-app" class="screen">
+        <header>
+            <h1>ಶಹಾಪುರ ಮಾರ್ಕೆಟ್ (ಶಾಪ್ ಓನರ್)</h1>
             <div class="header-btns">
                 <button onclick="openOrdersListModal()" style="background:#28a745; color:white; border:none; padding:5px 8px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:11px;">📦 ಆರ್ಡರ್ ನೋಡಿ</button>
-                <button onclick="switchScreen('screen-customer-view')" style="background:#ffc107; color:#111; border:none; padding:5px 8px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:11px;">👤 ಗ್ರಾಹಕ ವ್ಯೂ</button>
+                <button onclick="switchScreen('screen-customer-shop')" style="background:#ffc107; color:#111; border:none; padding:5px 8px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:11px;">← ಗ್ರಾಹಕ ಆ್ಯಪ್‌ಗೆ</button>
             </div>
         </header>
 
         <div class="card-box">
             <h3 style="font-size: 15px; margin-bottom: 12px; color:#0d47a1;">➕ ಹೊಸ ವಸ್ತು ಪ್ರಕಟಿಸಿ (Publish Product)</h3>
-            <form id="upload-product-form" onsubmit="submitNewProduct(event)">
+            <form id="upload-product-form" onsubmit="handleProductPublish(event)">
                 <div class="form-group">
                     <label>ವಸ್ತುವಿನ ಹೆಸರು:</label>
-                    <input type="text" id="prod-name" required placeholder="ಉದಾ: ಚಪ್ಪಲಿ / ಜೀನ್ಸ್ ಪ್ಯಾಂಟ್">
+                    <input type="text" id="prod-name" required placeholder="ಉದಾ: ಜೀನ್ಸ್ ಪ್ಯಾಂಟ್ / ಶರ್ಟ್">
                 </div>
                 <div style="display: flex; gap: 10px;">
                     <div class="form-group" style="flex:1;">
                         <label>ಹಳೆಯ ರೇಟ್ (₹):</label>
-                        <input type="number" id="prod-old-price" required placeholder="350">
+                        <input type="number" id="prod-old-price" required placeholder="600">
                     </div>
                     <div class="form-group" style="flex:1;">
                         <label>ಈಗಿನ ಪ್ರೈಸ್ (₹):</label>
-                        <input type="number" id="prod-curr-price" required placeholder="200">
+                        <input type="number" id="prod-curr-price" required placeholder="350">
                     </div>
                 </div>
                 <div style="display: flex; gap: 10px;">
@@ -223,7 +242,7 @@
                     </div>
                     <div class="form-group" style="flex:1;">
                         <label>ಸೈಜ್ / ನಂಬರ್ / ಅಳತೆ:</label>
-                        <input type="text" id="prod-size" required placeholder="M / 8 / L">
+                        <input type="text" id="prod-size" required placeholder="XL / 8 / M">
                     </div>
                 </div>
                 <div class="form-group">
@@ -232,56 +251,71 @@
                 </div>
                 <div class="form-group">
                     <label>ಹಿಂಭಾಗದ ಫೋಟೋ ಅಪ್ಲೋಡ್ ಮಾಡಿ:</label>
-                    <input type="file" id="prod-back-img" accept="image/*" required>
+                    <input type="file" id="prod-back-img" accept="image/*">
                 </div>
-                <button type="submit" class="btn-primary">ವಸ್ತು ಪ್ರಕಟಿಸಿ (Publish)</button>
+                <button type="submit" class="btn-publish">ವಸ್ತು ಪ್ರಕಟಿಸಿ (Publish)</button>
             </form>
         </div>
 
         <div style="padding: 16px;">
-            <h3 style="font-size: 15px; margin-bottom: 10px;"> ನಿಮ್ಮ ಅಂಗಡಿಯಲ್ಲಿರುವ ವಸ್ತುಗಳು:</h3>
+            <h3 style="font-size: 15px; margin-bottom: 10px;">🖼️ ನಿಮ್ಮ ಅಂಗಡಿಯಲ್ಲಿರುವ ವಸ್ತುಗಳು:</h3>
             <div id="owner-uploaded-products-list">
-                <!-- Uploaded items list with small images and delete button -->
+                <!-- Uploaded items list -->
             </div>
         </div>
     </div>
 
-    <!-- 2. ಆರ್ಡರ್‌ಗಳನ್ನು ವೀಕ್ಷಿಸುವ ಪೇಜ್ (Modal) -->
+    <!-- 3. ಬಂದಿರುವ ಆರ್ಡರ್‌ಗಳನ್ನು ವೀಕ್ಷಿಸುವ Modal -->
     <div id="orders-list-modal" class="screen" style="position:fixed; top:0; left:0; right:0; bottom:0; z-index:200; background:white; display:none; max-width:500px; margin:0 auto; overflow-y:auto;">
         <header>
-            <h1>ಬಂದಿರುವ ಆರ್ಡರ್‌ಗಳು (ಹೊಸದು ಮೇಲೆ)</h1>
+            <h1>ಬಂದಿರುವ ಆರ್ಡರ್‌ಗಳು</h1>
             <button onclick="closeOrdersListModal()" style="background:none; border:none; color:white; font-size:22px; cursor:pointer;">&times;</button>
         </header>
         <div style="padding: 16px;" id="owner-incoming-orders-list">
-            <!-- Incoming orders (new on top) -->
+            <!-- Incoming orders -->
         </div>
     </div>
 
-    <!-- 3. ಗ್ರಾಹಕರ ಮುಖಪುಟ (Customer View Page) -->
-    <div id="screen-customer-view" class="screen">
+    <!-- 4. ನನ್ನ ಆರ್ಡರ್‌ಗಳು (Customer Side Orders View) -->
+    <div id="screen-my-orders" class="screen">
         <header>
-            <h1>ಗ್ರಾಹಕರ ಶಾಪಿಂಗ್ ಪುಟ</h1>
-            <button onclick="switchScreen('screen-owner-dashboard')" style="background:#ffc107; border:none; padding:5px 10px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:11px;">← ಓನರ್ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್</button>
+            <h1>ನನ್ನ ಆರ್ಡರ್‌ಗಳು</h1>
+            <button onclick="switchScreen('screen-customer-shop')" style="background:#232f3e; color:white; border:1px solid #485769; padding:5px 8px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:11px;">← ಶಾಪಿಂಗ್‌ಗೆ ಮರಳಿ</button>
         </header>
-        <div id="customer-products-grid" class="cust-grid">
-            <!-- Products from owner will automatically appear here -->
+        <div style="padding: 16px;" id="customer-orders-list">
+            <!-- Customer placed orders -->
         </div>
     </div>
 
     <script>
-        let shopProducts = JSON.parse(localStorage.getItem('ar_shop_products')) || [];
+        // Default product if empty
+        let defaultProducts = [
+            {
+                id: 101,
+                name: 'ನೋಫಿಲ್ಟರ್ ಚೆಕ್ಡ್ ಕ್ಯಾಶುವಲ್ ಶರ್ಟ್',
+                oldPrice: '1899',
+                currPrice: '442',
+                pieces: '1 ಪೀಸ್',
+                size: 'M',
+                frontImg: 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=600',
+                backImg: 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=600'
+            }
+        ];
+
+        let shopProducts = JSON.parse(localStorage.getItem('ar_shop_products')) || defaultProducts;
         let ownerOrders = JSON.parse(localStorage.getItem('ar_owner_orders')) || [];
 
         window.onload = function() {
-            renderOwnerProducts();
             renderCustomerProducts();
+            renderOwnerProducts();
         };
 
         function switchScreen(screenId) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
             window.scrollTo(0,0);
-            if(screenId === 'screen-customer-view') renderCustomerProducts();
+            if(screenId === 'screen-customer-shop') renderCustomerProducts();
+            if(screenId === 'screen-owner-app') renderOwnerProducts();
         }
 
         function openOrdersListModal() {
@@ -293,7 +327,7 @@
             document.getElementById('orders-list-modal').style.display = 'none';
         }
 
-        function submitNewProduct(event) {
+        function handleProductPublish(event) {
             event.preventDefault();
             let name = document.getElementById('prod-name').value;
             let oldPrice = document.getElementById('prod-old-price').value;
@@ -301,30 +335,48 @@
             let pieces = document.getElementById('prod-pieces').value;
             let size = document.getElementById('prod-size').value;
 
-            let frontFile = document.getElementById('prod-front-img').files[0];
-            let backFile = document.getElementById('prod-back-img').files[0];
+            let frontFileInput = document.getElementById('prod-front-img').files[0];
+            let backFileInput = document.getElementById('prod-back-img').files[0];
 
-            let frontImgUrl = frontFile ? URL.createObjectURL(frontFile) : 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=600';
-            let backImgUrl = backFile ? URL.createObjectURL(backFile) : 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=600';
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                let frontImgUrl = e.target.result;
 
-            let newProd = {
-                id: Date.now(),
-                name: name,
-                oldPrice: oldPrice,
-                currPrice: currPrice,
-                pieces: pieces,
-                size: size,
-                frontImg: frontImgUrl,
-                backImg: backImgUrl
+                let createAndSave = function(backImgUrl) {
+                    let newProd = {
+                        id: Date.now(),
+                        name: name,
+                        oldPrice: oldPrice,
+                        currPrice: currPrice,
+                        pieces: pieces,
+                        size: size,
+                        frontImg: frontImgUrl,
+                        backImg: backImgUrl || frontImgUrl
+                    };
+
+                    shopProducts.unshift(newProd); // New published item comes to top
+                    localStorage.setItem('ar_shop_products', JSON.stringify(shopProducts));
+
+                    renderOwnerProducts();
+                    renderCustomerProducts();
+                    document.getElementById('upload-product-form').reset();
+                    alert("ನಿಮ್ಮ ವಸ್ತು ಯಶಸ್ವಿಯಾಗಿ ಪ್ರಕಟವಾಗಿದೆ ಹಾಗೂ ಗ್ರಾಹಕರ ಆ್ಯಪ್‌ಗೆ ತಲುಪಿದೆ!");
+                };
+
+                if (backFileInput) {
+                    let backReader = new FileReader();
+                    backReader.onload = function(eBack) {
+                        createAndSave(eBack.target.result);
+                    };
+                    backReader.readAsDataURL(backFileInput);
+                } else {
+                    createAndSave(frontImgUrl);
+                }
             };
 
-            shopProducts.unshift(newProd); // Add new product to top
-            localStorage.setItem('ar_shop_products', JSON.stringify(shopProducts));
-            
-            renderOwnerProducts();
-            renderCustomerProducts();
-            document.getElementById('upload-product-form').reset();
-            alert("ನಿಮ್ಮ ಫೋಟೋ ಅಪ್ಲೋಡ್ ಆಗಿ ಗ್ರಾಹಕರ ಪೇಜಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ!");
+            if (frontFileInput) {
+                reader.readAsDataURL(frontFileInput);
+            }
         }
 
         function renderOwnerProducts() {
@@ -364,41 +416,48 @@
         }
 
         function renderCustomerProducts() {
-            let grid = document.getElementById('customer-products-grid');
-            grid.innerHTML = '';
+            let container = document.getElementById('customer-products-container');
+            container.innerHTML = '';
             if (shopProducts.length === 0) {
-                grid.innerHTML = '<p style="color:#666; text-align:center; padding:20px;">ಯಾವುದೇ ವಸ್ತುಗಳು ಲಭ್ಯವಿಲ್ಲ.</p>';
+                container.innerHTML = '<p style="color:#666; text-align:center; padding:20px;">ಯಾವುದೇ ವಸ್ತುಗಳು ಲಭ್ಯವಿಲ್ಲ.</p>';
                 return;
             }
             shopProducts.forEach((p) => {
-                grid.innerHTML += `
-                    <div class="cust-card">
-                        <div class="cust-card-imgs">
-                            <img src="${p.frontImg}" alt="Front">
-                            <img src="${p.backImg}" alt="Back">
+                container.innerHTML += `
+                    <div class="cust-product-card">
+                        <img src="${p.frontImg}" alt="${p.name}" class="product-full-img">
+                        <h2 style="font-size:18px; font-weight:600; margin-bottom:6px;">${p.name}</h2>
+                        <div style="font-size:22px; font-weight:700; color:#0F1111; margin-bottom:8px;">
+                            ₹${p.currPrice} 
+                            <span style="text-decoration:line-through; color:#565959; font-size:14px; font-weight:normal;">₹${p.oldPrice}</span>
                         </div>
-                        <h3 style="font-size:16px; margin-bottom:4px;">${p.name}</h3>
-                        <p style="font-size:13px; color:#555;">ಸೈಜ್: ${p.size} | ${p.pieces}</p>
-                        <p style="font-size:18px; font-weight:bold; color:#0F1111; margin:6px 0;">₹${p.currPrice} <span style="text-decoration:line-through; color:#777; font-size:13px;">₹${p.oldPrice}</span></p>
-                        <button onclick="simulateCustomerOrder('${p.name}', '${p.currPrice}')" style="background:var(--primary-yellow); border:none; width:100%; padding:10px; border-radius:20px; font-weight:bold; cursor:pointer;">ಈಗಲೇ ಖರೀದಿಸಿ (Order)</button>
+                        <p style="color:#007600; font-size:14px; font-weight:bold; margin-bottom:10px;">ಉಚಿತ ಡೆಲಿವರಿ ಲಭ್ಯವಿದೆ (${p.size} - ${p.pieces})</p>
+                        <button class="btn-buy-now" onclick="placeCustomerOrder('${p.name}', '${p.currPrice}', '${p.size}')">₹${p.currPrice} ಗೆ ಈಗಲೇ ಖರೀದಿಸಿ</button>
                     </div>
                 `;
             });
         }
 
-        function simulateCustomerOrder(prodName, price) {
+        function placeCustomerOrder(prodName, price, size) {
             let newOrder = {
-                id: 'ORD' + Math.floor(1000 + Math.random() * 9000),
+                id: 'ORD' + Math.floor(100000 + Math.random() * 900000),
                 title: prodName,
-                size: 'M',
-                qty: '1 ಪೀಸ್',
+                size: size,
                 amount: price,
-                customer: { name: 'ಅನಿಲ್ ರಾಥೋಡ್', phone: '8105010768', village: 'ಶಹಾಪುರ', taluk: 'ಶಹಾಪುರ', district: 'ಯಾದಗಿರಿ', gps: 'Lat: 16.7390, Lng: 76.7977' },
+                customer: {
+                    name: 'ಅನಿಲ್ ರಾಥೋಡ್',
+                    phone: '8105010768',
+                    village: 'ಶಹಾಪುರ',
+                    taluk: 'ಶಹಾಪುರ',
+                    district: 'ಯಾದಗಿರಿ',
+                    gps: 'Lat: 16.7390, Lng: 76.7977'
+                },
                 status: 'ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಆಗಿದೆ'
             };
-            ownerOrders.unshift(newOrder); // New orders on top
+
+            ownerOrders.unshift(newOrder); // New order on top
             localStorage.setItem('ar_owner_orders', JSON.stringify(ownerOrders));
-            alert("ಆರ್ಡರ್ ಯಶಸ್ವಿಯಾಗಿ ಅಂಗಡಿ ಮಾಲೀಕರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ!");
+            alert("ಆರ್ಡರ್ ಯಶಸ್ವಿಯಾಗಿ ಕನ್ಫರ್ಮ್ ಆಗಿದೆ ಹಾಗೂ ಅಂಗಡಿ ಮಾಲೀಕರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ!");
         }
 
         function renderIncomingOrders() {
@@ -419,6 +478,26 @@
                     </div>
                 `;
             });
+        }
+
+        function openMyOrders() {
+            let container = document.getElementById('customer-orders-list');
+            container.innerHTML = '';
+            if (ownerOrders.length === 0) {
+                container.innerHTML = '<p style="color:#666; text-align:center; padding:20px;">ಯಾವುದೇ ಆರ್ಡರ್‌ಗಳು ಮಾಡಿಲ್ಲ.</p>';
+            } else {
+                ownerOrders.forEach(ord => {
+                    container.innerHTML += `
+                        <div class="card-box" style="background:#fff; border-radius:8px; margin-bottom:10px;">
+                            <strong>${ord.title}</strong><br>
+                            <span style="font-size:13px; color:#555;">ಆರ್ಡರ್ ಐಡಿ: ${ord.id} | ಸೈಜ್: ${ord.size}</span><br>
+                            <span style="font-size:14px; font-weight:bold;">ಮೊತ್ತ: ₹${ord.amount}</span><br>
+                            <span style="font-size:12px; color:var(--green-success); font-weight:bold;">ಸ್ಥಿತಿ: ${ord.status}</span>
+                        </div>
+                    `;
+                });
+            }
+            switchScreen('screen-my-orders');
         }
     </script>
 </body>
