@@ -103,7 +103,7 @@
         <div class="max-w-6xl mx-auto flex justify-between items-center flex-wrap gap-2">
             <div>
                 <h1 id="shopHeaderTitle" class="text-lg font-bold flex items-center gap-2">🏪 ನನ್ನ ಲೋಕಲ್ ಶಾಪ್ Panel</h1>
-                <p id="shopHeaderCategory" class="text-xs text-indigo-200">ಐಡಿ: #8492 | ಲಾಗಿನ್ ಆಗಿದೆ</p>
+                <p id="shopHeaderCategory" class="text-xs text-indigo-200">ಐಡಿ: #9353 | ಲಾಗಿನ್ ಆಗಿದೆ[span_1](start_span)[span_1](end_span)</p>
             </div>
             
             <div class="flex items-center gap-2">
@@ -151,11 +151,11 @@
                 <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2">
                     📦 ಅಂಗಡಿಯ ಫೋಟೋಗಳು / ಸಾಮಗ್ರಿಗಳು (<span id="productCount">0</span>)
                 </h2>
-                <span class="text-[10px] text-slate-400">*ಡಿಲೀಟ್ ಮಾಡುವವರೆಗೆ ಕಣ್ಮರೆಯಾಗುವುದಿಲ್ಲ</span>
+                <span class="text-[10px] text-slate-400">*ಮಾಲೀಕರು ಡಿಲೀಟ್ ಮಾಡುವವರೆಗೆ ಕಣ್ಮರೆಯಾಗುವುದಿಲ್ಲ[span_2](start_span)[span_2](end_span)</span>
             </div>
             
             <div id="productList" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2.5">
-                <!-- Instant Micro Thumbnails Populated Here -->
+                <!-- Permanent Micro Thumbnails Populated Here -->
             </div>
         </section>
 
@@ -196,17 +196,17 @@
             <form id="productForm" class="space-y-3">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">ವಸ್ತುವಿನ ಹೆಸರು</label>
-                    <input type="text" id="itemName" required placeholder="ಉದಾ: ಚಪ್ಪಲಿ / ಜೀನ್ಸ್ ಪ್ಯಾಂಟ್" class="w-full p-2 border rounded-xl text-xs outline-none focus:ring-2 focus:ring-indigo-500">
+                    <input type="text" id="itemName" required placeholder="ಉದಾ: ಚಪ್ಪಲಿ / ಬಟ್ಟೆ ಅಂಗಿ" class="w-full p-2 border rounded-xl text-xs outline-none focus:ring-2 focus:ring-indigo-500">
                 </div>
 
                 <div class="grid grid-cols-2 gap-2">
                     <div>
                         <label class="block text-xs font-bold text-slate-500 mb-1">ಹಳೆಯ ಬೆಲೆ (₹)</label>
-                        <input type="number" id="oldPrice" placeholder="350" class="w-full p-2 border rounded-xl text-xs outline-none">
+                        <input type="number" id="oldPrice" placeholder="550" class="w-full p-2 border rounded-xl text-xs outline-none">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-emerald-700 mb-1">ಪ್ರೆಸೆಂಟ್ ರೇಟ್ (₹)</label>
-                        <input type="number" id="newPrice" required placeholder="250" class="w-full p-2 border border-emerald-400 rounded-xl text-xs font-bold bg-emerald-50/30">
+                        <input type="number" id="newPrice" required placeholder="450" class="w-full p-2 border border-emerald-400 rounded-xl text-xs font-bold bg-emerald-50/30">
                     </div>
                 </div>
 
@@ -243,10 +243,10 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT LOGIC (INSTANT ULTRA FAST) -->
+    <!-- JAVASCRIPT LOGIC (PERMANENT STORAGE & SAFE DELETE) -->
     <script>
-        const STORE_KEY_PRODUCTS = "LOCAL_SHOP_PRODUCTS_ULTRA_FAST";
-        const STORE_KEY_ORDERS = "LOCAL_SHOP_ORDERS_ULTRA_FAST";
+        const STORE_KEY_PRODUCTS = "LOCAL_SHOP_PERMANENT_PRODUCTS_V4";
+        const STORE_KEY_ORDERS = "LOCAL_SHOP_PERMANENT_ORDERS_V4";
         const STORE_KEY_USER = "LOCAL_SHOP_USER_PIN";
 
         let products = JSON.parse(localStorage.getItem(STORE_KEY_PRODUCTS)) || [];
@@ -326,7 +326,7 @@
         function openAddProductModal() { document.getElementById('addProductModal').classList.remove('hidden'); }
         function closeAddProductModal() { document.getElementById('addProductModal').classList.add('hidden'); }
 
-        // INSTANT ULTRA FAST IMAGE PROCESSOR
+        // INSTANT ULTRA FAST UPLOAD & PERMANENT STORAGE
         document.getElementById('productForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -339,11 +339,11 @@
 
             const addProductToStore = (imgSrc) => {
                 products.push({ id: Date.now(), name, oldPrice, newPrice, unit, returnOption, image: imgSrc });
-                saveState();
+                saveState(); // LocalStorage ನಲ್ಲಿ ಪರ್ಮನೆಂಟ್ ಸೇವ್ ಆಗುತ್ತದೆ
                 renderProducts();
                 document.getElementById('productForm').reset();
                 closeAddProductModal();
-                alert("🎉 ಶುಭಾಶಯಗಳು!\nನಿಮ್ಮ ಪ್ರಾಡಕ್ಟ್ / ಫೋಟೋ ಯಶಸ್ವಿಯಾಗಿ ಆಪ್‌ಗೆ ಸೇರಿದೆ.");
+                alert("🎉 ಶುಭಾಶಯಗಳು!\nನಿಮ್ಮ ಪ್ರಾಡಕ್ಟ್ ಮತ್ತು ಫೋಟೋ ಯಶಸ್ವಿಯಾಗಿ ಆಪ್‌ಗೆ ಸೇರಿದೆ ಹಾಗೂ ಗ್ರಾಹಕರ ಆಪ್‌ಗೆ ಲೈವ್ ಆಗಿದೆ.");
             };
 
             if (imageInput.files && imageInput.files[0]) {
@@ -354,16 +354,16 @@
                     img.onload = function() {
                         const canvas = document.createElement('canvas');
                         const ctx = canvas.getContext('2d');
-                        canvas.width = 120;
-                        canvas.height = 120;
-                        ctx.drawImage(img, 0, 0, 120, 120);
-                        addProductToStore(canvas.toDataURL('image/jpeg', 0.6));
+                        canvas.width = 150;
+                        canvas.height = 150;
+                        ctx.drawImage(img, 0, 0, 150, 150);
+                        addProductToStore(canvas.toDataURL('image/jpeg', 0.7));
                     };
                     img.src = evt.target.result;
                 };
                 reader.readAsDataURL(file);
             } else {
-                addProductToStore("https://images.unsplash.com/photo-1542838132-92c53300491e?w=120");
+                addProductToStore("https://images.unsplash.com/photo-1542838132-92c53300491e?w=150");
             }
         });
 
@@ -379,7 +379,7 @@
 
             list.innerHTML = products.map((item) => `
                 <div class="border rounded-xl p-1.5 bg-slate-50 relative shadow-sm flex flex-col items-center text-center">
-                    <button onclick="deleteProduct(${item.id})" class="absolute -top-1.5 -right-1.5 bg-red-500 hover:bg-red-600 text-white w-5 h-5 rounded-full text-[10px] font-bold shadow flex items-center justify-center z-10" title="ಡಿಲೀಟ್ ಮಾಡಿ">
+                    <button onclick="confirmDelete(${item.id})" class="absolute -top-1.5 -right-1.5 bg-red-500 hover:bg-red-600 text-white w-5 h-5 rounded-full text-[10px] font-bold shadow flex items-center justify-center z-10" title="ಡಿಲೀಟ್ ಮಾಡಿ">
                         ✕
                     </button>
                     <img src="${item.image}" class="w-12 h-12 object-cover rounded-lg border bg-white mb-1">
@@ -391,11 +391,16 @@
             `).join('');
         }
 
-        function deleteProduct(id) {
-            if(confirm("ಈ ಫೋಟೋವನ್ನು ಡಿಲೀಟ್ ಮಾಡಬೇಕೇ?")) {
+        // Safe Delete with Confirmation (Cancel / Confirm Buttons)
+        function confirmDelete(id) {
+            const itemToDelete = products.find(p => p.id === id);
+            const itemName = itemToDelete ? itemToDelete.name : 'ಈ ವಸ್ತುವನ್ನು';
+            
+            if(confirm(`⚠️ ಎಚ್ಚರಿಕೆ!\n\nನೀವು ನಿಜವಾಗಿಯೂ "${itemName}" ಫೋಟೋವನ್ನು ಡಿಲೀಟ್ ಮಾಡಲು ಬಯಸುತ್ತೀರಾ?\n\n[OK] ಒತ್ತಿದರೆ ಡಿಲೀಟ್ ಆಗುತ್ತದೆ, [Cancel] ಒತ್ತಿದರೆ ಉಳಿಯುತ್ತದೆ.`)) {
                 products = products.filter(p => p.id !== id);
                 saveState();
                 renderProducts();
+                alert("🗑️ ಪ್ರಾಡಕ್ಟ್ ಯಶಸ್ವಿಯಾಗಿ ಡಿಲೀಟ್ ಆಗಿದೆ.");
             }
         }
 
@@ -442,7 +447,7 @@
                 id: orderCounter++,
                 customer: "ಗ್ರಾಹಕರು (ಮಲ್ಲೇಶ್ವರಂ)",
                 item: "ಚಪ್ಪಲಿ (2 Pieces)",
-                amount: 250,
+                amount: 450,
                 statusStep: 1
             });
             saveState();
