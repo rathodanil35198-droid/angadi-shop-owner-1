@@ -39,7 +39,7 @@
         }
 
         header h1 {
-            font-size: 16px;
+            font-size: 15px;
             color: var(--primary-yellow);
         }
 
@@ -95,6 +95,11 @@
             gap: 10px;
         }
 
+        .item-imgs {
+            display: flex;
+            gap: 5px;
+        }
+
         .item-imgs img {
             width: 50px;
             height: 50px;
@@ -128,6 +133,7 @@
 
     <header>
         <h1>👨‍💼 ಅಂಗಡಿ ಮಾಲೀಕರ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್</h1>
+        <button onclick="document.getElementById('orders-section').scrollIntoView({behavior: 'smooth'})" style="background:#28a745; color:white; border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:12px;">📦 ಆರ್ಡರ್ ನೋಡಿ</button>
     </header>
 
     <div class="card-box">
@@ -163,14 +169,18 @@
                 </div>
             </div>
             <div class="form-group">
-                <label>ಮುಂಭಾಗದ ಫೋಟೋ:</label>
+                <label>ಮುಂಭಾಗದ ಫೋಟೋ (Front Photo):</label>
                 <input type="file" id="prod-front-img" accept="image/*" required>
+            </div>
+            <div class="form-group">
+                <label>ಹಿಂಭಾಗದ ಫೋಟೋ (Back Photo):</label>
+                <input type="file" id="prod-back-img" accept="image/*" required>
             </div>
             <button type="submit" class="btn-publish">ವಸ್ತು ಪ್ರಕಟಿಸಿ</button>
         </form>
     </div>
 
-    <div class="card-box">
+    <div class="card-box" id="orders-section">
         <h3 style="font-size: 15px; margin-bottom: 10px;">📦 ಬಂದಿರುವ ಆರ್ಡರ್‌ಗಳು & ಪೇಮೆಂಟ್:</h3>
         <div id="owner-orders-container">
             <p style="color:#666; font-size:13px;">ಹೊಸ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>
@@ -199,22 +209,34 @@
             let currPrice = document.getElementById('prod-curr-price').value;
             let pieces = document.getElementById('prod-pieces').value;
             let size = document.getElementById('prod-size').value;
-            let fileInput = document.getElementById('prod-front-img').files[0];
+            
+            let frontFile = document.getElementById('prod-front-img').files[0];
+            let backFile = document.getElementById('prod-back-img').files[0];
 
-            let reader = new FileReader();
-            reader.onload = function(e) {
-                let newProd = {
-                    id: Date.now(),
-                    name, oldPrice, currPrice, pieces, size,
-                    frontImg: e.target.result
+            let readerFront = new FileReader();
+            readerFront.onload = function(eFront) {
+                let frontUrl = eFront.target.result;
+
+                let readerBack = new FileReader();
+                readerBack.onload = function(eBack) {
+                    let backUrl = eBack.target.result;
+
+                    let newProd = {
+                        id: Date.now(),
+                        name, oldPrice, currPrice, pieces, size,
+                        frontImg: frontUrl,
+                        backImg: backUrl
+                    };
+
+                    shopProducts.unshift(newProd);
+                    localStorage.setItem('ar_shop_products', JSON.stringify(shopProducts));
+                    renderOwnerData();
+                    document.getElementById('upload-product-form').reset();
+                    alert("ವಸ್ತು ಯಶಸ್ವಿಯಾಗಿ ಪ್ರಕಟವಾಗಿ ಗ್ರಾಹಕರ ಆ್ಯಪ್‌ಗೆ ತಲುಪಿದೆ!");
                 };
-                shopProducts.unshift(newProd);
-                localStorage.setItem('ar_shop_products', JSON.stringify(shopProducts));
-                renderOwnerData();
-                document.getElementById('upload-product-form').reset();
-                alert("ವಸ್ತು ಯಶಸ್ವಿಯಾಗಿ ಪ್ರಕಟವಾಗಿ ಗ್ರಾಹಕರ ಆ್ಯಪ್‌ಗೆ ತಲುಪಿದೆ!");
+                if(backFile) readerBack.readAsDataURL(backFile);
             };
-            if(fileInput) reader.readAsDataURL(fileInput);
+            if(frontFile) readerFront.readAsDataURL(frontFile);
         }
 
         function renderOwnerData() {
@@ -223,8 +245,14 @@
             shopProducts.forEach(p => {
                 pList.innerHTML += `
                     <div class="item-row">
-                        <div class="item-imgs"><img src="${p.frontImg}"></div>
-                        <div style="flex:1;"><strong>${p.name} (${p.size})</strong><br>₹${p.currPrice}</div>
+                        <div class="item-imgs">
+                            <img src="${p.frontImg}" alt="Front">
+                            <img src="${p.backImg}" alt="Back">
+                        </div>
+                        <div style="flex:1; padding-left:8px;">
+                            <strong>${p.name} (${p.size})</strong><br>
+                            <span style="color:#b12704; font-weight:bold;">₹${p.currPrice}</span>
+                        </div>
                         <button class="delete-btn" onclick="deleteProduct(${p.id})">ಡಿಲೀಟ್</button>
                     </div>
                 `;
