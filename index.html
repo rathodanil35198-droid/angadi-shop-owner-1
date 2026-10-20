@@ -101,12 +101,12 @@
         }
 
         .item-imgs img {
-            width: 50px;
-            height: 50px;
+            width: 55px;
+            height: 55px;
             object-fit: contain;
+            background: #fafafa;
             border-radius: 4px;
             border: 1px solid #ccc;
-            background: #f9f9f9;
         }
 
         .delete-btn {
@@ -132,8 +132,8 @@
 <body>
 
     <header>
-        <h1>👨‍💼 ಅಂಗಡಿ ಮಾಲೀಕರ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್</h1>
-        <button onclick="document.getElementById('orders-section').scrollIntoView({behavior: 'smooth'})" style="background:#28a745; color:white; border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:12px;">📦 ಆರ್ಡರ್ ನೋಡಿ</button>
+        <h1>👨‍💼 ಅಂಗಡಿ ಮಾಲೀಕರ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್[span_4](start_span)[span_4](end_span)</h1>
+        <button onclick="document.getElementById('orders-section').scrollIntoView({behavior: 'smooth'})" style="background:#28a745; color:white; border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:12px;">📦 ಆರ್ಡರ್ ನೋಡಿ[span_5](start_span)[span_5](end_span)</button>
     </header>
 
     <div class="card-box">
@@ -169,26 +169,26 @@
                 </div>
             </div>
             <div class="form-group">
-                <label>ಮುಂಭಾಗದ ಫೋಟೋ (Front Photo):</label>
+                <label>ಮುಂಭಾಗದ ಫೋಟೋ (Front Photo):[span_6](start_span)[span_6](end_span)</label>
                 <input type="file" id="prod-front-img" accept="image/*" required>
             </div>
             <div class="form-group">
-                <label>ಹಿಂಭಾಗದ ಫೋಟೋ (Back Photo):</label>
+                <label>ಹಿಂಭಾಗದ ಫೋಟೋ (Back Photo):[span_7](start_span)[span_7](end_span)</label>
                 <input type="file" id="prod-back-img" accept="image/*" required>
             </div>
-            <button type="submit" class="btn-publish">ವಸ್ತು ಪ್ರಕಟಿಸಿ</button>
+            <button type="submit" class="btn-publish">ವಸ್ತು ಪ್ರಕಟಿಸಿ[span_8](start_span)[span_8](end_span)</button>
         </form>
     </div>
 
     <div class="card-box" id="orders-section">
-        <h3 style="font-size: 15px; margin-bottom: 10px;">📦 ಬಂದಿರುವ ಆರ್ಡರ್‌ಗಳು & ಪೇಮೆಂಟ್:</h3>
+        <h3 style="font-size: 15px; margin-bottom: 10px;">📦 ಬಂದಿರುವ ಆರ್ಡರ್‌ಗಳು & ಪೇಮೆಂಟ್:[span_9](start_span)[span_9](end_span)</h3>
         <div id="owner-orders-container">
-            <p style="color:#666; font-size:13px;">ಹೊಸ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>
+            <p style="color:#666; font-size:13px;">ಯಾವುದೇ ಹೊಸ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>
         </div>
     </div>
 
     <div class="card-box">
-        <h3 style="font-size: 15px; margin-bottom: 10px;">🖼️ ನಿಮ್ಮ ಅಂಗಡಿಯಲ್ಲಿರುವ ವಸ್ತುಗಳು:</h3>
+        <h3 style="font-size: 15px; margin-bottom: 10px;">🖼️ ನಿಮ್ಮ ಅಂಗಡಿಯಲ್ಲಿರುವ ವಸ್ತುಗಳು:[span_10](start_span)[span_10](end_span)</h3>
         <div id="owner-products-list">
             <p style="color:#666; font-size:13px;">ಯಾವುದೇ ವಸ್ತುಗಳಿಲ್ಲ.</p>
         </div>
@@ -213,6 +213,11 @@
             let frontFile = document.getElementById('prod-front-img').files[0];
             let backFile = document.getElementById('prod-back-img').files[0];
 
+            if (!frontFile || !backFile) {
+                alert("ದಯವಿಟ್ಟು ಮುಂಭಾಗ ಮತ್ತು ಹಿಂಭಾಗದ ಎರಡೂ ಫೋಟೋಗಳನ್ನು ಆಯ್ಕೆ ಮಾಡಿ!");
+                return;
+            }
+
             let readerFront = new FileReader();
             readerFront.onload = function(eFront) {
                 let frontUrl = eFront.target.result;
@@ -230,13 +235,14 @@
 
                     shopProducts.unshift(newProd);
                     localStorage.setItem('ar_shop_products', JSON.stringify(shopProducts));
+                    
                     renderOwnerData();
                     document.getElementById('upload-product-form').reset();
-                    alert("ವಸ್ತು ಯಶಸ್ವಿಯಾಗಿ ಪ್ರಕಟವಾಗಿ ಗ್ರಾಹಕರ ಆ್ಯಪ್‌ಗೆ ತಲುಪಿದೆ!");
+                    alert("ನಿಮ್ಮ ಫೋಟೋ ಯಶಸ್ವಿಯಾಗಿ ಗ್ರಾಹಕರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ[span_11](start_span)[span_11](end_span)!");
                 };
-                if(backFile) readerBack.readAsDataURL(backFile);
+                readerBack.readAsDataURL(backFile);
             };
-            if(frontFile) readerFront.readAsDataURL(frontFile);
+            readerFront.readAsDataURL(frontFile);
         }
 
         function renderOwnerData() {
@@ -253,13 +259,13 @@
                             <strong>${p.name} (${p.size})</strong><br>
                             <span style="color:#b12704; font-weight:bold;">₹${p.currPrice}</span>
                         </div>
-                        <button class="delete-btn" onclick="deleteProduct(${p.id})">ಡಿಲೀಟ್</button>
+                        <button class="delete-btn" onclick="deleteProduct(${p.id})">ಡಿಲೀಟ್[span_12](start_span)[span_12](end_span)</button>
                     </div>
                 `;
             });
 
             let oList = document.getElementById('owner-orders-container');
-            oList.innerHTML = allOrders.length === 0 ? '<p style="color:#666; font-size:13px;">ಹೊಸ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>' : '';
+            oList.innerHTML = allOrders.length === 0 ? '<p style="color:#666; font-size:13px;">ಯಾವುದೇ ಹೊಸ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>' : '';
             allOrders.forEach((ord, index) => {
                 oList.innerHTML += `
                     <div class="order-card">
@@ -268,9 +274,9 @@
                         ಪ್ರಸ್ತುತ ಸ್ಥಿತಿ: <span style="color:green; font-weight:bold;">${ord.status}</span><br>
                         ಪೇಮೆಂಟ್ ಸ್ಥಿತಿ: <span style="color:red; font-weight:bold;">${ord.paymentStatus}</span><br>
                         <div style="margin-top:8px; display:flex; gap:5px; flex-wrap:wrap;">
-                            <button onclick="updateOrderStatus(${index}, 'ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಆಗಿದೆ')" style="background:#ffc107; border:none; padding:5px; font-size:11px; font-weight:bold; cursor:pointer;">ಕನ್ಫರ್ಮ್ ಮಾಡಿ</button>
-                            <button onclick="updateOrderStatus(${index}, 'ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ, ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ಕಳುಹಿಸಲಾಗಿದೆ')" style="background:#28a745; color:white; border:none; padding:5px; font-size:11px; font-weight:bold; cursor:pointer;">ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ</button>
-                            ${ord.paymentStatus === 'ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್' ? `<button onclick="updatePaymentStatus(${index})" style="background:#007bff; color:white; border:none; padding:5px; font-size:11px; font-weight:bold; cursor:pointer;">ಪೇಮೆಂಟ್ ಸಕ್ಸಸ್‌ಫುಲ್ ಮಾಡಿ</button>` : ''}
+                            <button onclick="updateOrderStatus(${index}, 'ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಆಗಿದೆ')" style="background:#ffc107; border:none; padding:5px; font-size:11px; font-weight:bold; cursor:pointer;">ಕನ್ಫರ್ಮ್ ಮಾಡಿ[span_13](start_span)[span_13](end_span)</button>
+                            <button onclick="updateOrderStatus(${index}, 'ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ, ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ಕಳುಹಿಸಲಾಗಿದೆ')" style="background:#28a745; color:white; border:none; padding:5px; font-size:11px; font-weight:bold; cursor:pointer;">ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ[span_14](start_span)[span_14](end_span)</button>
+                            ${ord.paymentStatus === 'ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್' ? `<button onclick="updatePaymentStatus(${index})" style="background:#007bff; color:white; border:none; padding:5px; font-size:11px; font-weight:bold; cursor:pointer;">ಪೇಮೆಂಟ್ ಸಕ್ಸಸ್‌ಫುಲ್ ಮಾಡಿ[span_15](start_span)[span_15](end_span)</button>` : ''}
                         </div>
                     </div>
                 `;
@@ -278,9 +284,11 @@
         }
 
         function deleteProduct(id) {
-            shopProducts = shopProducts.filter(p => p.id !== id);
-            localStorage.setItem('ar_shop_products', JSON.stringify(shopProducts));
-            renderOwnerData();
+            if(confirm("ಈ ವಸ್ತುವನ್ನು ಡಿಲೀಟ್ ಮಾಡಲು ಬಯಸುತ್ತೀರಾ?")) {
+                shopProducts = shopProducts.filter(p => p.id !== id);
+                localStorage.setItem('ar_shop_products', JSON.stringify(shopProducts));
+                renderOwnerData();
+            }
         }
 
         function updateOrderStatus(index, status) {
