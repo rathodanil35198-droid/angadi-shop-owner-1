@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ಅಕ್ವಿಕ್ ಇ-ಶಾಪ್ & ಶಾಪ್ ಓನರ್ ಆ್ಯಪ್</title>
+    <title>ಶಹಾಪುರ ಮಾರ್ಕೆಟ್ (ಶಾಪ್ ಓನರ್)</title>
     <style>
         :root {
             --primary-yellow: #ffd814;
@@ -39,7 +39,7 @@
         }
 
         header h1 {
-            font-size: 16px;
+            font-size: 15px;
             color: var(--primary-yellow);
         }
 
@@ -130,9 +130,9 @@
         }
 
         .item-imgs img {
-            width: 50px;
-            height: 50px;
-            object-fit: contain;
+            width: 55px;
+            height: 55px;
+            object-fit: cover;
             border-radius: 4px;
             border: 1px solid #ccc;
             background: #f9f9f9;
@@ -186,23 +186,8 @@
 </head>
 <body>
 
-    <!-- 1. ಗ್ರಾಹಕರ ಅಕ್ವಿಕ್ ಇ-ಶಾಪ್ ಪುಟ (ಮುಖ್ಯ ಪುಟ) -->
-    <div id="screen-customer-shop" class="screen active">
-        <header>
-            <h1 onclick="switchScreen('screen-customer-shop')">ಅಕ್ವಿಕ್ ಇ-ಶಾಪ್</h1>
-            <div class="header-btns">
-                <button onclick="switchScreen('screen-owner-app')" style="background:#232f3e; color:white; border:1px solid #485769; padding:5px 8px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:11px;">👨‍💼 ಶಾಪ್ ಓನರ್ ಆ್ಯಪ್</button>
-                <button onclick="openMyOrders()" style="background:#232f3e; color:white; border:1px solid #485769; padding:5px 8px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:11px;">📦 ನನ್ನ ಆರ್ಡರ್‌ಗಳು</button>
-            </div>
-        </header>
-
-        <div style="padding: 16px;" id="customer-products-container">
-            <!-- Dynamic products published by shop owner will show here -->
-        </div>
-    </div>
-
-    <!-- 2. ಶಾಪ್ ಓನರ್ ಆ್ಯಪ್ ಪೇಜ್ -->
-    <div id="screen-owner-app" class="screen">
+    <!-- 1. ಶಾಪ್ ಓನರ್ ಆ್ಯಪ್ ಪೇಜ್ (ಮುಖ್ಯ ಪುಟ) -->
+    <div id="screen-owner-app" class="screen active">
         <header>
             <h1>ಶಹಾಪುರ ಮಾರ್ಕೆಟ್ (ಶಾಪ್ ಓನರ್)</h1>
             <div class="header-btns">
@@ -242,7 +227,7 @@
                     </div>
                     <div class="form-group" style="flex:1;">
                         <label>ಸೈಜ್ / ನಂಬರ್ / ಅಳತೆ:</label>
-                        <input type="text" id="prod-size" required placeholder="XL / 8 / M">
+                        <input type="text" id="prod-size" required placeholder="XL / M / 8">
                     </div>
                 </div>
                 <div class="form-group">
@@ -262,6 +247,21 @@
             <div id="owner-uploaded-products-list">
                 <!-- Uploaded items list -->
             </div>
+        </div>
+    </div>
+
+    <!-- 2. ಗ್ರಾಹಕರ ಅಕ್ವಿಕ್ ಇ-ಶಾಪ್ ಪುಟ -->
+    <div id="screen-customer-shop" class="screen">
+        <header>
+            <h1 onclick="switchScreen('screen-customer-shop')">ಅಕ್ವಿಕ್ ಇ-ಶಾಪ್</h1>
+            <div class="header-btns">
+                <button onclick="switchScreen('screen-owner-app')" style="background:#232f3e; color:white; border:1px solid #485769; padding:5px 8px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:11px;">👨‍💼 ಶಾಪ್ ಓನರ್ ಆ್ಯಪ್</button>
+                <button onclick="openMyOrders()" style="background:#232f3e; color:white; border:1px solid #485769; padding:5px 8px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:11px;">📦 ನನ್ನ ಆರ್ಡರ್‌ಗಳು</button>
+            </div>
+        </header>
+
+        <div style="padding: 16px;" id="customer-products-container">
+            <!-- Dynamic products published by shop owner will show here -->
         </div>
     </div>
 
@@ -288,26 +288,12 @@
     </div>
 
     <script>
-        // Default product if empty
-        let defaultProducts = [
-            {
-                id: 101,
-                name: 'ನೋಫಿಲ್ಟರ್ ಚೆಕ್ಡ್ ಕ್ಯಾಶುವಲ್ ಶರ್ಟ್',
-                oldPrice: '1899',
-                currPrice: '442',
-                pieces: '1 ಪೀಸ್',
-                size: 'M',
-                frontImg: 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=600',
-                backImg: 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=600'
-            }
-        ];
-
-        let shopProducts = JSON.parse(localStorage.getItem('ar_shop_products')) || defaultProducts;
+        let shopProducts = JSON.parse(localStorage.getItem('ar_shop_products')) || [];
         let ownerOrders = JSON.parse(localStorage.getItem('ar_owner_orders')) || [];
 
         window.onload = function() {
-            renderCustomerProducts();
             renderOwnerProducts();
+            renderCustomerProducts();
         };
 
         function switchScreen(screenId) {
@@ -329,53 +315,50 @@
 
         function handleProductPublish(event) {
             event.preventDefault();
-            let name = document.getElementById('prod-name').value;
-            let oldPrice = document.getElementById('prod-old-price').value;
-            let currPrice = document.getElementById('prod-curr-price').value;
-            let pieces = document.getElementById('prod-pieces').value;
-            let size = document.getElementById('prod-size').value;
+            let name = document.getElementById('prod-name').value || 'ವಸ್ತು';
+            let oldPrice = document.getElementById('prod-old-price').value || '0';
+            let currPrice = document.getElementById('prod-curr-price').value || '0';
+            let pieces = document.getElementById('prod-pieces').value || '1 ಪೀಸ್';
+            let size = document.getElementById('prod-size').value || 'M';
 
             let frontFileInput = document.getElementById('prod-front-img').files[0];
             let backFileInput = document.getElementById('prod-back-img').files[0];
 
-            let reader = new FileReader();
-            reader.onload = function(e) {
-                let frontImgUrl = e.target.result;
-
-                let createAndSave = function(backImgUrl) {
-                    let newProd = {
-                        id: Date.now(),
-                        name: name,
-                        oldPrice: oldPrice,
-                        currPrice: currPrice,
-                        pieces: pieces,
-                        size: size,
-                        frontImg: frontImgUrl,
-                        backImg: backImgUrl || frontImgUrl
-                    };
-
-                    shopProducts.unshift(newProd); // New published item comes to top
-                    localStorage.setItem('ar_shop_products', JSON.stringify(shopProducts));
-
-                    renderOwnerProducts();
-                    renderCustomerProducts();
-                    document.getElementById('upload-product-form').reset();
-                    alert("ನಿಮ್ಮ ವಸ್ತು ಯಶಸ್ವಿಯಾಗಿ ಪ್ರಕಟವಾಗಿದೆ ಹಾಗೂ ಗ್ರಾಹಕರ ಆ್ಯಪ್‌ಗೆ ತಲುಪಿದೆ!");
+            let processImages = function(frontUrl, backUrl) {
+                let newProd = {
+                    id: Date.now(),
+                    name: name,
+                    oldPrice: oldPrice,
+                    currPrice: currPrice,
+                    pieces: pieces,
+                    size: size,
+                    frontImg: frontUrl,
+                    backImg: backUrl || frontUrl
                 };
 
-                if (backFileInput) {
-                    let backReader = new FileReader();
-                    backReader.onload = function(eBack) {
-                        createAndSave(eBack.target.result);
-                    };
-                    backReader.readAsDataURL(backFileInput);
-                } else {
-                    createAndSave(frontImgUrl);
-                }
+                shopProducts.unshift(newProd); // New product comes to top
+                localStorage.setItem('ar_shop_products', JSON.stringify(shopProducts));
+
+                renderOwnerProducts();
+                renderCustomerProducts();
+                document.getElementById('upload-product-form').reset();
+                alert("ನಿಮ್ಮ ವಸ್ತು ಯಶಸ್ವಿಯಾಗಿ ಪ್ರಕಟವಾಗಿದೆ ಹಾಗೂ ಫೋಟೋಗಳು ಕಾಣಿಸುತ್ತಿವೆ!");
             };
 
             if (frontFileInput) {
-                reader.readAsDataURL(frontFileInput);
+                let frontReader = new FileReader();
+                frontReader.onload = function(eFront) {
+                    if (backFileInput) {
+                        let backReader = new FileReader();
+                        backReader.onload = function(eBack) {
+                            processImages(eFront.target.result, eBack.target.result);
+                        };
+                        backReader.readAsDataURL(backFileInput);
+                    } else {
+                        processImages(eFront.target.result, eFront.target.result);
+                    }
+                };
+                frontReader.readAsDataURL(frontFileInput);
             }
         }
 
@@ -387,6 +370,12 @@
                 return;
             }
             shopProducts.forEach((p) => {
+                let pName = p.name || 'ವಸ್ತು';
+                let pSize = p.size || 'M';
+                let pCurrPrice = p.currPrice || '0';
+                let pOldPrice = p.oldPrice || '0';
+                let pPieces = p.pieces || '1 ಪೀಸ್';
+
                 list.innerHTML += `
                     <div class="item-row">
                         <div class="item-imgs">
@@ -394,10 +383,10 @@
                             <img src="${p.backImg}" alt="Back">
                         </div>
                         <div class="item-info">
-                            <strong>${p.name} (${p.size})</strong><br>
-                            <span style="color:#b12704; font-weight:bold;">₹${p.currPrice}</span> 
-                            <span style="text-decoration:line-through; color:#777; font-size:12px;">₹${p.oldPrice}</span><br>
-                            <span style="font-size:12px; color:#555;">${p.pieces}</span>
+                            <strong>${pName} (${pSize})</strong><br>
+                            <span style="color:#b12704; font-weight:bold;">₹${pCurrPrice}</span> 
+                            <span style="text-decoration:line-through; color:#777; font-size:12px;">₹${pOldPrice}</span><br>
+                            <span style="font-size:12px; color:#555;">${pPieces}</span>
                         </div>
                         <button class="delete-btn" onclick="deleteProduct(${p.id})">ಡಿಲೀಟ್</button>
                     </div>
@@ -423,16 +412,22 @@
                 return;
             }
             shopProducts.forEach((p) => {
+                let pName = p.name || 'ವಸ್ತು';
+                let pSize = p.size || 'M';
+                let pCurrPrice = p.currPrice || '0';
+                let pOldPrice = p.oldPrice || '0';
+                let pPieces = p.pieces || '1 ಪೀಸ್';
+
                 container.innerHTML += `
                     <div class="cust-product-card">
-                        <img src="${p.frontImg}" alt="${p.name}" class="product-full-img">
-                        <h2 style="font-size:18px; font-weight:600; margin-bottom:6px;">${p.name}</h2>
+                        <img src="${p.frontImg}" alt="${pName}" class="product-full-img">
+                        <h2 style="font-size:18px; font-weight:600; margin-bottom:6px;">${pName}</h2>
                         <div style="font-size:22px; font-weight:700; color:#0F1111; margin-bottom:8px;">
-                            ₹${p.currPrice} 
-                            <span style="text-decoration:line-through; color:#565959; font-size:14px; font-weight:normal;">₹${p.oldPrice}</span>
+                            ₹${pCurrPrice} 
+                            <span style="text-decoration:line-through; color:#565959; font-size:14px; font-weight:normal;">₹${pOldPrice}</span>
                         </div>
-                        <p style="color:#007600; font-size:14px; font-weight:bold; margin-bottom:10px;">ಉಚಿತ ಡೆಲಿವರಿ ಲಭ್ಯವಿದೆ (${p.size} - ${p.pieces})</p>
-                        <button class="btn-buy-now" onclick="placeCustomerOrder('${p.name}', '${p.currPrice}', '${p.size}')">₹${p.currPrice} ಗೆ ಈಗಲೇ ಖರೀದಿಸಿ</button>
+                        <p style="color:#007600; font-size:14px; font-weight:bold; margin-bottom:10px;">ಉಚಿತ ಡೆಲಿವರಿ ಲಭ್ಯವಿದೆ (${pSize} - ${pPieces})</p>
+                        <button class="btn-buy-now" onclick="placeCustomerOrder('${pName}', '${pCurrPrice}', '${pSize}')">₹${pCurrPrice} ಗೆ ಈಗಲೇ ಖರೀದಿಸಿ</button>
                     </div>
                 `;
             });
@@ -455,7 +450,7 @@
                 status: 'ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಆಗಿದೆ'
             };
 
-            ownerOrders.unshift(newOrder); // New order on top
+            ownerOrders.unshift(newOrder);
             localStorage.setItem('ar_owner_orders', JSON.stringify(ownerOrders));
             alert("ಆರ್ಡರ್ ಯಶಸ್ವಿಯಾಗಿ ಕನ್ಫರ್ಮ್ ಆಗಿದೆ ಹಾಗೂ ಅಂಗಡಿ ಮಾಲೀಕರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ!");
         }
