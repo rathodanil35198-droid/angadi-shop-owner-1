@@ -17,156 +17,169 @@
 <body class="bg-slate-100 font-sans min-h-screen text-slate-800 pb-10">
 
     <!-- Header Navigation -->
-    <header class="bg-indigo-700 text-white p-4 shadow-lg sticky top-0 z-50">
+    <header class="bg-indigo-700 text-white p-4 shadow-lg sticky top-0 z-40">
         <div class="max-w-6xl mx-auto flex justify-between items-center flex-wrap gap-2">
             <div>
-                <h1 class="text-xl font-bold flex items-center gap-2">🏪 ನನ್ನ ಲೋಕಲ್ ಶಾಪ್ (Shop Panel)</h1>
-                <p class="text-xs text-indigo-200">ಅಂಗಡಿ ಮಾಲೀಕರ ಡಿಜಿಟಲ್ ನಿರ್ವಹಣಾ ಸಿಸ್ಟಮ್</p>
+                <h1 class="text-xl font-bold flex items-center gap-2">🏪 ನನ್ನ ಲೋಕಲ್ ಶಾಪ್ Panel</h1>
+                <p class="text-xs text-indigo-200">ಅಂಗಡಿ ಮಾಲೀಕರ ಡಿಜಿಟಲ್ ಸಿಸ್ಟಮ್</p>
             </div>
             
-            <div class="flex items-center gap-3">
-                <!-- ಆರ್ಡರ್ ನೋಡಲು ವಿಶೇಷ ಬಟನ್ -->
-                <a href="#ordersSection" class="bg-amber-400 hover:bg-amber-500 text-indigo-950 font-bold text-xs px-3 py-2 rounded-lg shadow flex items-center gap-1 transition-all">
+            <div class="flex items-center gap-2">
+                <!-- ಆರ್ಡರ್ ನೋಡಿ ಬಟನ್ -->
+                <button onclick="openOrdersModal()" class="bg-amber-400 hover:bg-amber-500 text-indigo-950 font-bold text-xs px-3 py-2 rounded-xl shadow flex items-center gap-1 transition-all">
                     📋 ಆರ್ಡರ್ ನೋಡಿ (<span id="topOrderBadge">1</span>)
-                </a>
+                </button>
                 <span class="bg-green-500 text-white text-xs px-2.5 py-1 rounded-full font-bold shadow-sm">
-                    ● ಅಂಗಡಿ ಓಪನ್ ಆಗಿದೆ
+                    ● ಅಂಗಡಿ ಓಪನ್
                 </span>
             </div>
         </div>
     </header>
 
-    <main class="max-w-6xl mx-auto p-4 grid grid-cols-1 md:grid-cols-3 gap-6">
+    <main class="max-w-5xl mx-auto p-4 space-y-6">
 
-        <!-- 1. ಫೋಟೋ ಮತ್ತು ಪ್ರಾಡಕ್ಟ್ ಅಪ್ಲೋಡ್ ವಿಭಾಗ -->
-        <section class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 md:col-span-1">
-            <h2 class="text-lg font-bold mb-4 text-indigo-900 border-b pb-2 flex items-center gap-2">
-                ➕ ಹೊಸ ಪ್ರಾಡಕ್ಟ್ / ಫೋಟೋ ಹಾಕಿ
-            </h2>
-            
-            <form id="productForm" class="space-y-4">
-                <!-- ವಸ್ತುವಿನ ಹೆಸರು -->
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">ವಸ್ತುವಿನ ಹೆಸರು (Item Name)</label>
-                    <input type="text" id="itemName" required placeholder="ಉದಾ: ತಾಜಾ ಟೊಮೇಟೊ" class="w-full p-2.5 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
-                </div>
-
-                <!-- ಹಳೆಯ ಬೆಲೆ & ಹೊಸ ಪ್ರೆಸೆಂಟ್ ರೇಟ್ -->
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 mb-1">ಹಳೆಯ ಬೆಲೆ (Old Price ₹)</label>
-                        <input type="number" id="oldPrice" placeholder="50" class="w-full p-2.5 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none text-slate-400 line-through">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-emerald-700 mb-1">ಪ್ರೆಸೆಂಟ್ ರೇಟ್ (New Price ₹)</label>
-                        <input type="number" id="newPrice" required placeholder="40" class="w-full p-2.5 border border-emerald-400 rounded-lg text-sm font-bold focus:ring-2 focus:ring-emerald-500 outline-none bg-emerald-50/30">
-                    </div>
-                </div>
-
-                <!-- ಪ್ರಮಾಣ & ಡಿಸ್ಕೌಂಟ್ ಆಪ್ಷನ್ -->
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">ಪ್ರಮಾಣ (Quantity/Unit)</label>
-                        <input type="text" id="itemUnit" required placeholder="1 KG / 1 Pack" class="w-full p-2.5 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">ಡಿಸ್ಕೌಂಟ್ / ರಿಯಾಯಿತಿ (%)</label>
-                        <input type="text" id="itemDiscount" placeholder="ಉದಾ: 20% OFF" class="w-full p-2.5 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
-                    </div>
-                </div>
-
-                <!-- ಫೋಟೋ ಆಯ್ಕೆ -->
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">ಪ್ರಾಡಕ್ಟ್ ಫೋಟೋ (Select Image)</label>
-                    <input type="file" id="itemImage" accept="image/*" class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer">
-                </div>
-
-                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl text-sm transition-all shadow-md">
-                    🚀 ಆಪ್‌ಗೆ ಸೇರಿಸಿ (Publish Item)
-                </button>
-            </form>
+        <!-- 1. ಮಾಸಿಕ ಲೆಕ್ಕಾಚಾರದ ಬೋರ್ಡ್ (Monthly Analytics) -->
+        <section class="grid grid-cols-3 gap-3">
+            <div class="bg-white p-3.5 rounded-2xl border shadow-sm text-center">
+                <p class="text-[11px] font-bold text-slate-500">ತಿಂಗಳ ಆರ್ಡರ್</p>
+                <p id="statTotalOrders" class="text-lg font-black text-indigo-700 mt-1">125</p>
+            </div>
+            <div class="bg-white p-3.5 rounded-2xl border shadow-sm text-center">
+                <p class="text-[11px] font-bold text-slate-500">ರಿಟರ್ನ್ ಬಂದದ್ದು</p>
+                <p id="statReturns" class="text-lg font-black text-red-600 mt-1">2</p>
+            </div>
+            <div class="bg-white p-3.5 rounded-2xl border shadow-sm text-center">
+                <p class="text-[11px] font-bold text-slate-500">ಒಟ್ಟು ಸಂಪಾದನೆ</p>
+                <p id="statEarnings" class="text-lg font-black text-emerald-600 mt-1">₹14,500</p>
+            </div>
         </section>
 
-        <!-- Right Panel: Dynamic Orders & Product List -->
-        <section class="md:col-span-2 space-y-6">
+        <!-- 2. ಫೋಟೋ ಹಾಕುವುದು & ಟೆಸ್ಟ್ ಆರ್ಡರ್ ಬಟನ್‌ಗಳು -->
+        <section class="flex gap-3">
+            <button onclick="openAddProductModal()" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-2xl shadow-md text-sm flex items-center justify-center gap-2 transition-all">
+                ➕ ಹೊಸ ಪ್ರಾಡಕ್ಟ್ / ಫೋಟೋ ಹಾಕಿ
+            </button>
+            <button onclick="simulateCustomerOrder()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-2xl shadow-md text-xs transition-all">
+                🧪 ಟೆಸ್ಟ್ ಆರ್ಡರ್
+            </button>
+        </section>
 
-            <!-- 2. ಆರ್ಡರ್‌ಗಳ ಪಟ್ಟಿ (Orders View Section) -->
-            <div id="ordersSection" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
-                <div class="flex justify-between items-center mb-4 border-b pb-3 flex-wrap gap-2">
-                    <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-                        🔔 ಬಂದಿರುವ ಆರ್ಡರ್‌ಗಳು 
-                        <span id="orderCount" class="bg-red-500 text-white text-xs px-2.5 py-0.5 rounded-full font-bold">1</span>
-                    </h2>
-                    <button onclick="simulateCustomerOrder()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-2 rounded-lg font-bold shadow transition-all">
-                        🧪 ಟೆಸ್ಟ್ ಆರ್ಡರ್ ಹಾಕಿ ನೋಡಿ (Simulate Order)
-                    </button>
-                </div>
-
-                <!-- Order List Container -->
-                <div id="ordersContainer" class="space-y-4">
-                    
-                    <!-- Sample Order Item Card -->
-                    <div id="order-101" class="border-2 border-amber-400 bg-amber-50/50 p-4 rounded-xl shadow-sm new-order-pulse">
-                        <div class="flex justify-between items-start flex-wrap gap-2">
-                            <div>
-                                <span class="text-xs bg-amber-200 text-amber-900 font-bold px-2 py-0.5 rounded-md">ಆರ್ಡರ್ #101</span>
-                                <p class="font-bold text-sm mt-1">ಗ್ರಾಹಕರು: ರಮೇಶ್ (ಮಲ್ಲೇಶ್ವರಂ)</p>
-                                <p class="text-xs text-slate-600">ಫೋನ್: +91 98765 43210</p>
-                            </div>
-                            <span id="status-101" class="text-xs font-bold text-amber-800 bg-amber-100 border border-amber-300 px-2.5 py-1 rounded-lg">
-                                ⏳ ಹೊಸ ಆರ್ಡರ್ ಬಂದಿದೆ!
-                            </span>
-                        </div>
-                        
-                        <!-- Order Items List -->
-                        <div class="my-3 border-t border-b border-slate-200 py-2 text-xs space-y-1">
-                            <div class="flex justify-between"><span>• ತಾಜಾ ಟೊಮೇಟೊ (1 KG)</span> <span class="font-semibold">₹40</span></div>
-                            <div class="flex justify-between font-bold border-t pt-1.5 mt-1 text-sm text-slate-900">
-                                <span>ಒಟ್ಟು ಮೊತ್ತ (Total Amount):</span> 
-                                <span class="text-indigo-700">₹40</span>
-                            </div>
-                        </div>
-
-                        <!-- Step-By-Step Buttons -->
-                        <div id="action-101" class="flex flex-col sm:flex-row gap-2 mt-3">
-                            <button onclick="confirmOrder('101')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-xs py-2.5 rounded-lg font-bold shadow">
-                                ✅ 1. ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಮಾಡಿ
-                            </button>
-                        </div>
-                    </div>
-
-                </div>
+        <!-- 3. ಲೈವ್ ಇರುವ ಪ್ರಾಡಕ್ಟ್‌ಗಳ ಸಣ್ಣ ಫೋಟೋಗಳ ಪಟ್ಟಿ (Thumbnails with Delete Button) -->
+        <section class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+            <div class="flex justify-between items-center mb-4 border-b pb-2">
+                <h2 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                    📦 ನಿಮ್ಮ ಅಂಗಡಿಯ ಸಾಮಗ್ರಿಗಳು (<span id="productCount">1</span>)
+                </h2>
+                <span class="text-[11px] text-slate-500">*ಡಿಲೀಟ್ ಮಾಡಿದರೆ ಮಾತ್ರ ಮಾಯವಾಗುತ್ತದೆ</span>
             </div>
-
-            <!-- 3. ಪ್ರದರ್ಶನಗೊಳ್ಳುತ್ತಿರುವ ಸಾಮಗ್ರಿಗಳ ಪಟ್ಟಿ -->
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
-                <h2 class="text-lg font-bold mb-4 text-slate-900 border-b pb-2">📦 ಆಪ್‌ನಲ್ಲಿ ಲೈವ್ ಇರುವ ಸಾಮಗ್ರಿಗಳು</h2>
-                <div id="productList" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <!-- Dynamic Product List Populates Here -->
-                </div>
+            
+            <div id="productList" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                <!-- Dynamically populated items -->
             </div>
-
         </section>
 
     </main>
 
+    <!-- ========================================== -->
+    <!-- MODAL 1: ಆರ್ಡರ್ ನೋಡಿ ಪೂರ್ಣ ವಿವರಗಳ ಪಾಪ್-ಅಪ್ -->
+    <!-- ========================================== -->
+    <div id="ordersModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl max-h-[90vh] flex flex-col overflow-hidden">
+            
+            <!-- Modal Header -->
+            <div class="bg-indigo-700 text-white p-4 flex justify-between items-center">
+                <h2 class="text-lg font-bold flex items-center gap-2">
+                    📋 ಬಂದಿರುವ ಆರ್ಡರ್‌ಗಳು (<span id="modalOrderCount">1</span>)
+                </h2>
+                <button onclick="closeOrdersModal()" class="bg-indigo-800 hover:bg-indigo-900 text-white w-8 h-8 rounded-full font-bold text-sm flex items-center justify-center">
+                    ✕
+                </button>
+            </div>
+
+            <!-- Orders Container (Newest on Top) -->
+            <div id="ordersContainer" class="p-4 space-y-4 overflow-y-auto flex-1">
+                <!-- Dynamic Orders Will Appear Here -->
+            </div>
+
+            <div class="p-3 bg-slate-100 border-t text-center text-xs text-slate-500">
+                ಅಂಗಡಿ ಮಾಲೀಕರ ಆರ್ಡರ್ ನಿರ್ವಹಣಾ ಪುಟ
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL 2: ಪ್ರಾಡಕ್ಟ್ / ಫೋಟೋ ಹಾಕುವ ಪಾಪ್-ಅಪ್   -->
+    <!-- ========================================== -->
+    <div id="addProductModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden p-6 relative">
+            <button onclick="closeAddProductModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-lg font-bold">
+                ✕
+            </button>
+            <h2 class="text-lg font-bold mb-4 text-indigo-900 border-b pb-2">➕ ಪ್ರಾಡಕ್ಟ್ / ಫೋಟೋ ಅಪ್‌ಲೋಡ್</h2>
+
+            <form id="productForm" class="space-y-3">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">ವಸ್ತುವಿನ ಹೆಸರು</label>
+                    <input type="text" id="itemName" required placeholder="ಉದಾ: ತಾಜಾ ಟೊಮೇಟೊ" class="w-full p-2.5 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1">ಹಳೆಯ ಬೆಲೆ (₹)</label>
+                        <input type="number" id="oldPrice" placeholder="50" class="w-full p-2.5 border rounded-xl text-sm outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-emerald-700 mb-1">ಪ್ರೆಸೆಂಟ್ ರೇಟ್ (₹)</label>
+                        <input type="number" id="newPrice" required placeholder="40" class="w-full p-2.5 border border-emerald-400 rounded-xl text-sm font-bold bg-emerald-50/30">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">ಪ್ರಮಾಣ (Unit)</label>
+                        <input type="text" id="itemUnit" required placeholder="1 KG / 1 Pack" class="w-full p-2.5 border rounded-xl text-sm outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">ರಿಯಾಯಿತಿ (%)</label>
+                        <input type="text" id="itemDiscount" placeholder="20% OFF" class="w-full p-2.5 border rounded-xl text-sm outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">ಫೋಟೋ ಆಯ್ಕೆ ಮಾಡಿ</label>
+                    <input type="file" id="itemImage" accept="image/*" class="w-full text-xs text-slate-500 file:mr-2 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer">
+                </div>
+
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl text-sm transition-all shadow-md mt-2">
+                    🚀 ಸೇವ್ ಮಾಡಿ (Publish)
+                </button>
+            </form>
+        </div>
+    </div>
+
     <!-- JavaScript Logic -->
     <script>
+        // Default Uploaded Products
         let products = [
-            { 
-                name: "ತಾಜಾ ಟೊಮೇಟೊ", 
-                oldPrice: "50", 
-                newPrice: "40", 
-                unit: "1 KG", 
-                discount: "20% OFF", 
-                image: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=150" 
-            }
+            { id: 1, name: "ತಾಜಾ ಟೊಮೇಟೊ", oldPrice: "50", newPrice: "40", unit: "1 KG", discount: "20% OFF", image: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=150" }
         ];
 
-        // 1. Initial Load
-        renderProducts();
+        // Default Sample Order
+        let orders = [
+            { id: 101, customer: "ರಮೇಶ್ (ಮಲ್ಲೇಶ್ವರಂ)", phone: "+91 98765 43210", item: "ತಾಜಾ ಟೊಮೇಟೊ (1 KG)", amount: 40, statusStep: 1 }
+        ];
 
-        // 2. Product Upload Handling
+        // Initial Page Render
+        renderProducts();
+        renderOrders();
+
+        // 1. Modals Open/Close Functions
+        function openOrdersModal() { document.getElementById('ordersModal').classList.remove('hidden'); }
+        function closeOrdersModal() { document.getElementById('ordersModal').classList.add('hidden'); }
+        function openAddProductModal() { document.getElementById('addProductModal').classList.remove('hidden'); }
+        function closeAddProductModal() { document.getElementById('addProductModal').classList.add('hidden'); }
+
+        // 2. Product Form Submit
         document.getElementById('productForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -183,140 +196,126 @@
                 imageUrl = URL.createObjectURL(imageInput.files[0]);
             }
 
-            products.push({ name, oldPrice, newPrice, unit, discount, image: imageUrl });
+            products.push({ id: Date.now(), name, oldPrice, newPrice, unit, discount, image: imageUrl });
             renderProducts();
             this.reset();
-            alert('✅ ಪ್ರಾಡಕ್ಟ್ ಲೈವ್ ಆಗಿದೆ!');
+            closeAddProductModal();
         });
 
-        // Render Product List to Display
+        // 3. Render Product Thumbnails with Delete Button
         function renderProducts() {
             const list = document.getElementById('productList');
+            document.getElementById('productCount').innerText = products.length;
+
             list.innerHTML = products.map((item) => `
-                <div class="border rounded-xl p-3 flex gap-3 items-center bg-slate-50 relative shadow-sm">
-                    <img src="${item.image}" class="w-16 h-16 object-cover rounded-lg border bg-white">
-                    <div class="text-xs space-y-0.5">
-                        <h3 class="font-bold text-sm text-slate-800">${item.name}</h3>
-                        <p class="text-slate-500">${item.unit}</p>
-                        <div class="flex items-center gap-2 mt-1">
-                            ${item.oldPrice ? `<span class="line-through text-slate-400">₹${item.oldPrice}</span>` : ''}
-                            <span class="text-emerald-700 font-bold text-sm">₹${item.newPrice}</span>
-                        </div>
+                <div class="border rounded-2xl p-2 bg-slate-50 relative shadow-sm flex flex-col items-center text-center group">
+                    <button onclick="deleteProduct(${item.id})" class="absolute top-1.5 right-1.5 bg-red-500 hover:bg-red-600 text-white w-6 h-6 rounded-full text-xs font-bold shadow flex items-center justify-center z-10" title="ಡಿಲೀಟ್ ಮಾಡಿ">
+                        🗑️
+                    </button>
+                    <img src="${item.image}" class="w-16 h-16 object-cover rounded-xl border bg-white mb-2">
+                    <h3 class="font-bold text-xs text-slate-800 line-clamp-1">${item.name}</h3>
+                    <p class="text-[10px] text-slate-500">${item.unit}</p>
+                    <div class="flex items-center gap-1 mt-1">
+                        ${item.oldPrice ? `<span class="line-through text-[10px] text-slate-400">₹${item.oldPrice}</span>` : ''}
+                        <span class="text-emerald-700 font-bold text-xs">₹${item.newPrice}</span>
                     </div>
-                    ${item.discount ? `<span class="absolute top-2 right-2 text-[10px] bg-red-100 text-red-600 font-bold px-1.5 py-0.5 rounded">${item.discount}</span>` : ''}
                 </div>
             `).join('');
         }
 
-        // --- STEP BY STEP WORKFLOW BUTTONS ---
-
-        // Step 1: Order Confirm Button
-        function confirmOrder(id) {
-            const status = document.getElementById(`status-${id}`);
-            const action = document.getElementById(`action-${id}`);
-            const card = document.getElementById(`order-${id}`);
-
-            card.classList.remove('new-order-pulse', 'border-amber-400', 'bg-amber-50/50');
-            card.classList.add('border-blue-400', 'bg-blue-50/30');
-
-            status.className = "text-xs font-bold text-blue-800 bg-blue-100 border border-blue-300 px-2.5 py-1 rounded-lg";
-            status.innerText = "👍 ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಆಗಿದೆ";
-
-            action.innerHTML = `
-                <button onclick="markPacked('${id}')" class="w-full bg-amber-600 hover:bg-amber-700 text-white text-xs py-2.5 rounded-lg font-bold shadow">
-                    📦 2. ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (Notify Delivery Boy)
-                </button>
-            `;
+        // Delete Product (Only Shop Owner can Delete)
+        function deleteProduct(id) {
+            if(confirm("ಈ ಪ್ರಾಡಕ್ಟ್ ಅನ್ನು ಆಪ್‌ನಿಂದ ಡಿಲೀಟ್ ಮಾಡಲು ಬಯಸುತ್ತೀರಾ?")) {
+                products = products.filter(p => p.id !== id);
+                renderProducts();
+            }
         }
 
-        // Step 2: Packing Done Button
-        function markPacked(id) {
-            const status = document.getElementById(`status-${id}`);
-            const action = document.getElementById(`action-${id}`);
-
-            status.className = "text-xs font-bold text-purple-800 bg-purple-100 border border-purple-300 px-2.5 py-1 rounded-lg";
-            status.innerText = "📦 ಪ್ಯಾಕ್ ಆಗಿದೆ - ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ಅಸೈನ್ ಆಗಿದೆ";
-
-            action.innerHTML = `
-                <button onclick="markPickedUp('${id}')" class="w-full bg-purple-600 hover:bg-purple-700 text-white text-xs py-2.5 rounded-lg font-bold shadow">
-                    🚴‍♂️ 3. ಡೆಲಿವರಿ ಬಾಯ್ ಪಿಕ್ ಮಾಡಿಕೊಂಡರು (Pickup Done)
-                </button>
-            `;
-        }
-
-        // Step 3: Delivery Pickup Button
-        function markPickedUp(id) {
-            const status = document.getElementById(`status-${id}`);
-            const action = document.getElementById(`action-${id}`);
-
-            status.className = "text-xs font-bold text-orange-800 bg-orange-100 border border-orange-300 px-2.5 py-1 rounded-lg";
-            status.innerText = "🚚 ಡೆಲಿವರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ - ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್";
-
-            action.innerHTML = `
-                <button onclick="markPaymentSuccess('${id}')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs py-2.5 rounded-lg font-bold shadow">
-                    💰 4. ಪೇಮೆಂಟ್ ಬಂತು - OK (Payment Successful)
-                </button>
-            `;
-        }
-
-        // Step 4: Payment OK / Success Button
-        function markPaymentSuccess(id) {
-            const status = document.getElementById(`status-${id}`);
-            const action = document.getElementById(`action-${id}`);
-            const card = document.getElementById(`order-${id}`);
-
-            card.className = "border-2 border-emerald-500 bg-emerald-50/50 p-4 rounded-xl shadow-sm transition-all";
-
-            status.className = "text-xs font-bold text-emerald-800 bg-emerald-100 border border-emerald-300 px-2.5 py-1 rounded-lg";
-            status.innerText = "✅ ಡೆಲಿವರಿ ಮತ್ತು ಪೇಮೆಂಟ್ ಸಕ್ಸಸ್‌ಫುಲ್!";
-
-            action.innerHTML = `
-                <div class="w-full bg-emerald-200 text-emerald-900 text-xs p-2.5 rounded-lg text-center font-bold">
-                    🎉 ಆರ್ಡರ್ ಸಂಪೂರ್ಣಗೊಂಡಿದೆ!
-                </div>
-            `;
-        }
-
-        // Simulate New Order
-        let orderNo = 102;
-        function simulateCustomerOrder() {
+        // 4. Render Orders (Newest Always On Top)
+        function renderOrders() {
             const container = document.getElementById('ordersContainer');
-            const id = orderNo++;
+            document.getElementById('orderCount').innerText = orders.length;
+            document.getElementById('modalOrderCount').innerText = orders.length;
+            document.getElementById('topOrderBadge').innerText = orders.length;
+
+            if (orders.length === 0) {
+                container.innerHTML = `<p class="text-center text-xs text-slate-400 py-8">ಯಾವುದೇ ಹೊಸ ಆರ್ಡರ್‌ಗಳು ಇಲ್ಲ</p>`;
+                return;
+            }
+
+            // Display newest orders at the top
+            container.innerHTML = orders.slice().reverse().map((ord) => {
+                let statusTag = '';
+                let buttonBox = '';
+
+                if (ord.statusStep === 1) {
+                    statusTag = `<span class="text-xs font-bold text-amber-800 bg-amber-100 border border-amber-300 px-2.5 py-1 rounded-lg">⏳ ಹೊಸ ಆರ್ಡರ್ ಬಂದಿದೆ!</span>`;
+                    buttonBox = `<button onclick="updateStep(${ord.id}, 2)" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-xs py-2.5 rounded-xl font-bold shadow">✅ 1. ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಮಾಡಿ</button>`;
+                } else if (ord.statusStep === 2) {
+                    statusTag = `<span class="text-xs font-bold text-blue-800 bg-blue-100 border border-blue-300 px-2.5 py-1 rounded-lg">👍 ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಆಗಿದೆ</span>`;
+                    buttonBox = `<button onclick="updateStep(${ord.id}, 3)" class="w-full bg-amber-600 hover:bg-amber-700 text-white text-xs py-2.5 rounded-xl font-bold shadow">📦 2. ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (Notify Delivery)</button>`;
+                } else if (ord.statusStep === 3) {
+                    statusTag = `<span class="text-xs font-bold text-purple-800 bg-purple-100 border border-purple-300 px-2.5 py-1 rounded-lg">📦 ಪ್ಯಾಕ್ ಆಗಿದೆ - Pickup Ready</span>`;
+                    buttonBox = `<button onclick="updateStep(${ord.id}, 4)" class="w-full bg-purple-600 hover:bg-purple-700 text-white text-xs py-2.5 rounded-xl font-bold shadow">🚴‍♂️ 3. ಡೆಲಿವರಿ ಬಾಯ್ ಪಿಕ್ ಮಾಡಿಕೊಂಡರು</button>`;
+                } else if (ord.statusStep === 4) {
+                    statusTag = `<span class="text-xs font-bold text-orange-800 bg-orange-100 border border-orange-300 px-2.5 py-1 rounded-lg">🚚 ಡೆಲಿವರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ - Payment Pending</span>`;
+                    buttonBox = `<button onclick="updateStep(${ord.id}, 5)" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs py-2.5 rounded-xl font-bold shadow">💰 4. ಪೇಮೆಂಟ್ ಬಂತು - OK</button>`;
+                } else {
+                    statusTag = `<span class="text-xs font-bold text-emerald-800 bg-emerald-100 border border-emerald-300 px-2.5 py-1 rounded-lg">✅ ಡೆಲಿವರಿ ಹಾಗೂ ಪೇಮೆಂಟ್ ಸಕ್ಸಸ್‌ಫುಲ್!</span>`;
+                    buttonBox = `<div class="w-full bg-emerald-200 text-emerald-900 text-xs p-2 rounded-xl text-center font-bold">🎉 ಆರ್ಡರ್ ಸಂಪೂರ್ಣಗೊಂಡಿದೆ</div>`;
+                }
+
+                return `
+                    <div class="border-2 ${ord.statusStep === 1 ? 'border-amber-400 bg-amber-50/50 new-order-pulse' : 'border-slate-200 bg-white'} p-4 rounded-2xl shadow-sm">
+                        <div class="flex justify-between items-start flex-wrap gap-2">
+                            <div>
+                                <span class="text-xs bg-indigo-100 text-indigo-900 font-bold px-2 py-0.5 rounded-md">ಆರ್ಡರ್ #${ord.id}</span>
+                                <p class="font-bold text-sm mt-1">ಗ್ರಾಹಕರು: ${ord.customer}</p>
+                                <p class="text-xs text-slate-500">ಫೋನ್: ${ord.phone}</p>
+                            </div>
+                            ${statusTag}
+                        </div>
+                        
+                        <div class="my-3 border-t border-b border-slate-100 py-2 text-xs space-y-1">
+                            <div class="flex justify-between"><span>• ${ord.item}</span> <span class="font-semibold">₹${ord.amount}</span></div>
+                            <div class="flex justify-between font-bold border-t pt-1.5 mt-1 text-sm text-slate-900">
+                                <span>ಒಟ್ಟು ಮೊತ್ತ:</span> 
+                                <span class="text-indigo-700">₹${ord.amount}</span>
+                            </div>
+                        </div>
+
+                        <div class="mt-3">
+                            ${buttonBox}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Update Step Logic
+        function updateStep(orderId, newStep) {
+            const ord = orders.find(o => o.id === orderId);
+            if(ord) {
+                ord.statusStep = newStep;
+                renderOrders();
+            }
+        }
+
+        // 5. Simulate New Order Coming
+        let orderCounter = 102;
+        function simulateCustomerOrder() {
             const activeItem = products[0] || { name: 'ಸಾಮಗ್ರಿ', newPrice: '50' };
+            orders.push({
+                id: orderCounter++,
+                customer: "ಹೊಸ ಗ್ರಾಹಕರು",
+                phone: "+91 99000 11223",
+                item: `${activeItem.name} (${activeItem.unit})`,
+                amount: activeItem.newPrice,
+                statusStep: 1
+            });
 
-            const orderHTML = `
-                <div id="order-${id}" class="border-2 border-amber-400 bg-amber-50/50 p-4 rounded-xl shadow-sm new-order-pulse">
-                    <div class="flex justify-between items-start flex-wrap gap-2">
-                        <div>
-                            <span class="text-xs bg-amber-200 text-amber-900 font-bold px-2 py-0.5 rounded-md">ಆರ್ಡರ್ #${id}</span>
-                            <p class="font-bold text-sm mt-1">ಗ್ರಾಹಕರು: ಹೊಸ ಗ್ರಾಹಕರು</p>
-                            <p class="text-xs text-slate-600">ಫೋನ್: +91 99000 11223</p>
-                        </div>
-                        <span id="status-${id}" class="text-xs font-bold text-amber-800 bg-amber-100 border border-amber-300 px-2.5 py-1 rounded-lg">
-                            ⏳ ಹೊಸ ಆರ್ಡರ್ ಬಂದಿದೆ!
-                        </span>
-                    </div>
-                    
-                    <div class="my-3 border-t border-b border-slate-200 py-2 text-xs space-y-1">
-                        <div class="flex justify-between"><span>• ${activeItem.name}</span> <span class="font-semibold">₹${activeItem.newPrice}</span></div>
-                        <div class="flex justify-between font-bold border-t pt-1.5 mt-1 text-sm text-slate-900">
-                            <span>ಒಟ್ಟು ಮೊತ್ತ (Total Amount):</span> 
-                            <span class="text-indigo-700">₹${activeItem.newPrice}</span>
-                        </div>
-                    </div>
-
-                    <div id="action-${id}" class="flex flex-col sm:flex-row gap-2 mt-3">
-                        <button onclick="confirmOrder('${id}')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-xs py-2.5 rounded-lg font-bold shadow">
-                            ✅ 1. ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಮಾಡಿ
-                        </button>
-                    </div>
-                </div>
-            `;
-
-            container.insertAdjacentHTML('afterbegin', orderHTML);
-            const count = container.children.length;
-            document.getElementById('orderCount').innerText = count;
-            document.getElementById('topOrderBadge').innerText = count;
+            renderOrders();
+            openOrdersModal(); // ಬಿಟ್ಟುಹೋಗದಂತೆ ಆರ್ಡರ್ ಬಂದ ತಕ್ಷಣ ಪಾಪ್-ಅಪ್ ತೆರೆಯುತ್ತದೆ
         }
     </script>
 </body>
