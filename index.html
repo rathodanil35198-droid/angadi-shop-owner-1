@@ -304,8 +304,8 @@
 
         window.onload = function() {
             try {
-                let pData = localStorage.getItem('ar_market_products_v2');
-                let oData = localStorage.getItem('ar_market_orders_v2');
+                let pData = localStorage.getItem('ar_market_products_v3');
+                let oData = localStorage.getItem('ar_market_orders_v3');
                 if (pData) shopProducts = JSON.parse(pData);
                 if (oData) allOrders = JSON.parse(oData);
             } catch(e) {
@@ -319,10 +319,10 @@
 
         function saveDataToLocal() {
             try {
-                localStorage.setItem('ar_market_products_v2', JSON.stringify(shopProducts));
-                localStorage.setItem('ar_market_orders_v2', JSON.stringify(allOrders));
+                localStorage.setItem('ar_market_products_v3', JSON.stringify(shopProducts));
+                localStorage.setItem('ar_market_orders_v3', JSON.stringify(allOrders));
             } catch(e) {
-                alert("ಮೆಮೊರಿ ತುಂಬಿದೆ! ದಯವಿಟ್ಟು ಕೆಲವು ಹಳೆಯ ವಸ್ತುಗಳನ್ನು ಡಿಲೀಟ್ ಮಾಡಿ.");
+                alert("ಮೆಮೊರಿ ಭರ್ತಿಯಾಗಿದೆ! ದಯವಿಟ್ಟು ಹಳೆಯ ವಸ್ತುಗಳನ್ನು ಡಿಲೀಟ್ ಮಾಡಿ.");
             }
         }
 
@@ -347,7 +347,7 @@
             window.scrollTo(0,0);
         }
 
-        // ಫೋಟೋ ಸೈಜ್ ಅನ್ನು ಅತಿ ಚಿಕ್ಕದಾಗಿ ಕಂಪ್ರೆಸ್ ಮಾಡುವ ಫಂಕ್ಷನ್ (ಮಾಯವಾಗುವುದನ್ನು ತಡೆಯಲು)
+        // ಫೋಟೋ ಸೈಜ್ ಅನ್ನು ಅತಿ ಚಿಕ್ಕದಾಗಿ ಕಂಪ್ರೆಸ್ ಮಾಡುವ ಫಂಕ್ಷನ್ (ಮಾಯವಾಗುವುದನ್ನು ಸಂಪೂರ್ಣವಾಗಿ ತಡೆಯಲು)
         function compressImage(file, callback) {
             let reader = new FileReader();
             reader.readAsDataURL(file);
@@ -356,7 +356,7 @@
                 img.src = event.target.result;
                 img.onload = function() {
                     let canvas = document.createElement('canvas');
-                    let maxWidth = 150; // ಅತ್ಯಂತ ಕಡಿಮೆ ಸೈಜ್
+                    let maxWidth = 150; 
                     let scale = maxWidth / img.width;
                     
                     canvas.width = maxWidth;
