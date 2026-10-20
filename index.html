@@ -6,13 +6,6 @@
     <title>ಅಂಗಡಿ ಮಾಲೀಕರ ಆಪ್ - Shop Owner Panel</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @keyframes pulse-border {
-            0%, 100% { border-color: #ef4444; }
-            50% { border-color: #f59e0b; }
-        }
-        .new-order-pulse { animation: pulse-border 1.2s infinite; }
-    </style>
 </head>
 <body class="bg-slate-100 font-sans min-h-screen text-slate-800 pb-10">
 
@@ -162,7 +155,7 @@
             </div>
             
             <div id="productList" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2.5">
-                <!-- Permanent thumbnails appear here -->
+                <!-- Fast thumbnails appear here -->
             </div>
         </section>
 
@@ -250,10 +243,10 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT LOGIC -->
+    <!-- JAVASCRIPT LOGIC (SUPER FAST & ZERO-LOAD) -->
     <script>
-        const STORE_KEY_PRODUCTS = "LOCAL_SHOP_PRODUCTS_V3";
-        const STORE_KEY_ORDERS = "LOCAL_SHOP_ORDERS_V3";
+        const STORE_KEY_PRODUCTS = "LOCAL_SHOP_PRODUCTS_FAST_V1";
+        const STORE_KEY_ORDERS = "LOCAL_SHOP_ORDERS_FAST_V1";
         const STORE_KEY_USER = "LOCAL_SHOP_USER_PIN";
 
         let products = JSON.parse(localStorage.getItem(STORE_KEY_PRODUCTS)) || [];
@@ -329,31 +322,9 @@
         function openAddProductModal() { document.getElementById('addProductModal').classList.remove('hidden'); }
         function closeAddProductModal() { document.getElementById('addProductModal').classList.add('hidden'); }
 
-        // Fast Image Compressor Function (Prevents App Freezing)
-        function compressAndSaveImage(file, callback) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = new Image();
-                img.onload = function() {
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-                    canvas.width = 200;
-                    canvas.height = 200;
-                    ctx.drawImage(img, 0, 0, 200, 200);
-                    callback(canvas.toDataURL('image/jpeg', 0.7));
-                };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-
-        // Product Form Submit Handler
+        // Instant Upload Handler (No Processing Lag)
         document.getElementById('productForm').addEventListener('submit', function(e) {
             e.preventDefault();
-
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.innerText = "⏳ ಅಪ್‌ಲೋಡ್ ಆಗುತ್ತಿದೆ...";
-            submitBtn.disabled = true;
 
             const name = document.getElementById('itemName').value;
             const oldPrice = document.getElementById('oldPrice').value;
@@ -362,23 +333,25 @@
             const returnOption = document.getElementById('itemReturn').value;
             const imageInput = document.getElementById('itemImage');
 
-            const finalizeAdd = (imgData) => {
-                products.push({ id: Date.now(), name, oldPrice, newPrice, unit, returnOption, image: imgData });
+            const saveAndRender = (imgSrc) => {
+                products.push({ id: Date.now(), name, oldPrice, newPrice, unit, returnOption, image: imgSrc });
                 saveState();
                 renderProducts();
                 this.reset();
-                submitBtn.innerText = "🚀 ಆಪ್‌ಗೆ ಸೇರಿಸಿ (Publish)";
-                submitBtn.disabled = false;
                 closeAddProductModal();
 
-                // Success Alert Box
+                // Direct Success Notification Popup
                 alert("🎉 ಶುಭಾಶಯಗಳು!\nನಿಮ್ಮ ಪ್ರಾಡಕ್ಟ್ / ಫೋಟೋ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್‌ಲೋಡ್ ಆಗಿದೆ.");
             };
 
             if (imageInput.files && imageInput.files[0]) {
-                compressAndSaveImage(imageInput.files[0], finalizeAdd);
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    saveAndRender(evt.target.result);
+                };
+                reader.readAsDataURL(imageInput.files[0]);
             } else {
-                finalizeAdd("https://images.unsplash.com/photo-1542838132-92c53300491e?w=150");
+                saveAndRender("https://images.unsplash.com/photo-1542838132-92c53300491e?w=150");
             }
         });
 
@@ -456,8 +429,8 @@
             orders.push({
                 id: orderCounter++,
                 customer: "ಗ್ರಾಹಕರು (ಮಲ್ಲೇಶ್ವರಂ)",
-                item: "ಚಪ್ಪಲಿ (3 Pieces)",
-                amount: 350,
+                item: "ಚಪ್ಪಲಿ (1 Piece)",
+                amount: 280,
                 statusStep: 1
             });
             saveState();
