@@ -73,9 +73,6 @@
         .btn-secondary {
             background-color: #2980b9;
         }
-        .btn-secondary:hover {
-            background-color: #1f6692;
-        }
 
         .btn-danger {
             background-color: #e74c3c;
@@ -93,7 +90,6 @@
             text-decoration: underline;
         }
 
-        /* Nav Buttons */
         .nav-buttons {
             display: flex;
             gap: 10px;
@@ -104,7 +100,6 @@
             flex: 1;
         }
 
-        /* Sections */
         .section {
             display: none;
         }
@@ -113,7 +108,6 @@
             display: block;
         }
 
-        /* Product Display List */
         .product-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -127,7 +121,6 @@
             border-radius: 8px;
             padding: 8px;
             text-align: center;
-            position: relative;
         }
 
         .img-container {
@@ -138,8 +131,8 @@
         }
 
         .img-container img {
-            width: 45%;
-            height: 60px;
+            width: 48%;
+            height: 70px;
             object-fit: cover;
             border-radius: 4px;
             border: 1px solid #ccc;
@@ -167,7 +160,6 @@
             margin-top: 3px;
         }
 
-        /* Order Item */
         .order-card {
             border: 1px solid #ddd;
             padding: 10px;
@@ -185,7 +177,6 @@
     <div id="loginSection" class="section active">
         <h2>ಅಂಗಡಿ ಓನರ್ ಲಾಗಿನ್</h2>
         
-        <!-- Registration Form -->
         <form id="regForm">
             <div class="form-group">
                 <label>ನಿಮ್ಮ ಹೆಸರು:</label>
@@ -214,7 +205,6 @@
             <button type="submit">ಸಬ್ಮಿಟ್ (Register)</button>
         </form>
 
-        <!-- Old ID Login Form -->
         <form id="oldIdForm" style="display: none;">
             <div class="form-group">
                 <label>ನಿಮ್ಮ 4-ಡಿಜಿಟ್ ಐಡಿ (ID) ಹಾಕಿ:</label>
@@ -230,7 +220,6 @@
     <div id="mainDashboard" class="section">
         <h3 id="welcomeShopName">ಅಂಗಡಿ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್</h3>
         
-        <!-- Navigation Buttons -->
         <div class="nav-buttons">
             <button class="btn-secondary" onclick="showTab('uploadTab')">ಫೋಟೋ ಅಪ್ಲೋಡ್</button>
             <button class="btn-secondary" onclick="showTab('orderTab')">ಆರ್ಡರ್ ನೋಡಿ</button>
@@ -242,11 +231,11 @@
             <form id="productForm">
                 <div class="form-group">
                     <label>ವಸ್ತುವಿನ ಹೆಸರು:</label>
-                    <input type="text" id="prodName" required placeholder="ಉದಾ: ರೈಸ್ ಬ್ಯಾಗ್">
+                    <input type="text" id="prodName" required placeholder="ಉದಾ: ಚಪ್ಪಲಿ">
                 </div>
                 <div class="form-group">
                     <label>ಹಳೆಯ ಪ್ರೈಸ್ ರೇಟ್ (₹):</label>
-                    <input type="number" id="oldPrice" placeholder="ಉದಾ: 500">
+                    <input type="number" id="oldPrice" placeholder="ಉದಾ: 600">
                 </div>
                 <div class="form-group">
                     <label>ಹೊಸ ಪ್ರೆಸೆಂಟ್ ರೇಟ್ (₹):</label>
@@ -274,11 +263,8 @@
                 <button type="submit">ಸಕ್ಸಸ್‌ಫುಲ್ (Upload Product)</button>
             </form>
 
-            <!-- Uploaded Products List -->
             <h3 style="margin-top: 25px;">ಅಪ್ಲೋಡ್ ಮಾಡಲಾದ ವಸ್ತುಗಳು</h3>
-            <div id="productList" class="product-grid">
-                <!-- Dynamic products will appear here -->
-            </div>
+            <div id="productList" class="product-grid"></div>
         </div>
 
         <!-- Tab 2: View Orders -->
@@ -295,7 +281,6 @@
 </div>
 
 <script>
-    // --- Initialize App & Auto Login Check ---
     document.addEventListener("DOMContentLoaded", function() {
         const loggedInOwner = JSON.getItem("ownerData");
         if (loggedInOwner) {
@@ -303,7 +288,6 @@
         }
     });
 
-    // Toggle Login Forms
     let isOldLogin = false;
     const regForm = document.getElementById("regForm");
     const oldIdForm = document.getElementById("oldIdForm");
@@ -322,11 +306,8 @@
         }
     });
 
-    // Handle Registration Submit
     regForm.addEventListener("submit", function(e) {
         e.preventDefault();
-        
-        // Generate Random 4-Digit ID
         const generatedId = Math.floor(1000 + Math.random() * 9000).toString();
 
         const ownerData = {
@@ -339,20 +320,16 @@
             pincode: document.getElementById("pincode").value
         };
 
-        // Save Owner to Local Storage
         localStorage.setItem("ownerData", JSON.stringify(ownerData));
         
-        // Save in ID Directory for Old ID Login feature
         let allOwners = JSON.parse(localStorage.getItem("allOwnersList")) || {};
         allOwners[generatedId] = ownerData;
         localStorage.setItem("allOwnersList", JSON.stringify(allOwners));
 
-        // Alert popup with 4 Digit ID
-        alert("ನಿಮ್ಮ ನೋಂದಣಿ ಯಶಸ್ವಿಯಾಗಿದೆ!\n\nನಿಮ್ಮ 4-ಡಿಜಿಟ್ ಐಡಿ: " + generatedId + "\n\nಓಕೆ ಬಟನ್ ಒತ್ತಿ ಮುಂದುವರೆಯಿರಿ.");
+        alert("ನಿಮ್ಮ ನೋಂದಣಿ ಯಶಸ್ವಿಯಾಗಿದೆ!\n\nನಿಮ್ಮ 4-ಡಿಜಿಟ್ ಐಡಿ: " + generatedId);
         openMainDashboard(ownerData);
     });
 
-    // Handle Old ID Login Submit
     oldIdForm.addEventListener("submit", function(e) {
         e.preventDefault();
         const inputId = document.getElementById("oldIdInput").value;
@@ -363,11 +340,10 @@
             alert("ಲಾಗಿನ್ ಯಶಸ್ವಿಯಾಗಿದೆ!");
             openMainDashboard(allOwners[inputId]);
         } else {
-            alert("ತಪ್ಪು ಐಡಿ! ದಯವಿಟ್ಟು ಸರಿಯಾದ 4-ಡಿಜಿಟ್ ಐಡಿ ಹಾಕಿ ಅಥವಾ ಹೊಸದಾಗಿ ನೋಂದಾಯಿಸಿ.");
+            alert("ತಪ್ಪು ಐಡಿ! ದಯವಿಟ್ಟು ಸರಿಯಾದ 4-ಡಿಜಿಟ್ ಐಡಿ ಹಾಕಿ.");
         }
     });
 
-    // Open Dashboard
     function openMainDashboard(data) {
         document.getElementById("loginSection").classList.remove("active");
         document.getElementById("mainDashboard").classList.add("active");
@@ -376,70 +352,87 @@
         renderOrders();
     }
 
-    // Switch Tabs
     function showTab(tabId) {
         document.getElementById("uploadTab").style.display = "none";
         document.getElementById("orderTab").style.display = "none";
         document.getElementById(tabId).style.display = "block";
     }
 
-    // Convert Image File to Base64 String
-    function getBase64(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = error => reject(error);
-        });
+    // Helper function to compress and resize image for fast upload
+    function compressImage(file, callback) {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function(e) {
+            const img = new Image();
+            img.src = e.target.result;
+            img.onload = function() {
+                const canvas = document.createElement("canvas");
+                const MAX_WIDTH = 400; // Resize width to 400px for speed
+                const scaleFactor = MAX_WIDTH / img.width;
+                canvas.width = MAX_WIDTH;
+                canvas.height = img.height * scaleFactor;
+
+                const ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                const compressedBase64 = canvas.toDataURL("image/jpeg", 0.7);
+                callback(compressedBase64);
+            };
+        };
     }
 
     // Handle Product Upload
-    document.getElementById("productForm").addEventListener("submit", async function(e) {
+    document.getElementById("productForm").addEventListener("submit", function(e) {
         e.preventDefault();
 
         const frontImgFile = document.getElementById("frontImg").files[0];
         const backImgFile = document.getElementById("backImg").files[0];
 
-        const frontBase64 = await getBase64(frontImgFile);
-        const backBase64 = await getBase64(backImgFile);
+        if (!frontImgFile || !backImgFile) {
+            alert("ದಯವಿಟ್ಟು ಎರಡೂ ಫೋಟೋಗಳನ್ನು ಆಯ್ಕೆ ಮಾಡಿ!");
+            return;
+        }
 
-        const ownerData = JSON.parse(localStorage.getItem("ownerData"));
+        compressImage(frontImgFile, function(frontBase64) {
+            compressImage(backImgFile, function(backBase64) {
+                const ownerData = JSON.parse(localStorage.getItem("ownerData"));
 
-        const newProduct = {
-            id: Date.now(),
-            shopId: ownerData.id,
-            shopName: ownerData.shopName,
-            name: document.getElementById("prodName").value,
-            oldPrice: document.getElementById("oldPrice").value,
-            newPrice: document.getElementById("newPrice").value,
-            qty: document.getElementById("pieceQty").value,
-            frontImg: frontBase64,
-            backImg: backBase64
-        };
+                const newProduct = {
+                    id: Date.now(),
+                    shopId: ownerData.id,
+                    shopName: ownerData.shopName,
+                    name: document.getElementById("prodName").value,
+                    oldPrice: document.getElementById("oldPrice").value,
+                    newPrice: document.getElementById("newPrice").value,
+                    qty: document.getElementById("pieceQty").value,
+                    frontImg: frontBase64,
+                    backImg: backBase64
+                };
 
-        // Fetch existing products for customer app sync
-        let products = JSON.parse(localStorage.getItem("products")) || [];
-        products.push(newProduct);
-        localStorage.setItem("products", JSON.stringify(products));
-
-        alert("ವಸ್ತು ಯಶಸ್ವಿಯಾಗಿ ಅಪ್ಲೋಡ್ ಆಗಿದೆ!");
-        document.getElementById("productForm").reset();
-        renderProducts();
+                let products = JSON.parse(localStorage.getItem("products")) || [];
+                products.push(newProduct);
+                
+                try {
+                    localStorage.setItem("products", JSON.stringify(products));
+                    alert("ನಿಮ್ಮ ಫೋಟೋ ಅಪ್ಲೋಡ್ ಆಗಿ ಗ್ರಾಹಕರ ಪೇಜ್ ಗೆ ಹೋಗಿದೆ");
+                    document.getElementById("productForm").reset();
+                    renderProducts();
+                } catch (err) {
+                    alert("ಫೋಟೋಗಳ ಸೈಜ್ ಹೆಚ್ಚಾಗಿದೆ, ದಯವಿಟ್ಟು ಬೇರೆ ಫೋಟೋ ಪ್ರಯತ್ನಿಸಿ.");
+                }
+            });
+        });
     });
 
-    // Render Product Cards
     function renderProducts() {
         const productList = document.getElementById("productList");
         productList.innerHTML = "";
 
         const ownerData = JSON.parse(localStorage.getItem("ownerData"));
         let products = JSON.parse(localStorage.getItem("products")) || [];
-
-        // Filter products belonging to this shop owner
         const myProducts = products.filter(p => p.shopId === ownerData.id);
 
         if (myProducts.length === 0) {
-            productList.innerHTML = "<p style='grid-column: span 2; text-align:center;'>ಇನ್ನೂ ಯಾವುದೇ ವಸ್ತುಗಳನ್ನು ಅಪ್ಲೋಡ್ ಮಾಡಿಲ್ಲ.</p>";
+            productList.innerHTML = "<p style='grid-column: span 2; text-align:center; color:#777;'>ಇನ್ನೂ ಯಾವುದೇ ವಸ್ತುಗಳನ್ನು ಅಪ್ಲೋಡ್ ಮಾಡಿಲ್ಲ.</p>";
             return;
         }
 
@@ -461,9 +454,8 @@
         });
     }
 
-    // Delete Product Function
     function deleteProduct(productId) {
-        if (confirm("ಈ ವಸ್ತುವನ್ನು ಡಿಲೀಟ್ ಮಾಡಲು ನಿಶ್ಚಯಿಸಿದ್ದೀರಾ?")) {
+        if (confirm("ಈ ವಸ್ತುವನ್ನು ಡಿಲೀಟ್ ಮಾಡಲು ಬಯಸುತ್ತೀರಾ?")) {
             let products = JSON.parse(localStorage.getItem("products")) || [];
             products = products.filter(p => p.id !== productId);
             localStorage.setItem("products", JSON.stringify(products));
@@ -471,12 +463,10 @@
         }
     }
 
-    // Render Orders List (Simulated)
     function renderOrders() {
         const ordersList = document.getElementById("ordersList");
         const ownerData = JSON.parse(localStorage.getItem("ownerData"));
         let orders = JSON.parse(localStorage.getItem("orders")) || [];
-
         const myOrders = orders.filter(o => o.shopId === ownerData.id);
 
         if (myOrders.length === 0) {
@@ -499,7 +489,6 @@
         });
     }
 
-    // Logout Function
     function logout() {
         if (confirm("ನೀವು ಲಾಗಿನ್‌ನಿಂದ ಹೊರಬರಲು ಬಯಸುತ್ತೀರಾ?")) {
             localStorage.removeItem("ownerData");
