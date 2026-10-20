@@ -43,7 +43,6 @@
             color: var(--primary-yellow);
         }
 
-        /* Mode Selector Tabs */
         .mode-tabs {
             display: flex;
             background: #232f3e;
@@ -204,7 +203,6 @@
         <h1 id="header-title">👨‍💼 ಅಂಗಡಿ ಮಾಲೀಕರ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್</h1>
     </header>
 
-    <!-- ಮೂರು ವಿಭಾಗಗಳಿಗೆ ಬದಲಾಯಿಸುವ ಬಟನ್‌ಗಳು -->
     <div class="mode-tabs">
         <button class="mode-btn active-tab" onclick="switchAppMode('owner', this)">ಅಂಗಡಿ ಮಾಲೀಕರು</button>
         <button class="mode-btn" onclick="switchAppMode('customer', this)">ಗ್ರಾಹಕರು</button>
@@ -305,44 +303,40 @@
         let allOrders = [];
 
         window.onload = function() {
-            try {
-                let storedProds = JSON.parse(localStorage.getItem('ar_shop_products'));
-                
-                // ಒಮ್ಮೆ ಮಾತ್ರ ಮೆಮೊರಿ ಸಂಪೂರ್ಣ ಖಾಲಿ ಇದ್ದರೆ ಡೆಮೊ ಲೋಡ್ ಆಗುತ್ತದೆ, ಇಲ್ಲದಿದ್ದರೆ ನಿಮ್ಮ ಡೇಟಾ ಇರುತ್ತದೆ
-                if (storedProds === null) {
-                    shopProducts = [
-                        {
-                            id: 101,
-                            name: "ಬ್ರಾಂಡೆಡ್ ಚಪ್ಪಲಿ",
-                            oldPrice: "600",
-                            currPrice: "450",
-                            pieces: "1 ಪೀಸ್",
-                            size: "8",
-                            frontImg: "https://via.placeholder.com/200/222222/FFFFFF?text=Chappal+Front",
-                            backImg: "https://via.placeholder.com/200/555555/FFFFFF?text=Chappal+Back"
-                        }
-                    ];
-                    localStorage.setItem('ar_shop_products', JSON.stringify(shopProducts));
-                } else {
-                    shopProducts = storedProds;
-                }
-                
-                allOrders = JSON.parse(localStorage.getItem('ar_all_orders')) || [];
-            } catch(e) {
-                shopProducts = [];
-                allOrders = [];
-            }
+            loadAllData();
             renderOwnerData();
             renderCustomerData();
             renderDeliveryData();
         };
 
-        function saveToStorage() {
+        function loadAllData() {
             try {
-                localStorage.setItem('ar_shop_products', JSON.stringify(shopProducts));
-                localStorage.setItem('ar_all_orders', JSON.stringify(allOrders));
+                let pData = localStorage.getItem('ar_fixed_products');
+                let oData = localStorage.getItem('ar_fixed_orders');
+
+                if (pData) {
+                    shopProducts = JSON.parse(pData);
+                } else {
+                    shopProducts = [];
+                }
+
+                if (oData) {
+                    allOrders = JSON.parse(oData);
+                } else {
+                    allOrders = [];
+                }
             } catch(e) {
-                console.log("Storage error resolved.");
+                shopProducts = [];
+                allOrders = [];
+            }
+        }
+
+        function saveAllData() {
+            try {
+                localStorage.setItem('ar_fixed_products', JSON.stringify(shopProducts));
+                localStorage.setItem('ar_fixed_orders', JSON.stringify(allOrders));
+            } catch(e) {
+                alert("ಫೋಟೋ ಸೈಜ್ ದೊಡ್ಡದಾಗಿದೆ, ಮತ್ತೊಮ್ಮೆ ಪ್ರಯತ್ನಿಸಿ.");
             }
         }
 
@@ -367,8 +361,8 @@
             window.scrollTo(0,0);
         }
 
-        // ಲೈಟ್‌ವೇಟ್ ಕಂಪ್ರೆಶನ್ ಫಂಕ್ಷನ್
-        function compressImage(file, callback) {
+        // ಸೂಪರ್ ಫಿಕ್ಸ್ಡ್ ಕಂಪ್ರೆಶನ್ (ಫೋಟೋ ಎಂದಿಗೂ ಮಾಯವಾಗದಂತೆ ತಡೆಯಲು ಸೈಜ್ ಕಡಿತ)
+        function compressFileToUltraSmall(file, callback) {
             let reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = function(event) {
@@ -376,17 +370,17 @@
                 img.src = event.target.result;
                 img.onload = function() {
                     let canvas = document.createElement('canvas');
-                    let maxWidth = 250;
-                    let scaleSize = maxWidth / img.width;
+                    let targetWidth = 180;
+                    let scale = targetWidth / img.width;
                     
-                    canvas.width = (scaleSize < 1) ? img.width * scaleSize : img.width;
-                    canvas.height = (scaleSize < 1) ? img.height * scaleSize : img.height;
+                    canvas.width = targetWidth;
+                    canvas.height = img.height * scale;
 
                     let ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-                    let compressedDataUrl = canvas.toDataURL('image/jpeg', 0.4);
-                    callback(compressedDataUrl);
+                    let ultraSmallBase64 = canvas.toDataURL('image/jpeg', 0.3);
+                    callback(ultraSmallBase64);
                 };
             };
         }
@@ -408,30 +402,30 @@
             let backFile = document.getElementById('prod-back-img').files[0];
 
             if (!frontFile || !backFile) {
-                alert("ದಯವಿಟ್ಟು ಮುಂಭಾಗ ಮತ್ತು ಹಿಂಭಾಗದ ಎರಡೂ ಫೋಟೋಗಳನ್ನು ಆಯ್ಕೆ ಮಾಡಿ!");
+                alert("ದಯವಿಟ್ಟು ಎರಡೂ ಫೋಟೋ ಆಯ್ಕೆ ಮಾಡಿ!");
                 btn.innerText = "ವಸ್ತು ಪ್ರಕಟಿಸಿ";
                 btn.disabled = false;
                 return;
             }
 
-            compressImage(frontFile, function(frontUrl) {
-                compressImage(backFile, function(backUrl) {
+            compressFileToUltraSmall(frontFile, function(frontUrl) {
+                compressFileToUltraSmall(backFile, function(backUrl) {
                     let newProd = {
-                        id: Date.now(),
+                        id: 'PROD_' + Date.now(),
                         name, oldPrice, currPrice, pieces, size,
                         frontImg: frontUrl,
                         backImg: backUrl
                     };
 
                     shopProducts.unshift(newProd);
-                    saveToStorage();
+                    saveAllData();
                     
                     renderOwnerData();
                     renderCustomerData();
                     document.getElementById('upload-product-form').reset();
                     btn.innerText = "ವಸ್ತು ಪ್ರಕಟಿಸಿ";
                     btn.disabled = false;
-                    alert("ಫೋಟೋ ಶಾಶ್ವತವಾಗಿ ಕಳುಹಿಸಲಾಗಿದೆ ಮತ್ತು ಸೇವ್ ಆಗಿದೆ!");
+                    alert("ಫೋಟೋ ಸಕ್ಸಸ್‌ಫುಲ್ ಆಗಿ ಫಿಕ್ಸ್ ಆಗಿದೆ! ಆಪ್ ಮುಚ್ಚಿದರೂ ಮಾಯವಾಗುವುದಿಲ್ಲ.");
                 });
             });
         }
@@ -452,7 +446,7 @@
                             <strong>${p.name} (${p.size})</strong><br>
                             <span style="color:#b12704; font-weight:bold;">₹${p.currPrice}</span>
                         </div>
-                        <button class="delete-btn" onclick="deleteProduct(${p.id})">ಡಿಲೀಟ್ ಮಾಡಿ</button>
+                        <button class="delete-btn" onclick="deleteProduct('${p.id}')">ಡಿಲೀಟ್ ಮಾಡಿ</button>
                     </div>
                 `;
             });
@@ -479,7 +473,7 @@
         function deleteProduct(id) {
             if(confirm("ಈ ವಸ್ತುವನ್ನು ಡಿಲೀಟ್ ಮಾಡಲು ಬಯಸುತ್ತೀರಾ?")) {
                 shopProducts = shopProducts.filter(p => p.id !== id);
-                saveToStorage();
+                saveAllData();
                 renderOwnerData();
                 renderCustomerData();
             }
@@ -487,7 +481,7 @@
 
         function updateOrderStatus(index, status) {
             allOrders[index].status = status;
-            saveToStorage();
+            saveAllData();
             renderOwnerData();
             renderCustomerData();
             renderDeliveryData();
@@ -496,7 +490,7 @@
 
         function updatePaymentStatus(index) {
             allOrders[index].paymentStatus = 'ಪೇಮೆಂಟ್ ಸಕ್ಸಸ್‌ಫುಲ್ ✔';
-            saveToStorage();
+            saveAllData();
             renderOwnerData();
             renderCustomerData();
             alert("ಪೇಮೆಂಟ್ ಯಶಸ್ವಿಯಾಗಿ ಸ್ವೀಕರಿಸಲಾಗಿದೆ!");
@@ -540,7 +534,7 @@
                 paymentStatus: 'ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್'
             };
             allOrders.unshift(newOrd);
-            saveToStorage();
+            saveAllData();
             renderOwnerData();
             renderCustomerData();
             renderDeliveryData();
@@ -569,7 +563,7 @@
 
         function deliveryAction(index, status) {
             allOrders[index].status = status;
-            saveToStorage();
+            saveAllData();
             renderOwnerData();
             renderCustomerData();
             renderDeliveryData();
