@@ -72,21 +72,6 @@
                         </select>
                     </div>
 
-                    <div class="grid grid-cols-3 gap-2">
-                        <div>
-                            <label class="block text-[11px] font-bold text-slate-700">ಜಿಲ್ಲೆ</label>
-                            <input type="text" required placeholder="ಕೊಪ್ಪಳ" class="w-full p-2 border rounded-xl text-xs outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-bold text-slate-700">ತಾಲೂಕು</label>
-                            <input type="text" required placeholder="ತಾಲೂಕು" class="w-full p-2 border rounded-xl text-xs outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-bold text-slate-700">ಪಿನ್ ಕೋಡ್</label>
-                            <input type="text" required placeholder="583231" class="w-full p-2 border rounded-xl text-xs outline-none">
-                        </div>
-                    </div>
-
                     <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-xs transition-all shadow-md mt-2">
                         📝 ನೋಂದಾಯಿಸಿ & 4-ಡಿಜಿಟ್ ಐಡಿ ಪಡೆಯಿರಿ
                     </button>
@@ -103,7 +88,7 @@
         <div class="max-w-6xl mx-auto flex justify-between items-center flex-wrap gap-2">
             <div>
                 <h1 id="shopHeaderTitle" class="text-lg font-bold flex items-center gap-2">🏪 ನನ್ನ ಲೋಕಲ್ ಶಾಪ್ Panel</h1>
-                <p id="shopHeaderCategory" class="text-xs text-indigo-200">ಐಡಿ: #9353 | ಲಾಗಿನ್ ಆಗಿದೆ[span_1](start_span)[span_1](end_span)</p>
+                <p id="shopHeaderCategory" class="text-xs text-indigo-200">ಐಡಿ: #9353 | ಲಾಗಿನ್ ಆಗಿದೆ[span_0](start_span)[span_0](end_span)[span_1](start_span)[span_1](end_span)[span_2](start_span)[span_2](end_span)</p>
             </div>
             
             <div class="flex items-center gap-2">
@@ -151,11 +136,11 @@
                 <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2">
                     📦 ಅಂಗಡಿಯ ಫೋಟೋಗಳು / ಸಾಮಗ್ರಿಗಳು (<span id="productCount">0</span>)
                 </h2>
-                <span class="text-[10px] text-slate-400">*ಮಾಲೀಕರು ಡಿಲೀಟ್ ಮಾಡುವವರೆಗೆ ಕಣ್ಮರೆಯಾಗುವುದಿಲ್ಲ[span_2](start_span)[span_2](end_span)</span>
+                <span class="text-[10px] text-slate-400">*ಮಾಲೀಕರು ಡಿಲೀಟ್ ಮಾಡುವವರೆಗೆ ಕಣ್ಮರೆಯಾಗುವುದಿಲ್ಲ[span_3](start_span)[span_3](end_span)[span_4](start_span)[span_4](end_span)[span_5](start_span)[span_5](end_span)</span>
             </div>
             
-            <div id="productList" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2.5">
-                <!-- Permanent Micro Thumbnails Populated Here -->
+            <div id="productList" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                <!-- Permanent Product Cards Populated Here -->
             </div>
         </section>
 
@@ -243,10 +228,10 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT LOGIC (PERMANENT STORAGE & SAFE DELETE) -->
+    <!-- JAVASCRIPT LOGIC (100% SAFE PERMANENT STORAGE) -->
     <script>
-        const STORE_KEY_PRODUCTS = "LOCAL_SHOP_PERMANENT_PRODUCTS_V4";
-        const STORE_KEY_ORDERS = "LOCAL_SHOP_PERMANENT_ORDERS_V4";
+        const STORE_KEY_PRODUCTS = "LOCAL_SHOP_ULTIMATE_PRODUCTS_V5";
+        const STORE_KEY_ORDERS = "LOCAL_SHOP_ULTIMATE_ORDERS_V5";
         const STORE_KEY_USER = "LOCAL_SHOP_USER_PIN";
 
         let products = JSON.parse(localStorage.getItem(STORE_KEY_PRODUCTS)) || [];
@@ -270,7 +255,7 @@
                 localStorage.setItem(STORE_KEY_PRODUCTS, JSON.stringify(products));
                 localStorage.setItem(STORE_KEY_ORDERS, JSON.stringify(orders));
             } catch(e) {
-                console.log("Storage Limit Handled");
+                alert("⚠️ ಮೆಮೊರಿ ಪೂರ್ಣಗೊಂಡಿದೆ! ದಯವಿಟ್ಟು ಕೆಲವು ಹಳೆ ಫೋಟೋಗಳನ್ನು ಡಿಲೀಟ್ ಮಾಡಿ.");
             }
         }
 
@@ -326,7 +311,7 @@
         function openAddProductModal() { document.getElementById('addProductModal').classList.remove('hidden'); }
         function closeAddProductModal() { document.getElementById('addProductModal').classList.add('hidden'); }
 
-        // INSTANT ULTRA FAST UPLOAD & PERMANENT STORAGE
+        // PERMANENT STORAGE IMAGE HANDLER
         document.getElementById('productForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -339,11 +324,11 @@
 
             const addProductToStore = (imgSrc) => {
                 products.push({ id: Date.now(), name, oldPrice, newPrice, unit, returnOption, image: imgSrc });
-                saveState(); // LocalStorage ನಲ್ಲಿ ಪರ್ಮನೆಂಟ್ ಸೇವ್ ಆಗುತ್ತದೆ
+                saveState(); // ಶಾಶ್ವತವಾಗಿ ಬ್ರೌಸರ್ ಮೆಮೊರಿಯಲ್ಲಿ ಸೇವ್ ಆಗುತ್ತದೆ
                 renderProducts();
                 document.getElementById('productForm').reset();
                 closeAddProductModal();
-                alert("🎉 ಶುಭಾಶಯಗಳು!\nನಿಮ್ಮ ಪ್ರಾಡಕ್ಟ್ ಮತ್ತು ಫೋಟೋ ಯಶಸ್ವಿಯಾಗಿ ಆಪ್‌ಗೆ ಸೇರಿದೆ ಹಾಗೂ ಗ್ರಾಹಕರ ಆಪ್‌ಗೆ ಲೈವ್ ಆಗಿದೆ.");
+                alert("🎉 ಶುಭಾಶಯಗಳು!\nನಿಮ್ಮ ಪ್ರಾಡಕ್ಟ್ ಮತ್ತು ಫೋಟೋ ಯಶಸ್ವಿಯಾಗಿ ಸೇರಿದೆ ಹಾಗೂ ಗ್ರಾಹಕರ ಆಪ್‌ಗೆ ಲೈವ್ ಆಗಿದೆ.");
             };
 
             if (imageInput.files && imageInput.files[0]) {
@@ -367,7 +352,7 @@
             }
         });
 
-        // Render Micro Thumbnails List
+        // Render Permanent Products Grid with Delete Button
         function renderProducts() {
             const list = document.getElementById('productList');
             document.getElementById('productCount').innerText = products.length;
@@ -378,25 +363,30 @@
             }
 
             list.innerHTML = products.map((item) => `
-                <div class="border rounded-xl p-1.5 bg-slate-50 relative shadow-sm flex flex-col items-center text-center">
-                    <button onclick="confirmDelete(${item.id})" class="absolute -top-1.5 -right-1.5 bg-red-500 hover:bg-red-600 text-white w-5 h-5 rounded-full text-[10px] font-bold shadow flex items-center justify-center z-10" title="ಡಿಲೀಟ್ ಮಾಡಿ">
-                        ✕
+                <div class="border rounded-2xl p-2 bg-slate-50 relative shadow-sm flex flex-col items-center text-center">
+                    <img src="${item.image}" class="w-16 h-16 object-cover rounded-xl border bg-white mb-1.5">
+                    <h3 class="font-bold text-xs text-slate-800 line-clamp-1">${item.name}</h3>
+                    <p class="text-[10px] text-slate-500">${item.unit}</p>
+                    <div class="flex items-center gap-1.5 my-1">
+                        ${item.oldPrice ? `<span class="line-through text-[10px] text-slate-400">₹${item.oldPrice}</span>` : ''}
+                        <span class="text-emerald-700 font-bold text-xs">₹${item.newPrice}</span>
+                    </div>
+                    <span class="text-[9px] ${item.returnOption === 'ರಿಟರ್ನ್ ಇದೆ' ? 'text-emerald-600' : 'text-red-500'} font-semibold mb-2">${item.returnOption}</span>
+                    
+                    <!-- ಸ್ಪಷ್ಟವಾದ ಡಿಲೀಟ್ ಬಟನ್ -->
+                    <button onclick="confirmDelete(${item.id})" class="w-full bg-red-500 hover:bg-red-600 text-white text-[10px] font-bold py-1 px-2 rounded-lg shadow transition-all flex items-center justify-center gap-1">
+                        🗑️ ಡಿಲೀಟ್ ಮಾಡಿ
                     </button>
-                    <img src="${item.image}" class="w-12 h-12 object-cover rounded-lg border bg-white mb-1">
-                    <h3 class="font-bold text-[10px] text-slate-800 line-clamp-1">${item.name}</h3>
-                    <p class="text-[9px] text-slate-500">${item.unit}</p>
-                    <p class="text-emerald-700 font-bold text-[10px] mt-0.5">₹${item.newPrice}</p>
-                    <span class="text-[8px] ${item.returnOption === 'ರಿಟರ್ನ್ ಇದೆ' ? 'text-emerald-600' : 'text-red-500'} font-semibold">${item.returnOption}</span>
                 </div>
             `).join('');
         }
 
-        // Safe Delete with Confirmation (Cancel / Confirm Buttons)
+        // Safe Delete with Confirmation Popup
         function confirmDelete(id) {
             const itemToDelete = products.find(p => p.id === id);
             const itemName = itemToDelete ? itemToDelete.name : 'ಈ ವಸ್ತುವನ್ನು';
             
-            if(confirm(`⚠️ ಎಚ್ಚರಿಕೆ!\n\nನೀವು ನಿಜವಾಗಿಯೂ "${itemName}" ಫೋಟೋವನ್ನು ಡಿಲೀಟ್ ಮಾಡಲು ಬಯಸುತ್ತೀರಾ?\n\n[OK] ಒತ್ತಿದರೆ ಡಿಲೀಟ್ ಆಗುತ್ತದೆ, [Cancel] ಒತ್ತಿದರೆ ಉಳಿಯುತ್ತದೆ.`)) {
+            if(confirm(`⚠️ ಎಚ್ಚರಿಕೆ!\n\nನೀವು ನಿಜವಾಗಿಯೂ "${itemName}" ಫೋಟೋವನ್ನು ಡಿಲೀಟ್ ಮಾಡಲು ಬಯಸುತ್ತೀರಾ?\n\n[OK] ಒತ್ತಿದರೆ ಡಿಲೀಟ್ ಆಗುತ್ತದೆ, [Cancel] ಒತ್ತಿದರೆ ಹಾಗೆಯೇ ಉಳಿಯುತ್ತದೆ.`)) {
                 products = products.filter(p => p.id !== id);
                 saveState();
                 renderProducts();
@@ -446,7 +436,7 @@
             orders.push({
                 id: orderCounter++,
                 customer: "ಗ್ರಾಹಕರು (ಮಲ್ಲೇಶ್ವರಂ)",
-                item: "ಚಪ್ಪಲಿ (2 Pieces)",
+                item: "ಬಟ್ಟೆ ಅಂಗಿ (2 Pieces)",
                 amount: 450,
                 statusStep: 1
             });
