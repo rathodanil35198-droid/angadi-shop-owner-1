@@ -301,65 +301,35 @@
     </div>
 
     <script>
-        // 4 ಡೆಮೊ ಪ್ರಾಪರ್ಟಿ ಫೋಟೋ ಲಿಂಕ್‌ಗಳು (ಖಾಲಿ ಇರಬಾರದು ಎಂದು)
-        const demoProducts = [
-            {
-                id: 101,
-                name: "ಬ್ರಾಂಡೆಡ್ ಚಪ್ಪಲಿ",
-                oldPrice: "600",
-                currPrice: "450",
-                pieces: "1 ಪೀಸ್",
-                size: "8",
-                frontImg: "https://via.placeholder.com/200/222222/FFFFFF?text=Chappal+Front",
-                backImg: "https://via.placeholder.com/200/555555/FFFFFF?text=Chappal+Back"
-            },
-            {
-                id: 102,
-                name: "ಜೀನ್ಸ್ ಪ್ಯಾಂಟ್",
-                oldPrice: "1200",
-                currPrice: "799",
-                pieces: "1 ಪೀಸ್",
-                size: "32",
-                frontImg: "https://via.placeholder.com/200/003366/FFFFFF?text=Jeans+Front",
-                backImg: "https://via.placeholder.com/200/001133/FFFFFF?text=Jeans+Back"
-            },
-            {
-                id: 103,
-                name: "ಕಾಟನ್ ಟೀ-ಶರ್ಟ್",
-                oldPrice: "500",
-                currPrice: "299",
-                pieces: "1 ಪೀಸ್",
-                size: "L",
-                frontImg: "https://via.placeholder.com/200/990000/FFFFFF?text=Tshirt+Front",
-                backImg: "https://via.placeholder.com/200/660000/FFFFFF?text=Tshirt+Back"
-            },
-            {
-                id: 104,
-                name: "ಸ್ಪೋರ್ಟ್ಸ್ ಶೂಸ್",
-                oldPrice: "1500",
-                currPrice: "999",
-                pieces: "1 ಪೀಸ್",
-                size: "9",
-                frontImg: "https://via.placeholder.com/200/006622/FFFFFF?text=Shoes+Front",
-                backImg: "https://via.placeholder.com/200/003311/FFFFFF?text=Shoes+Back"
-            }
-        ];
-
         let shopProducts = [];
         let allOrders = [];
 
         window.onload = function() {
             try {
                 let storedProds = JSON.parse(localStorage.getItem('ar_shop_products'));
-                if (!storedProds || storedProds.length === 0) {
-                    shopProducts = demoProducts;
+                
+                // ಒಮ್ಮೆ ಮಾತ್ರ ಮೆಮೊರಿ ಸಂಪೂರ್ಣ ಖಾಲಿ ಇದ್ದರೆ ಡೆಮೊ ಲೋಡ್ ಆಗುತ್ತದೆ, ಇಲ್ಲದಿದ್ದರೆ ನಿಮ್ಮ ಡೇಟಾ ಇರುತ್ತದೆ
+                if (storedProds === null) {
+                    shopProducts = [
+                        {
+                            id: 101,
+                            name: "ಬ್ರಾಂಡೆಡ್ ಚಪ್ಪಲಿ",
+                            oldPrice: "600",
+                            currPrice: "450",
+                            pieces: "1 ಪೀಸ್",
+                            size: "8",
+                            frontImg: "https://via.placeholder.com/200/222222/FFFFFF?text=Chappal+Front",
+                            backImg: "https://via.placeholder.com/200/555555/FFFFFF?text=Chappal+Back"
+                        }
+                    ];
                     localStorage.setItem('ar_shop_products', JSON.stringify(shopProducts));
                 } else {
                     shopProducts = storedProds;
                 }
+                
                 allOrders = JSON.parse(localStorage.getItem('ar_all_orders')) || [];
             } catch(e) {
-                shopProducts = demoProducts;
+                shopProducts = [];
                 allOrders = [];
             }
             renderOwnerData();
@@ -372,7 +342,7 @@
                 localStorage.setItem('ar_shop_products', JSON.stringify(shopProducts));
                 localStorage.setItem('ar_all_orders', JSON.stringify(allOrders));
             } catch(e) {
-                console.log("Storage error resolved automatically.");
+                console.log("Storage error resolved.");
             }
         }
 
@@ -397,7 +367,7 @@
             window.scrollTo(0,0);
         }
 
-        // ಸೂಪರ್ ಲೈಟ್‌ವೇಟ್ ಕಂಪ್ರೆಶನ್ ಫಂಕ್ಷನ್ (200px max width to prevent storage full errors)
+        // ಲೈಟ್‌ವೇಟ್ ಕಂಪ್ರೆಶನ್ ಫಂಕ್ಷನ್
         function compressImage(file, callback) {
             let reader = new FileReader();
             reader.readAsDataURL(file);
