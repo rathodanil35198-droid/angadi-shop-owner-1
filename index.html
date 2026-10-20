@@ -4,11 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ಶಹಾಪುರ ಮಾರ್ಕೆಟ್ - ಸಂಪೂರ್ಣ ವ್ಯವಸ್ಥೆ</title>
-    
-    <!-- Firebase Libraries Integration -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
     <style>
         :root {
             --primary-yellow: #ffd814;
@@ -180,7 +175,7 @@
 
         .product-full-img {
             width: 100%;
-            max-height: 280px;
+            max-height: 250px;
             object-fit: cover;
             background: #fafafa;
             border-radius: 6px;
@@ -266,14 +261,14 @@
         <div class="card-box" id="orders-section">
             <h3 style="font-size: 15px; margin-bottom: 10px;">📦 ಬಂದಿರುವ ಆರ್ಡರ್‌ಗಳು & ಪೇಮೆಂಟ್:</h3>
             <div id="owner-orders-container">
-                <p style="color:#666; font-size:13px;">ಲೋಡ್ ಆಗುತ್ತಿದೆ...</p>
+                <p style="color:#666; font-size:13px;">ಯಾವುದೇ ಹೊಸ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>
             </div>
         </div>
 
         <div class="card-box">
             <h3 style="font-size: 15px; margin-bottom: 10px;">🖼️ ನಿಮ್ಮ ಅಂಗಡಿಯಲ್ಲಿರುವ ವಸ್ತುಗಳು (<span id="prod-count">0</span>):</h3>
             <div id="owner-products-list">
-                <p style="color:#666; font-size:13px;">ಲೋಡ್ ಆಗುತ್ತಿದೆ...</p>
+                <p style="color:#666; font-size:13px;">ಯಾವುದೇ ವಸ್ತುಗಳಿಲ್ಲ.</p>
             </div>
         </div>
     </div>
@@ -283,12 +278,12 @@
         <div class="card-box">
             <h2 style="font-size: 18px; margin-bottom: 12px;">🛒 ಅಕ್ವಿಕ್ ಇ-ಶಾಪ್ (ಗ್ರಾಹಕರು)</h2>
             <div id="customer-products-container">
-                <p style="text-align:center; color:#666;">ಲೋಡ್ ಆಗುತ್ತಿದೆ...</p>
+                <p style="text-align:center; color:#666;">ಯಾವುದೇ ವಸ್ತುಗಳು ಲಭ್ಯವಿಲ್ಲ.</p>
             </div>
             <hr style="margin: 20px 0;">
             <h2 style="font-size: 18px; margin-bottom: 12px;">📦 ನನ್ನ ಆರ್ಡರ್‌ಗಳ ಸ್ಥಿತಿ (Status)</h2>
             <div id="customer-orders-list">
-                <p style="color:#666; font-size:13px;">ಲೋಡ್ ಆಗುತ್ತಿದೆ...</p>
+                <p style="color:#666; font-size:13px;">ಯಾವುದೇ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>
             </div>
         </div>
     </div>
@@ -298,44 +293,38 @@
         <div class="card-box">
             <h2 style="font-size: 18px; margin-bottom: 12px; color:#0d47a1;">🛵 ಡೆಲಿವರಿ ಬಾಯ್ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್</h2>
             <div id="delivery-orders-container">
-                <p style="color:#666; font-size:13px;">ಲೋಡ್ ಆಗುತ್ತಿದೆ...</p>
+                <p style="color:#666; font-size:13px;">ಡೆಲಿವರಿ ಮಾಡಲು ಯಾವುದೇ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>
             </div>
         </div>
     </div>
 
     <script>
-        // 1. Firebase Config (ನಿಮ್ಮ Firebase ರಿಯಲ್-ಟೈಮ್ ಡೇಟಾಬೇಸ್ ವಿವರಗಳು)
-        const firebaseConfig = {
-            databaseURL: "https://ar-taxi-shahapur-default-rtdb.firebaseio.com/"
-        };
-        
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
-        const db = firebase.database();
+        let shopProducts = [];
+        let allOrders = [];
 
-        // 2. ImgBB Free Cloud API Key
-        const IMGBB_API_KEY = '6d1b72e11801d4281729363d31409f2b'; // ImgBB ಉಚಿತ ಸರ್ವರ್ ಕೀ
-
-        let globalProducts = {};
-        let globalOrders = {};
-
-        // 3. ರಿಯಲ್-ಟೈಮ್ ಲಿಜನರ್ಸ್ (ಲೈವ್ ಡೇಟಾ ಸಿಂಕ್)
         window.onload = function() {
-            // ಪ್ರತಿಯೊಂದು ಫೋನ್‌ನಲ್ಲಿಯೂ ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಲೈವ್ ಡೇಟಾ ಅಪ್‌ಡೇಟ್ ಆಗುತ್ತದೆ
-            db.ref('products').on('value', (snapshot) => {
-                globalProducts = snapshot.val() || {};
-                renderOwnerData();
-                renderCustomerData();
-            });
-
-            db.ref('orders').on('value', (snapshot) => {
-                globalOrders = snapshot.val() || {};
-                renderOwnerData();
-                renderCustomerData();
-                renderDeliveryData();
-            });
+            try {
+                let pData = localStorage.getItem('ar_market_products_v2');
+                let oData = localStorage.getItem('ar_market_orders_v2');
+                if (pData) shopProducts = JSON.parse(pData);
+                if (oData) allOrders = JSON.parse(oData);
+            } catch(e) {
+                shopProducts = [];
+                allOrders = [];
+            }
+            renderOwnerData();
+            renderCustomerData();
+            renderDeliveryData();
         };
+
+        function saveDataToLocal() {
+            try {
+                localStorage.setItem('ar_market_products_v2', JSON.stringify(shopProducts));
+                localStorage.setItem('ar_market_orders_v2', JSON.stringify(allOrders));
+            } catch(e) {
+                alert("ಮೆಮೊರಿ ತುಂಬಿದೆ! ದಯವಿಟ್ಟು ಕೆಲವು ಹಳೆಯ ವಸ್ತುಗಳನ್ನು ಡಿಲೀಟ್ ಮಾಡಿ.");
+            }
+        }
 
         function switchAppMode(mode, btn) {
             document.querySelectorAll('.app-section').forEach(s => s.classList.remove('active-section'));
@@ -345,38 +334,47 @@
             if(mode === 'owner') {
                 document.getElementById('section-owner').classList.add('active-section');
                 document.getElementById('header-title').innerText = "👨‍💼 ಅಂಗಡಿ ಮಾಲೀಕರ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್";
+                renderOwnerData();
             } else if(mode === 'customer') {
                 document.getElementById('section-customer').classList.add('active-section');
                 document.getElementById('header-title').innerText = "🛒 ಗ್ರಾಹಕರ ಶಾಪಿಂಗ್ ಪುಟ";
+                renderCustomerData();
             } else if(mode === 'delivery') {
                 document.getElementById('section-delivery').classList.add('active-section');
                 document.getElementById('header-title').innerText = "🛵 ಡೆಲಿವರಿ ಬಾಯ್ ಆ್ಯಪ್";
+                renderDeliveryData();
             }
             window.scrollTo(0,0);
         }
 
-        // ImgBB ಕ್ಲೌಡ್ ಅಪ್‌ಲೋಡ್ ಫಂಕ್ಷನ್
-        async function uploadToImgBB(file) {
-            let formData = new FormData();
-            formData.append('image', file);
-            
-            let response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
-                method: 'POST',
-                body: formData
-            });
-            let result = await response.json();
-            if(result.success) {
-                return result.data.url;
-            } else {
-                throw new Error("Upload Failed");
-            }
+        // ಫೋಟೋ ಸೈಜ್ ಅನ್ನು ಅತಿ ಚಿಕ್ಕದಾಗಿ ಕಂಪ್ರೆಸ್ ಮಾಡುವ ಫಂಕ್ಷನ್ (ಮಾಯವಾಗುವುದನ್ನು ತಡೆಯಲು)
+        function compressImage(file, callback) {
+            let reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function(event) {
+                let img = new Image();
+                img.src = event.target.result;
+                img.onload = function() {
+                    let canvas = document.createElement('canvas');
+                    let maxWidth = 150; // ಅತ್ಯಂತ ಕಡಿಮೆ ಸೈಜ್
+                    let scale = maxWidth / img.width;
+                    
+                    canvas.width = maxWidth;
+                    canvas.height = img.height * scale;
+
+                    let ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                    let compressedDataUrl = canvas.toDataURL('image/jpeg', 0.3);
+                    callback(compressedDataUrl);
+                };
+            };
         }
 
-        // Owner Functions (ಹೊಸ ವಸ್ತು ಅಪ್‌ಲೋಡ್)
-        async function handleProductPublish(event) {
+        function handleProductPublish(event) {
             event.preventDefault();
             let btn = document.getElementById('submit-btn');
-            btn.innerText = "ಕ್ಲೌಡ್‌ಗೆ ಅಪ್‌ಲೋಡ್ ಆಗುತ್ತಿದೆ...";
+            btn.innerText = "ಪ್ರಕಟಿಸಲಾಗುತ್ತಿದೆ...";
             btn.disabled = true;
 
             let name = document.getElementById('prod-name').value;
@@ -388,186 +386,171 @@
             let frontFile = document.getElementById('prod-front-img').files[0];
             let backFile = document.getElementById('prod-back-img').files[0];
 
-            try {
-                // ಫೋಟೋಗಳನ್ನು ಕ್ಲೌಡ್ ಸರ್ವರ್‌ಗೆ ಸೇವ್ ಮಾಡುವುದು
-                let frontUrl = await uploadToImgBB(frontFile);
-                let backUrl = await uploadToImgBB(backFile);
-
-                let prodId = 'PROD_' + Date.now();
-                let newProd = {
-                    id: prodId,
-                    name, oldPrice, currPrice, pieces, size,
-                    frontImg: frontUrl,
-                    backImg: backUrl,
-                    timestamp: Date.now()
-                };
-
-                // Firebase Realtime Database ನಲ್ಲಿ ಸೇವ್
-                await db.ref('products/' + prodId).set(newProd);
-
-                document.getElementById('upload-product-form').reset();
+            if (!frontFile || !backFile) {
+                alert("ದಯವಿಟ್ಟು ಮುಂಭಾಗ ಮತ್ತು ಹಿಂಭಾಗದ ಎರಡೂ ಫೋಟೋ ಆಯ್ಕೆ ಮಾಡಿ!");
                 btn.innerText = "ವಸ್ತು ಪ್ರಕಟಿಸಿ";
                 btn.disabled = false;
-                alert("ಫೋಟೋ ಶಾಶ್ವತವಾಗಿ ಕ್ಲೌಡ್‌ನಲ್ಲಿ ಸೇವ್ ಆಗಿದೆ! ಗ್ರಾಹಕರಿಗೂ ಈಗ ನೇರವಾಗಿ ಕಾಣಿಸುತ್ತದೆ.");
-            } catch (err) {
-                alert("ಅಪ್‌ಲೋಡ್ ವಿಫಲವಾಗಿದೆ. ನೆಟ್‌ವರ್ಕ್ ಪರಿಶೀಲಿಸಿ ಮತ್ತೊಮ್ಮೆ ಪ್ರಯತ್ನಿಸಿ.");
-                btn.innerText = "ವಸ್ತು ಪ್ರಕಟಿಸಿ";
-                btn.disabled = false;
+                return;
             }
+
+            compressImage(frontFile, function(frontUrl) {
+                compressImage(backFile, function(backUrl) {
+                    let newProd = {
+                        id: 'PROD_' + Date.now(),
+                        name, oldPrice, currPrice, pieces, size,
+                        frontImg: frontUrl,
+                        backImg: backUrl
+                    };
+
+                    shopProducts.unshift(newProd);
+                    saveDataToLocal();
+                    
+                    renderOwnerData();
+                    renderCustomerData();
+                    document.getElementById('upload-product-form').reset();
+                    btn.innerText = "ವಸ್ತು ಪ್ರಕಟಿಸಿ";
+                    btn.disabled = false;
+                    alert("ವಸ್ತು ಯಶಸ್ವಿಯಾಗಿ ಪ್ರಕಟಿಸಲಾಗಿದೆ ಮತ್ತು ಫಿಕ್ಸ್ ಆಗಿದೆ!");
+                });
+            });
         }
 
         function renderOwnerData() {
             let pList = document.getElementById('owner-products-list');
-            let keys = Object.keys(globalProducts);
-            document.getElementById('prod-count').innerText = keys.length;
-
-            if (keys.length === 0) {
-                pList.innerHTML = '<p style="color:#666; font-size:13px;">ಯಾವುದೇ ವಸ್ತುಗಳಿಲ್ಲ.</p>';
-            } else {
-                pList.innerHTML = '';
-                keys.reverse().forEach(key => {
-                    let p = globalProducts[key];
-                    pList.innerHTML += `
-                        <div class="item-row">
-                            <div class="item-imgs">
-                                <img src="${p.frontImg}" alt="Front">
-                                <img src="${p.backImg}" alt="Back">
-                            </div>
-                            <div style="flex:1; padding-left:8px;">
-                                <strong>${p.name} (${p.size})</strong><br>
-                                <span style="color:#b12704; font-weight:bold;">₹${p.currPrice}</span>
-                            </div>
-                            <button class="delete-btn" onclick="deleteProduct('${p.id}')">ಡಿಲೀಟ್ ಮಾಡಿ</button>
+            document.getElementById('prod-count').innerText = shopProducts.length;
+            pList.innerHTML = shopProducts.length === 0 ? '<p style="color:#666; font-size:13px;">ಯಾವುದೇ ವಸ್ತುಗಳಿಲ್ಲ.</p>' : '';
+            
+            shopProducts.forEach(p => {
+                pList.innerHTML += `
+                    <div class="item-row">
+                        <div class="item-imgs">
+                            <img src="${p.frontImg}" alt="Front">
+                            <img src="${p.backImg}" alt="Back">
                         </div>
-                    `;
-                });
-            }
+                        <div style="flex:1; padding-left:8px;">
+                            <strong>${p.name} (${p.size})</strong><br>
+                            <span style="color:#b12704; font-weight:bold;">₹${p.currPrice}</span>
+                        </div>
+                        <button class="delete-btn" onclick="deleteProduct('${p.id}')">ಡಿಲೀಟ್ ಮಾಡಿ</button>
+                    </div>
+                `;
+            });
 
             let oList = document.getElementById('owner-orders-container');
-            let orderKeys = Object.keys(globalOrders);
-            if (orderKeys.length === 0) {
-                oList.innerHTML = '<p style="color:#666; font-size:13px;">ಯಾವುದೇ ಹೊಸ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>';
-            } else {
-                oList.innerHTML = '';
-                orderKeys.reverse().forEach(key => {
-                    let ord = globalOrders[key];
-                    oList.innerHTML += `
-                        <div class="order-card">
-                            <strong>ಗ್ರಾಹಕರು: ${ord.customerName}</strong><br>
-                            ವಸ್ತು: ${ord.title} (₹${ord.amount})<br>
-                            ಪ್ರಸ್ತುತ ಸ್ಥಿತಿ: <span style="color:green; font-weight:bold;">${ord.status}</span><br>
-                            ಪೇಮೆಂಟ್ ಸ್ಥಿತಿ: <span style="color:red; font-weight:bold;">${ord.paymentStatus}</span><br>
-                            <div style="margin-top:8px; display:flex; gap:5px; flex-wrap:wrap;">
-                                <button onclick="updateOrderStatus('${ord.id}', 'ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಆಗಿದೆ')" style="background:#ffc107; border:none; padding:5px; font-size:11px; font-weight:bold; cursor:pointer;">ಕನ್ಫರ್ಮ್ ಮಾಡಿ</button>
-                                <button onclick="updateOrderStatus('${ord.id}', 'ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ, ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ಕಳುಹಿಸಲಾಗಿದೆ')" style="background:#28a745; color:white; border:none; padding:5px; font-size:11px; font-weight:bold; cursor:pointer;">ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ</button>
-                                ${ord.paymentStatus === 'ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್' ? `<button onclick="updatePaymentStatus('${ord.id}')" style="background:#007bff; color:white; border:none; padding:5px; font-size:11px; font-weight:bold; cursor:pointer;">ಪೇಮೆಂಟ್ ಸಕ್ಸಸ್‌ಫುಲ್ ಮಾಡಿ</button>` : ''}
-                            </div>
+            oList.innerHTML = allOrders.length === 0 ? '<p style="color:#666; font-size:13px;">ಯಾವುದೇ ಹೊಸ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>' : '';
+            allOrders.forEach((ord, index) => {
+                oList.innerHTML += `
+                    <div class="order-card">
+                        <strong>ಗ್ರಾಹಕರು: ${ord.customerName}</strong><br>
+                        ವಸ್ತು: ${ord.title} (₹${ord.amount})<br>
+                        ಪ್ರಸ್ತುತ ಸ್ಥಿತಿ: <span style="color:green; font-weight:bold;">${ord.status}</span><br>
+                        ಪೇಮೆಂಟ್ ಸ್ಥಿತಿ: <span style="color:red; font-weight:bold;">${ord.paymentStatus}</span><br>
+                        <div style="margin-top:8px; display:flex; gap:5px; flex-wrap:wrap;">
+                            <button onclick="updateOrderStatus(${index}, 'ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಆಗಿದೆ')" style="background:#ffc107; border:none; padding:5px; font-size:11px; font-weight:bold; cursor:pointer;">ಕನ್ಫರ್ಮ್ ಮಾಡಿ</button>
+                            <button onclick="updateOrderStatus(${index}, 'ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ, ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ಕಳುಹಿಸಲಾಗಿದೆ')" style="background:#28a745; color:white; border:none; padding:5px; font-size:11px; font-weight:bold; cursor:pointer;">ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ</button>
+                            ${ord.paymentStatus === 'ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್' ? `<button onclick="updatePaymentStatus(${index})" style="background:#007bff; color:white; border:none; padding:5px; font-size:11px; font-weight:bold; cursor:pointer;">ಪೇಮೆಂಟ್ ಸಕ್ಸಸ್‌ಫುಲ್ ಮಾಡಿ</button>` : ''}
                         </div>
-                    `;
-                });
-            }
+                    </div>
+                `;
+            });
         }
 
         function deleteProduct(id) {
-            if(confirm("ಈ ವಸ್ತುವನ್ನು ಕ್ಲೌಡ್‌ನಿಂದ ಸಂಪೂರ್ಣವಾಗಿ ಡಿಲೀಟ್ ಮಾಡಲು ಬಯಸುತ್ತೀರಾ?")) {
-                db.ref('products/' + id).remove();
+            if(confirm("ಈ ವಸ್ತುವನ್ನು ಡಿಲೀಟ್ ಮಾಡಲು ಬಯಸುತ್ತೀರಾ?")) {
+                shopProducts = shopProducts.filter(p => p.id !== id);
+                saveDataToLocal();
+                renderOwnerData();
+                renderCustomerData();
             }
         }
 
-        function updateOrderStatus(id, status) {
-            db.ref('orders/' + id).update({ status: status });
+        function updateOrderStatus(index, status) {
+            allOrders[index].status = status;
+            saveDataToLocal();
+            renderOwnerData();
+            renderCustomerData();
+            renderDeliveryData();
+            alert("ಸ್ಥಿತಿ ಅಪ್‌ಡೇಟ್ ಮಾಡಲಾಗಿದೆ!");
         }
 
-        function updatePaymentStatus(id) {
-            db.ref('orders/' + id).update({ paymentStatus: 'ಪೇಮೆಂಟ್ ಸಕ್ಸಸ್‌ಫುಲ್ ✔' });
+        function updatePaymentStatus(index) {
+            allOrders[index].paymentStatus = 'ಪೇಮೆಂಟ್ ಸಕ್ಸಸ್‌ಫುಲ್ ✔';
+            saveDataToLocal();
+            renderOwnerData();
+            renderCustomerData();
+            alert("ಪೇಮೆಂಟ್ ಯಶಸ್ವಿಯಾಗಿ ಸ್ವೀಕರಿಸಲಾಗಿದೆ!");
         }
 
-        // Customer Functions
         function renderCustomerData() {
             let cCont = document.getElementById('customer-products-container');
-            let keys = Object.keys(globalProducts);
-
-            if (keys.length === 0) {
-                cCont.innerHTML = '<p style="text-align:center; color:#666;">ಯಾವುದೇ ವಸ್ತುಗಳು ಲಭ್ಯವಿಲ್ಲ.</p>';
-            } else {
-                cCont.innerHTML = '';
-                keys.reverse().forEach(key => {
-                    let p = globalProducts[key];
-                    cCont.innerHTML += `
-                        <div class="cust-product-card">
-                            <img src="${p.frontImg}" class="product-full-img">
-                            <h2 style="font-size:16px;">${p.name} (${p.size})</h2>
-                            <p style="font-size:18px; font-weight:bold; margin:6px 0;">₹${p.currPrice} <span style="text-decoration:line-through; color:#777; font-size:13px;">₹${p.oldPrice}</span></p>
-                            <p style="font-size:12px; color:#555; margin-bottom:8px;">ಪೀಸ್: ${p.pieces}</p>
-                            <button class="btn-buy-now" onclick="placeOrder('${p.name}', '${p.currPrice}')">ಈಗಲೇ ಖರೀದಿಸಿ</button>
-                        </div>
-                    `;
-                });
-            }
+            cCont.innerHTML = shopProducts.length === 0 ? '<p style="text-align:center; color:#666;">ಯಾವುದೇ ವಸ್ತುಗಳು ಲಭ್ಯವಿಲ್ಲ.</p>' : '';
+            shopProducts.forEach(p => {
+                cCont.innerHTML += `
+                    <div class="cust-product-card">
+                        <img src="${p.frontImg}" class="product-full-img">
+                        <h2 style="font-size:16px;">${p.name} (${p.size})</h2>
+                        <p style="font-size:18px; font-weight:bold; margin:6px 0;">₹${p.currPrice} <span style="text-decoration:line-through; color:#777; font-size:13px;">₹${p.oldPrice}</span></p>
+                        <p style="font-size:12px; color:#555; margin-bottom:8px;">ಪೀಸ್: ${p.pieces}</p>
+                        <button class="btn-buy-now" onclick="placeOrder('${p.name}', '${p.currPrice}')">ಈಗಲೇ ಖರೀದಿಸಿ</button>
+                    </div>
+                `;
+            });
 
             let cOrders = document.getElementById('customer-orders-list');
-            let orderKeys = Object.keys(globalOrders);
-            if (orderKeys.length === 0) {
-                cOrders.innerHTML = '<p style="color:#666; font-size:13px;">ಯಾವುದೇ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>';
-            } else {
-                cOrders.innerHTML = '';
-                orderKeys.reverse().forEach(key => {
-                    let ord = globalOrders[key];
-                    cOrders.innerHTML += `
-                        <div class="order-card">
-                            <strong>${ord.title}</strong> (₹${ord.amount})<br>
-                            ಸ್ಥಿತಿ: <span style="color:green; font-weight:bold;">${ord.status}</span><br>
-                            ಪೇಮೆಂಟ್: <span style="color:#d9534f; font-weight:bold;">${ord.paymentStatus}</span>
-                        </div>
-                    `;
-                });
-            }
+            cOrders.innerHTML = allOrders.length === 0 ? '<p style="color:#666; font-size:13px;">ಯಾವುದೇ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>' : '';
+            allOrders.forEach(ord => {
+                cOrders.innerHTML += `
+                    <div class="order-card">
+                        <strong>${ord.title}</strong> (₹${ord.amount})<br>
+                        ಸ್ಥಿತಿ: <span style="color:green; font-weight:bold;">${ord.status}</span><br>
+                        ಪೇಮೆಂಟ್: <span style="color:#d9534f; font-weight:bold;">${ord.paymentStatus}</span>
+                    </div>
+                `;
+            });
         }
 
         function placeOrder(title, amount) {
-            let ordId = 'ORD_' + Math.floor(1000 + Math.random() * 9000);
             let newOrd = {
-                id: ordId,
+                id: 'ORD' + Math.floor(1000 + Math.random() * 9000),
                 title, amount,
                 customerName: 'ಅನಿಲ್ ರಾಥೋಡ್ (ಶಹಾಪುರ)',
                 status: 'ಆರ್ಡರ್ ಸ್ವೀಕರಿಸಲಾಗಿದೆ',
-                paymentStatus: 'ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್',
-                timestamp: Date.now()
+                paymentStatus: 'ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್'
             };
-
-            db.ref('orders/' + ordId).set(newOrd);
-            alert("ಆರ್ಡರ್ ಯಶಸ್ವಿಯಾಗಿ ಅಂಗಡಿ ಮಾಲೀಕರಿಗೆ ರಿಯಲ್-ಟೈಮ್‌ನಲ್ಲಿ ಕಳುಹಿಸಲಾಗಿದೆ!");
+            allOrders.unshift(newOrd);
+            saveDataToLocal();
+            renderOwnerData();
+            renderCustomerData();
+            renderDeliveryData();
+            alert("ಆರ್ಡರ್ ಯಶಸ್ವಿಯಾಗಿ ಅಂಗಡಿ ಮಾಲೀಕರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ!");
         }
 
-        // Delivery Boy Functions
         function renderDeliveryData() {
             let dCont = document.getElementById('delivery-orders-container');
-            let orderKeys = Object.keys(globalOrders);
-
-            if (orderKeys.length === 0) {
-                dCont.innerHTML = '<p style="color:#666; font-size:13px;">ಡೆಲಿವರಿ ಮಾಡಲು ಯಾವುದೇ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>';
-            } else {
-                dCont.innerHTML = '';
-                orderKeys.reverse().forEach(key => {
-                    let ord = globalOrders[key];
-                    dCont.innerHTML += `
-                        <div class="order-card">
-                            <strong>ಗ್ರಾಹಕರು: ${ord.customerName}</strong><br>
-                            ವಸ್ತು: ${ord.title} (₹${ord.amount})<br>
-                            ಪ್ರಸ್ತುತ ಸ್ಥಿತಿ: <span style="color:green; font-weight:bold;">${ord.status}</span><br>
-                            <div style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap;">
-                                <button onclick="deliveryAction('${ord.id}', 'ಡೆಲಿವರಿ ಬಾಯ್ ಪಿಕಪ್ ಮಾಡಿದ್ದಾರೆ, 2 ರಿಂದ 3 ಗಂಟೆಯ ಒಳಗೆ ತಲುಪುತ್ತದೆ')" style="background:#ffc107; border:none; padding:6px; font-weight:bold; cursor:pointer; font-size:11px;">ಪಿಕಪ್ ಮಾಡಿ</button>
-                                <button onclick="deliveryAction('${ord.id}', 'ಡೆಲಿವರಿ ಸಕ್ಸಸ್‌ಫುಲ್ ಆಗಿದೆ')" style="background:#28a745; color:white; border:none; padding:6px; font-weight:bold; cursor:pointer; font-size:11px;">ಡೆಲಿವರಿ ಮುಗಿಯಿತು</button>
-                            </div>
+            dCont.innerHTML = allOrders.length === 0 ? '<p style="color:#666; font-size:13px;">ಡೆಲಿವರಿ ಮಾಡಲು ಯಾವುದೇ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>' : '';
+            
+            allOrders.forEach((ord, index) => {
+                dCont.innerHTML += `
+                    <div class="order-card">
+                        <strong>ಗ್ರಾಹಕರು: ${ord.customerName}</strong><br>
+                        ವಸ್ತು: ${ord.title} (₹${ord.amount})<br>
+                        ಪ್ರಸ್ತುತ ಸ್ಥಿತಿ: <span style="color:green; font-weight:bold;">${ord.status}</span><br>
+                        <div style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap;">
+                            <button onclick="deliveryAction(${index}, 'ಡೆಲಿವರಿ ಬಾಯ್ ಪಿಕಪ್ ಮಾಡಿದ್ದಾರೆ, 2 ರಿಂದ 3 ಗಂಟೆಯ ಒಳಗೆ ತಲುಪುತ್ತದೆ')" style="background:#ffc107; border:none; padding:6px; font-weight:bold; cursor:pointer; font-size:11px;">ಪಿಕಪ್ ಮಾಡಿ</button>
+                            <button onclick="deliveryAction(${index}, 'ಡೆಲಿವರಿ ಸಕ್ಸಸ್‌ಫುಲ್ ಆಗಿದೆ')" style="background:#28a745; color:white; border:none; padding:6px; font-weight:bold; cursor:pointer; font-size:11px;">ಡೆಲಿವರಿ ಮುಗಿಯಿತು</button>
                         </div>
-                    `;
-                });
-            }
+                    </div>
+                `;
+            });
         }
 
-        function deliveryAction(id, status) {
-            db.ref('orders/' + id).update({ status: status });
-            alert("ಡೆಲಿವರಿ ಸ್ಥಿತಿ ರಿಯಲ್-ಟೈಮ್‌ಗೆ ಅಪ್‌ಡೇಟ್ ಆಗಿದೆ!");
+        function deliveryAction(index, status) {
+            allOrders[index].status = status;
+            saveDataToLocal();
+            renderOwnerData();
+            renderCustomerData();
+            renderDeliveryData();
+            alert("ಡೆಲಿವರಿ ಸ್ಥಿತಿ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್‌ಡೇಟ್ ಆಗಿದೆ!");
         }
     </script>
 </body>
