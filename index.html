@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ಶಹಾಪುರ ಮಾರ್ಕೆಟ್ (ಶಾಪ್ ಓನರ್)</title>
+    <title>ಶಹಾಪುರ ಮಾರ್ಕೆಟ್ - ಸಂಪೂರ್ಣ ವ್ಯವಸ್ಥೆ</title>
     <style>
         :root {
             --primary-yellow: #ffd814;
@@ -43,9 +43,27 @@
             color: var(--primary-yellow);
         }
 
-        .header-btns {
+        /* Home Selector Buttons */
+        .role-selector {
             display: flex;
-            gap: 6px;
+            gap: 8px;
+            padding: 10px;
+            background: #232f3e;
+            justify-content: center;
+            position: sticky;
+            top: 48px;
+            z-index: 99;
+        }
+
+        .role-btn {
+            background: #ffc107;
+            color: #111;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 12px;
         }
 
         .screen {
@@ -53,7 +71,7 @@
             max-width: 500px;
             margin: 0 auto;
             background: white;
-            min-height: 100vh;
+            min-height: 90vh;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             position: relative;
         }
@@ -100,10 +118,9 @@
             color: white;
         }
 
-        /* Full Product Image display without cropping */
         .product-full-img {
             width: 100%;
-            max-height: 380px;
+            max-height: 350px;
             object-fit: contain;
             background: #fafafa;
             border-radius: 6px;
@@ -111,7 +128,6 @@
             margin-bottom: 10px;
         }
 
-        /* Owner Item Row */
         .item-row {
             display: flex;
             align-items: center;
@@ -124,22 +140,13 @@
             gap: 10px;
         }
 
-        .item-imgs {
-            display: flex;
-            gap: 5px;
-        }
-
         .item-imgs img {
-            width: 55px;
-            height: 55px;
-            object-fit: cover;
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
             border-radius: 4px;
             border: 1px solid #ccc;
             background: #f9f9f9;
-        }
-
-        .item-info {
-            flex: 1;
         }
 
         .delete-btn {
@@ -153,7 +160,6 @@
             font-weight: bold;
         }
 
-        /* Customer View */
         .cust-product-card {
             background: #fff;
             border: 1px solid #ddd;
@@ -175,7 +181,7 @@
             margin-top: 8px;
         }
 
-        .owner-order-card {
+        .order-card {
             background: #fffde7;
             border: 1px solid #fbc02d;
             padding: 12px;
@@ -186,18 +192,21 @@
 </head>
 <body>
 
-    <!-- 1. ಶಾಪ್ ಓನರ್ ಆ್ಯಪ್ ಪೇಜ್ (ಮುಖ್ಯ ಪುಟ) -->
-    <div id="screen-owner-app" class="screen active">
-        <header>
-            <h1>ಶಹಾಪುರ ಮಾರ್ಕೆಟ್ (ಶಾಪ್ ಓನರ್)</h1>
-            <div class="header-btns">
-                <button onclick="openOrdersListModal()" style="background:#28a745; color:white; border:none; padding:5px 8px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:11px;">📦 ಆರ್ಡರ್ ನೋಡಿ</button>
-                <button onclick="switchScreen('screen-customer-shop')" style="background:#ffc107; color:#111; border:none; padding:5px 8px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:11px;">← ಗ್ರಾಹಕ ಆ್ಯಪ್‌ಗೆ</button>
-            </div>
-        </header>
+    <header>
+        <h1>ಶಹಾಪುರ ಮಾರ್ಕೆಟ್ (ಒಂದೇ ಲಿಂಕ್ ಸಿಸ್ಟಮ್)</h1>
+    </header>
 
+    <!-- ಮೂರು ಪಾತ್ರಗಳ ಬಟನ್‌ಗಳು -->
+    <div class="role-selector">
+        <button class="role-btn" onclick="switchScreen('screen-owner')">👨‍💼 1. ಅಂಗಡಿ ಮಾಲೀಕರು</button>
+        <button class="role-btn" onclick="switchScreen('screen-customer')">🛒 2. ಗ್ರಾಹಕರು</button>
+        <button class="role-btn" onclick="switchScreen('screen-delivery')">🛵 3. ಡೆಲಿವರಿ ಬಾಯ್</button>
+    </div>
+
+    <!-- 1. ಅಂಗಡಿ ಮಾಲೀಕರ ಪೇಜ್ -->
+    <div id="screen-owner" class="screen active">
         <div class="card-box">
-            <h3 style="font-size: 15px; margin-bottom: 12px; color:#0d47a1;">➕ ಹೊಸ ವಸ್ತು ಪ್ರಕಟಿಸಿ (Publish Product)</h3>
+            <h3 style="font-size: 15px; margin-bottom: 12px; color:#0d47a1;">➕ ಹೊಸ ವಸ್ತು ಪ್ರಕಟಿಸಿ (Publish)</h3>
             <form id="upload-product-form" onsubmit="handleProductPublish(event)">
                 <div class="form-group">
                     <label>ವಸ್ತುವಿನ ಹೆಸರು:</label>
@@ -215,285 +224,223 @@
                 </div>
                 <div style="display: flex; gap: 10px;">
                     <div class="form-group" style="flex:1;">
-                        <label>ಎಷ್ಟು ಪೀಸ್ ಕೊಡ್ತಾ ಇದ್ದೀರಾ?:</label>
+                        <label>ಎಷ್ಟು ಪೀಸ್:</label>
                         <select id="prod-pieces" required>
                             <option value="1 ಪೀಸ್">1 ಪೀಸ್</option>
                             <option value="2 ಪೀಸ್">2 ಪೀಸ್</option>
                             <option value="3 ಪೀಸ್">3 ಪೀಸ್</option>
                             <option value="4 ಪೀಸ್">4 ಪೀಸ್</option>
-                            <option value="5 ಪೀಸ್">5 ಪೀಸ್</option>
-                            <option value="6 ಪೀಸ್">6 ಪೀಸ್</option>
                         </select>
                     </div>
                     <div class="form-group" style="flex:1;">
-                        <label>ಸೈಜ್ / ನಂಬರ್ / ಅಳತೆ:</label>
-                        <input type="text" id="prod-size" required placeholder="XL / M / 8">
+                        <label>ಸೈಜ್ / ಅಳತೆ:</label>
+                        <input type="text" id="prod-size" required placeholder="XL / M">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>ಮುಂಭಾಗದ ಫೋಟೋ ಅಪ್ಲೋಡ್ ಮಾಡಿ:</label>
+                    <label>ಮುಂಭಾಗದ ಫೋಟೋ:</label>
                     <input type="file" id="prod-front-img" accept="image/*" required>
                 </div>
-                <div class="form-group">
-                    <label>ಹಿಂಭಾಗದ ಫೋಟೋ ಅಪ್ಲೋಡ್ ಮಾಡಿ:</label>
-                    <input type="file" id="prod-back-img" accept="image/*">
-                </div>
-                <button type="submit" class="btn-publish">ವಸ್ತು ಪ್ರಕಟಿಸಿ (Publish)</button>
+                <button type="submit" class="btn-publish">ವಸ್ತು ಪ್ರಕಟಿಸಿ</button>
             </form>
         </div>
 
         <div style="padding: 16px;">
-            <h3 style="font-size: 15px; margin-bottom: 10px;">🖼️ ನಿಮ್ಮ ಅಂಗಡಿಯಲ್ಲಿರುವ ವಸ್ತುಗಳು:</h3>
-            <div id="owner-uploaded-products-list">
-                <!-- Uploaded items list -->
+            <h3 style="font-size: 15px; margin-bottom: 10px;">📦 ಬಂದಿರುವ ಆರ್ಡರ್‌ಗಳು & ಪೇಮೆಂಟ್:</h3>
+            <div id="owner-orders-container">
+                <!-- Orders for owner -->
             </div>
+            <h3 style="font-size: 15px; margin: 20px 0 10px 0;">🖼️ ಅಪ್‌ಲೋಡ್ ಮಾಡಿದ ವಸ್ತುಗಳು:</h3>
+            <div id="owner-products-list"></div>
         </div>
     </div>
 
-    <!-- 2. ಗ್ರಾಹಕರ ಅಕ್ವಿಕ್ ಇ-ಶಾಪ್ ಪುಟ -->
-    <div id="screen-customer-shop" class="screen">
-        <header>
-            <h1 onclick="switchScreen('screen-customer-shop')">ಅಕ್ವಿಕ್ ಇ-ಶಾಪ್</h1>
-            <div class="header-btns">
-                <button onclick="switchScreen('screen-owner-app')" style="background:#232f3e; color:white; border:1px solid #485769; padding:5px 8px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:11px;">👨‍💼 ಶಾಪ್ ಓನರ್ ಆ್ಯಪ್</button>
-                <button onclick="openMyOrders()" style="background:#232f3e; color:white; border:1px solid #485769; padding:5px 8px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:11px;">📦 ನನ್ನ ಆರ್ಡರ್‌ಗಳು</button>
+    <!-- 2. ಗ್ರಾಹಕರ ಪೇಜ್ -->
+    <div id="screen-customer" class="screen">
+        <div style="padding: 16px;">
+            <h2 style="font-size: 18px; margin-bottom: 12px;">ಉಪಲব্ধ ವಸ್ತುಗಳು (ಶಾಪಿಂಗ್)</h2>
+            <div id="customer-products-container">
+                <!-- Products list -->
             </div>
-        </header>
-
-        <div style="padding: 16px;" id="customer-products-container">
-            <!-- Dynamic products published by shop owner will show here -->
+            <hr style="margin: 20px 0;">
+            <h2 style="font-size: 18px; margin-bottom: 12px;">ನನ್ನ ಆರ್ಡರ್ ಸ್ಥಿತಿ (Status)</h2>
+            <div id="customer-orders-list"></div>
         </div>
     </div>
 
-    <!-- 3. ಬಂದಿರುವ ಆರ್ಡರ್‌ಗಳನ್ನು ವೀಕ್ಷಿಸುವ Modal -->
-    <div id="orders-list-modal" class="screen" style="position:fixed; top:0; left:0; right:0; bottom:0; z-index:200; background:white; display:none; max-width:500px; margin:0 auto; overflow-y:auto;">
-        <header>
-            <h1>ಬಂದಿರುವ ಆರ್ಡರ್‌ಗಳು</h1>
-            <button onclick="closeOrdersListModal()" style="background:none; border:none; color:white; font-size:22px; cursor:pointer;">&times;</button>
-        </header>
-        <div style="padding: 16px;" id="owner-incoming-orders-list">
-            <!-- Incoming orders -->
-        </div>
-    </div>
-
-    <!-- 4. ನನ್ನ ಆರ್ಡರ್‌ಗಳು (Customer Side Orders View) -->
-    <div id="screen-my-orders" class="screen">
-        <header>
-            <h1>ನನ್ನ ಆರ್ಡರ್‌ಗಳು</h1>
-            <button onclick="switchScreen('screen-customer-shop')" style="background:#232f3e; color:white; border:1px solid #485769; padding:5px 8px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:11px;">← ಶಾಪಿಂಗ್‌ಗೆ ಮರಳಿ</button>
-        </header>
-        <div style="padding: 16px;" id="customer-orders-list">
-            <!-- Customer placed orders -->
+    <!-- 3. ಡೆಲಿವರಿ ಬಾಯ್ ಪೇಜ್ -->
+    <div id="screen-delivery" class="screen">
+        <div style="padding: 16px;">
+            <h2 style="font-size: 18px; margin-bottom: 12px;">🛵 ಡೆಲಿವರಿ ಬಾಯ್ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್</h2>
+            <div id="delivery-orders-container">
+                <!-- Delivery tasks -->
+            </div>
         </div>
     </div>
 
     <script>
         let shopProducts = JSON.parse(localStorage.getItem('ar_shop_products')) || [];
-        let ownerOrders = JSON.parse(localStorage.getItem('ar_owner_orders')) || [];
-
-        window.onload = function() {
-            renderOwnerProducts();
-            renderCustomerProducts();
-        };
+        let allOrders = JSON.parse(localStorage.getItem('ar_all_orders')) || [];
 
         function switchScreen(screenId) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
             window.scrollTo(0,0);
-            if(screenId === 'screen-customer-shop') renderCustomerProducts();
-            if(screenId === 'screen-owner-app') renderOwnerProducts();
+            if(screenId === 'screen-owner') renderOwnerData();
+            if(screenId === 'screen-customer') renderCustomerData();
+            if(screenId === 'screen-delivery') renderDeliveryData();
         }
 
-        function openOrdersListModal() {
-            renderIncomingOrders();
-            document.getElementById('orders-list-modal').style.display = 'block';
-        }
-
-        function closeOrdersListModal() {
-            document.getElementById('orders-list-modal').style.display = 'none';
-        }
-
+        // 1. Owner Functions
         function handleProductPublish(event) {
             event.preventDefault();
-            let name = document.getElementById('prod-name').value || 'ವಸ್ತು';
-            let oldPrice = document.getElementById('prod-old-price').value || '0';
-            let currPrice = document.getElementById('prod-curr-price').value || '0';
-            let pieces = document.getElementById('prod-pieces').value || '1 ಪೀಸ್';
-            let size = document.getElementById('prod-size').value || 'M';
+            let name = document.getElementById('prod-name').value;
+            let oldPrice = document.getElementById('prod-old-price').value;
+            let currPrice = document.getElementById('prod-curr-price').value;
+            let pieces = document.getElementById('prod-pieces').value;
+            let size = document.getElementById('prod-size').value;
+            let fileInput = document.getElementById('prod-front-img').files[0];
 
-            let frontFileInput = document.getElementById('prod-front-img').files[0];
-            let backFileInput = document.getElementById('prod-back-img').files[0];
-
-            let processImages = function(frontUrl, backUrl) {
+            let reader = new FileReader();
+            reader.onload = function(e) {
                 let newProd = {
                     id: Date.now(),
-                    name: name,
-                    oldPrice: oldPrice,
-                    currPrice: currPrice,
-                    pieces: pieces,
-                    size: size,
-                    frontImg: frontUrl,
-                    backImg: backUrl || frontUrl
+                    name, oldPrice, currPrice, pieces, size,
+                    frontImg: e.target.result
                 };
-
-                shopProducts.unshift(newProd); // New product comes to top
+                shopProducts.unshift(newProd);
                 localStorage.setItem('ar_shop_products', JSON.stringify(shopProducts));
-
-                renderOwnerProducts();
-                renderCustomerProducts();
+                renderOwnerData();
                 document.getElementById('upload-product-form').reset();
-                alert("ನಿಮ್ಮ ವಸ್ತು ಯಶಸ್ವಿಯಾಗಿ ಪ್ರಕಟವಾಗಿದೆ ಹಾಗೂ ಫೋಟೋಗಳು ಕಾಣಿಸುತ್ತಿವೆ!");
+                alert("ವಸ್ತು ಯಶಸ್ವಿಯಾಗಿ ಪ್ರಕಟವಾಗಿ ಗ್ರಾಹಕರ ಪೇಜಿಗೆ ತಲುಪಿದೆ!");
             };
-
-            if (frontFileInput) {
-                let frontReader = new FileReader();
-                frontReader.onload = function(eFront) {
-                    if (backFileInput) {
-                        let backReader = new FileReader();
-                        backReader.onload = function(eBack) {
-                            processImages(eFront.target.result, eBack.target.result);
-                        };
-                        backReader.readAsDataURL(backFileInput);
-                    } else {
-                        processImages(eFront.target.result, eFront.target.result);
-                    }
-                };
-                frontReader.readAsDataURL(frontFileInput);
-            }
+            if(fileInput) reader.readAsDataURL(fileInput);
         }
 
-        function renderOwnerProducts() {
-            let list = document.getElementById('owner-uploaded-products-list');
-            list.innerHTML = '';
-            if (shopProducts.length === 0) {
-                list.innerHTML = '<p style="color:#666; font-size:13px;">ಯಾವುದೇ ವಸ್ತುಗಳನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿಲ್ಲ.</p>';
-                return;
-            }
-            shopProducts.forEach((p) => {
-                let pName = p.name || 'ವಸ್ತು';
-                let pSize = p.size || 'M';
-                let pCurrPrice = p.currPrice || '0';
-                let pOldPrice = p.oldPrice || '0';
-                let pPieces = p.pieces || '1 ಪೀಸ್';
-
-                list.innerHTML += `
+        function renderOwnerData() {
+            // Render Products
+            let pList = document.getElementById('owner-products-list');
+            pList.innerHTML = shopProducts.length === 0 ? '<p style="color:#666;">ಯಾವುದೇ ವಸ್ತುಗಳಿಲ್ಲ.</p>' : '';
+            shopProducts.forEach(p => {
+                pList.innerHTML += `
                     <div class="item-row">
-                        <div class="item-imgs">
-                            <img src="${p.frontImg}" alt="Front">
-                            <img src="${p.backImg}" alt="Back">
-                        </div>
-                        <div class="item-info">
-                            <strong>${pName} (${pSize})</strong><br>
-                            <span style="color:#b12704; font-weight:bold;">₹${pCurrPrice}</span> 
-                            <span style="text-decoration:line-through; color:#777; font-size:12px;">₹${pOldPrice}</span><br>
-                            <span style="font-size:12px; color:#555;">${pPieces}</span>
-                        </div>
+                        <div class="item-imgs"><img src="${p.frontImg}"></div>
+                        <div style="flex:1;"><strong>${p.name} (${p.size})</strong><br>₹${p.currPrice}</div>
                         <button class="delete-btn" onclick="deleteProduct(${p.id})">ಡಿಲೀಟ್</button>
+                    </div>
+                `;
+            });
+
+            // Render Orders & Payment
+            let oList = document.getElementById('owner-orders-container');
+            oList.innerHTML = allOrders.length === 0 ? '<p style="color:#666; font-size:13px;">ಹೊಸ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>' : '';
+            allOrders.forEach((ord, index) => {
+                oList.innerHTML += `
+                    <div class="order-card">
+                        <strong>ಗ್ರಾಹಕರು: ${ord.customerName}</strong><br>
+                        ವಸ್ತು: ${ord.title} (₹${ord.amount})<br>
+                        ಪ್ರಸ್ತುತ ಸ್ಥಿತಿ: <span style="color:green; font-weight:bold;">${ord.status}</span><br>
+                        ಪೇಮೆಂಟ್ ಸ್ಥಿತಿ: <span style="color:red; font-weight:bold;">${ord.paymentStatus}</span><br>
+                        <div style="margin-top:8px; display:flex; gap:5px; flex-wrap:wrap;">
+                            <button onclick="updateOrderStatus(${index}, 'ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಆಗಿದೆ')" style="background:#ffc107; border:none; padding:5px; font-size:11px; font-weight:bold; cursor:pointer;">ಕನ್ಫರ್ಮ್ ಮಾಡಿ</button>
+                            <button onclick="updateOrderStatus(${index}, 'ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ, ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ಕಳುಹಿಸಲಾಗಿದೆ')" style="background:#28a745; color:white; border:none; padding:5px; font-size:11px; font-weight:bold; cursor:pointer;">ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ</button>
+                            ${ord.paymentStatus === 'ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್' ? `<button onclick="updatePaymentStatus(${index})" style="background:#007bff; color:white; border:none; padding:5px; font-size:11px; font-weight:bold; cursor:pointer;">ಪೇಮೆಂಟ್ ಸಕ್ಸಸ್‌ಫುಲ್ ಮಾಡಿ</button>` : ''}
+                        </div>
                     </div>
                 `;
             });
         }
 
         function deleteProduct(id) {
-            if (confirm("ಈ ವಸ್ತುವನ್ನು ಡಿಲೀಟ್ ಮಾಡಲು ಬಯಸುತ್ತೀರಾ?")) {
-                shopProducts = shopProducts.filter(p => p.id !== id);
-                localStorage.setItem('ar_shop_products', JSON.stringify(shopProducts));
-                renderOwnerProducts();
-                renderCustomerProducts();
-                alert("ವಸ್ತು ಯಶಸ್ವಿಯಾಗಿ ಡಿಲೀಟ್ ಆಗಿದೆ.");
-            }
+            shopProducts = shopProducts.filter(p => p.id !== id);
+            localStorage.setItem('ar_shop_products', JSON.stringify(shopProducts));
+            renderOwnerData();
         }
 
-        function renderCustomerProducts() {
-            let container = document.getElementById('customer-products-container');
-            container.innerHTML = '';
-            if (shopProducts.length === 0) {
-                container.innerHTML = '<p style="color:#666; text-align:center; padding:20px;">ಯಾವುದೇ ವಸ್ತುಗಳು ಲಭ್ಯವಿಲ್ಲ.</p>';
-                return;
-            }
-            shopProducts.forEach((p) => {
-                let pName = p.name || 'ವಸ್ತು';
-                let pSize = p.size || 'M';
-                let pCurrPrice = p.currPrice || '0';
-                let pOldPrice = p.oldPrice || '0';
-                let pPieces = p.pieces || '1 ಪೀಸ್';
+        function updateOrderStatus(index, status) {
+            allOrders[index].status = status;
+            localStorage.setItem('ar_all_orders', JSON.stringify(allOrders));
+            renderOwnerData();
+            alert("ಸ್ಥಿತಿ ಅಪ್‌ಡೇಟ್ ಮಾಡಲಾಗಿದೆ!");
+        }
 
-                container.innerHTML += `
+        function updatePaymentStatus(index) {
+            allOrders[index].paymentStatus = 'ಪೇಮೆಂಟ್ ಸಕ್ಸಸ್‌ಫುಲ್ ✔';
+            localStorage.setItem('ar_all_orders', JSON.stringify(allOrders));
+            renderOwnerData();
+            alert("ಪೇಮೆಂಟ್ ಯಶಸ್ವಿಯಾಗಿ ಸ್ವೀಕರಿಸಲಾಗಿದೆ!");
+        }
+
+        // 2. Customer Functions
+        function renderCustomerData() {
+            let cCont = document.getElementById('customer-products-container');
+            cCont.innerHTML = shopProducts.length === 0 ? '<p style="text-align:center; color:#666;">ಯಾವುದೇ ವಸ್ತುಗಳು ಲಭ್ಯವಿಲ್ಲ.</p>' : '';
+            shopProducts.forEach(p => {
+                cCont.innerHTML += `
                     <div class="cust-product-card">
-                        <img src="${p.frontImg}" alt="${pName}" class="product-full-img">
-                        <h2 style="font-size:18px; font-weight:600; margin-bottom:6px;">${pName}</h2>
-                        <div style="font-size:22px; font-weight:700; color:#0F1111; margin-bottom:8px;">
-                            ₹${pCurrPrice} 
-                            <span style="text-decoration:line-through; color:#565959; font-size:14px; font-weight:normal;">₹${pOldPrice}</span>
-                        </div>
-                        <p style="color:#007600; font-size:14px; font-weight:bold; margin-bottom:10px;">ಉಚಿತ ಡೆಲಿವರಿ ಲಭ್ಯವಿದೆ (${pSize} - ${pPieces})</p>
-                        <button class="btn-buy-now" onclick="placeCustomerOrder('${pName}', '${pCurrPrice}', '${pSize}')">₹${pCurrPrice} ಗೆ ಈಗಲೇ ಖರೀದಿಸಿ</button>
+                        <img src="${p.frontImg}" class="product-full-img">
+                        <h2 style="font-size:16px;">${p.name}</h2>
+                        <p style="font-size:18px; font-weight:bold; margin:6px 0;">₹${p.currPrice} <span style="text-decoration:line-through; color:#777; font-size:13px;">₹${p.oldPrice}</span></p>
+                        <button class="btn-buy-now" onclick="placeOrder('${p.name}', '${p.currPrice}')">ಈಗಲೇ ಖರೀದಿಸಿ</button>
+                    </div>
+                `;
+            });
+
+            let cOrders = document.getElementById('customer-orders-list');
+            cOrders.innerHTML = allOrders.length === 0 ? '<p style="color:#666; font-size:13px;">ಯಾವುದೇ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>' : '';
+            allOrders.forEach(ord => {
+                cOrders.innerHTML += `
+                    <div class="order-card">
+                        <strong>${ord.title}</strong> (₹${ord.amount})<br>
+                        ಸ್ಥಿತಿ: <span style="color:green; font-weight:bold;">${ord.status}</span>
                     </div>
                 `;
             });
         }
 
-        function placeCustomerOrder(prodName, price, size) {
-            let newOrder = {
-                id: 'ORD' + Math.floor(100000 + Math.random() * 900000),
-                title: prodName,
-                size: size,
-                amount: price,
-                customer: {
-                    name: 'ಅನಿಲ್ ರಾಥೋಡ್',
-                    phone: '8105010768',
-                    village: 'ಶಹಾಪುರ',
-                    taluk: 'ಶಹಾಪುರ',
-                    district: 'ಯಾದಗಿರಿ',
-                    gps: 'Lat: 16.7390, Lng: 76.7977'
-                },
-                status: 'ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಆಗಿದೆ'
+        function placeOrder(title, amount) {
+            let newOrd = {
+                id: 'ORD' + Math.floor(1000 + Math.random() * 9000),
+                title, amount,
+                customerName: 'ಅನಿಲ್ ರಾಥೋಡ್ (ಶಹಾಪುರ)',
+                status: 'ಆರ್ಡರ್ ಸ್ವೀಕರಿಸಲಾಗಿದೆ',
+                paymentStatus: 'ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್'
             };
-
-            ownerOrders.unshift(newOrder);
-            localStorage.setItem('ar_owner_orders', JSON.stringify(ownerOrders));
-            alert("ಆರ್ಡರ್ ಯಶಸ್ವಿಯಾಗಿ ಕನ್ಫರ್ಮ್ ಆಗಿದೆ ಹಾಗೂ ಅಂಗಡಿ ಮಾಲೀಕರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ!");
+            allOrders.unshift(newOrd);
+            localStorage.setItem('ar_all_orders', JSON.stringify(allOrders));
+            renderCustomerData();
+            alert("ಆರ್ಡರ್ ಯಶಸ್ವಿಯಾಗಿ ಅಂಗಡಿ ಮಾಲೀಕರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ!");
         }
 
-        function renderIncomingOrders() {
-            let container = document.getElementById('owner-incoming-orders-list');
-            container.innerHTML = '';
-            if (ownerOrders.length === 0) {
-                container.innerHTML = '<p style="color:#666; font-size:13px;">ಯಾವುದೇ ಹೊಸ ಆರ್ಡರ್‌ಗಳು ಬಂದಿಲ್ಲ.</p>';
-                return;
-            }
-            ownerOrders.forEach((ord) => {
-                container.innerHTML += `
-                    <div class="owner-order-card">
-                        <strong>ಗ್ರಾಹಕರು: ${ord.customer.name} (${ord.customer.phone})</strong><br>
-                        <span style="font-size:13px;">ವಿಳಾಸ: ${ord.customer.village}, ${ord.customer.taluk}</span><br>
-                        <span style="font-size:13px; color:#007bff;">GPS: ${ord.customer.gps}</span><br>
-                        <span style="font-size:13px; font-weight:bold;">ವಸ್ತು: ${ord.title} (ಮೊತ್ತ: ₹${ord.amount})</span><br>
-                        <span style="font-size:13px; color:var(--green-success); font-weight:bold;">ಸ್ಥಿತಿ: ${ord.status}</span>
+        // 3. Delivery Boy Functions
+        function renderDeliveryData() {
+            let dCont = document.getElementById('delivery-orders-container');
+            dCont.innerHTML = allOrders.length === 0 ? '<p style="color:#666;">ಯಾವುದೇ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>' : '';
+            allOrders.forEach((ord, index) => {
+                dCont.innerHTML += `
+                    <div class="order-card">
+                        <strong>ಗ್ರಾಹಕರು: ${ord.customerName}</strong><br>
+                        ವಸ್ತು: ${ord.title}<br>
+                        ಪ್ರಸ್ತುತ ಸ್ಥಿತಿ: ${ord.status}<br>
+                        <div style="margin-top:8px; display:flex; gap:5px;">
+                            <button onclick="deliveryAction(${index}, 'ಡೆಲಿವರಿ ಬಾಯ್ ಪಿಕಪ್ ಮಾಡಿದ್ದಾರೆ, 2 ರಿಂದ 3 ಗಂಟೆಯ ಒಳಗೆ ತಲುಪುತ್ತದೆ')" style="background:#ffc107; border:none; padding:6px; font-weight:bold; cursor:pointer; font-size:11px;">ಪಿಕಪ್ ಮಾಡಿ</button>
+                            <button onclick="deliveryAction(${index}, 'ಡೆಲಿವರಿ ಸಕ್ಸಸ್‌ಫುಲ್ ಆಗಿದೆ')" style="background:#28a745; color:white; border:none; padding:6px; font-weight:bold; cursor:pointer; font-size:11px;">ಡೆಲಿವರಿ ಮುಗಿಯಿತು</button>
+                        </div>
                     </div>
                 `;
             });
         }
 
-        function openMyOrders() {
-            let container = document.getElementById('customer-orders-list');
-            container.innerHTML = '';
-            if (ownerOrders.length === 0) {
-                container.innerHTML = '<p style="color:#666; text-align:center; padding:20px;">ಯಾವುದೇ ಆರ್ಡರ್‌ಗಳು ಮಾಡಿಲ್ಲ.</p>';
-            } else {
-                ownerOrders.forEach(ord => {
-                    container.innerHTML += `
-                        <div class="card-box" style="background:#fff; border-radius:8px; margin-bottom:10px;">
-                            <strong>${ord.title}</strong><br>
-                            <span style="font-size:13px; color:#555;">ಆರ್ಡರ್ ಐಡಿ: ${ord.id} | ಸೈಜ್: ${ord.size}</span><br>
-                            <span style="font-size:14px; font-weight:bold;">ಮೊತ್ತ: ₹${ord.amount}</span><br>
-                            <span style="font-size:12px; color:var(--green-success); font-weight:bold;">ಸ್ಥಿತಿ: ${ord.status}</span>
-                        </div>
-                    `;
-                });
-            }
-            switchScreen('screen-my-orders');
+        function deliveryAction(index, status) {
+            allOrders[index].status = status;
+            localStorage.setItem('ar_all_orders', JSON.stringify(allOrders));
+            renderDeliveryData();
+            alert("ಡೆಲಿವರಿ ಸ್ಥಿತಿ ಅಪ್‌ಡೇಟ್ ಆಗಿದೆ!");
         }
+
+        window.onload = function() {
+            renderOwnerData();
+        };
     </script>
 </body>
 </html>
