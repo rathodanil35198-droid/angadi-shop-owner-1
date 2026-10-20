@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ಅಕ್ವಿಕ್ - ಶಾಪ್ ಓನರ್ & ಗ್ರಾಹಕ ವ್ಯವಸ್ಥೆ</title>
+    <title>ಶಹಾಪುರ ಮಾರ್ಕೆಟ್ - ಸಂಪೂರ್ಣ ವ್ಯವಸ್ಥೆ</title>
     <style>
         :root {
             --primary-yellow: #ffd814;
@@ -39,32 +39,54 @@
         }
 
         header h1 {
-            font-size: 16px;
+            font-size: 15px;
             color: var(--primary-yellow);
         }
 
-        .header-btns {
+        /* Mode Selector Tabs */
+        .mode-tabs {
             display: flex;
+            background: #232f3e;
+            padding: 8px;
+            justify-content: center;
             gap: 6px;
+            position: sticky;
+            top: 45px;
+            z-index: 99;
         }
 
-        .screen {
+        .mode-btn {
+            background: #485769;
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .mode-btn.active-tab {
+            background: var(--primary-yellow);
+            color: #111;
+        }
+
+        .app-section {
             display: none;
             max-width: 500px;
             margin: 0 auto;
-            background: white;
-            min-height: 100vh;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            position: relative;
         }
 
-        .screen.active {
+        .app-section.active-section {
             display: block;
         }
 
         .card-box {
             padding: 16px;
-            border-bottom: 8px solid #f0f0f0;
+            background: white;
+            margin: 10px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
         .form-group {
@@ -87,394 +109,409 @@
             font-size: 14px;
         }
 
-        .btn-primary {
-            background-color: var(--primary-yellow);
+        .btn-publish {
+            background-color: #2e7d32;
             width: 100%;
             padding: 14px;
-            border-radius: 24px;
+            border-radius: 6px;
             font-size: 16px;
             font-weight: bold;
             border: none;
             cursor: pointer;
-            margin-top: 15px;
-            color: #111;
+            color: white;
         }
 
-        .product-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 16px;
-            padding: 16px;
-        }
-
-        .product-card {
+        .item-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             background: #fff;
             border: 1px solid #ddd;
             border-radius: 8px;
-            padding: 12px;
-            text-align: center;
-            position: relative;
+            padding: 10px;
+            margin-bottom: 10px;
+            gap: 10px;
         }
 
-        .product-card img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 6px;
-            margin-bottom: 8px;
+        .item-imgs {
+            display: flex;
+            gap: 5px;
+        }
+
+        .item-imgs img {
+            width: 55px;
+            height: 55px;
+            object-fit: contain;
+            background: #fafafa;
+            border-radius: 4px;
+            border: 1px solid #ccc;
         }
 
         .delete-btn {
-            position: absolute;
-            top: 15px;
-            right: 15px;
             background: var(--red-cancel);
             color: white;
             border: none;
-            padding: 5px 10px;
+            padding: 6px 12px;
             border-radius: 4px;
             font-size: 12px;
             cursor: pointer;
+            font-weight: bold;
         }
 
-        .owner-order-card {
+        .order-card {
             background: #fffde7;
             border: 1px solid #fbc02d;
             padding: 12px;
             border-radius: 8px;
             margin-bottom: 12px;
         }
+
+        .cust-product-card {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 16px;
+        }
+
+        .product-full-img {
+            width: 100%;
+            max-height: 350px;
+            object-fit: contain;
+            background: #fafafa;
+            border-radius: 6px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .btn-buy-now {
+            background-color: var(--primary-yellow);
+            color: #111;
+            width: 100%;
+            padding: 12px;
+            border-radius: 20px;
+            font-size: 15px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            margin-top: 8px;
+        }
     </style>
 </head>
 <body>
 
-    <!-- 1. ಶಾಪ್ ಓನರ್ ಲಾಗಿನ್ / ಐಡಿ ಪರಿಶೀಲನೆ ಪೇಜ್ -->
-    <div id="screen-owner-login" class="screen active">
-        <header>
-            <h1>ಅಕ್ವಿಕ್ - ಶಾಪ್ ಓನರ್ ನೋಂದಣಿ</h1>
-        </header>
+    <header>
+        <h1 id="header-title">👨‍💼 ಅಂಗಡಿ ಮಾಲೀಕರ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್[span_2](start_span)[span_2](end_span)</h1>
+    </header>
+
+    <!-- ಮೂರು ವಿಭಾಗಗಳಿಗೆ ಬದಲಾಯಿಸುವ ಬಟನ್‌ಗಳು -->
+    <div class="mode-tabs">
+        <button class="mode-btn active-tab" onclick="switchAppMode('owner', this)">ಅಂಗಡಿ ಮಾಲೀಕರು</button>
+        <button class="mode-btn" onclick="switchAppMode('customer', this)">ಗ್ರಾಹಕರು</button>
+        <button class="mode-btn" onclick="switchAppMode('delivery', this)">ಡೆಲಿವರಿ ಬಾಯ್</button>
+    </div>
+
+    <!-- 1. ಅಂಗಡಿ ಮಾಲೀಕರ ಸೆಕ್ಷನ್ -->
+    <div id="section-owner" class="app-section active-section">
         <div class="card-box">
-            <div style="background:#e3f2fd; padding:12px; border-radius:8px; margin-bottom:15px;">
-                <h4 style="font-size:14px; color:#0d47a1; margin-bottom:6px;">ಹಳೆಯ 4-ಡಿಜಿಟ್ ಐಡಿ ಇದ್ದರೆ ಇಲ್ಲಿ ಹಾಕಿ:</h4>
-                <div style="display:flex; gap:8px;">
-                    <input type="text" id="login-old-id" placeholder="ಉದಾ: 4829" maxlength="4">
-                    <button onclick="loginWithOldId()" style="background:#007bff; color:white; border:none; padding:0 15px; border-radius:6px; font-weight:bold; cursor:pointer;">ಲಾಗಿನ್</button>
-                </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <h3 style="font-size: 15px; color:#0d47a1;">➕ ಹೊಸ ವಸ್ತು ಪ್ರಕಟಿಸಿ (Publish)</h3>
+                <button onclick="document.getElementById('orders-section').scrollIntoView({behavior: 'smooth'})" style="background:#28a745; color:white; border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:11px;">📦 ಆರ್ಡರ್ ನೋಡಿ[span_3](start_span)[span_3](end_span)</button>
             </div>
-
-            <h3 style="margin-bottom: 15px; font-size:15px;">ಅಥವಾ ಹೊಸ ಮಾಲೀಕರ ವಿವರಗಳನ್ನು ಭರ್ತಿ ಮಾಡಿ:</h3>
-            <form id="owner-login-form" onsubmit="registerOwner(event)">
-                <div class="form-group">
-                    <label>ಮಾಲೀಕರ ಹೆಸರು:</label>
-                    <input type="text" id="owner-name" required placeholder="ನಿಮ್ಮ ಹೆಸರು">
-                </div>
-                <div class="form-group">
-                    <label>ಮೊಬೈಲ್ ನಂಬರ್:</label>
-                    <input type="tel" id="owner-phone" required placeholder="10 ಅಂಕಿಗಳ ಮೊಬೈಲ್ ನಂಬರ್">
-                </div>
-                <div class="form-group">
-                    <label>ಜಿಲ್ಲೆಯ ಹೆಸರು:</label>
-                    <input type="text" id="owner-district" required placeholder="ಉದಾ: ಯಾದಗಿರಿ">
-                </div>
-                <div class="form-group">
-                    <label>ತಾಲೂಕು ಹೆಸರು:</label>
-                    <input type="text" id="owner-taluk" required placeholder="ಉದಾ: ಶಹಾಪುರ">
-                </div>
-                <div class="form-group">
-                    <label>ಊರಿನ ಹೆಸರು:</label>
-                    <input type="text" id="owner-village" required placeholder="ಗ್ರಾಮ / ವಾರ್ಡ್ ಹೆಸರು">
-                </div>
-                <div class="form-group">
-                    <label>ಪಿನ್ ಕೋಡ್ ನಂಬರ್:</label>
-                    <input type="text" id="owner-pincode" required placeholder="585223">
-                </div>
-                <div class="form-group">
-                    <label>ಅಂಗಡಿ ಪಿಕಪ್ ಜಿಪಿಎಸ್ ಲೊಕೇಶನ್:</label>
-                    <input type="text" id="owner-gps" readonly style="background:#e9ecef;" value="GPS ಕ್ಯಾಪ್ಚರ್ ಆಗುತ್ತಿದೆ...">
-                </div>
-                <div class="form-group">
-                    <label>ಅಂಗಡಿಯ ಹೆಸರು:</label>
-                    <input type="text" id="shop-name-input" required placeholder="ನಿಮ್ಮ ಅಂಗಡಿಯ ಹೆಸರು">
-                </div>
-                <div class="form-group">
-                    <label>ಅಂಗಡಿಯ ಫೋಟೋ (ಕ್ಯಾಮೆರಾ / ಗ್ಯಾಲರಿ):</label>
-                    <input type="file" id="shop-photo-file" accept="image/*" required>
-                </div>
-                <div class="form-group">
-                    <label>ಅಂಗಡಿಯ ವಿಧ (Category):</label>
-                    <select id="shop-category" required>
-                        <option value="">-- ಅಂಗಡಿ ವಿಧ ಆಯ್ಕೆಮಾಡಿ --</option>
-                        <option value="ಚಪ್ಪಲಿ & ಶೂಸ್ ಅಂಗಡಿ">ಚಪ್ಪಲಿ & ಶೂಸ್ ಅಂಗಡಿ</option>
-                        <option value="ಬಟ್ಟೆ ಅಂಗಡಿ">ಬಟ್ಟೆ ಅಂಗಡಿ</option>
-                        <option value="ಗಿಫ್ಟ್ ಅಂಗಡಿ">ಗಿಫ್ಟ್ ಅಂಗಡಿ</option>
-                        <option value="ಎಲೆಕ್ಟ್ರಿಕಲ್ ಶೀಟ್ ಅಂಗಡಿ">ಎಲೆಕ್ಟ್ರಿಕಲ್ ಶೀಟ್ ಅಂಗಡಿ</option>
-                        <option value="ಇತರ ಅಂಗಡಿ">ಇತರ ಅಂಗಡಿ</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn-primary">ಸಬ್ಮಿಟ್ (OK)</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- 2. 4 ಡಿಜಿಟ್ ಐಡಿ ಶೋ ಪೇಜ್ -->
-    <div id="screen-owner-id-success" class="screen">
-        <header>
-            <h1>ಐಡಿ ದೃಢೀಕರಣ</h1>
-        </header>
-        <div class="card-box" style="text-align: center; padding: 40px 20px;">
-            <h2 style="color: var(--green-success); margin-bottom: 15px;">ಅಭಿನಂದನೆಗಳು! ನೋಂದಣಿ ಯಶಸ್ವಿಯಾಗಿದೆ</h2>
-            <p style="font-size: 14px; color: #555; margin-bottom: 20px;">ನಿಮ್ಮ ಶಾಪ್ ಐಡಿ (ಈ 4 ಡಿಜಿಟ್ ಐಡಿಯನ್ನು ನಿಮ್ಮ ಜ್ಞಾಪಕದಲ್ಲಿ ಇಟ್ಟುಕೊಳ್ಳಿ):</p>
-            <div id="generated-4digit-id" style="font-size: 36px; font-weight: bold; background: #fffde7; padding: 15px; border: 2px dashed #fbc02d; border-radius: 8px; display: inline-block; margin-bottom: 30px;">4829</div>
-            <button class="btn-primary" onclick="switchScreen('screen-owner-dashboard')">ಮುಂದಿನ ಪುಟಕ್ಕೆ ಹೋಗಿ</button>
-        </div>
-    </div>
-
-    <!-- 3. ಶಾಪ್ ಓನರ್ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ -->
-    <div id="screen-owner-dashboard" class="screen">
-        <header>
-            <h1 id="header-shop-title">ಶಾಪ್ ಓನರ್ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್</h1>
-            <div class="header-btns">
-                <button onclick="openOrdersListModal()" style="background:#28a745; color:white; border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:12px;">📦 ಆರ್ಡರ್ ನೋಡಿ</button>
-                <button onclick="openUploadModal()" style="background:var(--primary-yellow); border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:12px;">+ ಹೊಸ ಫೋಟೋ</button>
-            </div>
-        </header>
-        <div style="padding: 16px;">
-            <h3 style="font-size: 16px; margin-bottom: 10px;">🖼️ ಅಪ್‌ಲೋಡ್ ಮಾಡಿದ ವಸ್ತುಗಳು:</h3>
-            <div id="owner-uploaded-products-grid" class="product-grid" style="padding:0;">
-                <!-- Uploaded products list with delete option -->
-            </div>
-        </div>
-    </div>
-
-    <!-- 4. ಆರ್ಡರ್‌ಗಳನ್ನು ವೀಕ್ಷಿಸುವ ಮತ್ತು ಕನ್ಫರ್ಮ್/ಪ್ಯಾಕಿಂಗ್ ಮಾಡುವ ಪೇಜ್ (Modal) -->
-    <div id="orders-list-modal" class="screen" style="position:fixed; top:0; left:0; right:0; bottom:0; z-index:200; background:white; display:none; max-width:500px; margin:0 auto; overflow-y:auto;">
-        <header>
-            <h1>ಬಂದಿರುವ ಆರ್ಡರ್‌ಗಳು</h1>
-            <button onclick="closeOrdersListModal()" style="background:none; border:none; color:white; font-size:22px; cursor:pointer;">&times;</button>
-        </header>
-        <div style="padding: 16px;" id="owner-incoming-orders-list">
-            <!-- Incoming orders will show here -->
-        </div>
-    </div>
-
-    <!-- 5. ಹೊಸ ವಸ್ತು/ಫೋಟೋ ಅಪ್‌ಲೋಡ್ ಮಾಡುವ ಫಾರ್ಮ್ (Modal) -->
-    <div id="upload-modal" class="screen" style="position:fixed; top:0; left:0; right:0; bottom:0; z-index:200; background:white; display:none; max-width:500px; margin:0 auto; overflow-y:auto;">
-        <header>
-            <h1>ಹೊಸ ಫೋಟೋ ಅಪ್ಲೋಡ್</h1>
-            <button onclick="closeUploadModal()" style="background:none; border:none; color:white; font-size:22px; cursor:pointer;">&times;</button>
-        </header>
-        <div class="card-box">
-            <form id="upload-product-form" onsubmit="submitNewProduct(event)">
+            <form id="upload-product-form" onsubmit="handleProductPublish(event)">
                 <div class="form-group">
                     <label>ವಸ್ತುವಿನ ಹೆಸರು:</label>
-                    <input type="text" id="prod-name" required placeholder="ವಸ್ತುವಿನ ಹೆಸರು ಬರೆಯಿರಿ">
+                    <input type="text" id="prod-name" required placeholder="ಉದಾ: ಜೀನ್ಸ್ ಪ್ಯಾಂಟ್ / ಶರ್ಟ್">
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <div class="form-group" style="flex:1;">
+                        <label>ಹಳೆಯ ರೇಟ್ (₹):</label>
+                        <input type="number" id="prod-old-price" required placeholder="600">
+                    </div>
+                    <div class="form-group" style="flex:1;">
+                        <label>ಈಗಿನ ಪ್ರೈಸ್ (₹):</label>
+                        <input type="number" id="prod-curr-price" required placeholder="350">
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <div class="form-group" style="flex:1;">
+                        <label>ಎಷ್ಟು ಪೀಸ್:</label>
+                        <select id="prod-pieces" required>
+                            <option value="1 ಪೀಸ್">1 ಪೀಸ್</option>
+                            <option value="2 ಪೀಸ್">2 ಪೀಸ್</option>
+                            <option value="3 ಪೀಸ್">3 ಪೀಸ್</option>
+                            <option value="4 ಪೀಸ್">4 ಪೀಸ್</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="flex:1;">
+                        <label>ಸೈಜ್ / ಅಳತೆ:</label>
+                        <input type="text" id="prod-size" required placeholder="XL / M">
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label>ಮುಂಭಾಗದ ಫೋಟೋ (Front Photo - ಗ್ಯಾಲರಿ):</label>
+                    <label>ಮುಂಭಾಗದ ಫೋಟೋ (Front Photo):[span_4](start_span)[span_4](end_span)</label>
                     <input type="file" id="prod-front-img" accept="image/*" required>
                 </div>
                 <div class="form-group">
-                    <label>ಹಿಂಭಾಗದ ಫೋಟೋ (Back Photo - ಗ್ಯಾಲರಿ):</label>
+                    <label>ಹಿಂಭಾಗದ ಫೋಟೋ (Back Photo):[span_5](start_span)[span_5](end_span)</label>
                     <input type="file" id="prod-back-img" accept="image/*" required>
                 </div>
-                <div class="form-group">
-                    <label>ಹಳೆಯ ರೇಟು (Strike Price ₹):</label>
-                    <input type="number" id="prod-old-price" required placeholder="1899">
-                </div>
-                <div class="form-group">
-                    <label>ಪ್ರೆಸೆಂಟ್ ಇರುವ ರೇಟ್ (Current Price ₹):</label>
-                    <input type="number" id="prod-curr-price" required placeholder="442">
-                </div>
-                <div class="form-group">
-                    <label>ಪೀಸ್‌ಗಳ ಆಯ್ಕೆ (1 ರಿಂದ 6 ರವರೆಗೆ):</label>
-                    <select id="prod-max-pieces" required>
-                        <option value="1">1 ಪೀಸ್</option>
-                        <option value="2">2 ಪೀಸ್</option>
-                        <option value="3">3 ಪೀಸ್</option>
-                        <option value="4">4 ಪೀಸ್</option>
-                        <option value="5">5 ಪೀಸ್</option>
-                        <option value="6">6 ಪೀಸ್</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn-primary">ಓಕೆ (ಸಬ್ಮಿಟ್ ಮಾಡಿ)</button>
+                <button type="submit" class="btn-publish">ವಸ್ತು ಪ್ರಕಟಿಸಿ[span_6](start_span)[span_6](end_span)</button>
             </form>
+        </div>
+
+        <div class="card-box" id="orders-section">
+            <h3 style="font-size: 15px; margin-bottom: 10px;">📦 ಬಂದಿರುವ ಆರ್ಡರ್‌ಗಳು & ಪೇಮೆಂಟ್:[span_7](start_span)[span_7](end_span)</h3>
+            <div id="owner-orders-container">
+                <p style="color:#666; font-size:13px;">ಯಾವುದೇ ಹೊಸ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>
+            </div>
+        </div>
+
+        <div class="card-box">
+            <h3 style="font-size: 15px; margin-bottom: 10px;">🖼️ ನಿಮ್ಮ ಅಂಗಡಿಯಲ್ಲಿರುವ ವಸ್ತುಗಳು:[span_8](start_span)[span_8](end_span)</h3>
+            <div id="owner-products-list">
+                <p style="color:#666; font-size:13px;">ಯಾವುದೇ ವಸ್ತುಗಳಿಲ್ಲ.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. ಗ್ರಾಹಕರ ಸೆಕ್ಷನ್ -->
+    <div id="section-customer" class="app-section">
+        <div class="card-box">
+            <h2 style="font-size: 18px; margin-bottom: 12px;">🛒 ಅಕ್ವಿಕ್ ಇ-ಶಾಪ್ (ಗ್ರಾಹಕರು)</h2>
+            <div id="customer-products-container">
+                <p style="text-align:center; color:#666;">ಯಾವುದೇ ವಸ್ತುಗಳು ಲಭ್ಯವಿಲ್ಲ.</p>
+            </div>
+            <hr style="margin: 20px 0;">
+            <h2 style="font-size: 18px; margin-bottom: 12px;">📦 ನನ್ನ ಆರ್ಡರ್‌ಗಳ ಸ್ಥಿತಿ (Status)</h2>
+            <div id="customer-orders-list">
+                <p style="color:#666; font-size:13px;">ಯಾವುದೇ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. ಡೆಲಿವರಿ ಬಾಯ್ ಸೆಕ್ಷನ್ -->
+    <div id="section-delivery" class="app-section">
+        <div class="card-box">
+            <h2 style="font-size: 18px; margin-bottom: 12px; color:#0d47a1;">🛵 ಡೆಲಿವರಿ ಬಾಯ್ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್</h2>
+            <div id="delivery-orders-container">
+                <p style="color:#666; font-size:13px;">ಡೆಲಿವರಿ ಮಾಡಲು ಯಾವುದೇ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>
+            </div>
         </div>
     </div>
 
     <script>
-        let ownerData = null;
-        let shopProducts = [];
-        let ownerOrders = [];
-        let savedShopId = localStorage.getItem('ar_shop_id') || "4829";
+        let shopProducts = JSON.parse(localStorage.getItem('ar_shop_products')) || [];
+        let allOrders = JSON.parse(localStorage.getItem('ar_all_orders')) || [];
 
         window.onload = function() {
-            // Check if already logged in
-            let savedOwner = localStorage.getItem('ar_owner_data');
-            if (savedOwner) {
-                ownerData = JSON.parse(savedOwner);
-                document.getElementById('header-shop-title').innerText = ownerData.shopName;
-                switchScreen('screen-owner-dashboard');
-            }
-
-            // Auto capture GPS
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function(pos) {
-                    let gpsStr = `Lat: ${pos.coords.latitude.toFixed(4)}, Lng: ${pos.coords.longitude.toFixed(4)}`;
-                    let gpsField = document.getElementById('owner-gps');
-                    if(gpsField) gpsField.value = gpsStr;
-                }, function(err) {
-                    let gpsField = document.getElementById('owner-gps');
-                    if(gpsField) gpsField.value = "GPS ಲೊಕೇಶನ್ ಸಿಗಲಿಲ್ಲ";
-                });
-            }
+            renderOwnerData();
+            renderCustomerData();
+            renderDeliveryData();
         };
 
-        function loginWithOldId() {
-            let inputId = document.getElementById('login-old-id').value;
-            if (inputId.length === 4) {
-                localStorage.setItem('ar_shop_id', inputId);
-                let savedOwner = localStorage.getItem('ar_owner_data');
-                if (savedOwner) {
-                    ownerData = JSON.parse(savedOwner);
-                    document.getElementById('header-shop-title').innerText = ownerData.shopName;
-                } else {
-                    ownerData = { shopName: "ನನ್ನ ಅಂಗಡಿ (" + inputId + ")" };
-                }
-                switchScreen('screen-owner-dashboard');
-            } else {
-                alert("ದಯವಿಟ್ಟು ಸರಿಯಾದ 4 ಡಿಜಿಟ್ ಐಡಿ ನಮೂದಿಸಿ!");
-            }
-        }
-
-        function registerOwner(event) {
-            event.preventDefault();
-            ownerData = {
-                name: document.getElementById('owner-name').value,
-                phone: document.getElementById('owner-phone').value,
-                district: document.getElementById('owner-district').value,
-                taluk: document.getElementById('owner-taluk').value,
-                village: document.getElementById('owner-village').value,
-                pincode: document.getElementById('owner-pincode').value,
-                gps: document.getElementById('owner-gps').value,
-                shopName: document.getElementById('shop-name-input').value,
-                category: document.getElementById('shop-category').value
-            };
-
-            localStorage.setItem('ar_owner_data', JSON.stringify(ownerData));
-            let randomId = Math.floor(1000 + Math.random() * 9000).toString();
-            localStorage.setItem('ar_shop_id', randomId);
+        function switchAppMode(mode, btn) {
+            document.querySelectorAll('.app-section').forEach(s => s.classList.remove('active-section'));
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active-tab'));
             
-            document.getElementById('generated-4digit-id').innerText = randomId;
-            document.getElementById('header-shop-title').innerText = ownerData.shopName;
-
-            switchScreen('screen-owner-id-success');
-        }
-
-        function switchScreen(screenId) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(screenId).classList.add('active');
+            btn.classList.add('active-tab');
+            if(mode === 'owner') {
+                document.getElementById('section-owner').classList.add('active-section');
+                document.getElementById('header-title').innerText = "👨‍💼 ಅಂಗಡಿ ಮಾಲೀಕರ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್[span_9](start_span)[span_9](end_span)";
+                renderOwnerData();
+            } else if(mode === 'customer') {
+                document.getElementById('section-customer').classList.add('active-section');
+                document.getElementById('header-title').innerText = "🛒 ಗ್ರಾಹಕರ ಶಾಪಿಂಗ್ ಪುಟ";
+                renderCustomerData();
+            } else if(mode === 'delivery') {
+                document.getElementById('section-delivery').classList.add('active-section');
+                document.getElementById('header-title').innerText = "🛵 ಡೆಲಿವರಿ ಬಾಯ್ ಆ್ಯಪ್";
+                renderDeliveryData();
+            }
             window.scrollTo(0,0);
         }
 
-        function openUploadModal() {
-            document.getElementById('upload-modal').style.display = 'block';
-        }
-
-        function closeUploadModal() {
-            document.getElementById('upload-modal').style.display = 'none';
-        }
-
-        function openOrdersListModal() {
-            renderIncomingOrders();
-            document.getElementById('orders-list-modal').style.display = 'block';
-        }
-
-        function closeOrdersListModal() {
-            document.getElementById('orders-list-modal').style.display = 'none';
-        }
-
-        function submitNewProduct(event) {
+        // Owner Functions
+        function handleProductPublish(event) {
             event.preventDefault();
             let name = document.getElementById('prod-name').value;
             let oldPrice = document.getElementById('prod-old-price').value;
             let currPrice = document.getElementById('prod-curr-price').value;
-            let maxPieces = document.getElementById('prod-max-pieces').value;
-
+            let pieces = document.getElementById('prod-pieces').value;
+            let size = document.getElementById('prod-size').value;
+            
             let frontFile = document.getElementById('prod-front-img').files[0];
-            let frontImgUrl = frontFile ? URL.createObjectURL(frontFile) : 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=600';
+            let backFile = document.getElementById('prod-back-img').files[0];
 
-            let newProd = {
-                id: Date.now(),
-                name: name,
-                oldPrice: oldPrice,
-                currPrice: currPrice,
-                maxPieces: maxPieces,
-                image: frontImgUrl
-            };
-
-            shopProducts.push(newProd);
-            renderOwnerProducts();
-            closeUploadModal();
-            alert("ನಿಮ್ಮ ಫೋಟೋವನ್ನು ಅಪ್ಲೋಡ್ ಆಗಿ ಗ್ರಾಹಕರಿಗೆ ಕಳಿಸಲಾಗಿದೆ!");
-            document.getElementById('upload-product-form').reset();
-        }
-
-        function renderOwnerProducts() {
-            let grid = document.getElementById('owner-uploaded-products-grid');
-            grid.innerHTML = '';
-            if (shopProducts.length === 0) {
-                grid.innerHTML = '<p style="color:#666; font-size:13px; padding:10px;">ಯಾವುದೇ ವಸ್ತುಗಳನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿಲ್ಲ.</p>';
+            if (!frontFile || !backFile) {
+                alert("ದಯವಿಟ್ಟು ಮುಂಭಾಗ ಮತ್ತು ಹಿಂಭಾಗದ ಎರಡೂ ಫೋಟೋಗಳನ್ನು ಆಯ್ಕೆ ಮಾಡಿ!");
                 return;
             }
-            shopProducts.forEach((p) => {
-                grid.innerHTML += `
-                    <div class="product-card">
-                        <button class="delete-btn" onclick="deleteProduct(${p.id})">ಡಿಲೀಟ್</button>
-                        <img src="${p.image}" alt="${p.name}">
-                        <div style="font-weight:bold; font-size:15px; margin-bottom:4px;">${p.name}</div>
-                        <div style="color:#b12704; font-weight:bold;">₹${p.currPrice} <span style="text-decoration:line-through; color:#777; font-size:12px;">₹${p.oldPrice}</span></div>
-                        <div style="font-size:12px; color:#555; margin-top:4px;">ಗರಿಷ್ಠ ಪೀಸ್: ${p.maxPieces}</div>
+
+            let readerFront = new FileReader();
+            readerFront.onload = function(eFront) {
+                let frontUrl = eFront.target.result;
+
+                let readerBack = new FileReader();
+                readerBack.onload = function(eBack) {
+                    let backUrl = eBack.target.result;
+
+                    let newProd = {
+                        id: Date.now(),
+                        name, oldPrice, currPrice, pieces, size,
+                        frontImg: frontUrl,
+                        backImg: backUrl
+                    };
+
+                    shopProducts.unshift(newProd);
+                    localStorage.setItem('ar_shop_products', JSON.stringify(shopProducts));
+                    
+                    renderOwnerData();
+                    renderCustomerData();
+                    document.getElementById('upload-product-form').reset();
+                    alert("ನಿಮ್ಮ ಫೋಟೋ ಯಶಸ್ವಿಯಾಗಿ ಗ್ರಾಹಕರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ[span_10](start_span)[span_10](end_span)!");
+                };
+                readerBack.readAsDataURL(backFile);
+            };
+            readerFront.readAsDataURL(frontFile);
+        }
+
+        function renderOwnerData() {
+            let pList = document.getElementById('owner-products-list');
+            pList.innerHTML = shopProducts.length === 0 ? '<p style="color:#666; font-size:13px;">ಯಾವುದೇ ವಸ್ತುಗಳಿಲ್ಲ.</p>' : '';
+            shopProducts.forEach(p => {
+                pList.innerHTML += `
+                    <div class="item-row">
+                        <div class="item-imgs">
+                            <img src="${p.frontImg}" alt="Front">
+                            <img src="${p.backImg}" alt="Back">
+                        </div>
+                        <div style="flex:1; padding-left:8px;">
+                            <strong>${p.name} (${p.size})</strong><br>
+                            <span style="color:#b12704; font-weight:bold;">₹${p.currPrice}</span>
+                        </div>
+                        <button class="delete-btn" onclick="deleteProduct(${p.id})">ಡಿಲೀಟ್[span_11](start_span)[span_11](end_span)</button>
                     </div>
                 `;
             });
-        }
 
-        function deleteProduct(id) {
-            if (confirm("ಈ ವಸ್ತುವನ್ನು ಡಿಲೀಟ್ ಮಾಡಲು ಬಯಸುತ್ತೀರಾ?")) {
-                shopProducts = shopProducts.filter(p => p.id !== id);
-                renderOwnerProducts();
-                alert("ವಸ್ತು ಯಶಸ್ವಿಯಾಗಿ ಡಿಲೀಟ್ ಆಗಿದೆ.");
-            }
-        }
-
-        function renderIncomingOrders() {
-            let container = document.getElementById('owner-incoming-orders-list');
-            container.innerHTML = '';
-            if (ownerOrders.length === 0) {
-                container.innerHTML = '<p style="color:#666; font-size:13px;">ಯಾವುದೇ ಹೊಸ ಆರ್ಡರ್‌ಗಳು ಬಂದಿಲ್ಲ.</p>';
-                return;
-            }
-            ownerOrders.forEach((ord, index) => {
-                container.innerHTML += `
-                    <div class="owner-order-card">
-                        <strong>ಗ್ರಾಹಕರು: ${ord.customer.name} (${ord.customer.phone})</strong><br>
-                        <span style="font-size:13px;">ವಿಳಾಸ: ${ord.customer.village}, ${ord.customer.taluk}, ${ord.customer.district}</span><br>
-                        <span style="font-size:13px; color:#007bff;">GPS: ${ord.customer.gps}</span><br>
-                        <span style="font-size:13px; font-weight:bold;">ವಸ್ತು: ${ord.title} (ಸೈಜ್: ${ord.size}, ಪೀಸ್: ${ord.qty})</span><br>
-                        <span style="font-size:13px; color:var(--green-success); font-weight:bold;">ಪ್ರಸ್ತುತ ಸ್ಥಿತಿ: ${ord.status}</span><br>
-                        <div style="margin-top:10px; display:flex; gap:6px;">
-                            <button onclick="updateOrderStatus(${index}, 'ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಆಗಿದೆ')" style="background:#ffc107; border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:12px;">ಕನ್ಫರ್ಮ್ ಮಾಡಿ</button>
-                            <button onclick="updateOrderStatus(${index}, 'ನಿಮ್ಮ ಆರ್ಡರ್ ಪ್ಯಾಕಿಂಗ್ ಆಗಿ ಕಳುಹಿಸಲಾಗಿದೆ, 2 ರಿಂದ 3 ಗಂಟೆಯ ಒಳಗೆ ಡೆಲಿವರಿ ತಲುಪುತ್ತದೆ')" style="background:#28a745; color:white; border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:12px;">ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (ಬಾಯಿಗೆ ಕಳುಹಿಸಿ)</button>
+            let oList = document.getElementById('owner-orders-container');
+            oList.innerHTML = allOrders.length === 0 ? '<p style="color:#666; font-size:13px;">ಯಾವುದೇ ಹೊಸ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>' : '';
+            allOrders.forEach((ord, index) => {
+                oList.innerHTML += `
+                    <div class="order-card">
+                        <strong>ಗ್ರಾಹಕರು: ${ord.customerName}</strong><br>
+                        ವಸ್ತು: ${ord.title} (₹${ord.amount})<br>
+                        ಪ್ರಸ್ತುತ ಸ್ಥಿತಿ: <span style="color:green; font-weight:bold;">${ord.status}</span><br>
+                        ಪೇಮೆಂಟ್ ಸ್ಥಿತಿ: <span style="color:red; font-weight:bold;">${ord.paymentStatus}</span><br>
+                        <div style="margin-top:8px; display:flex; gap:5px; flex-wrap:wrap;">
+                            <button onclick="updateOrderStatus(${index}, 'ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಆಗಿದೆ')" style="background:#ffc107; border:none; padding:5px; font-size:11px; font-weight:bold; cursor:pointer;">ಕನ್ಫರ್ಮ್ ಮಾಡಿ[span_12](start_span)[span_12](end_span)</button>
+                            <button onclick="updateOrderStatus(${index}, 'ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ, ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ಕಳುಹಿಸಲಾಗಿದೆ')" style="background:#28a745; color:white; border:none; padding:5px; font-size:11px; font-weight:bold; cursor:pointer;">ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ[span_13](start_span)[span_13](end_span)</button>
+                            ${ord.paymentStatus === 'ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್' ? `<button onclick="updatePaymentStatus(${index})" style="background:#007bff; color:white; border:none; padding:5px; font-size:11px; font-weight:bold; cursor:pointer;">ಪೇಮೆಂಟ್ ಸಕ್ಸಸ್‌ಫುಲ್ ಮಾಡಿ[span_14](start_span)[span_14](end_span)</button>` : ''}
                         </div>
                     </div>
                 `;
             });
         }
 
-        function updateOrderStatus(index, statusText) {
-            ownerOrders[index].status = statusText;
-            alert("ಸ್ಥಿತಿಯನ್ನು ಅಪ್‌ಡೇಟ್ ಮಾಡಲಾಗಿದೆ ಹಾಗೂ ಗ್ರಾಹಕರಿಗೆ ಸಂದೇಶ ಕಳುಹಿಸಲಾಗಿದೆ!");
-            renderIncomingOrders();
+        function deleteProduct(id) {
+            if(confirm("ಈ ವಸ್ತುವನ್ನು ಡಿಲೀಟ್ ಮಾಡಲು ಬಯಸುತ್ತೀರಾ?")) {
+                shopProducts = shopProducts.filter(p => p.id !== id);
+                localStorage.setItem('ar_shop_products', JSON.stringify(shopProducts));
+                renderOwnerData();
+                renderCustomerData();
+            }
+        }
+
+        function updateOrderStatus(index, status) {
+            allOrders[index].status = status;
+            localStorage.setItem('ar_all_orders', JSON.stringify(allOrders));
+            renderOwnerData();
+            renderCustomerData();
+            renderDeliveryData();
+            alert("ಸ್ಥಿತಿ ಅಪ್‌ಡೇಟ್ ಮಾಡಲಾಗಿದೆ!");
+        }
+
+        function updatePaymentStatus(index) {
+            allOrders[index].paymentStatus = 'ಪೇಮೆಂಟ್ ಸಕ್ಸಸ್‌ಫುಲ್ ✔';
+            localStorage.setItem('ar_all_orders', JSON.stringify(allOrders));
+            renderOwnerData();
+            renderCustomerData();
+            alert("ಪೇಮೆಂಟ್ ಯಶಸ್ವಿಯಾಗಿ ಸ್ವೀಕರಿಸಲಾಗಿದೆ!");
+        }
+
+        // Customer Functions
+        function renderCustomerData() {
+            let cCont = document.getElementById('customer-products-container');
+            cCont.innerHTML = shopProducts.length === 0 ? '<p style="text-align:center; color:#666;">ಯಾವುದೇ ವಸ್ತುಗಳು ಲಭ್ಯವಿಲ್ಲ.</p>' : '';
+            shopProducts.forEach(p => {
+                cCont.innerHTML += `
+                    <div class="cust-product-card">
+                        <img src="${p.frontImg}" class="product-full-img">
+                        <h2 style="font-size:16px;">${p.name} (${p.size})</h2>
+                        <p style="font-size:18px; font-weight:bold; margin:6px 0;">₹${p.currPrice} <span style="text-decoration:line-through; color:#777; font-size:13px;">₹${p.oldPrice}</span></p>
+                        <p style="font-size:12px; color:#555; margin-bottom:8px;">ಪೀಸ್: ${p.pieces}</p>
+                        <button class="btn-buy-now" onclick="placeOrder('${p.name}', '${p.currPrice}')">ಈಗಲೇ ಖರೀದಿಸಿ</button>
+                    </div>
+                `;
+            });
+
+            let cOrders = document.getElementById('customer-orders-list');
+            cOrders.innerHTML = allOrders.length === 0 ? '<p style="color:#666; font-size:13px;">ಯಾವುದೇ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>' : '';
+            allOrders.forEach(ord => {
+                cOrders.innerHTML += `
+                    <div class="order-card">
+                        <strong>${ord.title}</strong> (₹${ord.amount})<br>
+                        ಸ್ಥಿತಿ: <span style="color:green; font-weight:bold;">${ord.status}</span><br>
+                        ಪೇಮೆಂಟ್: <span style="color:#d9534f; font-weight:bold;">${ord.paymentStatus}</span>
+                    </div>
+                `;
+            });
+        }
+
+        function placeOrder(title, amount) {
+            let newOrd = {
+                id: 'ORD' + Math.floor(1000 + Math.random() * 9000),
+                title, amount,
+                customerName: 'ಅನಿಲ್ ರಾಥೋಡ್ (ಶಹಾಪುರ)',
+                status: 'ಆರ್ಡರ್ ಸ್ವೀಕರಿಸಲಾಗಿದೆ',
+                paymentStatus: 'ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್'
+            };
+            allOrders.unshift(newOrd);
+            localStorage.setItem('ar_all_orders', JSON.stringify(allOrders));
+            renderOwnerData();
+            renderCustomerData();
+            renderDeliveryData();
+            alert("ಆರ್ಡರ್ ಯಶಸ್ವಿಯಾಗಿ ಅಂಗಡಿ ಮಾಲೀಕರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ!");
+        }
+
+        // Delivery Boy Functions
+        function renderDeliveryData() {
+            let dCont = document.getElementById('delivery-orders-container');
+            dCont.innerHTML = allOrders.length === 0 ? '<p style="color:#666; font-size:13px;">ಡೆಲಿವರಿ ಮಾಡಲು ಯಾವುದೇ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>' : '';
+            
+            allOrders.forEach((ord, index) => {
+                dCont.innerHTML += `
+                    <div class="order-card">
+                        <strong>ಗ್ರಾಹಕರು: ${ord.customerName}</strong><br>
+                        ವಸ್ತು: ${ord.title} (₹${ord.amount})<br>
+                        ಪ್ರಸ್ತುತ ಸ್ಥಿತಿ: <span style="color:green; font-weight:bold;">${ord.status}</span><br>
+                        <div style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap;">
+                            <button onclick="deliveryAction(${index}, 'ಡೆಲಿವರಿ ಬಾಯ್ ಪಿಕಪ್ ಮಾಡಿದ್ದಾರೆ, 2 ರಿಂದ 3 ಗಂಟೆಯ ಒಳಗೆ ತಲುಪುತ್ತದೆ')" style="background:#ffc107; border:none; padding:6px; font-weight:bold; cursor:pointer; font-size:11px;">ಪಿಕಪ್ ಮಾಡಿ</button>
+                            <button onclick="deliveryAction(${index}, 'ಡೆಲಿವರಿ ಸಕ್ಸಸ್‌ಫುಲ್ ಆಗಿದೆ')" style="background:#28a745; color:white; border:none; padding:6px; font-weight:bold; cursor:pointer; font-size:11px;">ಡೆಲಿವರಿ ಮುಗಿಯಿತು</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function deliveryAction(index, status) {
+            allOrders[index].status = status;
+            localStorage.setItem('ar_all_orders', JSON.stringify(allOrders));
+            renderOwnerData();
+            renderCustomerData();
+            renderDeliveryData();
+            alert("ಡೆಲಿವರಿ ಸ್ಥಿತಿ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್‌ಡೇಟ್ ಆಗಿದೆ!");
         }
     </script>
 </body>
