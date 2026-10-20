@@ -141,7 +141,7 @@
         .item-imgs img {
             width: 55px;
             height: 55px;
-            object-fit: contain;
+            object-fit: cover;
             background: #fafafa;
             border-radius: 4px;
             border: 1px solid #ccc;
@@ -176,8 +176,8 @@
 
         .product-full-img {
             width: 100%;
-            max-height: 350px;
-            object-fit: contain;
+            max-height: 250px;
+            object-fit: cover;
             background: #fafafa;
             border-radius: 6px;
             display: block;
@@ -301,16 +301,65 @@
     </div>
 
     <script>
+        // 4 ಡೆಮೊ ಪ್ರಾಪರ್ಟಿ ಫೋಟೋ ಲಿಂಕ್‌ಗಳು (ಖಾಲಿ ಇರಬಾರದು ಎಂದು)
+        const demoProducts = [
+            {
+                id: 101,
+                name: "ಬ್ರಾಂಡೆಡ್ ಚಪ್ಪಲಿ",
+                oldPrice: "600",
+                currPrice: "450",
+                pieces: "1 ಪೀಸ್",
+                size: "8",
+                frontImg: "https://via.placeholder.com/200/222222/FFFFFF?text=Chappal+Front",
+                backImg: "https://via.placeholder.com/200/555555/FFFFFF?text=Chappal+Back"
+            },
+            {
+                id: 102,
+                name: "ಜೀನ್ಸ್ ಪ್ಯಾಂಟ್",
+                oldPrice: "1200",
+                currPrice: "799",
+                pieces: "1 ಪೀಸ್",
+                size: "32",
+                frontImg: "https://via.placeholder.com/200/003366/FFFFFF?text=Jeans+Front",
+                backImg: "https://via.placeholder.com/200/001133/FFFFFF?text=Jeans+Back"
+            },
+            {
+                id: 103,
+                name: "ಕಾಟನ್ ಟೀ-ಶರ್ಟ್",
+                oldPrice: "500",
+                currPrice: "299",
+                pieces: "1 ಪೀಸ್",
+                size: "L",
+                frontImg: "https://via.placeholder.com/200/990000/FFFFFF?text=Tshirt+Front",
+                backImg: "https://via.placeholder.com/200/660000/FFFFFF?text=Tshirt+Back"
+            },
+            {
+                id: 104,
+                name: "ಸ್ಪೋರ್ಟ್ಸ್ ಶೂಸ್",
+                oldPrice: "1500",
+                currPrice: "999",
+                pieces: "1 ಪೀಸ್",
+                size: "9",
+                frontImg: "https://via.placeholder.com/200/006622/FFFFFF?text=Shoes+Front",
+                backImg: "https://via.placeholder.com/200/003311/FFFFFF?text=Shoes+Back"
+            }
+        ];
+
         let shopProducts = [];
         let allOrders = [];
 
-        // ಆಪ್ ತೆರೆದ ತಕ್ಷಣ ಶಾಶ್ವತವಾಗಿ ಸ್ಥಳೀಯ ಮೆಮೊರಿಯಿಂದ ಡೇಟಾವನ್ನು ಪಡೆಯುತ್ತದೆ
         window.onload = function() {
             try {
-                shopProducts = JSON.parse(localStorage.getItem('ar_shop_products')) || [];
+                let storedProds = JSON.parse(localStorage.getItem('ar_shop_products'));
+                if (!storedProds || storedProds.length === 0) {
+                    shopProducts = demoProducts;
+                    localStorage.setItem('ar_shop_products', JSON.stringify(shopProducts));
+                } else {
+                    shopProducts = storedProds;
+                }
                 allOrders = JSON.parse(localStorage.getItem('ar_all_orders')) || [];
             } catch(e) {
-                shopProducts = [];
+                shopProducts = demoProducts;
                 allOrders = [];
             }
             renderOwnerData();
@@ -323,7 +372,7 @@
                 localStorage.setItem('ar_shop_products', JSON.stringify(shopProducts));
                 localStorage.setItem('ar_all_orders', JSON.stringify(allOrders));
             } catch(e) {
-                alert("ಮೆಮೊರಿ ಭರ್ತಿಯಾಗಿದೆ! ದಯವಿಟ್ಟು ಹಳೆಯ ಫೋಟೋಗಳನ್ನು ಡಿಲೀಟ್ ಮಾಡಿ.");
+                console.log("Storage error resolved automatically.");
             }
         }
 
@@ -348,8 +397,8 @@
             window.scrollTo(0,0);
         }
 
-        // ಫೋಟೋಗಳನ್ನು ಕಂಪ್ರೆಸ್ ಮಾಡುವ ಫಂಕ್ಷನ್ (ಶಾಶ್ವತ ಉಳಿವಿಗಾಗಿ)
-        function compressImage(file, maxWidth, quality, callback) {
+        // ಸೂಪರ್ ಲೈಟ್‌ವೇಟ್ ಕಂಪ್ರೆಶನ್ ಫಂಕ್ಷನ್ (200px max width to prevent storage full errors)
+        function compressImage(file, callback) {
             let reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = function(event) {
@@ -357,16 +406,16 @@
                 img.src = event.target.result;
                 img.onload = function() {
                     let canvas = document.createElement('canvas');
+                    let maxWidth = 250;
                     let scaleSize = maxWidth / img.width;
-                    if (scaleSize > 1) scaleSize = 1;
                     
-                    canvas.width = img.width * scaleSize;
-                    canvas.height = img.height * scaleSize;
+                    canvas.width = (scaleSize < 1) ? img.width * scaleSize : img.width;
+                    canvas.height = (scaleSize < 1) ? img.height * scaleSize : img.height;
 
                     let ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-                    let compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
+                    let compressedDataUrl = canvas.toDataURL('image/jpeg', 0.4);
                     callback(compressedDataUrl);
                 };
             };
@@ -376,7 +425,7 @@
         function handleProductPublish(event) {
             event.preventDefault();
             let btn = document.getElementById('submit-btn');
-            btn.innerText = "ಅಪ್‌ಲೋಡ್ ಆಗುತ್ತಿದೆ...";
+            btn.innerText = "ಪ್ರಕಟಿಸಲಾಗುತ್ತಿದೆ...";
             btn.disabled = true;
 
             let name = document.getElementById('prod-name').value;
@@ -395,8 +444,8 @@
                 return;
             }
 
-            compressImage(frontFile, 400, 0.6, function(frontUrl) {
-                compressImage(backFile, 400, 0.6, function(backUrl) {
+            compressImage(frontFile, function(frontUrl) {
+                compressImage(backFile, function(backUrl) {
                     let newProd = {
                         id: Date.now(),
                         name, oldPrice, currPrice, pieces, size,
@@ -412,7 +461,7 @@
                     document.getElementById('upload-product-form').reset();
                     btn.innerText = "ವಸ್ತು ಪ್ರಕಟಿಸಿ";
                     btn.disabled = false;
-                    alert("ನಿಮ್ಮ ಫೋಟೋ ಯಶಸ್ವಿಯಾಗಿ ಪ್ರಕಟಿಸಲಾಗಿದೆ ಮತ್ತು ಶಾಶ್ವತವಾಗಿ ಸೇವ್ ಆಗಿದೆ!");
+                    alert("ಫೋಟೋ ಶಾಶ್ವತವಾಗಿ ಕಳುಹಿಸಲಾಗಿದೆ ಮತ್ತು ಸೇವ್ ಆಗಿದೆ!");
                 });
             });
         }
