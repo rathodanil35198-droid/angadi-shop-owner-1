@@ -3,130 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ಅಂಗಡಿ ಮಾಲೀಕರ ಆಪ್ - Shop Owner Dashboard</title>
-    <!-- Tailwind CSS for Responsive UI -->
+    <title>ಅಂಗಡಿ ಮಾಲೀಕರ ಆಪ್ - Shop Owner Panel</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @keyframes blink {
+        @keyframes pulse-border {
             0%, 100% { border-color: #ef4444; }
             50% { border-color: #f59e0b; }
         }
-        .new-order-alert {
-            animation: blink 1s infinite;
-        }
+        .new-order-pulse { animation: pulse-border 1.2s infinite; }
     </style>
 </head>
-<body class="bg-slate-100 font-sans min-h-screen text-slate-800">
+<body class="bg-slate-100 font-sans min-h-screen text-slate-800 pb-10">
 
-    <!-- Header / Nav -->
+    <!-- Header Navigation -->
     <header class="bg-indigo-700 text-white p-4 shadow-lg sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto flex justify-between items-center">
+        <div class="max-w-6xl mx-auto flex justify-between items-center flex-wrap gap-2">
             <div>
-                <h1 class="text-xl font-bold">🏪 ನನ್ನ ಲೋಕಲ್ ಶಾಪ್ (Shop Panel)</h1>
-                <p class="text-xs text-indigo-200">ಅಂಗಡಿ ಮಾಲೀಕರ ನಿರ್ವಹಣಾ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್</p>
+                <h1 class="text-xl font-bold flex items-center gap-2">🏪 ನನ್ನ ಲೋಕಲ್ ಶಾಪ್ (Shop Panel)</h1>
+                <p class="text-xs text-indigo-200">ಅಂಗಡಿ ಮಾಲೀಕರ ಡಿಜಿಟಲ್ ನಿರ್ವಹಣಾ ಸಿಸ್ಟಮ್</p>
             </div>
-            <div id="shopStatus" class="bg-green-500 text-xs px-3 py-1 rounded-full font-bold">
-                ● ಅಂಗಡಿ ಓಪನ್ ಆಗಿದೆ
+            
+            <div class="flex items-center gap-3">
+                <!-- ಆರ್ಡರ್ ನೋಡಲು ವಿಶೇಷ ಬಟನ್ -->
+                <a href="#ordersSection" class="bg-amber-400 hover:bg-amber-500 text-indigo-950 font-bold text-xs px-3 py-2 rounded-lg shadow flex items-center gap-1 transition-all">
+                    📋 ಆರ್ಡರ್ ನೋಡಿ (<span id="topOrderBadge">1</span>)
+                </a>
+                <span class="bg-green-500 text-white text-xs px-2.5 py-1 rounded-full font-bold shadow-sm">
+                    ● ಅಂಗಡಿ ಓಪನ್ ಆಗಿದೆ
+                </span>
             </div>
         </div>
     </header>
 
     <main class="max-w-6xl mx-auto p-4 grid grid-cols-1 md:grid-cols-3 gap-6">
 
-        <!-- 1. Product Upload Panel (ಫೋಟೋ ಮತ್ತು ಪ್ರಾಡಕ್ಟ್ ಸೇರಿಸುವ ಜಾಗ) -->
-        <section class="bg-white p-5 rounded-xl shadow-md border border-slate-200 md:col-span-1">
-            <h2 class="text-lg font-bold mb-4 text-indigo-900 border-b pb-2">➕ ಹೊಸ ಪ್ರಾಡಕ್ಟ್ / ಫೋಟೋ ಹಾಕಿ</h2>
+        <!-- 1. ಫೋಟೋ ಮತ್ತು ಪ್ರಾಡಕ್ಟ್ ಅಪ್ಲೋಡ್ ವಿಭಾಗ -->
+        <section class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 md:col-span-1">
+            <h2 class="text-lg font-bold mb-4 text-indigo-900 border-b pb-2 flex items-center gap-2">
+                ➕ ಹೊಸ ಪ್ರಾಡಕ್ಟ್ / ಫೋಟೋ ಹಾಕಿ
+            </h2>
             
             <form id="productForm" class="space-y-4">
+                <!-- ವಸ್ತುವಿನ ಹೆಸರು -->
                 <div>
-                    <label class="block text-xs font-semibold mb-1">ಸಾಮಗ್ರಿಯ ಹೆಸರು (Item Name)</label>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">ವಸ್ತುವಿನ ಹೆಸರು (Item Name)</label>
                     <input type="text" id="itemName" required placeholder="ಉದಾ: ತಾಜಾ ಟೊಮೇಟೊ" class="w-full p-2.5 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
                 </div>
 
-                <div>
-                    <label class="block text-xs font-semibold mb-1">ಬೆಲೆ (Price - ₹)</label>
-                    <input type="number" id="itemPrice" required placeholder="40" class="w-full p-2.5 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                <!-- ಹಳೆಯ ಬೆಲೆ & ಹೊಸ ಪ್ರೆಸೆಂಟ್ ರೇಟ್ -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1">ಹಳೆಯ ಬೆಲೆ (Old Price ₹)</label>
+                        <input type="number" id="oldPrice" placeholder="50" class="w-full p-2.5 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none text-slate-400 line-through">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-emerald-700 mb-1">ಪ್ರೆಸೆಂಟ್ ರೇಟ್ (New Price ₹)</label>
+                        <input type="number" id="newPrice" required placeholder="40" class="w-full p-2.5 border border-emerald-400 rounded-lg text-sm font-bold focus:ring-2 focus:ring-emerald-500 outline-none bg-emerald-50/30">
+                    </div>
                 </div>
 
-                <div>
-                    <label class="block text-xs font-semibold mb-1">ಪ್ರಮಾಣ (Quantity/Unit)</label>
-                    <input type="text" id="itemUnit" required placeholder="ಉದಾ: 1 KG / 1 Pack" class="w-full p-2.5 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                <!-- ಪ್ರಮಾಣ & ಡಿಸ್ಕೌಂಟ್ ಆಪ್ಷನ್ -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">ಪ್ರಮಾಣ (Quantity/Unit)</label>
+                        <input type="text" id="itemUnit" required placeholder="1 KG / 1 Pack" class="w-full p-2.5 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">ಡಿಸ್ಕೌಂಟ್ / ರಿಯಾಯಿತಿ (%)</label>
+                        <input type="text" id="itemDiscount" placeholder="ಉದಾ: 20% OFF" class="w-full p-2.5 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                    </div>
                 </div>
 
+                <!-- ಫೋಟೋ ಆಯ್ಕೆ -->
                 <div>
-                    <label class="block text-xs font-semibold mb-1">ಪ್ರಾಡಕ್ಟ್ ಫೋಟೋ (Select Image)</label>
-                    <input type="file" id="itemImage" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer">
+                    <label class="block text-xs font-bold text-slate-700 mb-1">ಪ್ರಾಡಕ್ಟ್ ಫೋಟೋ (Select Image)</label>
+                    <input type="file" id="itemImage" accept="image/*" class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer">
                 </div>
 
-                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-lg text-sm transition-all shadow">
-                    ಆಪ್‌ಗೆ ಸೇರಿಸಿ (Publish Item)
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl text-sm transition-all shadow-md">
+                    🚀 ಆಪ್‌ಗೆ ಸೇರಿಸಿ (Publish Item)
                 </button>
             </form>
         </section>
 
-        <!-- Right Side: Orders & Published Items List -->
+        <!-- Right Panel: Dynamic Orders & Product List -->
         <section class="md:col-span-2 space-y-6">
 
-            <!-- 2. Live Orders Panel (ಗ್ರಾಹಕರಿಂದ ಬಂದ ಆರ್ಡರ್‌ಗಳು) -->
-            <div class="bg-white p-5 rounded-xl shadow-md border border-slate-200">
-                <div class="flex justify-between items-center mb-4 border-b pb-2">
+            <!-- 2. ಆರ್ಡರ್‌ಗಳ ಪಟ್ಟಿ (Orders View Section) -->
+            <div id="ordersSection" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                <div class="flex justify-between items-center mb-4 border-b pb-3 flex-wrap gap-2">
                     <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
                         🔔 ಬಂದಿರುವ ಆರ್ಡರ್‌ಗಳು 
-                        <span id="orderCount" class="bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">1</span>
+                        <span id="orderCount" class="bg-red-500 text-white text-xs px-2.5 py-0.5 rounded-full font-bold">1</span>
                     </h2>
-                    <button onclick="simulateCustomerOrder()" class="bg-emerald-600 text-white text-xs px-3 py-1.5 rounded-lg font-semibold hover:bg-emerald-700 shadow">
+                    <button onclick="simulateCustomerOrder()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-2 rounded-lg font-bold shadow transition-all">
                         🧪 ಟೆಸ್ಟ್ ಆರ್ಡರ್ ಹಾಕಿ ನೋಡಿ (Simulate Order)
                     </button>
                 </div>
 
                 <!-- Order List Container -->
                 <div id="ordersContainer" class="space-y-4">
-                    <!-- Default Sample Order -->
-                    <div id="order-101" class="border-2 border-amber-400 bg-amber-50 p-4 rounded-xl shadow-sm new-order-alert">
-                        <div class="flex justify-between items-start">
+                    
+                    <!-- Sample Order Item Card -->
+                    <div id="order-101" class="border-2 border-amber-400 bg-amber-50/50 p-4 rounded-xl shadow-sm new-order-pulse">
+                        <div class="flex justify-between items-start flex-wrap gap-2">
                             <div>
-                                <span class="text-xs bg-amber-200 text-amber-900 font-bold px-2 py-0.5 rounded">ಆರ್ಡರ್ #101</span>
+                                <span class="text-xs bg-amber-200 text-amber-900 font-bold px-2 py-0.5 rounded-md">ಆರ್ಡರ್ #101</span>
                                 <p class="font-bold text-sm mt-1">ಗ್ರಾಹಕರು: ರಮೇಶ್ (ಮಲ್ಲೇಶ್ವರಂ)</p>
                                 <p class="text-xs text-slate-600">ಫೋನ್: +91 98765 43210</p>
                             </div>
-                            <span id="status-101" class="text-xs font-bold text-amber-700 bg-amber-100 border border-amber-300 px-2 py-1 rounded">
-                                ⏳ ಅಂಗಡಿಯವರ ಒಪ್ಪಿಗೆಗಾಗಿ ಕಾಯುತ್ತಿದೆ
+                            <span id="status-101" class="text-xs font-bold text-amber-800 bg-amber-100 border border-amber-300 px-2.5 py-1 rounded-lg">
+                                ⏳ ಹೊಸ ಆರ್ಡರ್ ಬಂದಿದೆ!
                             </span>
                         </div>
                         
-                        <div class="my-3 border-t border-b border-amber-200/60 py-2 text-xs space-y-1">
-                            <div class="flex justify-between"><span>• ತಾಜಾ ಟೊಮೇಟೊ (1 KG)</span> <span>₹40</span></div>
-                            <div class="flex justify-between"><span>• ಹಾಲಿನ ಪ್ಯಾಕೆಟ್ (500 ml)</span> <span>₹25</span></div>
-                            <div class="flex justify-between font-bold border-t pt-1 mt-1"><span>ಒಟ್ಟು ಮೊತ್ತ:</span> <span>₹65</span></div>
+                        <!-- Order Items List -->
+                        <div class="my-3 border-t border-b border-slate-200 py-2 text-xs space-y-1">
+                            <div class="flex justify-between"><span>• ತಾಜಾ ಟೊಮೇಟೊ (1 KG)</span> <span class="font-semibold">₹40</span></div>
+                            <div class="flex justify-between font-bold border-t pt-1.5 mt-1 text-sm text-slate-900">
+                                <span>ಒಟ್ಟು ಮೊತ್ತ (Total Amount):</span> 
+                                <span class="text-indigo-700">₹40</span>
+                            </div>
                         </div>
 
-                        <div id="action-101" class="flex gap-2">
-                            <button onclick="acceptOrder('101')" class="w-full bg-green-600 hover:bg-green-700 text-white text-xs py-2 rounded-lg font-bold shadow">
-                                ✅ ಒಪ್ಪಿಕೊಳ್ಳಿ & ಪ್ಯಾಕ್ ಮಾಡಿ (Accept Order)
-                            </button>
-                            <button onclick="rejectOrder('101')" class="bg-red-100 text-red-600 hover:bg-red-200 text-xs px-3 py-2 rounded-lg font-semibold">
-                                ತಿರಸ್ಕರಿಸಿ
+                        <!-- Step-By-Step Buttons -->
+                        <div id="action-101" class="flex flex-col sm:flex-row gap-2 mt-3">
+                            <button onclick="confirmOrder('101')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-xs py-2.5 rounded-lg font-bold shadow">
+                                ✅ 1. ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಮಾಡಿ
                             </button>
                         </div>
                     </div>
+
                 </div>
             </div>
 
-            <!-- 3. My Uploaded Products List (ಅಂಗಡಿಯವರು ಅಪ್‌ಲೋಡ್ ಮಾಡಿದ ಸಾಮಗ್ರಿಗಳು) -->
-            <div class="bg-white p-5 rounded-xl shadow-md border border-slate-200">
-                <h2 class="text-lg font-bold mb-4 text-slate-900 border-b pb-2">📦 ಆಪ್‌ನಲ್ಲಿ ಪ್ರದರ್ಶನಗೊಳ್ಳುತ್ತಿರುವ ನಿಮ್ಮ ಸಾಮಗ್ರಿಗಳು</h2>
-                
+            <!-- 3. ಪ್ರದರ್ಶನಗೊಳ್ಳುತ್ತಿರುವ ಸಾಮಗ್ರಿಗಳ ಪಟ್ಟಿ -->
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                <h2 class="text-lg font-bold mb-4 text-slate-900 border-b pb-2">📦 ಆಪ್‌ನಲ್ಲಿ ಲೈವ್ ಇರುವ ಸಾಮಗ್ರಿಗಳು</h2>
                 <div id="productList" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <!-- Default Sample Item -->
-                    <div class="border rounded-xl p-3 flex gap-3 items-center bg-slate-50 relative">
-                        <img src="https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=150" class="w-16 h-16 object-cover rounded-lg border">
-                        <div>
-                            <h3 class="font-bold text-sm">ತಾಜಾ ಟೊಮೇಟೊ</h3>
-                            <p class="text-xs text-slate-500">1 KG</p>
-                            <p class="text-indigo-600 font-bold text-sm mt-1">₹40</p>
-                        </div>
-                        <span class="absolute top-2 right-2 text-xs bg-green-100 text-green-700 font-semibold px-1.5 py-0.5 rounded">Active</span>
-                    </div>
+                    <!-- Dynamic Product List Populates Here -->
                 </div>
             </div>
 
@@ -134,128 +150,174 @@
 
     </main>
 
-    <!-- JavaScript Logic (Real Functionality) -->
+    <!-- JavaScript Logic -->
     <script>
-        // Store uploaded products locally in browser memory
         let products = [
-            { name: "ತಾಜಾ ಟೊಮೇಟೊ", price: 40, unit: "1 KG", image: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=150" }
+            { 
+                name: "ತಾಜಾ ಟೊಮೇಟೊ", 
+                oldPrice: "50", 
+                newPrice: "40", 
+                unit: "1 KG", 
+                discount: "20% OFF", 
+                image: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=150" 
+            }
         ];
 
-        // 1. Handle Product Form Submit (ಫೋಟೋ & ಪ್ರಾಡಕ್ಟ್ ಆಡ್ ಮಾಡುವುದು)
+        // 1. Initial Load
+        renderProducts();
+
+        // 2. Product Upload Handling
         document.getElementById('productForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
             const name = document.getElementById('itemName').value;
-            const price = document.getElementById('itemPrice').value;
+            const oldPrice = document.getElementById('oldPrice').value;
+            const newPrice = document.getElementById('newPrice').value;
             const unit = document.getElementById('itemUnit').value;
+            const discount = document.getElementById('itemDiscount').value;
             const imageInput = document.getElementById('itemImage');
 
-            let imageUrl = "https://via.placeholder.com/150?text=Product";
+            let imageUrl = "https://images.unsplash.com/photo-1542838132-92c53300491e?w=150";
 
             if (imageInput.files && imageInput.files[0]) {
                 imageUrl = URL.createObjectURL(imageInput.files[0]);
             }
 
-            // Save object
-            const newProduct = { name, price, unit, image: imageUrl };
-            products.push(newProduct);
-
-            // Render updated product list
+            products.push({ name, oldPrice, newPrice, unit, discount, image: imageUrl });
             renderProducts();
-
-            // Form Reset
             this.reset();
-            alert('✅ ಪ್ರಾಡಕ್ಟ್ ಅನ್ನು ಆಪ್‌ಗೆ ಪ್ರಕಟಿಸಲಾಗಿದೆ!');
+            alert('✅ ಪ್ರಾಡಕ್ಟ್ ಲೈವ್ ಆಗಿದೆ!');
         });
 
-        // 2. Render Products into UI
+        // Render Product List to Display
         function renderProducts() {
             const list = document.getElementById('productList');
             list.innerHTML = products.map((item) => `
-                <div class="border rounded-xl p-3 flex gap-3 items-center bg-slate-50 relative">
-                    <img src="${item.image}" class="w-16 h-16 object-cover rounded-lg border">
-                    <div>
-                        <h3 class="font-bold text-sm">${item.name}</h3>
-                        <p class="text-xs text-slate-500">${item.unit}</p>
-                        <p class="text-indigo-600 font-bold text-sm mt-1">₹${item.price}</p>
+                <div class="border rounded-xl p-3 flex gap-3 items-center bg-slate-50 relative shadow-sm">
+                    <img src="${item.image}" class="w-16 h-16 object-cover rounded-lg border bg-white">
+                    <div class="text-xs space-y-0.5">
+                        <h3 class="font-bold text-sm text-slate-800">${item.name}</h3>
+                        <p class="text-slate-500">${item.unit}</p>
+                        <div class="flex items-center gap-2 mt-1">
+                            ${item.oldPrice ? `<span class="line-through text-slate-400">₹${item.oldPrice}</span>` : ''}
+                            <span class="text-emerald-700 font-bold text-sm">₹${item.newPrice}</span>
+                        </div>
                     </div>
-                    <span class="absolute top-2 right-2 text-xs bg-green-100 text-green-700 font-semibold px-1.5 py-0.5 rounded">ಆನ್‌ಲೈನ್‌ನಲ್ಲಿದೆ</span>
+                    ${item.discount ? `<span class="absolute top-2 right-2 text-[10px] bg-red-100 text-red-600 font-bold px-1.5 py-0.5 rounded">${item.discount}</span>` : ''}
                 </div>
             `).join('');
         }
 
-        // 3. Accept Order Functionality
-        function acceptOrder(orderId) {
-            const statusBadge = document.getElementById(`status-${orderId}`);
-            const actionBox = document.getElementById(`action-${orderId}`);
-            const orderCard = document.getElementById(`order-${orderId}`);
+        // --- STEP BY STEP WORKFLOW BUTTONS ---
 
-            // Remove blinking effect
-            orderCard.classList.remove('new-order-alert', 'border-amber-400', 'bg-amber-50');
-            orderCard.classList.add('border-green-400', 'bg-green-50');
+        // Step 1: Order Confirm Button
+        function confirmOrder(id) {
+            const status = document.getElementById(`status-${id}`);
+            const action = document.getElementById(`action-${id}`);
+            const card = document.getElementById(`order-${id}`);
 
-            // Update status & notify Delivery app
-            statusBadge.className = "text-xs font-bold text-indigo-800 bg-indigo-100 border border-indigo-300 px-2 py-1 rounded";
-            statusBadge.innerHTML = "🚴‍♂️ ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ಅಸೈನ್ ಆಗಿದೆ (Delivery Boy Assigned)";
+            card.classList.remove('new-order-pulse', 'border-amber-400', 'bg-amber-50/50');
+            card.classList.add('border-blue-400', 'bg-blue-50/30');
 
-            actionBox.innerHTML = `
-                <div class="w-full bg-green-100 text-green-800 text-xs p-2 rounded-lg text-center font-bold">
-                    ✔️ ಆರ್ಡರ್ ಒಪ್ಪಿಕೊಳ್ಳಲಾಗಿದೆ. ಡೆಲಿವರಿ ಬಾಯ್ ಬರುವವರೆಗೆ ಪ್ಯಾಕ್ ಮಾಡಿ ಸಿದ್ಧವಾಗಿಡಿ.
+            status.className = "text-xs font-bold text-blue-800 bg-blue-100 border border-blue-300 px-2.5 py-1 rounded-lg";
+            status.innerText = "👍 ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಆಗಿದೆ";
+
+            action.innerHTML = `
+                <button onclick="markPacked('${id}')" class="w-full bg-amber-600 hover:bg-amber-700 text-white text-xs py-2.5 rounded-lg font-bold shadow">
+                    📦 2. ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (Notify Delivery Boy)
+                </button>
+            `;
+        }
+
+        // Step 2: Packing Done Button
+        function markPacked(id) {
+            const status = document.getElementById(`status-${id}`);
+            const action = document.getElementById(`action-${id}`);
+
+            status.className = "text-xs font-bold text-purple-800 bg-purple-100 border border-purple-300 px-2.5 py-1 rounded-lg";
+            status.innerText = "📦 ಪ್ಯಾಕ್ ಆಗಿದೆ - ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ಅಸೈನ್ ಆಗಿದೆ";
+
+            action.innerHTML = `
+                <button onclick="markPickedUp('${id}')" class="w-full bg-purple-600 hover:bg-purple-700 text-white text-xs py-2.5 rounded-lg font-bold shadow">
+                    🚴‍♂️ 3. ಡೆಲಿವರಿ ಬಾಯ್ ಪಿಕ್ ಮಾಡಿಕೊಂಡರು (Pickup Done)
+                </button>
+            `;
+        }
+
+        // Step 3: Delivery Pickup Button
+        function markPickedUp(id) {
+            const status = document.getElementById(`status-${id}`);
+            const action = document.getElementById(`action-${id}`);
+
+            status.className = "text-xs font-bold text-orange-800 bg-orange-100 border border-orange-300 px-2.5 py-1 rounded-lg";
+            status.innerText = "🚚 ಡೆಲಿವರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ - ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್";
+
+            action.innerHTML = `
+                <button onclick="markPaymentSuccess('${id}')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs py-2.5 rounded-lg font-bold shadow">
+                    💰 4. ಪೇಮೆಂಟ್ ಬಂತು - OK (Payment Successful)
+                </button>
+            `;
+        }
+
+        // Step 4: Payment OK / Success Button
+        function markPaymentSuccess(id) {
+            const status = document.getElementById(`status-${id}`);
+            const action = document.getElementById(`action-${id}`);
+            const card = document.getElementById(`order-${id}`);
+
+            card.className = "border-2 border-emerald-500 bg-emerald-50/50 p-4 rounded-xl shadow-sm transition-all";
+
+            status.className = "text-xs font-bold text-emerald-800 bg-emerald-100 border border-emerald-300 px-2.5 py-1 rounded-lg";
+            status.innerText = "✅ ಡೆಲಿವರಿ ಮತ್ತು ಪೇಮೆಂಟ್ ಸಕ್ಸಸ್‌ಫುಲ್!";
+
+            action.innerHTML = `
+                <div class="w-full bg-emerald-200 text-emerald-900 text-xs p-2.5 rounded-lg text-center font-bold">
+                    🎉 ಆರ್ಡರ್ ಸಂಪೂರ್ಣಗೊಂಡಿದೆ!
                 </div>
             `;
         }
 
-        // Reject Order
-        function rejectOrder(orderId) {
-            const orderCard = document.getElementById(`order-${orderId}`);
-            orderCard.remove();
-            updateOrderCount();
-        }
-
-        // Simulate New Order coming from Customer
-        let testOrderNo = 102;
+        // Simulate New Order
+        let orderNo = 102;
         function simulateCustomerOrder() {
             const container = document.getElementById('ordersContainer');
-            const newOrderId = testOrderNo++;
+            const id = orderNo++;
+            const activeItem = products[0] || { name: 'ಸಾಮಗ್ರಿ', newPrice: '50' };
 
             const orderHTML = `
-                <div id="order-${newOrderId}" class="border-2 border-amber-400 bg-amber-50 p-4 rounded-xl shadow-sm new-order-alert">
-                    <div class="flex justify-between items-start">
+                <div id="order-${id}" class="border-2 border-amber-400 bg-amber-50/50 p-4 rounded-xl shadow-sm new-order-pulse">
+                    <div class="flex justify-between items-start flex-wrap gap-2">
                         <div>
-                            <span class="text-xs bg-amber-200 text-amber-900 font-bold px-2 py-0.5 rounded">ಆರ್ಡರ್ #${newOrderId}</span>
-                            <p class="font-bold text-sm mt-1">ಗ್ರಾಹಕರು: ಸುರೇಶ್ (ಲೋಕಲ್ ಏರಿಯಾ)</p>
-                            <p class="text-xs text-slate-600">ಫೋನ್: +91 91234 56789</p>
+                            <span class="text-xs bg-amber-200 text-amber-900 font-bold px-2 py-0.5 rounded-md">ಆರ್ಡರ್ #${id}</span>
+                            <p class="font-bold text-sm mt-1">ಗ್ರಾಹಕರು: ಹೊಸ ಗ್ರಾಹಕರು</p>
+                            <p class="text-xs text-slate-600">ಫೋನ್: +91 99000 11223</p>
                         </div>
-                        <span id="status-${newOrderId}" class="text-xs font-bold text-amber-700 bg-amber-100 border border-amber-300 px-2 py-1 rounded">
+                        <span id="status-${id}" class="text-xs font-bold text-amber-800 bg-amber-100 border border-amber-300 px-2.5 py-1 rounded-lg">
                             ⏳ ಹೊಸ ಆರ್ಡರ್ ಬಂದಿದೆ!
                         </span>
                     </div>
                     
-                    <div class="my-3 border-t border-b border-amber-200/60 py-2 text-xs space-y-1">
-                        <div class="flex justify-between"><span>• ${products[0] ? products[0].name : 'ತಾಜಾ ಪ್ರಾಡಕ್ಟ್'}</span> <span>₹${products[0] ? products[0].price : '50'}</span></div>
-                        <div class="flex justify-between font-bold border-t pt-1 mt-1"><span>ಒಟ್ಟು ಮೊತ್ತ:</span> <span>₹${products[0] ? products[0].price : '50'}</span></div>
+                    <div class="my-3 border-t border-b border-slate-200 py-2 text-xs space-y-1">
+                        <div class="flex justify-between"><span>• ${activeItem.name}</span> <span class="font-semibold">₹${activeItem.newPrice}</span></div>
+                        <div class="flex justify-between font-bold border-t pt-1.5 mt-1 text-sm text-slate-900">
+                            <span>ಒಟ್ಟು ಮೊತ್ತ (Total Amount):</span> 
+                            <span class="text-indigo-700">₹${activeItem.newPrice}</span>
+                        </div>
                     </div>
 
-                    <div id="action-${newOrderId}" class="flex gap-2">
-                        <button onclick="acceptOrder('${newOrderId}')" class="w-full bg-green-600 hover:bg-green-700 text-white text-xs py-2 rounded-lg font-bold shadow">
-                            ✅ ಒಪ್ಪಿಕೊಳ್ಳಿ & ಪ್ಯಾಕ್ ಮಾಡಿ (Accept Order)
-                        </button>
-                        <button onclick="rejectOrder('${newOrderId}')" class="bg-red-100 text-red-600 hover:bg-red-200 text-xs px-3 py-2 rounded-lg font-semibold">
-                            ತಿರಸ್ಕರಿಸಿ
+                    <div id="action-${id}" class="flex flex-col sm:flex-row gap-2 mt-3">
+                        <button onclick="confirmOrder('${id}')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-xs py-2.5 rounded-lg font-bold shadow">
+                            ✅ 1. ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಮಾಡಿ
                         </button>
                     </div>
                 </div>
             `;
 
             container.insertAdjacentHTML('afterbegin', orderHTML);
-            updateOrderCount();
-        }
-
-        function updateOrderCount() {
-            const count = document.getElementById('ordersContainer').children.length;
+            const count = container.children.length;
             document.getElementById('orderCount').innerText = count;
+            document.getElementById('topOrderBadge').innerText = count;
         }
     </script>
-
 </body>
 </html>
