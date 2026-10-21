@@ -3,55 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ಲೋಕಲ್ ಮಾರ್ಕೆಟ್ - E-Commerce Platform</title>
+    <title>ಲೋಕಲ್ ಮಾರ್ಕೆಟ್ - ರಿಯಲ್ ಟೈಮ್ ಪ್ಲಾಟ್‌ಫಾರ್ಮ್</title>
+    <!-- Firebase SDK Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+    
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #f4f6f9; color: #333; }
         header { background: #2874f0; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        header h1 { font-size: 22px; }
-        .nav-tabs { display: flex; background: #fff; border-bottom: 1px solid #ddd; padding: 0 20px; overflow-x: auto; }
-        .tab-btn { padding: 12px 20px; cursor: pointer; border: none; background: none; font-size: 16px; font-weight: 600; color: #666; border-bottom: 3px solid transparent; }
+        header h1 { font-size: 20px; }
+        .nav-tabs { display: flex; background: #fff; border-bottom: 1px solid #ddd; padding: 0 10px; overflow-x: auto; }
+        .tab-btn { padding: 12px 15px; cursor: pointer; border: none; background: none; font-size: 14px; font-weight: 600; color: #666; border-bottom: 3px solid transparent; white-space: nowrap; }
         .tab-btn.active { color: #2874f0; border-bottom: 3px solid #2874f0; }
         .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
         .panel { display: none; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         .panel.active { display: block; }
-        
-        /* Product & Grid styles */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; margin-top: 15px; }
-        .card { background: #fff; border: 1px solid #e0e0e0; border-radius: 6px; padding: 15px; text-align: center; transition: 0.3s; }
-        .card:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .card h3 { font-size: 18px; margin-bottom: 8px; color: #111; }
-        .card p { color: #555; font-size: 14px; margin-bottom: 10px; }
+        .card { background: #fff; border: 1px solid #e0e0e0; border-radius: 6px; padding: 15px; text-align: center; }
+        .card h3 { font-size: 18px; margin-bottom: 8px; }
         .price { font-size: 16px; font-weight: bold; color: #b12704; margin-bottom: 12px; }
         .btn { background: #ff9f00; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 14px; }
         .btn:hover { background: #fb641b; }
         .btn-success { background: #26a541; }
-        .btn-success:hover { background: #218838; }
-        
-        /* Tables for Orders */
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; font-size: 14px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; font-size: 13px; }
         th { background-color: #f8f9fa; }
-        
-        .badge { padding: 5px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; }
+        .badge { padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; }
         .badge-pending { background: #fff3cd; color: #856404; }
         .badge-accepted { background: #d4edda; color: #155724; }
-        .badge-delivered { background: #cce5ff; color: #004085; }
-
         .cart-box { background: #fff; padding: 15px; border: 1px solid #ddd; border-radius: 6px; margin-top: 20px; }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>🛍️ ಲೋಕಲ್ ಮಾರ್ಕೆಟ್ (Local Market Hub)</h1>
-        <p>ಶಾಪುರ / ಕರ್ನಾಟಕ</p>
+        <h1>🛍️ ಲೋಕಲ್ ಮಾರ್ಕೆಟ್ (Real-Time)</h1>
+        <p>ಶಾಪುರ</p>
     </header>
 
     <div class="nav-tabs">
-        <button class="tab-btn active" onclick="switchTab('customer')">1. ಗ್ರಾಹಕರ ಆ್ಯಪ್ (Customer)</button>
-        <button class="tab-btn" onclick="switchTab('vendor')">2. ಅಂಗಡಿಯವರ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ (Vendor)</button>
-        <button class="tab-btn" onclick="switchTab('delivery')">3. ಡೆಲಿವರಿ ಬಾಯ್ ಆ್ಯಪ್ (Delivery)</button>
+        <button class="tab-btn active" onclick="switchTab('customer')">1. ಗ್ರಾಹಕರ ಆ್ಯಪ್</button>
+        <button class="tab-btn" onclick="switchTab('vendor')">2. ಅಂಗಡಿಯವರ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್</button>
+        <button class="tab-btn" onclick="switchTab('delivery')">3. ಡೆಲಿವರಿ ಬಾಯ್ ಆ್ಯಪ್</button>
     </div>
 
     <div class="container">
@@ -60,31 +54,35 @@
         <div id="customer" class="panel active">
             <h2>ಲಭ್ಯವಿರುವ ಲೋಕಲ್ ಉತ್ಪನ್ನಗಳು</h2>
             <div class="grid" id="product-list">
-                <!-- JavaScript ಮೂಲಕ ಪ್ರಾಡಕ್ಟ್ಸ್ ಇಲ್ಲಿ ಲೋಡ್ ಆಗುತ್ತವೆ -->
-            </div>
-
-            <div class="cart-box">
-                <h3>🛒 ನಿಮ್ಮ ಕಾರ್ಟ್ (Cart Summary)</h3>
-                <p id="cart-items">ಯಾವುದೇ ವಸ್ತುಗಳನ್ನು ಆಯ್ಕೆ ಮಾಡಿಲ್ಲ.</p>
-                <button class="btn btn-success" onclick="placeOrder()" style="margin-top: 10px;">ಆರ್ಡರ್ ಮಾಡಿ (Place Order)</button>
+                <div class="card">
+                    <h3>ತಾಜಾ ತರಕಾರಿಗಳು (1 ಕೆಜಿ)</h3>
+                    <p>ಅಂಗಡಿ: ಶ್ರೀ ಸಾಯಿ ಸ್ಟೋರ್ಸ್</p>
+                    <div class="price">₹60</div>
+                    <button class="btn" onclick="placeOrder('ತಾಜಾ ತರಕಾರಿಗಳು (1 ಕೆಜಿ)', 60, 'ಶ್ರೀ ಸಾಯಿ ಸ್ಟೋರ್ಸ್')">ಆರ್ಡರ್ ಮಾಡಿ</button>
+                </div>
+                <div class="card">
+                    <h3>ಬಾಸ್ಮತಿ ಅಕ್ಕಿ (5 ಕೆಜಿ)</h3>
+                    <p>ಅಂಗಡಿ: ಅಂಬಿಕಾ ಪ್ರಾವಿಷನ್</p>
+                    <div class="price">₹350</div>
+                    <button class="btn" onclick="placeOrder('ಬಾಸ್ಮತಿ ಅಕ್ಕಿ (5 ಕೆಜಿ)', 350, 'ಅಂಬಿಕಾ ಪ್ರಾವಿಷನ್')">ಆರ್ಡರ್ ಮಾಡಿ</button>
+                </div>
             </div>
         </div>
 
         <!-- 2. ಅಂಗಡಿಯವರ ಪ್ಯಾನಲ್ -->
         <div id="vendor" class="panel">
-            <h2>ಅಂಗಡಿ ಮಾಲೀಕರ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ (Orders Received)</h2>
+            <h2>ಅಂಗಡಿ ಮಾಲೀಕರ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ (ಲೈವ್ ಆರ್ಡರ್‌ಗಳು)</h2>
             <table>
                 <thead>
                     <tr>
                         <th>ಆರ್ಡರ್ ID</th>
-                        <th>ವಸ್ತುಗಳ ವಿವರ</th>
-                        <th>ಗ್ರಾಹಕರ ವಿಳಾಸ</th>
-                        <th>ಸ್ಥಿತಿ (Status)</th>
-                        <th>ಕ್ರಿಯೆ (Action)</th>
+                        <th>ವಸ್ತು</th>
+                        <th>ಸ್ಥಿತಿ</th>
+                        <th>ಕ್ರಿಯೆ</th>
                     </tr>
                 </thead>
                 <tbody id="vendor-orders">
-                    <!-- ಆರ್ಡರ್‌ಗಳು ಇಲ್ಲಿ ಪ್ರದರ್ಶಿತವಾಗುತ್ತವೆ -->
+                    <!-- ಫೈರ್‌ಬೇಸ್‌ನಿಂದ ಲೈವ್ ಡೇಟಾ ಬರುತ್ತದೆ -->
                 </tbody>
             </table>
         </div>
@@ -96,14 +94,13 @@
                 <thead>
                     <tr>
                         <th>ಆರ್ಡರ್ ID</th>
-                        <th>ವಿವರಣೆ</th>
-                        <th>ಡೆಲಿವರಿ ವಿಳಾಸ</th>
+                        <th>ವಸ್ತು</th>
                         <th>ಸ್ಥಿತಿ</th>
                         <th>ಕ್ರಿಯೆ</th>
                     </tr>
                 </thead>
                 <tbody id="delivery-orders">
-                    <!-- ಡೆಲಿವರಿ ಲಿಸ್ಟ್ -->
+                    <!-- ಫೈರ್‌ಬೇಸ್‌ನಿಂದ ಲೈವ್ ಡೇಟಾ ಬರುತ್ತದೆ -->
                 </tbody>
             </table>
         </div>
@@ -111,143 +108,92 @@
     </div>
 
     <script>
-        // ಡೇಟಾಬೇಸ್ ಸಿಮ್ಯುಲೇಶನ್ (Local Database)
-        let products = [
-            { id: 1, name: "ತಾಜಾ ತರಕಾರಿಗಳು (1 ಕೆಜಿ)", price: 60, shop: "ಶ್ರೀ ಸಾಯಿ ಸ್ಟೋರ್ಸ್" },
-            { id: 2, name: "ಬಾಸ್ಮತಿ ಅಕ್ಕಿ (5 ಕೆಜಿ)", price: 350, shop: "ಅಂಬಿಕಾ ಪ್ರಾವಿಷನ್" },
-            { id: 3, name: "ಪಾಪ್ ಕಾರ್ನ್ ಸ್ನ್ಯಾಕ್ಸ್", price: 40, shop: "ಲೋಕಲ್ ಬೇಕರಿ" }
-        ];
+        // TODO: ನಿಮ್ಮ ಫೈರ್‌ಬೇಸ್ ಕನ್ಸೋಲ್‌ನಿಂದ ಸಿಗುವ ಕಾನ್ಫಿಗರೇಶನ್ ಇಲ್ಲಿ ಹಾಕಿ
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
 
-        let cart = [];
-        let orders = JSON.parse(localStorage.getItem('local_orders')) || [];
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
 
-        // ಟ್ಯಾಬ್ ಸ್ವಿಚ್ ಮಾಡುವ ಫಂಕ್ಷನ್
         function switchTab(tabId) {
             document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            
             document.getElementById(tabId).classList.add('active');
             event.currentTarget.classList.add('active');
-            
-            loadData();
         }
 
-        // ಪ್ರಾಡಕ್ಟ್ ಪ್ರದರ್ಶಿಸುವುದು
-        function renderProducts() {
-            const list = document.getElementById('product-list');
-            list.innerHTML = "";
-            products.forEach(p => {
-                list.innerHTML += `
-                    <div class="card">
-                        <h3>${p.name}</h3>
-                        <p>ಅಂಗಡಿ: ${p.shop}</p>
-                        <div class="price">₹${p.price}</div>
-                        <button class="btn" onclick="addToCart(${p.id})">ಕಾರ್ಟ್‌ಗೆ ಸೇರಿಸಿ</button>
-                    </div>
-                `;
+        // ಗ್ರಾಹಕರಿಂದ ನೇರವಾಗಿ ಫೈರ್‌ಬೇಸ್‌ಗೆ ಆರ್ಡರ್ ಕಳುಹಿಸುವುದು
+        function placeOrder(itemName, price, shopName) {
+            const orderId = 'ORD' + Math.floor(1000 + Math.random() * 9000);
+            db.ref('orders/' + orderId).set({
+                id: orderId,
+                items: itemName + ' (₹' + price + ')',
+                shop: shopName,
+                address: 'ಶಹಾಪುರ',
+                status: 'Pending (ಅಂಗಡಿ ಒಪ್ಪಿಗೆಗೆ ಕಾಯುತ್ತಿದೆ)'
+            }, (error) => {
+                if (error) {
+                    alert("ಆರ್ಡರ್ ವಿಫಲವಾಗಿದೆ!");
+                } else {
+                    alert("ನಿಮ್ಮ ಆರ್ಡರ್ ಯಶಸ್ವಿಯಾಗಿ ಸಲ್ಲಿಕೆಯಾಗಿದೆ! ID: " + orderId);
+                }
             });
         }
 
-        // ಕಾರ್ಟ್‌ಗೆ ಸೇರಿಸುವುದು
-        function addToCart(productId) {
-            let item = products.find(p => p.id === productId);
-            cart.push(item);
-            updateCartUI();
-        }
-
-        function updateCartUI() {
-            const cartBox = document.getElementById('cart-items');
-            if (cart.length === 0) {
-                cartBox.innerHTML = "ಯಾವುದೇ ವಸ್ತುಗಳನ್ನು ಆಯ್ಕೆ ಮಾಡಿಲ್ಲ.";
-                return;
-            }
-            let text = "";
-            let total = 0;
-            cart.forEach((c, index) => {
-                text += `${index + 1}. ${c.name} - ₹${c.price}<br>`;
-                total += c.price;
-            });
-            cartBox.innerHTML = `${text}<strong>ಒಟ್ಟು ಮೊತ್ತ: ₹${total}</strong>`;
-        }
-
-        // ಗ್ರಾಹಕರಿಂದ ಆರ್ಡರ್ ಸಲ್ಲಿಕೆ
-        function placeOrder() {
-            if (cart.length === 0) {
-                alert("ದಯವಿಟ್ಟು ಮೊದಲು ವಸ್ತುಗಳನ್ನು ಆಯ್ಕೆ ಮಾಡಿ!");
-                return;
-            }
-            let newOrder = {
-                id: 'ORD' + Math.floor(1000 + Math.random() * 9000),
-                items: cart.map(c => c.name).join(', '),
-                address: "ಹೊತ್ತಪೇಟ್ ತಾಂಡಾ ರಸ್ತೆ, ಶಹಾಪುರ",
-                status: "Pending (ಅಂಗಡಿ ಒಪ್ಪಿಗೆಗೆ ಕಾಯುತ್ತಿದೆ)"
-            };
-            orders.push(newOrder);
-            localStorage.setItem('local_orders', JSON.stringify(orders));
-            cart = [];
-            updateCartUI();
-            alert("ನಿಮ್ಮ ಆರ್ಡರ್ ಯಶಸ್ವಿಯಾಗಿ ಸಲ್ಲಿಕೆಯಾಗಿದೆ!");
-            loadData();
-        }
-
-        // ಡೇಟಾ ಲೋಡ್ ಮಾಡುವ ಫಂಕ್ಷನ್ (ಅಂಗಡಿ ಮತ್ತು ಡೆಲಿವರಿ ಪ್ಯಾನಲ್‌ಗಾಗಿ)
-        function loadData() {
-            orders = JSON.parse(localStorage.getItem('local_orders')) || [];
-            
-            // Vendor Panel Load
+        // ಫೈರ್‌ಬೇಸ್‌ನಿಂದ ಲೈವ್ ಡೇಟಾವನ್ನು ಪಡೆದು ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ಅಪ್‌ಡೇಟ್ ಮಾಡುವುದು
+        db.ref('orders').on('value', (snapshot) => {
+            const data = snapshot.val();
             const vendorTable = document.getElementById('vendor-orders');
-            vendorTable.innerHTML = "";
-            orders.forEach((o, index) => {
-                vendorTable.innerHTML += `
-                    <tr>
-                        <td>${o.id}</td>
-                        <td>${o.items}</td>
-                        <td>${o.address}</td>
-                        <td><span class="badge badge-pending">${o.status}</span></td>
-                        <td>
-                            ${o.status.includes('Pending') ? `<button class="btn" onclick="acceptOrder(${index})">Accept (ಒಪ್ಪಿಕೊಳ್ಳಿ)</button>` : 'ಒಪ್ಪಿಕೊಳ್ಳಲಾಗಿದೆ'}
-                        </td>
-                    </tr>
-                `;
-            });
-
-            // Delivery Panel Load
             const deliveryTable = document.getElementById('delivery-orders');
+            
+            vendorTable.innerHTML = "";
             deliveryTable.innerHTML = "";
-            orders.forEach((o, index) => {
-                deliveryTable.innerHTML += `
-                    <tr>
-                        <td>${o.id}</td>
-                        <td>${o.items}</td>
-                        <td>${o.address}</td>
-                        <td><span class="badge badge-accepted">${o.status}</span></td>
-                        <td>
-                            <button class="btn btn-success" onclick="deliverOrder(${index})">ಡೆಲಿವರಿ ಮುಕ್ತಾಯ (Complete)</button>
-                        </td>
-                    </tr>
-                `;
+
+            if (data) {
+                Object.keys(data).forEach(key => {
+                    let o = data[key];
+                    
+                    // Vendor Table
+                    vendorTable.innerHTML += `
+                        <tr>
+                            <td>${o.id}</td>
+                            <td>${o.items}</td>
+                            <td><span class="badge badge-pending">${o.status}</span></td>
+                            <td>
+                                ${o.status.includes('Pending') ? `<button class="btn" onclick="updateStatus('${o.id}', 'Accepted (ಪ್ಯಾಕಿಂಗ್ ನಡೆಯುತ್ತಿದೆ)')">Accept</button>` : 'ಒಪ್ಪಿಕೊಳ್ಳಲಾಗಿದೆ'}
+                            </td>
+                        </tr>
+                    `;
+
+                    // Delivery Table
+                    deliveryTable.innerHTML += `
+                        <tr>
+                            <td>${o.id}</td>
+                            <td>${o.items}</td>
+                            <td><span class="badge badge-accepted">${o.status}</span></td>
+                            <td>
+                                <button class="btn btn-success" onclick="updateStatus('${o.id}', 'Delivered (ತಲುಪಿಸಲಾಗಿದೆ)')">ಡೆಲಿವರಿ ಮುಕ್ತಾಯ</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+        });
+
+        // ಆರ್ಡರ್ ಸ್ಟೇಟಸ್ ಅಪ್‌ಡೇಟ್ ಮಾಡಲು
+        function updateStatus(orderId, newStatus) {
+            db.ref('orders/' + orderId).update({
+                status: newStatus
             });
         }
-
-        // ಅಂಗಡಿಯವರು ಆರ್ಡರ್ ಒಪ್ಪಿಕೊಳ್ಳುವುದು
-        function acceptOrder(index) {
-            orders[index].status = "Accepted (ಪ್ಯಾಕಿಂಗ್ ನಡೆಯುತ್ತಿದೆ)";
-            localStorage.setItem('local_orders', JSON.stringify(orders));
-            loadData();
-            alert("ಆರ್ಡರ್ ಸ್ವೀಕರಿಸಲಾಗಿದೆ!");
-        }
-
-        // ಡೆಲಿವರಿ ಕಂಪ್ಲೀಟ್ ಮಾಡುವುದು
-        function deliverOrder(index) {
-            orders[index].status = "Delivered (ತಲುಪಿಸಲಾಗಿದೆ)";
-            localStorage.setItem('local_orders', JSON.stringify(orders));
-            loadData();
-            alert("ಆರ್ಡರ್ ಯಶಸ್ವಿಯಾಗಿ ತಲುಪಿಸಲಾಗಿದೆ!");
-        }
-
-        // ಆರಂಭದಲ್ಲಿ ಪ್ರಾಡಕ್ಟ್ಸ್ ಲೋಡ್ ಮಾಡಿ
-        renderProducts();
-        loadData();
     </script>
 </body>
 </html>
