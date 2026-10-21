@@ -8,34 +8,34 @@
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background: #eef2f5; margin: 0; padding: 10px; }
         header { background: #131921; color: #febd69; padding: 12px; text-align: center; font-size: 20px; font-weight: bold; border-radius: 6px; }
-        .nav-buttons { display: flex; justify-content: center; gap: 8px; margin: 12px 0; }
-        .nav-buttons button { padding: 10px 18px; font-weight: bold; border: none; border-radius: 20px; cursor: pointer; background: #ddd; }
+        .nav-buttons { display: flex; justify-content: center; gap: 5px; margin: 12px 0; flex-wrap: wrap; }
+        .nav-buttons button { padding: 8px 14px; font-weight: bold; border: none; border-radius: 20px; cursor: pointer; background: #ddd; font-size: 13px; }
         .nav-buttons button.active { background: #ff9900; color: #fff; }
         .container { background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 15px; }
-        .form-group { margin-bottom: 12px; }
-        .form-group label { display: block; font-weight: 600; margin-bottom: 4px; font-size: 14px; }
+        .form-group { margin-bottom: 10px; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 4px; font-size: 13px; }
         .form-group input { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
-        .btn-main { background: #28a745; color: white; border: none; padding: 12px; width: 100%; font-weight: bold; font-size: 16px; border-radius: 6px; cursor: pointer; }
+        .btn-main { background: #28a745; color: white; border: none; padding: 10px; width: 100%; font-weight: bold; font-size: 15px; border-radius: 6px; cursor: pointer; }
         
-        /* Product Cards */
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
-        .product-card { border: 1px solid #e0e0e0; border-radius: 8px; padding: 10px; background: #fff; text-align: center; position: relative; }
-        .product-card img { width: 100%; height: 130px; object-fit: cover; border-radius: 6px; }
-        .price-tag { color: #b12704; font-size: 16px; font-weight: bold; }
-        .old-price { text-decoration: line-through; color: #767676; font-size: 12px; margin-left: 5px; }
+        /* Product Cards Grid */
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+        .product-card { border: 1px solid #e0e0e0; border-radius: 8px; padding: 8px; background: #fff; text-align: center; }
+        .product-card img { width: 100%; height: 120px; object-fit: cover; border-radius: 6px; }
+        .price-tag { color: #b12704; font-size: 15px; font-weight: bold; }
+        .old-price { text-decoration: line-through; color: #767676; font-size: 11px; margin-left: 4px; }
         
-        .action-btns { display: flex; justify-content: space-between; margin-top: 8px; }
-        .btn-edit { background: #ffc107; border: none; padding: 5px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; }
-        .btn-delete { background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; }
+        .action-btns { display: flex; justify-content: space-between; margin-top: 6px; }
+        .btn-edit { background: #ffc107; border: none; padding: 4px 8px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 12px; }
+        .btn-delete { background: #dc3545; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 12px; }
         .btn-buy { background: #fb641b; color: white; border: none; padding: 8px; width: 100%; font-weight: bold; margin-top: 6px; border-radius: 4px; cursor: pointer; }
 
-        /* Order Tracking (Flipkart Style) */
-        .order-card { border: 1px solid #28a745; padding: 12px; border-radius: 8px; margin-bottom: 10px; background: #f9fff9; }
-        .track-status { display: flex; justify-content: space-between; margin-top: 10px; background: #eee; padding: 8px; border-radius: 20px; font-size: 11px; font-weight: bold; }
+        /* Order Cards & Status Bar */
+        .order-card { border: 1px solid #007bff; padding: 10px; border-radius: 8px; margin-bottom: 10px; background: #f8f9fa; }
+        .track-status { display: flex; justify-content: space-between; margin-top: 10px; background: #e9ecef; padding: 8px; border-radius: 15px; font-size: 10px; font-weight: bold; }
         .track-step { color: #888; }
         .track-step.active { color: #28a745; text-decoration: underline; }
 
-        .popup { position: fixed; top: 15px; left: 50%; transform: translateX(-50%); background: #28a745; color: white; padding: 10px 20px; border-radius: 20px; font-weight: bold; display: none; z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .popup { position: fixed; top: 15px; left: 50%; transform: translateX(-50%); background: #28a745; color: white; padding: 8px 18px; border-radius: 20px; font-weight: bold; display: none; z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.2); font-size: 14px; }
     </style>
 </head>
 <body>
@@ -44,14 +44,16 @@
 
 <header>ಅರ್ಪಿತ್ ಇ-ಶಾಪ್ (ಶಹಾಪುರ)</header>
 
+<!-- ನ್ಯಾವಿಗೇಷನ್ ಬಟನ್‌ಗಳು -->
 <div class="nav-buttons">
     <button class="tab-btn active" onclick="switchTab('owner')">ಅಂಗಡಿ ಮಾಲೀಕರು</button>
     <button class="tab-btn" onclick="switchTab('customer')">ಗ್ರಾಹಕರು</button>
+    <button class="tab-btn" onclick="switchTab('delivery')">ಡೆಲಿವರಿ ಬಾಯ್</button>
 </div>
 
 <!-- 1. ಅಂಗಡಿ ಮಾಲೀಕರ ವಿಭಾಗ -->
 <div id="owner-section" class="container">
-    <h3 id="form-title">ಹೊಸ ವಸ್ತು ಸೇರಿಸಿ</h3>
+    <h3 id="form-title">ಹೊಸ ವಸ್ತು ಸೇರಿಸಿ / ಎಡಿಟ್ ಮಾಡಿ</h3>
     <input type="hidden" id="edit-index" value="">
     <div class="form-group">
         <label>ವಸ್ತುವಿನ ಹೆಸರು:</label>
@@ -77,7 +79,7 @@
 
     <hr style="margin: 20px 0;">
 
-    <h3>📦 ಬಂದಿರುವ ಆರ್ಡರ್‌ಗಳು (ಮಾಲೀಕರಿಗೆ)</h3>
+    <h3>📦 ಬಂದಿರುವ ಆರ್ಡರ್‌ಗಳು (ಮಾಲೀಕರ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್)</h3>
     <div id="owner-orders-list"></div>
 
     <hr style="margin: 20px 0;">
@@ -97,6 +99,13 @@
     <div id="customer-orders-list"></div>
 </div>
 
+<!-- 3. ಡೆಲಿವರಿ ಬಾಯ್ ವಿಭಾಗ -->
+<div id="delivery-section" class="container" style="display:none;">
+    <h3>🚴 ಡೆಲಿವರಿ ಬಾಯ್ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್</h3>
+    <p style="font-size: 12px; color: #666;">ಪ್ಯಾಕ್ ಆಗಿರುವ ಆರ್ಡರ್‌ಗಳನ್ನು ಡೆಲಿವರಿ ಮಾಡಲು ಇಲ್ಲಿ ನಿರ್ವಹಿಸಿ:</p>
+    <div id="delivery-orders-list"></div>
+</div>
+
 <script>
     let products = JSON.parse(localStorage.getItem('arpit_shop_products')) || [];
     let orders = JSON.parse(localStorage.getItem('arpit_shop_orders')) || [];
@@ -110,22 +119,28 @@
 
     function switchTab(tab) {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('owner-section').style.display = 'none';
+        document.getElementById('customer-section').style.display = 'none';
+        document.getElementById('delivery-section').style.display = 'none';
+
         if(tab === 'owner') {
             document.getElementById('owner-section').style.display = 'block';
-            document.getElementById('customer-section').style.display = 'none';
             document.querySelectorAll('.tab-btn')[0].classList.add('active');
             renderOwnerProducts();
             renderOwnerOrders();
-        } else {
-            document.getElementById('owner-section').style.display = 'none';
+        } else if(tab === 'customer') {
             document.getElementById('customer-section').style.display = 'block';
             document.querySelectorAll('.tab-btn')[1].classList.add('active');
             renderCustomerProducts();
             renderCustomerOrders();
+        } else if(tab === 'delivery') {
+            document.getElementById('delivery-section').style.display = 'block';
+            document.querySelectorAll('.tab-btn')[2].classList.add('active');
+            renderDeliveryOrders();
         }
     }
 
-    // ಚಿತ್ರಗಳನ್ನು ಕುಗ್ಗಿಸಲು (Compress) Canvas ಬಳಕೆ - ಮೆಮೊರಿ ಫುಲ್ ಆಗುವುದಿಲ್ಲ
+    // ಮೆಮೊರಿ ಭರ್ತಿಯಾಗದಂತೆ ಫೋಟೋ ಸೈಜ್ ಕುಗ್ಗಿಸುವ ಫಂಕ್ಷನ್
     function compressAndSave(file, callback) {
         const reader = new FileReader();
         reader.onload = function(e) {
@@ -133,9 +148,9 @@
             img.onload = function() {
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
-                canvas.width = 300; // ಸಣ್ಣ ಗಾತ್ರಕ್ಕೆ ಬದಲಾವಣೆ
-                canvas.height = 300;
-                ctx.drawImage(img, 0, 0, 300, 300);
+                canvas.width = 250;
+                canvas.height = 250;
+                ctx.drawImage(img, 0, 0, 250, 250);
                 callback(canvas.toDataURL('image/jpeg', 0.6));
             };
             img.src = e.target.result;
@@ -195,8 +210,8 @@
             list.innerHTML += `
                 <div class="product-card">
                     <img src="${p.image || 'https://via.placeholder.com/150'}" alt="img">
-                    <div style="font-weight:bold; margin-top:5px;">${p.name}</div>
-                    <div style="font-size:12px; color:#555;">ಸೈಜ್: ${p.size}</div>
+                    <div style="font-weight:bold; margin-top:5px; font-size:13px;">${p.name}</div>
+                    <div style="font-size:11px; color:#555;">ಸೈಜ್: ${p.size}</div>
                     <div><span class="price-tag">₹${p.newPrice}</span> <span class="old-price">₹${p.oldPrice}</span></div>
                     <div class="action-btns">
                         <button class="btn-edit" onclick="editProduct(${i})">ಎಡಿಟ್</button>
@@ -228,16 +243,16 @@
         }
     }
 
-    // ಗ್ರಾಹಕರ ಪೇಜ್‌ನಲ್ಲಿ ವಸ್ತು ಪ್ರದರ್ಶನ
+    // ಗ್ರಾಹಕರ ವಿಭಾಗ
     function renderCustomerProducts() {
         const list = document.getElementById('customer-product-list');
         list.innerHTML = products.length === 0 ? '<p>ಯಾವುದೇ ವಸ್ತುಗಳು ಲಭ್ಯವಿಲ್ಲ.</p>' : '';
-        products.forEach((p, i) => {
+        products.forEach((p) => {
             list.innerHTML += `
                 <div class="product-card">
                     <img src="${p.image || 'https://via.placeholder.com/150'}" alt="img">
-                    <div style="font-weight:bold; margin-top:5px;">${p.name}</div>
-                    <div style="font-size:12px; color:#555;">ಸೈಜ್: ${p.size}</div>
+                    <div style="font-weight:bold; margin-top:5px; font-size:13px;">${p.name}</div>
+                    <div style="font-size:11px; color:#555;">ಸೈಜ್: ${p.size}</div>
                     <div><span class="price-tag">₹${p.newPrice}</span> <span class="old-price">₹${p.oldPrice}</span></div>
                     <button class="btn-buy" onclick="placeOrder('${p.name}', '${p.newPrice}')">ಈಗಲೇ ಖರೀದಿಸಿ</button>
                 </div>
@@ -245,10 +260,9 @@
         });
     }
 
-    // ಫ್ಲಿಪ್‌ಕಾರ್ಟ್ ಮಾದರಿಯ ಆರ್ಡರ್ ಪ್ರಕ್ರಿಯೆ
     function placeOrder(pName, price) {
         const cName = prompt("ನಿಮ್ಮ ಹೆಸರು ನಮೂದಿಸಿ:");
-        const phone = prompt("ನಿಮ್ಮ ಮೊಬೈಲ್ ಸಂಖ್ಯೆ:");
+        const phone = prompt("ನಿಮ್ಮ ಮೊಬೈಲ್ ಸಂಖ್ಯೆ ನಮೂದಿಸಿ:");
         if(!cName || !phone) { alert("ಆರ್ಡರ್ ಪೂರ್ಣಗೊಳಿಸಲು ವಿವರ ನೀಡಿ!"); return; }
 
         const newOrder = {
@@ -257,7 +271,7 @@
             price: price,
             customer: cName,
             phone: phone,
-            status: 'Placed' // Placed -> Confirmed -> Packed -> Delivered
+            status: 'Placed'
         };
 
         orders.push(newOrder);
@@ -271,22 +285,26 @@
         localStorage.setItem('arpit_shop_orders', JSON.stringify(orders));
         renderOwnerOrders();
         renderCustomerOrders();
+        renderDeliveryOrders();
         showToast("ಆರ್ಡರ್ ಸ್ಟೇಟಸ್ ಅಪ್‌ಡೇಟ್ ಆಗಿದೆ!");
     }
 
+    // ಅಂಗಡಿ ಮಾಲೀಕರ ಆರ್ಡರ್ ಪಟ್ಟಿ
     function renderOwnerOrders() {
         const div = document.getElementById('owner-orders-list');
         div.innerHTML = orders.length === 0 ? '<p>ಯಾವುದೇ ಹೊಸ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>' : '';
         orders.forEach((o, i) => {
             let actionBtn = '';
             if(o.status === 'Placed') {
-                actionBtn = `<button class="btn-main" style="background:#007bff; padding:5px 10px; font-size:12px;" onclick="updateOrderStatus(${i}, 'Confirmed')">Confirm Order</button>`;
+                actionBtn = `<button class="btn-main" style="background:#007bff; padding:5px 10px; font-size:12px;" onclick="updateOrderStatus(${i}, 'Confirmed')">1. Confirm Order</button>`;
             } else if(o.status === 'Confirmed') {
-                actionBtn = `<button class="btn-main" style="background:#ffc107; color:black; padding:5px 10px; font-size:12px;" onclick="updateOrderStatus(${i}, 'Packed')">Mark as Packed</button>`;
+                actionBtn = `<button class="btn-main" style="background:#ffc107; color:black; padding:5px 10px; font-size:12px;" onclick="updateOrderStatus(${i}, 'Packed')">2. Mark as Packed</button>`;
             } else if(o.status === 'Packed') {
-                actionBtn = `<button class="btn-main" style="background:#28a745; padding:5px 10px; font-size:12px;" onclick="updateOrderStatus(${i}, 'Delivered')">Mark as Delivered</button>`;
+                actionBtn = `<b style="color:#d97706;">ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ತಲುಪಿಸಲಾಗಿದೆ (Waiting for Pickup)</b>`;
+            } else if(o.status === 'Out for Delivery') {
+                actionBtn = `<b style="color:#2563eb;">ಡೆಲಿವರಿಯಲ್ಲಿದೆ (Out for Delivery)</b>`;
             } else {
-                actionBtn = `<b style="color:green;">✓ Delivered</b>`;
+                actionBtn = `<b style="color:green;">✓ Delivered (ಡೆಲಿವರಿ ಪೂರ್ಣಗೊಂಡಿದೆ)</b>`;
             }
 
             div.innerHTML += `
@@ -299,6 +317,7 @@
         });
     }
 
+    // ಗ್ರಾಹಕರ ಆರ್ಡರ್ ಟ್ರ್ಯಾಕಿಂಗ್
     function renderCustomerOrders() {
         const div = document.getElementById('customer-orders-list');
         div.innerHTML = orders.length === 0 ? '<p>ನೀವು ಇನ್ನೂ ಯಾವುದೇ ಆರ್ಡರ್ ಮಾಡಿಲ್ಲ.</p>' : '';
@@ -307,9 +326,10 @@
                 <div class="order-card">
                     <b>ಆರ್ಡರ್ ID: ${o.id}</b> - ${o.product} (₹${o.price})
                     <div class="track-status">
-                        <span class="track-step ${o.status==='Placed'||o.status==='Confirmed'||o.status==='Packed'||o.status==='Delivered'?'active':''}">● Placed</span>
-                        <span class="track-step ${o.status==='Confirmed'||o.status==='Packed'||o.status==='Delivered'?'active':''}">● Confirmed</span>
-                        <span class="track-step ${o.status==='Packed'||o.status==='Delivered'?'active':''}">● Packed</span>
+                        <span class="track-step ${['Placed','Confirmed','Packed','Out for Delivery','Delivered'].includes(o.status)?'active':''}">● Placed</span>
+                        <span class="track-step ${['Confirmed','Packed','Out for Delivery','Delivered'].includes(o.status)?'active':''}">● Confirmed</span>
+                        <span class="track-step ${['Packed','Out for Delivery','Delivered'].includes(o.status)?'active':''}">● Packed</span>
+                        <span class="track-step ${['Out for Delivery','Delivered'].includes(o.status)?'active':''}">● Out for Delivery</span>
                         <span class="track-step ${o.status==='Delivered'?'active':''}">● Delivered</span>
                     </div>
                 </div>
@@ -317,7 +337,33 @@
         });
     }
 
-    // ಮೊದಲ ಲೋಡ್
+    // ಡೆಲಿವರಿ ಬಾಯ್ ಆರ್ಡರ್ ಪಟ್ಟಿ
+    function renderDeliveryOrders() {
+        const div = document.getElementById('delivery-orders-list');
+        div.innerHTML = orders.length === 0 ? '<p>ಯಾವುದೇ ಡೆಲಿವರಿ ಕಾಯುತ್ತಿಲ್ಲ.</p>' : '';
+        orders.forEach((o, i) => {
+            let deliveryBtn = '';
+            if(o.status === 'Packed') {
+                deliveryBtn = `<button class="btn-main" style="background:#17a2b8; padding:5px 10px; font-size:12px;" onclick="updateOrderStatus(${i}, 'Out for Delivery')">Start Delivery (Out for Delivery)</button>`;
+            } else if(o.status === 'Out for Delivery') {
+                deliveryBtn = `<button class="btn-main" style="background:#28a745; padding:5px 10px; font-size:12px;" onclick="updateOrderStatus(${i}, 'Delivered')">Mark as Delivered (ತಲುಪಿಸಲಾಗಿದೆ)</button>`;
+            } else if(o.status === 'Delivered') {
+                deliveryBtn = `<b style="color:green;">✓ ಡೆಲಿವರಿ ಪೂರ್ಣಗೊಂಡಿದೆ</b>`;
+            } else {
+                deliveryBtn = `<i style="color:#777;">ಅಂಗಡಿ ಮಾಲೀಕರಿಂದ ಪ್ಯಾಕ್ ಆಗಲು ಕಾಯುತ್ತಿದೆ...</i>`;
+            }
+
+            div.innerHTML += `
+                <div class="order-card">
+                    <b>ಆರ್ಡರ್ ID: ${o.id}</b> | ವಸ್ತು: ${o.product}<br>
+                    ಗ್ರಾಹಕ: ${o.customer} | Ph: ${o.phone}<br>
+                    <div style="margin-top:8px;">${deliveryBtn}</div>
+                </div>
+            `;
+        });
+    }
+
+    // ಆರಂಭಿಕ ಲೋಡ್
     renderOwnerProducts();
     renderOwnerOrders();
 </script>
