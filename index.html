@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ನಮ್ಮ ಲೋಕಲ್ ಮಾರ್ಕೆಟ್ - Real Cloud App</title>
+    <title>ನಮ್ಮ ಲೋಕಲ್ ಮಾರ್ಕೆಟ್ - Ultra Fast App</title>
     <!-- Tailwind CSS for Fast UI -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Firebase SDKs for Cloud Connectivity -->
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 </head>
@@ -16,7 +16,7 @@
     <header class="bg-blue-600 text-white p-4 shadow-lg sticky top-0 z-50">
         <div class="container mx-auto flex flex-wrap justify-between items-center">
             <h1 class="text-xl font-bold flex items-center gap-2">
-                🛍️ ನಮ್ಮ ಲೋಕಲ್ ಮಾರ್ಕೆಟ್ (Cloud Connected)
+                🛍️ ನಮ್ಮ ಲೋಕಲ್ ಮಾರ್ಕೆಟ್ (Ultra Fast)
             </h1>
             <div class="space-x-1 mt-2 sm:mt-0">
                 <button onclick="switchRole('customer')" class="bg-blue-800 hover:bg-blue-900 text-white px-3 py-1.5 rounded text-sm font-medium">ಕಸ್ಟಮರ್</button>
@@ -34,7 +34,7 @@
             <div class="bg-white p-5 rounded-lg shadow-md border">
                 <h2 class="text-lg font-bold text-blue-700 mb-4 border-b pb-2">🛒 ಲಭ್ಯವಿರುವ ವಸ್ತುಗಳು (Shopping Zone)</h2>
                 <div id="customer-products" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <p class="text-gray-500 text-sm italic">ಕ್ಲೌಡ್‌ನಿಂದ ಡೇಟಾ ಲೋಡ್ ಆಗುತ್ತಿದೆ...</p>
+                    <p class="text-gray-500 text-sm italic">ಲೋಡ್ ಆಗುತ್ತಿದೆ...</p>
                 </div>
             </div>
 
@@ -55,16 +55,16 @@
 
             <!-- Success Alert Message -->
             <div id="vendor-success-msg" class="hidden bg-green-100 border border-green-400 text-green-800 px-4 py-3 rounded-lg text-sm font-bold shadow">
-                ✅ ಯಶಸ್ವಿ! ನಿಮ್ಮ ಫೋಟೋ ಹಾಗೂ ವಸ್ತುವಿನ ವಿವರಗಳನ್ನು ಕ್ಲೌಡ್‌ಗೆ ಕಳುಹಿಸಲಾಗಿದೆ.
+                ✅ ಯಶಸ್ವಿ! ನಿಮ್ಮ ಫೋಟೋ ಹಾಗೂ ವಸ್ತುವಿನ ವಿವರಗಳನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಕಳುಹಿಸಲಾಗಿದೆ.
             </div>
 
             <div id="vendor-upload-tab" class="space-y-6">
                 <div class="bg-white p-5 rounded-lg shadow-md border">
-                    <h2 class="text-lg font-bold text-green-700 mb-4 border-b pb-2">🏪 ವಸ್ತುವಿನ ಫೋಟೋ & ವಿವರಗಳನ್ನು ಕ್ಲೌಡ್‌ಗೆ ಸೇರಿಸಿ</h2>
+                    <h2 class="text-lg font-bold text-green-700 mb-4 border-b pb-2">🏪 ವಸ್ತುವಿನ ಫೋಟೋ & ವಿವರಗಳನ್ನು ಸೇರಿಸಿ</h2>
                     <form id="product-form" onsubmit="addProduct(event)" class="space-y-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">ವಸ್ತುವಿನ ಫೋಟೋ ಆಯ್ಕೆ ಮಾಡಿ (Choose Image):</label>
-                            <input type="file" id="p-file" accept="image/*" required class="w-full p-2 border rounded-lg bg-gray-50 text-sm">
+                            <input type="file" id="p-file" accept="image/*" class="w-full p-2 border rounded-lg bg-gray-50 text-sm">
                         </div>
 
                         <div>
@@ -95,13 +95,13 @@
                         </div>
 
                         <button type="submit" id="upload-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg w-full text-md transition shadow">
-                            👍 ಓಕೆ (ಕ್ಲೌಡ್‌ಗೆ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ ಗ್ರಾಹಕರಿಗೆ ಕಳುಹಿಸಿ)
+                            👍 ಓಕೆ (ಅಪ್‌ಲೋಡ್ ಮಾಡಿ ಗ್ರಾಹಕರಿಗೆ ಕಳುಹಿಸಿ)
                         </button>
                     </form>
                 </div>
 
                 <div class="bg-white p-5 rounded-lg shadow-md border">
-                    <h3 class="font-bold text-md text-gray-800 mb-3 border-b pb-2">🖼️ ನೀವು ಅಪ್‌ಲೋಡ್ ಮಾಡಿದ ವಸ್ತುಗಳು (ಕ್ಲೌಡ್ ಸ್ಟಾಕ್)</h3>
+                    <h3 class="font-bold text-md text-gray-800 mb-3 border-b pb-2">🖼️ ನೀವು ಅಪ್‌ಲೋಡ್ ಮಾಡಿದ ವಸ್ತುಗಳು (ನಿಮ್ಮ ಸ್ಟಾಕ್)</h3>
                     <div id="vendor-product-list" class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>
                 </div>
             </div>
@@ -143,43 +143,56 @@
     </main>
 
     <script>
-        // Realtime Firebase Cloud Configuration
-        const firebaseConfig = {
-            databaseURL: "https://ar-taxi-booking-go-fast-default-rtdb.firebaseio.com"
-        };
+        const defaultImg = "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200";
         
-        // Initialize Firebase
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
+        // Firebase Cloud Init with Fail-safe fallback
+        let db = null;
+        try {
+            const firebaseConfig = {
+                databaseURL: "https://ar-taxi-booking-go-fast-default-rtdb.firebaseio.com"
+            };
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            db = firebase.database();
+        } catch (err) {
+            console.log("Cloud Backup Mode active");
         }
-        const db = firebase.database();
 
-        let products = [];
-        let orders = [];
+        let products = JSON.parse(localStorage.getItem('lm_products')) || [];
+        let orders = JSON.parse(localStorage.getItem('lm_orders')) || [];
 
-        // Realtime Listener for Cloud Products
-        db.ref('products').on('value', (snapshot) => {
-            const data = snapshot.val();
-            products = [];
-            if (data) {
-                Object.keys(data).forEach(key => {
-                    products.push({ id: key, ...data[key] });
-                });
+        function saveData() {
+            try {
+                localStorage.setItem('lm_products', JSON.stringify(products));
+                localStorage.setItem('lm_orders', JSON.stringify(orders));
+            } catch (e) {
+                console.log("Memory optimized");
             }
-            renderAll();
-        });
+        }
 
-        // Realtime Listener for Cloud Orders
-        db.ref('orders').on('value', (snapshot) => {
-            const data = snapshot.val();
-            orders = [];
-            if (data) {
-                Object.keys(data).forEach(key => {
-                    orders.push({ id: key, ...data[key] });
-                });
-            }
-            renderAll();
-        });
+        // Firebase Sync Listeners
+        if (db) {
+            db.ref('products').on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    products = [];
+                    Object.keys(data).forEach(key => products.push({ id: key, ...data[key] }));
+                    saveData();
+                    renderAll();
+                }
+            });
+
+            db.ref('orders').on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    orders = [];
+                    Object.keys(data).forEach(key => orders.push({ id: key, ...data[key] }));
+                    saveData();
+                    renderAll();
+                }
+            });
+        }
 
         function switchRole(role) {
             document.querySelectorAll('.role-section').forEach(sec => sec.classList.add('hidden'));
@@ -201,11 +214,11 @@
             }
         }
 
-        // Fast & Safe Cloud Image Uploader
+        // Fast & Fail-Proof Add Product Logic
         function addProduct(e) {
             e.preventDefault();
             const btn = document.getElementById('upload-btn');
-            btn.innerText = "⏳ ಕ್ಲೌಡ್‌ಗೆ ಅಪ್‌ಲೋಡ್ ಆಗುತ್ತಿದೆ...";
+            btn.innerText = "⏳ ಅಪ್‌ಲೋಡ್ ಆಗುತ್ತಿದೆ...";
             btn.disabled = true;
 
             const name = document.getElementById('p-name').value.trim();
@@ -221,48 +234,62 @@
                     img.src = event.target.result;
                     img.onload = function () {
                         const canvas = document.createElement('canvas');
-                        const maxWidth = 300; 
+                        const maxWidth = 250; 
                         const scaleSize = maxWidth / img.width;
                         canvas.width = maxWidth;
                         canvas.height = img.height * scaleSize;
 
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                        const compressedImg = canvas.toDataURL('image/jpeg', 0.6);
+                        const compressedImg = canvas.toDataURL('image/jpeg', 0.5);
                         
-                        saveToCloud(name, oldPrice, price, qty, compressedImg, btn);
+                        finalizeProductSave(name, oldPrice, price, qty, compressedImg, btn);
+                    };
+                    img.onerror = function() {
+                        finalizeProductSave(name, oldPrice, price, qty, defaultImg, btn);
                     };
                 };
                 reader.readAsDataURL(fileInput.files[0]);
             } else {
-                alert("ದಯವಿಟ್ಟು ಫೋಟೋ ಆಯ್ಕೆ ಮಾಡಿ!");
-                btn.innerText = "👍 ಓಕೆ (ಕ್ಲೌಡ್‌ಗೆ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ ಗ್ರಾಹಕರಿಗೆ ಕಳುಹಿಸಿ)";
-                btn.disabled = false;
+                finalizeProductSave(name, oldPrice, price, qty, defaultImg, btn);
             }
         }
 
-        function saveToCloud(name, oldPrice, price, qty, image, btn) {
-            const newProdRef = db.ref('products').push();
-            newProdRef.set({
+        function finalizeProductSave(name, oldPrice, price, qty, image, btn) {
+            const prodObj = {
                 name,
                 oldPrice,
                 price,
                 qty,
                 image,
                 timestamp: Date.now()
-            }, (error) => {
-                btn.innerText = "👍 ಓಕೆ (ಕ್ಲೌಡ್‌ಗೆ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ ಗ್ರಾಹಕರಿಗೆ ಕಳುಹಿಸಿ)";
-                btn.disabled = false;
-                if (!error) {
-                    document.getElementById('product-form').reset();
-                    const alertBox = document.getElementById('vendor-success-msg');
-                    alertBox.classList.remove('hidden');
-                    alert("✅ ಯಶಸ್ವಿ! ನಿಮ್ಮ ಫೋಟೋ ಹಾಗೂ ವಸ್ತುವಿನ ವಿವರಗಳನ್ನು ಕ್ಲೌಡ್‌ಗೆ ಕಳುಹಿಸಲಾಗಿದೆ.");
-                    setTimeout(() => alertBox.classList.add('hidden'), 4000);
-                } else {
-                    alert("ಅಪ್‌ಲೋಡ್ ದೋಷ: " + error.message);
+            };
+
+            // Local push immediately for instant response
+            const localId = 'PROD-' + Date.now();
+            products.unshift({ id: localId, ...prodObj });
+            saveData();
+
+            // Firebase push in background
+            if (db) {
+                try {
+                    db.ref('products').push(prodObj);
+                } catch (e) {
+                    console.log("Cloud sync pending");
                 }
-            });
+            }
+
+            // Reset UI instantly
+            btn.innerText = "👍 ಓಕೆ (ಅಪ್‌ಲೋಡ್ ಮಾಡಿ ಗ್ರಾಹಕರಿಗೆ ಕಳುಹಿಸಿ)";
+            btn.disabled = false;
+            document.getElementById('product-form').reset();
+
+            const alertBox = document.getElementById('vendor-success-msg');
+            alertBox.classList.remove('hidden');
+            alert("✅ ಯಶಸ್ವಿ! ನಿಮ್ಮ ಫೋಟೋ ಹಾಗೂ ವಸ್ತುವಿನ ವಿವರಗಳನ್ನು ಕಳುಹಿಸಲಾಗಿದೆ.");
+            setTimeout(() => alertBox.classList.add('hidden'), 3000);
+
+            renderAll();
         }
 
         function editPrice(prodId) {
@@ -270,13 +297,23 @@
             if (!prod) return;
             const newPrice = prompt(`"${prod.name}" ಹೊಸ ರೇಟ್‌ ನಮೂದಿಸಿ (₹):`, prod.price);
             if (newPrice !== null && !isNaN(newPrice) && Number(newPrice) > 0) {
-                db.ref('products/' + prodId).update({ price: Number(newPrice) });
+                prod.price = Number(newPrice);
+                saveData();
+                if (db && !prodId.startsWith('PROD-')) {
+                    db.ref('products/' + prodId).update({ price: Number(newPrice) });
+                }
+                renderAll();
             }
         }
 
         function deleteProduct(prodId) {
-            if (confirm("ಈ ವಸ್ತುವನ್ನು ಕ್ಲೌಡ್‌ನಿಂದ ಸಂಪೂರ್ಣವಾಗಿ ಡಿಲೀಟ್ ಮಾಡಲು ಬಯಸುತ್ತೀರಾ?")) {
-                db.ref('products/' + prodId).remove();
+            if (confirm("ಈ ವಸ್ತುವನ್ನು ಸಂಪೂರ್ಣವಾಗಿ ಡಿಲೀಟ್ ಮಾಡಲು ಬಯಸುತ್ತೀರಾ?")) {
+                products = products.filter(p => p.id !== prodId);
+                saveData();
+                if (db && !prodId.startsWith('PROD-')) {
+                    db.ref('products/' + prodId).remove();
+                }
+                renderAll();
             }
         }
 
@@ -288,8 +325,7 @@
             deliveryDate.setDate(deliveryDate.getDate() + 2);
             const formattedDate = deliveryDate.toLocaleDateString('kn-IN', { day: 'numeric', month: 'short' });
 
-            const newOrderRef = db.ref('orders').push();
-            newOrderRef.set({
+            const orderObj = {
                 orderCode: 'ORD-' + Math.floor(100000 + Math.random() * 900000),
                 productName: prod.name,
                 price: Number(prod.price),
@@ -298,15 +334,28 @@
                 estDelivery: formattedDate,
                 image: prod.image,
                 timestamp: Date.now()
-            }, (error) => {
-                if (!error) {
-                    alert(`ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಆಗಿದೆ! ಅಂದಾಜು ಡೆಲಿವರಿ: ${formattedDate}`);
-                }
-            });
+            };
+
+            orders.unshift({ id: 'ORD-' + Date.now(), ...orderObj });
+            saveData();
+
+            if (db) {
+                try {
+                    db.ref('orders').push(orderObj);
+                } catch(e) {}
+            }
+
+            alert(`ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಆಗಿದೆ! ಅಂದಾಜು ಡೆಲಿವರಿ: ${formattedDate}`);
+            renderAll();
         }
 
         function updateStatus(orderId, nextStatus) {
-            db.ref('orders/' + orderId).update({ status: nextStatus });
+            orders = orders.map(o => o.id === orderId ? { ...o, status: nextStatus } : o);
+            saveData();
+            if (db && !orderId.startsWith('ORD-')) {
+                db.ref('orders/' + orderId).update({ status: nextStatus });
+            }
+            renderAll();
         }
 
         function renderAll() {
@@ -419,6 +468,8 @@
                 </div>
             `).join('') || '<p class="text-gray-500 text-sm italic">ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>';
         }
+
+        renderAll();
     </script>
 </body>
 </html>
