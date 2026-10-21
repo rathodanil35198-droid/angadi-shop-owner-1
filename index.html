@@ -3,459 +3,251 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ಅರ್ಪಿತ್ ಇ-ಶಾಪ್ - ಶಹಾಪುರ</title>
+    <title>ಲೋಕಲ್ ಮಾರ್ಕೆಟ್ - E-Commerce Platform</title>
     <style>
-        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background: #eef2f5; margin: 0; padding: 10px; }
-        header { background: #131921; color: #febd69; padding: 12px; text-align: center; font-size: 20px; font-weight: bold; border-radius: 6px; }
-        .nav-buttons { display: flex; justify-content: center; gap: 5px; margin: 12px 0; flex-wrap: wrap; }
-        .nav-buttons button { padding: 8px 14px; font-weight: bold; border: none; border-radius: 20px; cursor: pointer; background: #ddd; font-size: 13px; }
-        .nav-buttons button.active { background: #ff9900; color: #fff; }
-        .container { background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 15px; }
-        .form-group { margin-bottom: 10px; }
-        .form-group label { display: block; font-weight: 600; margin-bottom: 4px; font-size: 13px; }
-        .form-group input, .form-group select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
-        .btn-main { background: #28a745; color: white; border: none; padding: 12px; width: 100%; font-weight: bold; font-size: 16px; border-radius: 6px; cursor: pointer; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f4f6f9; color: #333; }
+        header { background: #2874f0; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        header h1 { font-size: 22px; }
+        .nav-tabs { display: flex; background: #fff; border-bottom: 1px solid #ddd; padding: 0 20px; overflow-x: auto; }
+        .tab-btn { padding: 12px 20px; cursor: pointer; border: none; background: none; font-size: 16px; font-weight: 600; color: #666; border-bottom: 3px solid transparent; }
+        .tab-btn.active { color: #2874f0; border-bottom: 3px solid #2874f0; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
+        .panel { display: none; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .panel.active { display: block; }
         
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
-        .product-card { border: 1px solid #e0e0e0; border-radius: 8px; padding: 8px; background: #fff; text-align: center; }
-        .product-card img { width: 100%; height: 120px; object-fit: cover; border-radius: 6px; }
-        .price-tag { color: #b12704; font-size: 15px; font-weight: bold; }
-        .old-price { text-decoration: line-through; color: #767676; font-size: 11px; margin-left: 4px; }
+        /* Product & Grid styles */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; margin-top: 15px; }
+        .card { background: #fff; border: 1px solid #e0e0e0; border-radius: 6px; padding: 15px; text-align: center; transition: 0.3s; }
+        .card:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .card h3 { font-size: 18px; margin-bottom: 8px; color: #111; }
+        .card p { color: #555; font-size: 14px; margin-bottom: 10px; }
+        .price { font-size: 16px; font-weight: bold; color: #b12704; margin-bottom: 12px; }
+        .btn { background: #ff9f00; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 14px; }
+        .btn:hover { background: #fb641b; }
+        .btn-success { background: #26a541; }
+        .btn-success:hover { background: #218838; }
         
-        .action-btns { display: flex; justify-content: space-between; margin-top: 6px; }
-        .btn-edit { background: #ffc107; border: none; padding: 4px 8px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 12px; }
-        .btn-delete { background: #dc3545; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 12px; }
-        .btn-buy { background: #fb641b; color: white; border: none; padding: 8px; width: 100%; font-weight: bold; margin-top: 6px; border-radius: 4px; cursor: pointer; }
+        /* Tables for Orders */
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; font-size: 14px; }
+        th { background-color: #f8f9fa; }
+        
+        .badge { padding: 5px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; }
+        .badge-pending { background: #fff3cd; color: #856404; }
+        .badge-accepted { background: #d4edda; color: #155724; }
+        .badge-delivered { background: #cce5ff; color: #004085; }
 
-        .order-card { border: 1px solid #007bff; padding: 10px; border-radius: 8px; margin-bottom: 10px; background: #f8f9fa; }
-        .track-status { display: flex; justify-content: space-between; margin-top: 10px; background: #e9ecef; padding: 8px; border-radius: 15px; font-size: 9px; font-weight: bold; }
-        .track-step { color: #888; }
-        .track-step.active { color: #28a745; text-decoration: underline; }
-
-        .popup { position: fixed; top: 15px; left: 50%; transform: translateX(-50%); background: #28a745; color: white; padding: 8px 18px; border-radius: 20px; font-weight: bold; display: none; z-index: 1000; font-size: 14px; }
+        .cart-box { background: #fff; padding: 15px; border: 1px solid #ddd; border-radius: 6px; margin-top: 20px; }
     </style>
 </head>
 <body>
 
-<div id="toast" class="popup">ಸಂದೇಶ</div>
+    <header>
+        <h1>🛍️ ಲೋಕಲ್ ಮಾರ್ಕೆಟ್ (Local Market Hub)</h1>
+        <p>ಶಾಪುರ / ಕರ್ನಾಟಕ</p>
+    </header>
 
-<header>ಅರ್ಪಿತ್ ಇ-ಶಾಪ್ - ಶಹಾಪುರ</header>
-
-<!-- 1. ಲಾಗಿನ್ / ರಿಜಿಸ್ಟ್ರೇಷನ್ ಫಾರ್ಮ್ -->
-<div id="auth-container" class="container">
-    <h3>🏪 ಅಂಗಡಿ ಮಾಲೀಕರ ಲಾಗಿನ್ / ನೋಂದಣಿ</h3>
-    <div class="form-group"><label>ಅಂಗಡಿ ಮಾಲೀಕರ ಹೆಸರು:</label><input type="text" id="reg-name" placeholder="ನಿಮ್ಮ ಹೆಸರು"></div>
-    <div class="form-group"><label>ಮೊಬೈಲ್ ನಂಬರ್:</label><input type="text" id="reg-phone" placeholder="ಮೊಬೈಲ್ ನಂಬರ್"></div>
-    <div class="form-group"><label>ಅಂಗಡಿಯ ಹೆಸರು:</label><input type="text" id="reg-shopname" placeholder="ಶಾಪ್ ಹೆಸರು"></div>
-    <div class="form-group"><label>ಜಿಲ್ಲೆ:</label><input type="text" id="reg-district" placeholder="ಉದಾ: ಯಾದಗಿರಿ"></div>
-    <div class="form-group"><label>ತಾಲೂಕ್:</label><input type="text" id="reg-taluk" placeholder="ಉದಾ: ಶಹಾಪುರ"></div>
-    <div class="form-group"><label>ಊರು (Village/City):</label><input type="text" id="reg-village" placeholder="ಊರು"></div>
-    <div class="form-group"><label>ಪಿನ್ ಕೋಡ್ ನಂಬರ್:</label><input type="text" id="reg-pin" placeholder="ಪಿನ್ ಕೋಡ್"></div>
-    <div class="form-group">
-        <label>ಅಂಗಡಿಯ ವಿಧ (Category):</label>
-        <select id="reg-category">
-            <option value="cloth">ಬಟ್ಟೆ ಅಂಗಡಿ</option>
-            <option value="footwear">ಚಪ್ಪಲಿ ಅಂಗಡಿ</option>
-            <option value="gift">ಗಿಫ್ಟ್ ಅಂಗಡಿ</option>
-            <option value="grocery">ಕರಿಯಾಣಿ ಅಂಗಡಿ</option>
-            <option value="electronics">ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್</option>
-            <option value="hotel">ಹೋಟೆಲ್ / ಫುಡ್</option>
-            <option value="other">ಇತರ ಅಂಗಡಿ</option>
-        </select>
-    </div>
-    <div class="form-group"><label>ಅಂಗಡಿಯ ಫೋಟೋ (ঐಚ್ಛಿಕ):</label><input type="file" id="reg-img" accept="image/*"></div>
-    <button class="btn-main" onclick="registerShopDirect()">ಲಾಗಿನ್ / ನೋಂದಾಯಿಸಿ</button>
-</div>
-
-<!-- 2. ಮುಖ್ಯ ಅಪ್ಲಿಕೇಶನ್ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ -->
-<div id="main-app" style="display:none;">
-    <div class="nav-buttons">
-        <button class="tab-btn active" onclick="switchTab('owner')">ಅಂಗಡಿ ಮಾಲೀಕರು</button>
-        <button class="tab-btn" onclick="switchTab('customer')">ಗ್ರಾಹಕರು</button>
-        <button class="tab-btn" onclick="switchTab('delivery')">ಡೆಲಿವರಿ ಬಾಯ್</button>
+    <div class="nav-tabs">
+        <button class="tab-btn active" onclick="switchTab('customer')">1. ಗ್ರಾಹಕರ ಆ್ಯಪ್ (Customer)</button>
+        <button class="tab-btn" onclick="switchTab('vendor')">2. ಅಂಗಡಿಯವರ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ (Vendor)</button>
+        <button class="tab-btn" onclick="switchTab('delivery')">3. ಡೆಲಿವರಿ ಬಾಯ್ ಆ್ಯಪ್ (Delivery)</button>
     </div>
 
-    <!-- ಅಂಗಡಿ ಮಾಲೀಕರ ವಿಭಾಗ -->
-    <div id="owner-section" class="container">
-        <h3 id="form-title">ಹೊಸ ವಸ್ತು ಸೇರಿಸಿ / ಎಡಿಟ್ ಮಾಡಿ</h3>
-        <input type="hidden" id="edit-index" value="">
-        <div class="form-group"><label>ವಸ್ತುವಿನ ಹೆಸರು:</label><input type="text" id="p-name" placeholder="ವಸ್ತುವಿನ ಹೆಸರು"></div>
-        <div class="form-group"><label>ಹಳೆಯ ರೇಟ್ (₹):</label><input type="number" id="p-old-price" placeholder="500"></div>
-        <div class="form-group"><label>ಈಗಿನ ಪ್ರೈಸ್ (₹):</label><input type="number" id="p-new-price" placeholder="350"></div>
-        
-        <div class="form-group">
-            <label>ವಯಸ್ಸು ಅಥವಾ ಸೈಜ್ ವಿಧ:</label>
-            <select id="p-age-type" onchange="updateSizeOptions()">
-                <option value="adult">ದೊಡ್ಡವರು (Adult)</option>
-                <option value="kids">ಚಿಕ್ಕ ಮಕ್ಕಳು (Kids Age)</option>
-            </select>
+    <div class="container">
+
+        <!-- 1. ಗ್ರಾಹಕರ ಪ್ಯಾನಲ್ -->
+        <div id="customer" class="panel active">
+            <h2>ಲಭ್ಯವಿರುವ ಲೋಕಲ್ ಉತ್ಪನ್ನಗಳು</h2>
+            <div class="grid" id="product-list">
+                <!-- JavaScript ಮೂಲಕ ಪ್ರಾಡಕ್ಟ್ಸ್ ಇಲ್ಲಿ ಲೋಡ್ ಆಗುತ್ತವೆ -->
+            </div>
+
+            <div class="cart-box">
+                <h3>🛒 ನಿಮ್ಮ ಕಾರ್ಟ್ (Cart Summary)</h3>
+                <p id="cart-items">ಯಾವುದೇ ವಸ್ತುಗಳನ್ನು ಆಯ್ಕೆ ಮಾಡಿಲ್ಲ.</p>
+                <button class="btn btn-success" onclick="placeOrder()" style="margin-top: 10px;">ಆರ್ಡರ್ ಮಾಡಿ (Place Order)</button>
+            </div>
         </div>
 
-        <div class="form-group">
-            <label id="size-label">ಸೈಜ್ / ಅಳತೆ:</label>
-            <select id="p-size"></select>
+        <!-- 2. ಅಂಗಡಿಯವರ ಪ್ಯಾನಲ್ -->
+        <div id="vendor" class="panel">
+            <h2>ಅಂಗಡಿ ಮಾಲೀಕರ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ (Orders Received)</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ಆರ್ಡರ್ ID</th>
+                        <th>ವಸ್ತುಗಳ ವಿವರ</th>
+                        <th>ಗ್ರಾಹಕರ ವಿಳಾಸ</th>
+                        <th>ಸ್ಥಿತಿ (Status)</th>
+                        <th>ಕ್ರಿಯೆ (Action)</th>
+                    </tr>
+                </thead>
+                <tbody id="vendor-orders">
+                    <!-- ಆರ್ಡರ್‌ಗಳು ಇಲ್ಲಿ ಪ್ರದರ್ಶಿತವಾಗುತ್ತವೆ -->
+                </tbody>
+            </table>
         </div>
 
-        <div class="form-group">
-            <label>ಕ್ವಾಂಟಿಟಿ (ಪೀಸ್ - 1 ರಿಂದ 10):</label>
-            <select id="p-qty">
-                <option value="1">1 ಪೀಸ್</option><option value="2">2 ಪೀಸ್</option><option value="3">3 ಪೀಸ್</option>
-                <option value="4">4 ಪೀಸ್</option><option value="5">5 ಪೀಸ್</option><option value="6">6 ಪೀಸ್</option>
-                <option value="7">7 ಪೀಸ್</option><option value="8">8 ಪೀಸ್</option><option value="9">9 ಪೀಸ್</option><option value="10">10 ಪೀಸ್</option>
-            </select>
+        <!-- 3. ಡೆಲಿವರಿ ಬಾಯ್ ಪ್ಯಾನಲ್ -->
+        <div id="delivery" class="panel">
+            <h2>ಡೆಲಿವರಿ ಪಾರ್ಟ್‌ನರ್ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ಆರ್ಡರ್ ID</th>
+                        <th>ವಿವರಣೆ</th>
+                        <th>ಡೆಲಿವರಿ ವಿಳಾಸ</th>
+                        <th>ಸ್ಥಿತಿ</th>
+                        <th>ಕ್ರಿಯೆ</th>
+                    </tr>
+                </thead>
+                <tbody id="delivery-orders">
+                    <!-- ಡೆಲಿವರಿ ಲಿಸ್ಟ್ -->
+                </tbody>
+            </table>
         </div>
 
-        <div class="form-group"><label>ಫೋಟೋ ಆಯ್ಕೆ ಮಾಡಿ:</label><input type="file" id="p-image" accept="image/*"></div>
-        <button class="btn-main" id="save-btn" onclick="saveProduct()">ವಸ್ತು ಪ್ರಕಟಿಸಿ</button>
-
-        <hr style="margin: 20px 0;">
-        <h3>📦 ಬಂದಿರುವ ಆರ್ಡರ್‌ಗಳು (ಮಾಲೀಕರ ಪ್ಯಾನೆಲ್)</h3>
-        <div id="owner-orders-list"></div>
-
-        <hr style="margin: 20px 0;">
-        <h3>🏪 ನಿಮ್ಮ ಅಂಗಡಿಯಲ್ಲಿರುವ ವಸ್ತುಗಳು</h3>
-        <div id="owner-product-list" class="product-grid"></div>
     </div>
 
-    <!-- ಗ್ರಾಹಕರ ವಿಭಾಗ -->
-    <div id="customer-section" class="container" style="display:none;">
-        <h3>🛒 ಗ್ರಾಹಕರ ಶಾಪಿಂಗ್ ಪುಟ</h3>
-        <div id="customer-product-list" class="product-grid"></div>
+    <script>
+        // ಡೇಟಾಬೇಸ್ ಸಿಮ್ಯುಲೇಶನ್ (Local Database)
+        let products = [
+            { id: 1, name: "ತಾಜಾ ತರಕಾರಿಗಳು (1 ಕೆಜಿ)", price: 60, shop: "ಶ್ರೀ ಸಾಯಿ ಸ್ಟೋರ್ಸ್" },
+            { id: 2, name: "ಬಾಸ್ಮತಿ ಅಕ್ಕಿ (5 ಕೆಜಿ)", price: 350, shop: "ಅಂಬಿಕಾ ಪ್ರಾವಿಷನ್" },
+            { id: 3, name: "ಪಾಪ್ ಕಾರ್ನ್ ಸ್ನ್ಯಾಕ್ಸ್", price: 40, shop: "ಲೋಕಲ್ ಬೇಕರಿ" }
+        ];
 
-        <hr style="margin: 20px 0;">
-        <h3>🚚 ನನ್ನ ಆರ್ಡರ್‌ಗಳ ಸ್ಥಿತಿ (Status Tracking)</h3>
-        <div id="customer-orders-list"></div>
-    </div>
+        let cart = [];
+        let orders = JSON.parse(localStorage.getItem('local_orders')) || [];
 
-    <!-- ಡೆಲಿವರಿ ಬಾಯ್ ವಿಭಾಗ -->
-    <div id="delivery-section" class="container" style="display:none;">
-        <h3>🚴 ಡೆಲಿವರಿ ಬಾಯ್ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್</h3>
-        <div id="delivery-orders-list"></div>
-    </div>
-</div>
-
-<script>
-    let shopData = JSON.parse(localStorage.getItem('arpit_shop_profile')) || null;
-    let products = JSON.parse(localStorage.getItem('arpit_shop_products')) || [];
-    let orders = JSON.parse(localStorage.getItem('arpit_shop_orders')) || [];
-
-    window.onload = function() {
-        if(shopData && shopData.shopname) {
-            document.getElementById('auth-container').style.display = 'none';
-            document.getElementById('main-app').style.display = 'block';
-            updateSizeOptions();
-            renderOwnerProducts();
-            renderOwnerOrders();
-        }
-    }
-
-    function showToast(msg) {
-        const t = document.getElementById('toast');
-        t.innerText = msg;
-        t.style.display = 'block';
-        setTimeout(() => { t.style.display = 'none'; }, 2500);
-    }
-
-    function registerShopDirect() {
-        const name = document.getElementById('reg-name').value.trim();
-        const phone = document.getElementById('reg-phone').value.trim();
-        const shopname = document.getElementById('reg-shopname').value.trim();
-        const district = document.getElementById('reg-district').value.trim();
-        const taluk = document.getElementById('reg-taluk').value.trim();
-        const village = document.getElementById('reg-village').value.trim();
-        const pin = document.getElementById('reg-pin').value.trim();
-        const category = document.getElementById('reg-category').value;
-        const imgInput = document.getElementById('reg-img');
-
-        if(!name || !phone || !shopname) { 
-            alert("ದಯವಿಟ್ಟು ಮಾಲೀಕರ ಹೆಸರು, ಮೊಬೈಲ್ ಮತ್ತು ಅಂಗಡಿಯ ಹೆಸರು ಭರ್ತಿ ಮಾಡಿ!"); 
-            return; 
+        // ಟ್ಯಾಬ್ ಸ್ವಿಚ್ ಮಾಡುವ ಫಂಕ್ಷನ್
+        function switchTab(tabId) {
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+            
+            loadData();
         }
 
-        const uniqueId = 'SH' + Math.floor(1000 + Math.random() * 9000);
-        shopData = { name, phone, shopname, district, taluk, village, pin, category, uniqueId, img: '' };
-
-        if(imgInput.files && imgInput.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                shopData.img = e.target.result;
-                completeRegistration();
-            };
-            reader.readAsDataURL(imgInput.files[0]);
-        } else {
-            completeRegistration();
-        }
-    }
-
-    function completeRegistration() {
-        localStorage.setItem('arpit_shop_profile', JSON.stringify(shopData));
-        alert("ನೋಂದಣಿ ಯಶಸ್ವಿಯಾಗಿದೆ! ನಿಮ್ಮ 4-ಅಂಕಿಯ ID: " + shopData.uniqueId);
-        document.getElementById('auth-container').style.display = 'none';
-        document.getElementById('main-app').style.display = 'block';
-        updateSizeOptions();
-        renderOwnerProducts();
-        renderOwnerOrders();
-    }
-
-    function updateSizeOptions() {
-        if(!shopData) return;
-        const cat = shopData.category;
-        const sizeSelect = document.getElementById('p-size');
-        const isKids = document.getElementById('p-age-type').value === 'kids';
-        sizeSelect.innerHTML = '';
-
-        if(isKids) {
-            for(let i=2; i<=18; i++) {
-                sizeSelect.innerHTML += `<option value="${i} ವರ್ಷ">${i} ವರ್ಷದ ಮಕ್ಕಳು</option>`;
-            }
-        } else if(cat === 'cloth') {
-            ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL'].forEach(s => {
-                sizeSelect.innerHTML += `<option value="${s}">${s} ಸೈಜ್</option>`;
-            });
-        } else if(cat === 'footwear') {
-            for(let i=5; i<=12; i++) {
-                sizeSelect.innerHTML += `<option value="${i} ನಂಬರ್">${i} ನಂಬರ್ ಚಪ್ಪಲಿ</option>`;
-            }
-        } else if(cat === 'gift') {
-            ['ಉದ್ದ 6 ಇಂಚು / ಅಗಲ 4 ಇಂಚು', 'ಉದ್ದ 12 ಇಂಚು / ಅಗಲ 8 ಇಂಚು', 'ದೊಡ್ಡ ಸೈಜ್'].forEach(s => {
-                sizeSelect.innerHTML += `<option value="${s}">${s}</option>`;
-            });
-        } else {
-            ['Standard Size', 'Free Size', '1 Kg / 1 Ltr'].forEach(s => {
-                sizeSelect.innerHTML += `<option value="${s}">${s}</option>`;
-            });
-        }
-    }
-
-    function switchTab(tab) {
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById('owner-section').style.display = 'none';
-        document.getElementById('customer-section').style.display = 'none';
-        document.getElementById('delivery-section').style.display = 'none';
-
-        if(tab === 'owner') {
-            document.getElementById('owner-section').style.display = 'block';
-            document.querySelectorAll('.tab-btn')[0].classList.add('active');
-            renderOwnerProducts(); renderOwnerOrders();
-        } else if(tab === 'customer') {
-            document.getElementById('customer-section').style.display = 'block';
-            document.querySelectorAll('.tab-btn')[1].classList.add('active');
-            renderCustomerProducts(); renderCustomerOrders();
-        } else if(tab === 'delivery') {
-            document.getElementById('delivery-section').style.display = 'block';
-            document.querySelectorAll('.tab-btn')[2].classList.add('active');
-            renderDeliveryOrders();
-        }
-    }
-
-    function saveProduct() {
-        const name = document.getElementById('p-name').value;
-        const oldPrice = document.getElementById('p-old-price').value;
-        const newPrice = document.getElementById('p-new-price').value;
-        const size = document.getElementById('p-size').value;
-        const qty = document.getElementById('p-qty').value;
-        const imgInput = document.getElementById('p-image');
-        const editIdx = document.getElementById('edit-index').value;
-
-        if(!name || !newPrice) { alert("ವಸ್ತುವಿನ ಹೆಸರು ಮತ್ತು ರೇಟ್ ಹಾಕಿ!"); return; }
-
-        if(imgInput.files && imgInput.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                commitProduct(name, oldPrice, newPrice, size, qty, e.target.result, editIdx);
-            };
-            reader.readAsDataURL(imgInput.files[0]);
-        } else {
-            let img = editIdx !== "" ? products[editIdx].image : '';
-            commitProduct(name, oldPrice, newPrice, size, qty, img, editIdx);
-        }
-    }
-
-    function commitProduct(name, oldPrice, newPrice, size, qty, image, editIdx) {
-        const item = { name, oldPrice, newPrice, size, qty: qty + " ಪೀಸ್", image };
-        if(editIdx !== "") {
-            products[editIdx] = item;
-            showToast("ವಸ್ತು ಅಪ್‌ಡೇಟ್ ಆಗಿದೆ!");
-        } else {
-            products.push(item);
-            showToast("ಹೊಸ ವಸ್ತು ಸೇರಿಸಲಾಗಿದೆ!");
-        }
-        localStorage.setItem('arpit_shop_products', JSON.stringify(products));
-        resetForm();
-        renderOwnerProducts();
-    }
-
-    function resetForm() {
-        document.getElementById('p-name').value = '';
-        document.getElementById('p-old-price').value = '';
-        document.getElementById('p-new-price').value = '';
-        document.getElementById('edit-index').value = '';
-        document.getElementById('save-btn').innerText = "ವಸ್ತು ಪ್ರಕಟಿಸಿ";
-    }
-
-    function renderOwnerProducts() {
-        const list = document.getElementById('owner-product-list');
-        list.innerHTML = products.length === 0 ? '<p>ಯಾವುದೇ ವಸ್ತುಗಳಿಲ್ಲ.</p>' : '';
-        products.forEach((p, i) => {
-            list.innerHTML += `
-                <div class="product-card">
-                    <img src="${p.image || 'https://via.placeholder.com/150'}" alt="img">
-                    <div style="font-weight:bold; font-size:13px;">${p.name}</div>
-                    <div style="font-size:11px; color:#555;">ಸೈಜ್: ${p.size} (${p.qty})</div>
-                    <div><span class="price-tag">₹${p.newPrice}</span> <span class="old-price">₹${p.oldPrice}</span></div>
-                    <div class="action-btns">
-                        <button class="btn-edit" onclick="editProduct(${i})">ಎಡಿಟ್</button>
-                        <button class="btn-delete" onclick="deleteProduct(${i})">ಡಿಲೀಟ್</button>
+        // ಪ್ರಾಡಕ್ಟ್ ಪ್ರದರ್ಶಿಸುವುದು
+        function renderProducts() {
+            const list = document.getElementById('product-list');
+            list.innerHTML = "";
+            products.forEach(p => {
+                list.innerHTML += `
+                    <div class="card">
+                        <h3>${p.name}</h3>
+                        <p>ಅಂಗಡಿ: ${p.shop}</p>
+                        <div class="price">₹${p.price}</div>
+                        <button class="btn" onclick="addToCart(${p.id})">ಕಾರ್ಟ್‌ಗೆ ಸೇರಿಸಿ</button>
                     </div>
-                </div>
-            `;
-        });
-    }
-
-    function editProduct(i) {
-        const p = products[i];
-        document.getElementById('p-name').value = p.name;
-        document.getElementById('p-old-price').value = p.oldPrice;
-        document.getElementById('p-new-price').value = p.newPrice;
-        document.getElementById('edit-index').value = i;
-        document.getElementById('save-btn').innerText = "ಅಪ್‌ಡೇಟ್ ಮಾಡಿ";
-        window.scrollTo(0,0);
-    }
-
-    function deleteProduct(i) {
-        if(confirm("ಖಚಿತವಾಗಿ ಈ ವಸ್ತುವನ್ನು ಡಿಲೀಟ್ ಮಾಡಬೇಕೇ?")) {
-            products.splice(i, 1);
-            localStorage.setItem('arpit_shop_products', JSON.stringify(products));
-            renderOwnerProducts();
-            showToast("ವಸ್ತು ಡಿಲೀಟ್ ಮಾಡಲಾಗಿದೆ!");
-        }
-    }
-
-    function renderCustomerProducts() {
-        const list = document.getElementById('customer-product-list');
-        list.innerHTML = products.length === 0 ? '<p>ಯಾವುದೇ ವಸ್ತುಗಳು ಲಭ್ಯವಿಲ್ಲ.</p>' : '';
-        products.forEach((p) => {
-            list.innerHTML += `
-                <div class="product-card">
-                    <img src="${p.image || 'https://via.placeholder.com/150'}" alt="img">
-                    <div style="font-weight:bold; font-size:13px;">${p.name}</div>
-                    <div style="font-size:11px; color:#555;">ಸೈಜ್: ${p.size}</div>
-                    <div><span class="price-tag">₹${p.newPrice}</span> <span class="old-price">₹${p.oldPrice}</span></div>
-                    <button class="btn-buy" onclick="placeOrder('${p.name}', '${p.newPrice}')">ಈಗಲೇ ಖರೀದಿಸಿ</button>
-                </div>
-            `;
-        });
-    }
-
-    function placeOrder(pName, price) {
-        const cName = prompt("ನಿಮ್ಮ ಹೆಸರು ನಮೂದಿಸಿ:");
-        const phone = prompt("ನಿಮ್ಮ ಮೊಬೈಲ್ ನಂಬರ್:");
-        const village = prompt("ನಿಮ್ಮ ಊರು / ವಿಳಾಸ:");
-        if(!cName || !phone) { alert("ಮಾಹಿತಿ ಅಪೂರ್ಣವಾಗಿದೆ!"); return; }
-
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(position => {
-                saveNewOrder(pName, price, cName, phone, village, position.coords.latitude, position.coords.longitude);
-            }, () => {
-                saveNewOrder(pName, price, cName, phone, village, 'GPS Not Allowed', '');
+                `;
             });
-        } else {
-            saveNewOrder(pName, price, cName, phone, village, 'N/A', '');
         }
-    }
 
-    function saveNewOrder(pName, price, cName, phone, village, lat, lon) {
-        const newOrder = {
-            id: 'ORD' + Math.floor(Math.random()*90000 + 10000),
-            product: pName, price, customer: cName, phone, village,
-            location: `Lat: ${lat}, Lon: ${lon}`,
-            status: 'Placed', payment: 'Pending'
-        };
-        orders.push(newOrder);
-        localStorage.setItem('arpit_shop_orders', JSON.stringify(orders));
-        showToast("ಆರ್ಡರ್ ಯಶಸ್ವಿಯಾಗಿದೆ!");
-        renderCustomerOrders();
-    }
-
-    function updateOrderStatus(idx, status) {
-        orders[idx].status = status;
-        if(status === 'Delivered') {
-            orders[idx].payment = 'Paid Successful';
+        // ಕಾರ್ಟ್‌ಗೆ ಸೇರಿಸುವುದು
+        function addToCart(productId) {
+            let item = products.find(p => p.id === productId);
+            cart.push(item);
+            updateCartUI();
         }
-        localStorage.setItem('arpit_shop_orders', JSON.stringify(orders));
-        renderOwnerOrders(); renderCustomerOrders(); renderDeliveryOrders();
-        showToast("ಸ್ಟೇಟಸ್ ಅಪ್‌ಡೇಟ್ ಆಗಿದೆ!");
-    }
 
-    function renderOwnerOrders() {
-        const div = document.getElementById('owner-orders-list');
-        div.innerHTML = orders.length === 0 ? '<p>ಯಾವುದೇ ಹೊಸ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>' : '';
-        orders.forEach((o, i) => {
-            let btn = '';
-            if(o.status === 'Placed') {
-                btn = `<button class="btn-main" style="background:#007bff; font-size:12px; padding:6px;" onclick="updateOrderStatus(${i}, 'Confirmed')">1. Confirm Order (2 ದಿನದಲ್ಲಿ ಡೆಲಿವರಿ)</button>`;
-            } else if(o.status === 'Confirmed') {
-                btn = `<button class="btn-main" style="background:#ffc107; color:black; font-size:12px; padding:6px;" onclick="updateOrderStatus(${i}, 'Packed')">2. ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ಕಳುಹಿಸಿ)</button>`;
-            } else {
-                btn = `<b>ಸ್ಥಿತಿ: ${o.status} | ಪೇಮೆಂಟ್: ${o.payment}</b>`;
+        function updateCartUI() {
+            const cartBox = document.getElementById('cart-items');
+            if (cart.length === 0) {
+                cartBox.innerHTML = "ಯಾವುದೇ ವಸ್ತುಗಳನ್ನು ಆಯ್ಕೆ ಮಾಡಿಲ್ಲ.";
+                return;
             }
+            let text = "";
+            let total = 0;
+            cart.forEach((c, index) => {
+                text += `${index + 1}. ${c.name} - ₹${c.price}<br>`;
+                total += c.price;
+            });
+            cartBox.innerHTML = `${text}<strong>ಒಟ್ಟು ಮೊತ್ತ: ₹${total}</strong>`;
+        }
 
-            div.innerHTML += `
-                <div class="order-card">
-                    <b>ID: ${o.id}</b> | ವಸ್ತು: ${o.product} (₹${o.price})<br>
-                    ಗ್ರಾಹಕ: ${o.customer} | Ph: <a href="tel:${o.phone}">${o.phone}</a><br>
-                    ಊರು: ${o.village} | GPS: ${o.location}<br>
-                    <div style="margin-top:6px;">${btn}</div>
-                </div>
-            `;
-        });
-    }
-
-    function renderCustomerOrders() {
-        const div = document.getElementById('customer-orders-list');
-        div.innerHTML = orders.length === 0 ? '<p>ಯಾವುದೇ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>' : '';
-        orders.forEach((o) => {
-            div.innerHTML += `
-                <div class="order-card">
-                    <b>ಆರ್ಡರ್ ID: ${o.id}</b> - ${o.product} (₹${o.price})<br>
-                    <span style="font-size:11px; color:green;">ಪೇಮೆಂಟ್ ಸ್ಥಿತಿ: ${o.payment}</span>
-                    <div class="track-status">
-                        <span class="track-step ${['Placed','Confirmed','Packed','Out for Delivery','Delivered'].includes(o.status)?'active':''}">● Placed</span>
-                        <span class="track-step ${['Confirmed','Packed','Out for Delivery','Delivered'].includes(o.status)?'active':''}">● Confirmed (2 ದಿನ)</span>
-                        <span class="track-step ${['Packed','Out for Delivery','Delivered'].includes(o.status)?'active':''}">● Packed</span>
-                        <span class="track-step ${['Out for Delivery','Delivered'].includes(o.status)?'active':''}">● Out for Delivery (2-3 ಗಂಟೆ)</span>
-                        <span class="track-step ${o.status==='Delivered'?'active':''}">● Delivered</span>
-                    </div>
-                </div>
-            `;
-        });
-    }
-
-    function renderDeliveryOrders() {
-        const div = document.getElementById('delivery-orders-list');
-        div.innerHTML = orders.length === 0 ? '<p>ಯಾವುದೇ ಡೆಲಿವರಿ ಇಲ್ಲ.</p>' : '';
-        orders.forEach((o, i) => {
-            let btn = '';
-            if(o.status === 'Packed') {
-                btn = `<button class="btn-main" style="background:#17a2b8; font-size:12px; padding:6px;" onclick="updateOrderStatus(${i}, 'Out for Delivery')">ಪಿಕಪ್ ಪಡೆದು ಹೊರಟಿದೆ (Out for Delivery)</button>`;
-            } else if(o.status === 'Out for Delivery') {
-                btn = `<button class="btn-main" style="background:#28a745; font-size:12px; padding:6px;" onclick="updateOrderStatus(${i}, 'Delivered')">ಪೇಮೆಂಟ್ ಪಡೆದು ಡೆಲಿವರಿ ಮುಗಿಯಿತು (Delivered & Paid)</button>`;
-            } else {
-                btn = `<b>ಸ್ಥಿತಿ: ${o.status}</b>`;
+        // ಗ್ರಾಹಕರಿಂದ ಆರ್ಡರ್ ಸಲ್ಲಿಕೆ
+        function placeOrder() {
+            if (cart.length === 0) {
+                alert("ದಯವಿಟ್ಟು ಮೊದಲು ವಸ್ತುಗಳನ್ನು ಆಯ್ಕೆ ಮಾಡಿ!");
+                return;
             }
+            let newOrder = {
+                id: 'ORD' + Math.floor(1000 + Math.random() * 9000),
+                items: cart.map(c => c.name).join(', '),
+                address: "ಹೊತ್ತಪೇಟ್ ತಾಂಡಾ ರಸ್ತೆ, ಶಹಾಪುರ",
+                status: "Pending (ಅಂಗಡಿ ಒಪ್ಪಿಗೆಗೆ ಕಾಯುತ್ತಿದೆ)"
+            };
+            orders.push(newOrder);
+            localStorage.setItem('local_orders', JSON.stringify(orders));
+            cart = [];
+            updateCartUI();
+            alert("ನಿಮ್ಮ ಆರ್ಡರ್ ಯಶಸ್ವಿಯಾಗಿ ಸಲ್ಲಿಕೆಯಾಗಿದೆ!");
+            loadData();
+        }
 
-            div.innerHTML += `
-                <div class="order-card">
-                    <b>ID: ${o.id}</b> | ವಸ್ತು: ${o.product} (₹${o.price})<br>
-                    ಗ್ರಾಹಕ: ${o.customer} | ಫೋನ್: <a href="tel:${o.phone}">${o.phone}</a><br>
-                    ವಿಳಾಸ: ${o.village} | GPS: ${o.location}<br>
-                    <div style="margin-top:6px;">${btn}</div>
-                </div>
-            `;
-        });
-    }
-</script>
+        // ಡೇಟಾ ಲೋಡ್ ಮಾಡುವ ಫಂಕ್ಷನ್ (ಅಂಗಡಿ ಮತ್ತು ಡೆಲಿವರಿ ಪ್ಯಾನಲ್‌ಗಾಗಿ)
+        function loadData() {
+            orders = JSON.parse(localStorage.getItem('local_orders')) || [];
+            
+            // Vendor Panel Load
+            const vendorTable = document.getElementById('vendor-orders');
+            vendorTable.innerHTML = "";
+            orders.forEach((o, index) => {
+                vendorTable.innerHTML += `
+                    <tr>
+                        <td>${o.id}</td>
+                        <td>${o.items}</td>
+                        <td>${o.address}</td>
+                        <td><span class="badge badge-pending">${o.status}</span></td>
+                        <td>
+                            ${o.status.includes('Pending') ? `<button class="btn" onclick="acceptOrder(${index})">Accept (ಒಪ್ಪಿಕೊಳ್ಳಿ)</button>` : 'ಒಪ್ಪಿಕೊಳ್ಳಲಾಗಿದೆ'}
+                        </td>
+                    </tr>
+                `;
+            });
 
+            // Delivery Panel Load
+            const deliveryTable = document.getElementById('delivery-orders');
+            deliveryTable.innerHTML = "";
+            orders.forEach((o, index) => {
+                deliveryTable.innerHTML += `
+                    <tr>
+                        <td>${o.id}</td>
+                        <td>${o.items}</td>
+                        <td>${o.address}</td>
+                        <td><span class="badge badge-accepted">${o.status}</span></td>
+                        <td>
+                            <button class="btn btn-success" onclick="deliverOrder(${index})">ಡೆಲಿವರಿ ಮುಕ್ತಾಯ (Complete)</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // ಅಂಗಡಿಯವರು ಆರ್ಡರ್ ಒಪ್ಪಿಕೊಳ್ಳುವುದು
+        function acceptOrder(index) {
+            orders[index].status = "Accepted (ಪ್ಯಾಕಿಂಗ್ ನಡೆಯುತ್ತಿದೆ)";
+            localStorage.setItem('local_orders', JSON.stringify(orders));
+            loadData();
+            alert("ಆರ್ಡರ್ ಸ್ವೀಕರಿಸಲಾಗಿದೆ!");
+        }
+
+        // ಡೆಲಿವರಿ ಕಂಪ್ಲೀಟ್ ಮಾಡುವುದು
+        function deliverOrder(index) {
+            orders[index].status = "Delivered (ತಲುಪಿಸಲಾಗಿದೆ)";
+            localStorage.setItem('local_orders', JSON.stringify(orders));
+            loadData();
+            alert("ಆರ್ಡರ್ ಯಶಸ್ವಿಯಾಗಿ ತಲುಪಿಸಲಾಗಿದೆ!");
+        }
+
+        // ಆರಂಭದಲ್ಲಿ ಪ್ರಾಡಕ್ಟ್ಸ್ ಲೋಡ್ ಮಾಡಿ
+        renderProducts();
+        loadData();
+    </script>
 </body>
 </html>
