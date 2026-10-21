@@ -49,7 +49,7 @@
 
             <!-- Success Alert Message -->
             <div id="vendor-success-msg" class="hidden bg-green-100 border border-green-400 text-green-800 px-4 py-3 rounded-lg text-sm font-bold shadow">
-                ✅ ನಿಮ್ಮ ಫೋಟೋ ಹಾಗೂ ವಸ್ತುವಿನ ವಿವರಗಳನ್ನು ಗ್ರಾಹಕರಿಗೆ ಸಫಲವಾಗಿ ಕಳುಹಿಸಲಾಗಿದೆ ಮತ್ತು ಕಾಯಂ ಆಗಿ ಸೇವ್ ಮಾಡಲಾಗಿದೆ!
+                ✅ ನಿಮ್ಮ ಫೋಟೋ ಹಾಗೂ ವಸ್ತುವಿನ ವಿವರಗಳನ್ನು ಗ್ರಾಹಕರಿಗೆ ಯಶಸ್ವಿಯಾಗಿ ಕಳುಹಿಸಲಾಗಿದೆ!
             </div>
 
             <!-- Upload Tab -->
@@ -150,7 +150,7 @@
                 localStorage.setItem('lm_products', JSON.stringify(products));
                 localStorage.setItem('lm_orders', JSON.stringify(orders));
             } catch (err) {
-                alert("ಮೆಮೊರಿ ಭರ್ತಿಯಾಗಿದೆ! ದಯವಿಟ್ಟು ಹಳೆಯ ಆಸಕ್ತಿಕರವಲ್ಲದ ವಸ್ತುಗಳನ್ನು ಡಿಲೀಟ್ ಮಾಡಿ.");
+                alert("ಮೆಮೊರಿ ಭರ್ತಿಯಾಗಿದೆ! ದಯವಿಟ್ಟು ಕೆಲವು ಹಳೆಯ ವಸ್ತುಗಳನ್ನು ಡಿಲೀಟ್ ಮಾಡಿ.");
             }
         }
 
@@ -174,34 +174,9 @@
             }
         }
 
-        // Auto Image Compression to prevent auto-deletion
-        function compressAndSaveImage(file, callback) {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = function (event) {
-                const img = new Image();
-                img.src = event.target.result;
-                img.onload = function () {
-                    const canvas = document.createElement('canvas');
-                    const maxWidth = 300; // Small width for memory optimization
-                    const scaleSize = maxWidth / img.width;
-                    canvas.width = maxWidth;
-                    canvas.height = img.height * scaleSize;
-
-                    const ctx = canvas.getContext('canvas');
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    const compressedUrl = canvas.toDataURL('image/jpeg', 0.6); // 60% quality
-                    callback(compressedUrl);
-                };
-            };
-        }
-
+        // Fast & Safe Image Reader
         function addProduct(e) {
             e.preventDefault();
-            const btn = document.getElementById('upload-btn');
-            btn.innerText = "⏳ ಅಪ್‌ಲೋಡ್ ಆಗುತ್ತಿದೆ...";
-            btn.disabled = true;
-
             const name = document.getElementById('p-name').value.trim();
             const oldPrice = Number(document.getElementById('p-old-price').value);
             const price = Number(document.getElementById('p-price').value);
@@ -209,15 +184,13 @@
             const fileInput = document.getElementById('p-file');
 
             if (fileInput.files && fileInput.files[0]) {
-                compressAndSaveImage(fileInput.files[0], function (compressedImg) {
-                    saveProductObj(name, oldPrice, price, qty, compressedImg);
-                    btn.innerText = "👍 ಓಕೆ (ಅಪ್‌ಲೋಡ್ ಮಾಡಿ ಗ್ರಾಹಕರಿಗೆ ಕಳುಹಿಸಿ)";
-                    btn.disabled = false;
-                });
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    saveProductObj(name, oldPrice, price, qty, event.target.result);
+                };
+                reader.readAsDataURL(fileInput.files[0]);
             } else {
                 saveProductObj(name, oldPrice, price, qty, defaultImg);
-                btn.innerText = "👍 ಓಕೆ (ಅಪ್‌ಲೋಡ್ ಮಾಡಿ ಗ್ರಾಹಕರಿಗೆ ಕಳುಹಿಸಿ)";
-                btn.disabled = false;
             }
         }
 
@@ -227,8 +200,10 @@
             saveData();
             document.getElementById('product-form').reset();
             
+            // Success Pop-up Alert
             const alertBox = document.getElementById('vendor-success-msg');
             alertBox.classList.remove('hidden');
+            alert("✅ ಯಶಸ್ವಿ! ನಿಮ್ಮ ಫೋಟೋ ಹಾಗೂ ವಸ್ತುವಿನ ವಿವರಗಳನ್ನು ಗ್ರಾಹಕರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ.");
             setTimeout(() => alertBox.classList.add('hidden'), 4000);
 
             renderAll();
@@ -321,7 +296,7 @@
                 </div>
             `).join('') || '<p class="text-gray-500 text-sm italic">ಇನ್ನೂ ಯಾವುದೇ ಆರ್ಡರ್ ಮಾಡಲಾಗಿಲ್ಲ.</p>';
 
-            // 3. Vendor Stock View (Tiny Cards with Edit & Delete)
+            // 3. Vendor Stock View
             const vendorProdDiv = document.getElementById('vendor-product-list');
             vendorProdDiv.innerHTML = products.map(p => `
                 <div class="border rounded-lg p-2 bg-gray-50 flex flex-col justify-between items-center text-center shadow-sm">
@@ -330,7 +305,7 @@
                     <p class="text-xs text-green-700 font-bold">₹${p.price} <span class="text-gray-400 text-[10px] line-through">₹${p.oldPrice}</span></p>
                     <p class="text-[10px] text-gray-500 mb-2">${p.qty}</p>
                     <div class="flex gap-1 w-full mt-1">
-                        <button onclick="editPrice(${p.id})" class="bg-amber-500 text-white text-[10px] font-bold py-1 px-1.5 rounded w-1/2">✏️ ರೇಟ್ ಎಡಿಟ್</button>
+                        <button onclick="editPrice(${p.id})" class="bg-amber-500 text-white text-[10px] font-bold py-1 px-1.5 rounded w-1/2">✏️ ಎಡಿಟ್</button>
                         <button onclick="deleteProduct(${p.id})" class="bg-red-600 text-white text-[10px] font-bold py-1 px-1.5 rounded w-1/2">🗑️ ಡಿಲೀಟ್</button>
                     </div>
                 </div>
