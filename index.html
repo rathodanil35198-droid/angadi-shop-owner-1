@@ -3,198 +3,300 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Local Market Multi-Role App (Flipkart Model)</title>
+    <title>ನಮ್ಮ ಲೋಕಲ್ ಮಾರ್ಕೆಟ್ (Local Market App)</title>
+    <!-- Tailwind CSS for UI Design -->
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 font-sans">
 
-    <!-- Navigation / Role Switcher -->
-    <header class="bg-blue-600 text-white p-4 shadow-md sticky top-0 z-50">
+    <!-- Header / Navigation -->
+    <header class="bg-blue-600 text-white p-4 shadow-lg sticky top-0 z-50">
         <div class="container mx-auto flex flex-wrap justify-between items-center">
-            <h1 class="text-xl font-bold">🛒 LocalMarket App</h1>
-            <div class="space-x-2 mt-2 sm:mt-0">
-                <button onclick="switchRole('customer')" class="bg-blue-700 px-3 py-1 rounded text-sm hover:bg-blue-800">Customer</button>
-                <button onclick="switchRole('vendor')" class="bg-blue-700 px-3 py-1 rounded text-sm hover:bg-blue-800">Vendor</button>
-                <button onclick="switchRole('delivery')" class="bg-blue-700 px-3 py-1 rounded text-sm hover:bg-blue-800">Delivery</button>
-                <button onclick="switchRole('admin')" class="bg-blue-700 px-3 py-1 rounded text-sm hover:bg-blue-800">Admin</button>
+            <h1 class="text-xl font-bold flex items-center gap-2">
+                🛍️ ಲೋಕಲ್ ಮಾರ್ಕೆಟ್ (2 Days Delivery)
+            </h1>
+            <div class="space-x-1 mt-2 sm:mt-0">
+                <button onclick="switchRole('customer')" class="bg-blue-800 hover:bg-blue-900 text-white px-3 py-1.5 rounded text-sm font-medium">ಕಸ್ಟಮರ್</button>
+                <button onclick="switchRole('vendor')" class="bg-blue-800 hover:bg-blue-900 text-white px-3 py-1.5 rounded text-sm font-medium">ಅಂಗಡಿಯವರು</button>
+                <button onclick="switchRole('delivery')" class="bg-blue-800 hover:bg-blue-900 text-white px-3 py-1.5 rounded text-sm font-medium">ಡೆಲಿವರಿ ಬಾಯ್</button>
+                <button onclick="switchRole('admin')" class="bg-blue-800 hover:bg-blue-900 text-white px-3 py-1.5 rounded text-sm font-medium">ಅಡ್ಮಿನ್ (ಮಾಲೀಕ)</button>
             </div>
         </div>
     </header>
 
     <main class="container mx-auto p-4 max-w-4xl">
 
-        <!-- 1. CUSTOMER VIEW -->
+        <!-- 1. CUSTOMER SECTION -->
         <section id="customer-view" class="role-section space-y-6">
-            <div class="bg-white p-4 rounded shadow">
-                <h2 class="text-lg font-bold text-blue-600 mb-3">🛍️ Customer Shopping App</h2>
-                <div id="customer-products" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <!-- Products loaded dynamically -->
+            <div class="bg-white p-5 rounded-lg shadow-md border">
+                <h2 class="text-lg font-bold text-blue-700 mb-4 border-b pb-2">🛒 ಲಭ್ಯವಿರುವ ವಸ್ತುಗಳು (Shopping Zone)</h2>
+                <div id="customer-products" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Products will render here -->
                 </div>
             </div>
-            <div class="bg-white p-4 rounded shadow">
-                <h3 class="font-bold text-md mb-2">My Orders & Live Tracking</h3>
-                <div id="customer-orders" class="space-y-2 text-sm"></div>
+
+            <div class="bg-white p-5 rounded-lg shadow-md border">
+                <h3 class="font-bold text-lg text-gray-800 mb-3 border-b pb-2">📦 ನನ್ನ ಆರ್ಡರ್‌ಗಳು & ಲೈವ್ ಟ್ರ್ಯಾಕಿಂಗ್</h3>
+                <div id="customer-orders" class="space-y-3">
+                    <!-- Orders will render here -->
+                </div>
             </div>
         </section>
 
-        <!-- 2. VENDOR VIEW -->
+        <!-- 2. VENDOR SECTION -->
         <section id="vendor-view" class="role-section hidden space-y-6">
-            <div class="bg-white p-4 rounded shadow">
-                <h2 class="text-lg font-bold text-green-600 mb-3">🏪 Vendor / Shop Keeper Panel</h2>
-                <form id="product-form" onsubmit="addProduct(event)" class="space-y-3">
-                    <input type="text" id="p-name" placeholder="Product Name" required class="w-full p-2 border rounded">
-                    <input type="number" id="p-price" placeholder="Price (₹)" required class="w-full p-2 border rounded">
-                    <input type="text" id="p-image" placeholder="Image URL (optional)" class="w-full p-2 border rounded">
-                    <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded w-full">Upload Product</button>
+            <div class="bg-white p-5 rounded-lg shadow-md border">
+                <h2 class="text-lg font-bold text-green-700 mb-4 border-b pb-2">🏪 ಅಂಗಡಿಯವರ ಪ್ಯಾನಲ್ (Upload Product)</h2>
+                <form id="product-form" onsubmit="addProduct(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">ವಸ್ತುವಿನ ಹೆಸರು (Product Name):</label>
+                        <input type="text" id="p-name" placeholder="ಉದಾ: ಚಪ್ಪಲಿ / ಶೂ / ಗಿಫ್ಟ್" required class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-green-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">ಬೆಲೆ (Price in ₹):</label>
+                        <input type="number" id="p-price" placeholder="499" required class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-green-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">ಫೋಟೋ ಲಿಂಕ್ (Image URL - Optional):</label>
+                        <input type="url" id="p-image" placeholder="https://example.com/photo.jpg" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-green-500 outline-none">
+                    </div>
+                    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 px-4 rounded-lg w-full transition">ಆಪ್‌ಗೆ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ</button>
                 </form>
             </div>
-            <div class="bg-white p-4 rounded shadow">
-                <h3 class="font-bold text-md mb-2">Incoming Orders (Pack Items)</h3>
-                <div id="vendor-orders" class="space-y-2 text-sm"></div>
+
+            <div class="bg-white p-5 rounded-lg shadow-md border">
+                <h3 class="font-bold text-lg text-gray-800 mb-3 border-b pb-2">📋 ಬಂದಿರುವ ಆರ್ಡರ್‌ಗಳು (Pack & Dispatch)</h3>
+                <div id="vendor-orders" class="space-y-3">
+                    <!-- Vendor orders render here -->
+                </div>
             </div>
         </section>
 
-        <!-- 3. DELIVERY PARTNER VIEW -->
+        <!-- 3. DELIVERY SECTION -->
         <section id="delivery-view" class="role-section hidden space-y-6">
-            <div class="bg-white p-4 rounded shadow">
-                <h2 class="text-lg font-bold text-orange-600 mb-3">🚚 Delivery Partner App</h2>
-                <p class="text-sm text-gray-600 mb-3">Orders ready for pickup from shops:</p>
-                <div id="delivery-orders" class="space-y-3"></div>
+            <div class="bg-white p-5 rounded-lg shadow-md border">
+                <h2 class="text-lg font-bold text-orange-600 mb-2 border-b pb-2">🚚 ಡೆಲಿವರಿ ಪಾರ್ಟ್‌ನರ್ ಆಪ್</h2>
+                <p class="text-xs text-gray-500 mb-4">*2 ದಿನದೊಳಗೆ ತಲುಪಿಸುವ ಆರ್ಡರ್‌ಗಳು:</p>
+                <div id="delivery-orders" class="space-y-3">
+                    <!-- Delivery tasks render here -->
+                </div>
             </div>
         </section>
 
-        <!-- 4. MASTER ADMIN VIEW -->
+        <!-- 4. ADMIN SECTION -->
         <section id="admin-view" class="role-section hidden space-y-6">
-            <div class="bg-white p-4 rounded shadow">
-                <h2 class="text-lg font-bold text-purple-600 mb-3">👑 Master Admin Panel (Owner)</h2>
-                <div class="grid grid-cols-2 gap-4 mb-4">
-                    <div class="bg-purple-50 p-3 rounded text-center">
-                        <p class="text-gray-500 text-sm">Total Sales</p>
-                        <p id="admin-sales" class="text-xl font-bold text-purple-700">₹0</p>
+            <div class="bg-white p-5 rounded-lg shadow-md border">
+                <h2 class="text-lg font-bold text-purple-700 mb-4 border-b pb-2">👑 ಮಾಸ್ಟರ್ ಅಡ್ಮಿನ್ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್</h2>
+                
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div class="bg-purple-50 p-4 rounded-lg border border-purple-200 text-center">
+                        <p class="text-gray-600 text-xs font-semibold">ಒಟ್ಟು ಒಟ್ಟು ವ್ಯಾಪಾರ (Total Sales)</p>
+                        <p id="admin-sales" class="text-2xl font-black text-purple-800 mt-1">₹0</p>
                     </div>
-                    <div class="bg-purple-50 p-3 rounded text-center">
-                        <p class="text-gray-500 text-sm">My Commission (10%)</p>
-                        <p id="admin-commission" class="text-xl font-bold text-purple-700">₹0</p>
+                    <div class="bg-green-50 p-4 rounded-lg border border-green-200 text-center">
+                        <p class="text-gray-600 text-xs font-semibold">ನಿಮ್ಮ ಕಮಿಷನ್ (10%)</p>
+                        <p id="admin-commission" class="text-2xl font-black text-green-700 mt-1">₹0</p>
                     </div>
                 </div>
-                <h3 class="font-bold text-md mb-2">All Platform Orders</h3>
-                <div id="admin-orders" class="space-y-2 text-sm"></div>
+
+                <h3 class="font-bold text-md text-gray-800 mb-3">ಪ್ಲಾಟ್‌ಫಾರ್ಮ್‌ನ ಎಲ್ಲಾ ಆರ್ಡರ್‌ಗಳು:</h3>
+                <div id="admin-orders" class="space-y-3">
+                    <!-- Admin view of all orders -->
+                </div>
             </div>
         </section>
 
     </main>
 
-    <!-- JavaScript Logic -->
     <script>
-        // Initial Mock Data
-        let products = JSON.parse(localStorage.getItem('products')) || [
-            { id: 1, name: 'Fresh Organic Tomatoes (1kg)', price: 40, image: 'https://via.placeholder.com/150' },
-            { id: 2, name: 'Milky Mist Curd (500g)', price: 35, image: 'https://via.placeholder.com/150' }
+        // Default Mock Data
+        const initialProducts = [
+            { id: 101, name: 'ಸ್ಟೈಲಿಶ್ ಲೇಡೀಸ್ ಚಪ್ಪಲಿ', price: 299, image: 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=300' },
+            { id: 102, name: 'ಸ್ಪೋರ್ಟ್ಸ್ ಶೂ (Sports Shoes)', price: 699, image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300' },
+            { id: 103, name: 'ಗಿಫ್ಟ್ ಬಾಕ್ಸ್ (Gift Box)', price: 450, image: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=300' }
         ];
 
-        let orders = JSON.parse(localStorage.getItem('orders')) || [];
+        // Fetch or Initialize Data
+        let products = JSON.parse(localStorage.getItem('lm_products')) || initialProducts;
+        let orders = JSON.parse(localStorage.getItem('lm_orders')) || [];
 
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('lm_products', JSON.stringify(products));
+            localStorage.setItem('lm_orders', JSON.stringify(orders));
+        }
+
+        // Switch Between Modules
         function switchRole(role) {
             document.querySelectorAll('.role-section').forEach(sec => sec.classList.add('hidden'));
             document.getElementById(`${role}-view`).classList.remove('hidden');
             renderAll();
         }
 
+        // Add Product (Vendor)
         function addProduct(e) {
             e.preventDefault();
-            const name = document.getElementById('p-name').value;
-            const price = parseFloat(document.getElementById('p-price').value);
-            const image = document.getElementById('p-image').value || 'https://via.placeholder.com/150';
+            const name = document.getElementById('p-name').value.trim();
+            const price = Number(document.getElementById('p-price').value);
+            const image = document.getElementById('p-image').value.trim() || 'https://images.unsplash.com/photo-1560343090-f0409e92791a?w=300';
 
-            products.push({ id: Date.now(), name, price, image });
-            localStorage.setItem('products', JSON.stringify(products));
+            if (!name || isNaN(price) || price <= 0) {
+                alert('ದಯವಿಟ್ಟು ಸರಿಯಾದ ವಿವರಗಳನ್ನು ನಮೂದಿಸಿ!');
+                return;
+            }
+
+            const newProd = { id: Date.now(), name, price, image };
+            products.push(newProd);
+            saveData();
             document.getElementById('product-form').reset();
-            alert('Product Uploaded Successfully!');
+            alert('ಪ್ರಾಡಕ್ಟ್ ಆಪ್‌ಗೆ ಯಶಸ್ವಿಯಾಗಿ ಸೇರಿಸಲಾಗಿದೆ!');
             renderAll();
         }
 
+        // Place Order (Customer)
         function placeOrder(productId) {
-            const product = products.find(p => p.id === productId);
+            const prod = products.find(p => p.id === productId);
+            if (!prod) return;
+
+            // Calculate 2 days estimated delivery date
+            const deliveryDate = new Date();
+            deliveryDate.setDate(deliveryDate.getDate() + 2);
+            const formattedDate = deliveryDate.toLocaleDateString('kn-IN', { day: 'numeric', month: 'short' });
+
             const newOrder = {
-                id: 'ORD' + Math.floor(1000 + Math.random() * 9000),
-                productName: product.name,
-                price: product.price,
-                status: 'Order Placed (Waiting for Vendor)' // Placed -> Packed -> Out for Delivery -> Delivered
+                id: 'ORD-' + Math.floor(100000 + Math.random() * 900000),
+                productName: prod.name,
+                price: Number(prod.price),
+                status: 'ಆರ್ಡರ್ ಸ್ವೀಕರಿಸಲಾಗಿದೆ (ಅಂಗಡಿಯವರು ಪ್ಯಾಕ್ ಮಾಡುತ್ತಿದ್ದಾರೆ)',
+                estDelivery: formattedDate,
+                image: prod.image
             };
-            orders.push(newOrder);
-            localStorage.setItem('orders', JSON.stringify(orders));
-            alert('Order Placed Successfully!');
+
+            orders.unshift(newOrder);
+            saveData();
+            alert(`ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಆಗಿದೆ! ಅಂದಾಜು ಡೆಲಿವರಿ: ${formattedDate}`);
             renderAll();
         }
 
-        function updateOrderStatus(orderId, newStatus) {
-            orders = orders.map(o => o.id === orderId ? {...o, status: newStatus} : o);
-            localStorage.setItem('orders', JSON.stringify(orders));
+        // Update Order Status (Vendor / Delivery)
+        function updateStatus(orderId, nextStatus) {
+            orders = orders.map(o => o.id === orderId ? { ...o, status: nextStatus } : o);
+            saveData();
             renderAll();
         }
 
+        // Render All Views Dynamically
         function renderAll() {
-            // 1. Render Customer Products
+            // 1. Customer Products Render
             const custProdDiv = document.getElementById('customer-products');
             custProdDiv.innerHTML = products.map(p => `
-                <div class="border p-3 rounded flex justify-between items-center">
-                    <div>
-                        <h4 class="font-bold">${p.name}</h4>
-                        <p class="text-green-600 font-semibold">₹${p.price}</p>
+                <div class="border rounded-lg p-3 flex items-center justify-between bg-gray-50 hover:shadow transition">
+                    <div class="flex items-center space-x-3">
+                        <img src="${p.image}" class="w-16 h-16 object-cover rounded" alt="${p.name}">
+                        <div>
+                            <h4 class="font-bold text-gray-800">${p.name}</h4>
+                            <p class="text-green-600 font-bold text-md">₹${p.price.toLocaleString('en-IN')}</p>
+                            <span class="text-[10px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded">⚡ 2 ದಿನದಲ್ಲಿ ಡೆಲಿವರಿ</span>
+                        </div>
                     </div>
-                    <button onclick="placeOrder(${p.id})" class="bg-blue-600 text-white px-3 py-1 rounded text-sm">Buy Now</button>
+                    <button onclick="placeOrder(${p.id})" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg text-sm shadow">
+                        ಖರೀದಿಸಿ
+                    </button>
                 </div>
-            `).join('') || '<p class="text-gray-500">No products available.</p>';
+            `).join('');
 
-            // 2. Render Customer Orders
+            // 2. Customer Orders Render
             const custOrdDiv = document.getElementById('customer-orders');
-            custOrdDiv.innerHTML = orders.map(o => `
-                <div class="border p-2 rounded flex justify-between items-center">
-                    <div><b>${o.id}</b>: ${o.productName} (₹${o.price})</div>
-                    <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs font-bold">${o.status}</span>
-                </div>
-            `).join('') || '<p class="text-gray-500">No orders yet.</p>';
+            if (orders.length === 0) {
+                custOrdDiv.innerHTML = `<p class="text-gray-500 text-sm italic">ಇನ್ನೂ ಯಾವುದೇ ಆರ್ಡರ್ ಮಾಡಲಾಗಿಲ್ಲ.</p>`;
+            } else {
+                custOrdDiv.innerHTML = orders.map(o => `
+                    <div class="border p-3 rounded-lg bg-gray-50 flex justify-between items-center">
+                        <div>
+                            <p class="text-xs text-gray-500 font-mono">ಐಡಿ: ${o.id}</p>
+                            <p class="font-bold text-gray-800">${o.productName} - <span class="text-green-600">₹${o.price}</span></p>
+                            <p class="text-xs text-gray-600">ಅಂದಾಜು ಡೆಲಿವರಿ: <b>${o.estDelivery}</b></p>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 bg-yellow-100 text-yellow-800 rounded-full font-bold border border-yellow-300">
+                            ${o.status}
+                        </span>
+                    </div>
+                `).join('');
+            }
 
-            // 3. Render Vendor Orders
+            // 3. Vendor Orders Render
             const vendOrdDiv = document.getElementById('vendor-orders');
-            vendOrdDiv.innerHTML = orders.map(o => `
-                <div class="border p-2 rounded flex justify-between items-center">
-                    <div><b>${o.id}</b>: ${o.productName}</div>
-                    <div>
-                        <span class="text-xs mr-2 font-semibold">Status: ${o.status}</span>
-                        ${o.status.includes('Placed') ? `<button onclick="updateOrderStatus('${o.id}', 'Packed by Vendor')" class="bg-green-600 text-white px-2 py-1 rounded text-xs">Pack Item</button>` : ''}
+            const vendorPending = orders.filter(o => o.status.includes('ಸ್ವೀಕರಿಸಲಾಗಿದೆ'));
+            if (vendorPending.length === 0) {
+                vendOrdDiv.innerHTML = `<p class="text-gray-500 text-sm italic">ಹೊಸ ಆರ್ಡರ್‌ಗಳು ಬಂದಿಲ್ಲ.</p>`;
+            } else {
+                vendOrdDiv.innerHTML = vendorPending.map(o => `
+                    <div class="border p-3 rounded-lg bg-green-50 flex justify-between items-center">
+                        <div>
+                            <p class="font-bold text-gray-800">${o.productName} (₹${o.price})</p>
+                            <p class="text-xs text-gray-500">ಆರ್ಡರ್ ಐಡಿ: ${o.id}</p>
+                        </div>
+                        <button onclick="updateStatus('${o.id}', 'ಪ್ಯಾಕಿಂಗ್ ಪೂರ್ಣಗೊಂಡಿದೆ (ಡೆಲಿವರಿಗೆ ಸಿದ್ಧ)')" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold">
+                            📦 ಪ್ಯಾಕ್ ಮಾಡಲಾಗಿದೆ
+                        </button>
                     </div>
-                </div>
-            `).join('') || '<p class="text-gray-500">No incoming orders.</p>';
+                `).join('');
+            }
 
-            // 4. Render Delivery Orders
+            // 4. Delivery Orders Render
             const delOrdDiv = document.getElementById('delivery-orders');
-            delOrdDiv.innerHTML = orders.map(o => `
-                <div class="border p-2 rounded flex justify-between items-center">
-                    <div><b>${o.id}</b>: ${o.productName} <br><small class="text-gray-500">Status: ${o.status}</small></div>
-                    <div>
-                        ${o.status.includes('Packed') ? `<button onclick="updateOrderStatus('${o.id}', 'Out for Delivery')" class="bg-orange-600 text-white px-2 py-1 rounded text-xs mr-1">Accept</button>` : ''}
-                        ${o.status.includes('Out for Delivery') ? `<button onclick="updateOrderStatus('${o.id}', 'Delivered ✅')" class="bg-blue-600 text-white px-2 py-1 rounded text-xs">Mark Delivered</button>` : ''}
+            const deliveryTasks = orders.filter(o => o.status.includes('ಪ್ಯಾಕಿಂಗ್ ಪೂರ್ಣಗೊಂಡಿದೆ') || o.status.includes('ಡೆಲಿವರಿದಾರರ ಬಳಿ ಇದೆ'));
+            if (deliveryTasks.length === 0) {
+                delOrdDiv.innerHTML = `<p class="text-gray-500 text-sm italic">ಡೆಲಿವರಿ ಮಾಡಲು ಯಾವುದೇ ವಸ್ತು ಸಿದ್ಧವಿಲ್ಲ.</p>`;
+            } else {
+                delOrdDiv.innerHTML = deliveryTasks.map(o => `
+                    <div class="border p-3 rounded-lg bg-orange-50 flex justify-between items-center">
+                        <div>
+                            <p class="font-bold text-gray-800">${o.productName}</p>
+                            <p class="text-xs text-gray-600">ಸ್ಟೇಟಸ್: ${o.status}</p>
+                        </div>
+                        <div>
+                            ${o.status.includes('ಪ್ಯಾಕಿಂಗ್ ಪೂರ್ಣಗೊಂಡಿದೆ') ? `
+                                <button onclick="updateStatus('${o.id}', 'ಡೆಲಿವರಿದಾರರ ಬಳಿ ಇದೆ (ದಾರಿಯಲ್ಲಿದೆ)')" class="bg-orange-600 hover:bg-orange-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold">
+                                    🚴 ಸ್ವೀಕರಿಸಿ (Pick Up)
+                                </button>
+                            ` : ''}
+                            ${o.status.includes('ದಾರಿಯಲ್ಲಿದೆ') ? `
+                                <button onclick="updateStatus('${o.id}', 'ಡೆಲಿವರಿ ಪೂರ್ಣಗೊಂಡಿದೆ ✅')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold">
+                                    ✅ ಡೆಲಿವರಿ ಮುಗಿಸಿ
+                                </button>
+                            ` : ''}
+                        </div>
                     </div>
-                </div>
-            `).join('') || '<p class="text-gray-500">No delivery tasks.</p>';
+                `).join('');
+            }
 
-            // 5. Render Admin Panel Stats
-            let totalSales = orders.filter(o => o.status.includes('Delivered')).reduce((sum, o) => sum + o.price, 0);
-            let commission = totalSales * 0.10; // 10% commission
-            document.getElementById('admin-sales').innerText = `₹${totalSales}`;
-            document.getElementById('admin-commission').innerText = `₹${commission}`;
+            // 5. Admin Stats Render
+            const completedOrders = orders.filter(o => o.status.includes('ಡೆಲಿವರಿ ಪೂರ್ಣಗೊಂಡಿದೆ'));
+            const totalSales = completedOrders.reduce((sum, o) => sum + Number(o.price), 0);
+            const commission = Math.round(totalSales * 0.10); // 10% Platform Commission
+
+            document.getElementById('admin-sales').innerText = `₹${totalSales.toLocaleString('en-IN')}`;
+            document.getElementById('admin-commission').innerText = `₹${commission.toLocaleString('en-IN')}`;
 
             const adminOrdDiv = document.getElementById('admin-orders');
-            adminOrdDiv.innerHTML = orders.map(o => `
-                <div class="border p-2 rounded flex justify-between items-center">
-                    <div><b>${o.id}</b> - ${o.productName} (₹${o.price})</div>
-                    <span class="text-xs font-bold text-purple-700">${o.status}</span>
-                </div>
-            `).join('') || '<p class="text-gray-500">No platform orders.</p>';
+            if (orders.length === 0) {
+                adminOrdDiv.innerHTML = `<p class="text-gray-500 text-sm italic">ಸಿಸ್ಟಮ್‌ನಲ್ಲಿ ಯಾವುದೇ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>`;
+            } else {
+                adminOrdDiv.innerHTML = orders.map(o => `
+                    <div class="border p-2.5 rounded-lg bg-gray-50 flex justify-between items-center text-xs">
+                        <div>
+                            <span class="font-bold text-gray-800">${o.id}</span> - ${o.productName} (₹${o.price})
+                        </div>
+                        <span class="font-bold px-2 py-0.5 rounded ${o.status.includes('ಪೂರ್ಣಗೊಂಡಿದೆ') ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">
+                            ${o.status}
+                        </span>
+                    </div>
+                `).join('');
+            }
         }
 
-        // Initial render on load
+        // First Initial Load
         renderAll();
     </script>
 </body>
