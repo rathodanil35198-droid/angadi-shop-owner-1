@@ -1,511 +1,201 @@
 <!DOCTYPE html>
 <html lang="kn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shahapur Local Market</title>
-
-<style>
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f4f6f8;
-  color: #222;
-}
-
-header {
-  background: #087f5b;
-  color: white;
-  padding: 20px 14px;
-  text-align: center;
-}
-
-header h1 {
-  margin: 0 0 8px;
-}
-
-.container {
-  max-width: 1000px;
-  margin: auto;
-  padding: 15px;
-}
-
-input, select, textarea, button {
-  width: 100%;
-  padding: 12px;
-  margin: 6px 0;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 16px;
-}
-
-button {
-  background: #087f5b;
-  color: white;
-  border: none;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-button:hover {
-  opacity: 0.9;
-}
-
-.secondary {
-  background: #34495e;
-}
-
-.danger {
-  background: #c0392b;
-}
-
-.products {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
-  gap: 12px;
-}
-
-.card, .panel {
-  background: white;
-  padding: 14px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px #0000000c;
-  margin-bottom: 14px;
-}
-
-.product-icon {
-  font-size: 48px;
-  text-align: center;
-}
-
-.price {
-  color: #087f5b;
-  font-size: 19px;
-  font-weight: bold;
-}
-
-nav {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 15px;
-}
-
-nav button {
-  flex: 1;
-  min-width: 100px;
-}
-
-.hidden {
-  display: none;
-}
-
-small {
-  color: #666;
-}
-
-.order-item {
-  border-bottom: 1px solid #ddd;
-  padding: 12px 0;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Market Multi-Role App (Flipkart Model)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-
-<body>
-
-<header>
-  <h1>🛒 Shahapur Local Market</h1>
-  <p>ನಿಮ್ಮ ಊರಿನ ಅಂಗಡಿ — ನಿಮ್ಮ ಮನೆಗೆ ಡೆಲಿವರಿ</p>
-</header>
-
-<div class="container">
-
-<nav>
-  <button onclick="showPage('home')">ಅಂಗಡಿಗಳು</button>
-  <button onclick="showPage('cart')">🛒 Cart <span id="cartCount">0</span></button>
-  <button onclick="showPage('orders')">ನನ್ನ ಆರ್ಡರ್</button>
-  <button class="secondary" onclick="showPage('owner')">Shop Owner</button>
-</nav>
-
-<section id="home">
-
-  <input
-    id="search"
-    placeholder="🔍 ವಸ್ತು ಅಥವಾ ಅಂಗಡಿ ಹುಡುಕಿ..."
-    oninput="renderProducts()"
-  >
-
-  <select id="category" onchange="renderProducts()">
-    <option value="all">ಎಲ್ಲಾ ಕ್ಯಾಟಗರಿಗಳು</option>
-    <option value="Grocery">ಕಿರಾಣಿ ಅಂಗಡಿ</option>
-    <option value="Vegetables">ತರಕಾರಿ</option>
-    <option value="Fruits">ಹಣ್ಣುಗಳು</option>
-    <option value="Medical">ಮೆಡಿಕಲ್</option>
-  </select>
-
-  <h2>ನಮ್ಮ ಅಂಗಡಿಗಳ ವಸ್ತುಗಳು</h2>
-
-  <div id="productList" class="products"></div>
-
-</section>
-
-<section id="cart" class="hidden">
-
-  <h2>🛒 ನಿಮ್ಮ ಕಾರ್ಟ್</h2>
-
-  <div id="cartList"></div>
-
-  <h3>ಒಟ್ಟು: ₹<span id="total">0</span></h3>
-
-  <div class="panel">
-    <h3>ಡೆಲಿವರಿ ವಿವರಗಳು</h3>
-
-    <input id="customerName" placeholder="ನಿಮ್ಮ ಹೆಸರು">
-
-    <input
-      id="customerPhone"
-      type="tel"
-      maxlength="10"
-      placeholder="10 ಅಂಕಿಯ ಮೊಬೈಲ್ ನಂಬರ್"
-    >
-
-    <textarea
-      id="customerAddress"
-      placeholder="ಮನೆ ವಿಳಾಸ, ಏರಿಯಾ, ಊರು"
-    ></textarea>
-
-    <select id="payment">
-      <option value="COD">Cash on Delivery</option>
-      <option value="ONLINE">Online Payment (Demo ಮಾತ್ರ)</option>
-    </select>
-
-    <button onclick="placeOrder()">ಆರ್ಡರ್ ಮಾಡಿ</button>
-
-    <small>
-      ಸೂಚನೆ: Online Payment ಆಯ್ಕೆ ಮಾಡಿದರೂ ಈ Demo ಹಣ ಪಾವತಿಸುವುದಿಲ್ಲ.
-    </small>
-  </div>
-
-</section>
-
-<section id="orders" class="hidden">
-
-  <h2>ನಿಮ್ಮ ಆರ್ಡರ್‌ಗಳು</h2>
-
-  <div id="myOrders"></div>
-
-</section>
-
-<section id="owner" class="hidden">
-
-  <h2>🏪 Shop Owner Panel</h2>
-
-  <p>
-    ಈ Demoಯಲ್ಲಿ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಉಳಿಸಿದ ಆರ್ಡರ್‌ಗಳನ್ನು ಇಲ್ಲಿ ನೋಡಬಹುದು.
-  </p>
-
-  <div id="ownerOrders"></div>
-
-</section>
-
-</div>
-
-<script>
-const products = [
-  {
-    id: 1,
-    name: "ಅಕ್ಕಿ 1 KG",
-    price: 60,
-    category: "Grocery",
-    shop: "ಶ್ರೀ ಲಕ್ಷ್ಮಿ ಕಿರಾಣಿ",
-    icon: "🍚"
-  },
-  {
-    id: 2,
-    name: "ಸಕ್ಕರೆ 1 KG",
-    price: 48,
-    category: "Grocery",
-    shop: "ಶ್ರೀ ಲಕ್ಷ್ಮಿ ಕಿರಾಣಿ",
-    icon: "🛍️"
-  },
-  {
-    id: 3,
-    name: "ಟೊಮೇಟೊ 1 KG",
-    price: 35,
-    category: "Vegetables",
-    shop: "ರೈತ ತರಕಾರಿ ಅಂಗಡಿ",
-    icon: "🍅"
-  },
-  {
-    id: 4,
-    name: "ಆಲೂಗಡ್ಡೆ 1 KG",
-    price: 40,
-    category: "Vegetables",
-    shop: "ರೈತ ತರಕಾರಿ ಅಂಗಡಿ",
-    icon: "🥔"
-  },
-  {
-    id: 5,
-    name: "ಸೇಬು 1 KG",
-    price: 160,
-    category: "Fruits",
-    shop: "ಫ್ರೂಟ್ಸ್ ಕಾರ್ನರ್",
-    icon: "🍎"
-  },
-  {
-    id: 6,
-    name: "ಬಾಳೆಹಣ್ಣು",
-    price: 50,
-    category: "Fruits",
-    shop: "ಫ್ರೂಟ್ಸ್ ಕಾರ್ನರ್",
-    icon: "🍌"
-  },
-  {
-    id: 7,
-    name: "ಫಸ್ಟ್ ಏಯ್ಡ್ ವಸ್ತುಗಳು",
-    price: 80,
-    category: "Medical",
-    shop: "ಹೆಲ್ತ್ ಮೆಡಿಕಲ್",
-    icon: "🩺"
-  }
-];
-
-let cart = JSON.parse(localStorage.getItem("marketCart") || "{}");
-
-let orders = JSON.parse(
-  localStorage.getItem("marketOrders") || "[]"
-);
-
-function saveData() {
-  localStorage.setItem("marketCart", JSON.stringify(cart));
-  localStorage.setItem("marketOrders", JSON.stringify(orders));
-}
-
-function showPage(page) {
-  ["home", "cart", "orders", "owner"].forEach(id => {
-    document.getElementById(id).classList.add("hidden");
-  });
-
-  document.getElementById(page).classList.remove("hidden");
-
-  if (page === "cart") renderCart();
-  if (page === "orders") renderMyOrders();
-  if (page === "owner") renderOwnerOrders();
-}
-
-function renderProducts() {
-  const search = document.getElementById("search")
-    .value.toLowerCase().trim();
-
-  const category = document.getElementById("category").value;
-
-  const filtered = products.filter(p => {
-    const matchesSearch =
-      p.name.toLowerCase().includes(search) ||
-      p.shop.toLowerCase().includes(search);
-
-    const matchesCategory =
-      category === "all" || p.category === category;
-
-    return matchesSearch && matchesCategory;
-  });
-
-  document.getElementById("productList").innerHTML =
-    filtered.map(p => `
-      <div class="card">
-        <div class="product-icon">${p.icon}</div>
-        <h3>${p.name}</h3>
-        <small>${p.shop}</small>
-        <p class="price">₹${p.price}</p>
-        <button onclick="addToCart(${p.id})">
-          ಕಾರ್ಟ್‌ಗೆ ಸೇರಿಸಿ
-        </button>
-      </div>
-    `).join("") || "<p>ವಸ್ತುಗಳು ಸಿಗಲಿಲ್ಲ.</p>";
-}
-
-function addToCart(id) {
-  cart[id] = (cart[id] || 0) + 1;
-  saveData();
-  updateCartCount();
-  alert("ವಸ್ತು ಕಾರ್ಟ್‌ಗೆ ಸೇರಿಸಲಾಗಿದೆ!");
-}
-
-function updateCartCount() {
-  const count = Object.values(cart).reduce(
-    (sum, qty) => sum + qty, 0
-  );
-
-  document.getElementById("cartCount").textContent = count;
-}
-
-function changeQty(id, amount) {
-  cart[id] = (cart[id] || 0) + amount;
-
-  if (cart[id] <= 0) delete cart[id];
-
-  saveData();
-  renderCart();
-  updateCartCount();
-}
-
-function renderCart() {
-  const items = products.filter(p => cart[p.id]);
-
-  document.getElementById("cartList").innerHTML =
-    items.map(p => `
-      <div class="card">
-        <b>${p.name}</b>
-        <p>₹${p.price} × ${cart[p.id]}</p>
-
-        <button onclick="changeQty(${p.id}, 1)">+</button>
-        <button class="secondary"
-          onclick="changeQty(${p.id}, -1)">−</button>
-
-        <p>ಮೊತ್ತ: ₹${p.price * cart[p.id]}</p>
-      </div>
-    `).join("") || "<p>ನಿಮ್ಮ ಕಾರ್ಟ್ ಖಾಲಿಯಾಗಿದೆ.</p>";
-
-  const total = items.reduce(
-    (sum, p) => sum + p.price * cart[p.id], 0
-  );
-
-  document.getElementById("total").textContent = total;
-}
-
-function placeOrder() {
-  const name = document.getElementById("customerName")
-    .value.trim();
-
-  const phone = document.getElementById("customerPhone")
-    .value.trim();
-
-  const address = document.getElementById("customerAddress")
-    .value.trim();
-
-  const payment = document.getElementById("payment").value;
-
-  const items = products.filter(p => cart[p.id]);
-
-  if (!items.length) {
-    alert("ಮೊದಲು ಕಾರ್ಟ್‌ಗೆ ವಸ್ತುಗಳನ್ನು ಸೇರಿಸಿ.");
-    return;
-  }
-
-  if (!name || !/^[6-9]\d{9}$/.test(phone) || !address) {
-    alert("ಸರಿಯಾದ ಹೆಸರು, 10 ಅಂಕಿಯ ಮೊಬೈಲ್ ನಂಬರ್ ಮತ್ತು ವಿಳಾಸ ನೀಡಿ.");
-    return;
-  }
-
-  const orderItems = items.map(p => ({
-    productId: p.id,
-    name: p.name,
-    price: p.price,
-    quantity: cart[p.id],
-    shop: p.shop
-  }));
-
-  const total = orderItems.reduce(
-    (sum, item) => sum + item.price * item.quantity, 0
-  );
-
-  const order = {
-    id: "ORD" + Date.now(),
-    name,
-    phone,
-    address,
-    payment,
-    items: orderItems,
-    total,
-    status: "ಹೊಸ ಆರ್ಡರ್",
-    createdAt: new Date().toLocaleString("en-IN")
-  };
-
-  orders.unshift(order);
-  cart = {};
-
-  saveData();
-  updateCartCount();
-  renderCart();
-
-  alert("Demo ಆರ್ಡರ್ ರಚಿಸಲಾಗಿದೆ! ಆರ್ಡರ್ ID: " + order.id);
-
-  showPage("orders");
-}
-
-function renderMyOrders() {
-  const html = orders.map(o => `
-    <div class="card">
-      <h3>ಆರ್ಡರ್: ${o.id}</h3>
-      <p>ದಿನಾಂಕ: ${o.createdAt}</p>
-      <p>ಒಟ್ಟು: ₹${o.total}</p>
-      <p>ಸ್ಥಿತಿ: <b>${o.status}</b></p>
-      <p>${o.items.map(i =>
-        `${i.name} × ${i.quantity}`
-      ).join("<br>")}</p>
-    </div>
-  `).join("");
-
-  document.getElementById("myOrders").innerHTML =
-    html || "<p>ಇನ್ನೂ ಯಾವುದೇ ಆರ್ಡರ್ ಇಲ್ಲ.</p>";
-}
-
-function renderOwnerOrders() {
-  const html = orders.map(o => `
-    <div class="card">
-      <h3>${o.id}</h3>
-      <p>ಗ್ರಾಹಕ: ${o.name}</p>
-      <p>ಮೊಬೈಲ್: ${o.phone}</p>
-      <p>ವಿಳಾಸ: ${o.address}</p>
-      <p>ಪಾವತಿ ವಿಧಾನ: ${o.payment}</p>
-      <p>ಒಟ್ಟು: ₹${o.total}</p>
-      <p>ಸ್ಥಿತಿ: <b>${o.status}</b></p>
-
-      ${o.items.map(i =>
-        `<p>${i.shop} — ${i.name} × ${i.quantity}</p>`
-      ).join("")}
-
-      <button onclick="updateStatus('${o.id}', 'ಆರ್ಡರ್ ಸ್ವೀಕರಿಸಲಾಗಿದೆ')">
-        Accept Order
-      </button>
-
-      <button class="secondary"
-        onclick="updateStatus('${o.id}', 'ಡೆಲಿವರಿಗೆ ಸಿದ್ಧ')">
-        Ready for Delivery
-      </button>
-
-      <button class="secondary"
-        onclick="updateStatus('${o.id}', 'ಡೆಲಿವರಿ ಪೂರ್ಣ')">
-        Delivered
-      </button>
-    </div>
-  `).join("");
-
-  document.getElementById("ownerOrders").innerHTML =
-    html || "<p>ಇನ್ನೂ ಯಾವುದೇ ಆರ್ಡರ್ ಬಂದಿಲ್ಲ.</p>";
-}
-
-function updateStatus(id, status) {
-  const order = orders.find(o => o.id === id);
-
-  if (!order) return;
-
-  order.status = status;
-
-  saveData();
-  renderOwnerOrders();
-  renderMyOrders();
-
-  alert("ಆರ್ಡರ್ ಸ್ಥಿತಿ ಬದಲಾಯಿಸಲಾಗಿದೆ.");
-}
-
-renderProducts();
-updateCartCount();
-</script>
-
+<body class="bg-gray-100 font-sans">
+
+    <!-- Navigation / Role Switcher -->
+    <header class="bg-blue-600 text-white p-4 shadow-md sticky top-0 z-50">
+        <div class="container mx-auto flex flex-wrap justify-between items-center">
+            <h1 class="text-xl font-bold">🛒 LocalMarket App</h1>
+            <div class="space-x-2 mt-2 sm:mt-0">
+                <button onclick="switchRole('customer')" class="bg-blue-700 px-3 py-1 rounded text-sm hover:bg-blue-800">Customer</button>
+                <button onclick="switchRole('vendor')" class="bg-blue-700 px-3 py-1 rounded text-sm hover:bg-blue-800">Vendor</button>
+                <button onclick="switchRole('delivery')" class="bg-blue-700 px-3 py-1 rounded text-sm hover:bg-blue-800">Delivery</button>
+                <button onclick="switchRole('admin')" class="bg-blue-700 px-3 py-1 rounded text-sm hover:bg-blue-800">Admin</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 max-w-4xl">
+
+        <!-- 1. CUSTOMER VIEW -->
+        <section id="customer-view" class="role-section space-y-6">
+            <div class="bg-white p-4 rounded shadow">
+                <h2 class="text-lg font-bold text-blue-600 mb-3">🛍️ Customer Shopping App</h2>
+                <div id="customer-products" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Products loaded dynamically -->
+                </div>
+            </div>
+            <div class="bg-white p-4 rounded shadow">
+                <h3 class="font-bold text-md mb-2">My Orders & Live Tracking</h3>
+                <div id="customer-orders" class="space-y-2 text-sm"></div>
+            </div>
+        </section>
+
+        <!-- 2. VENDOR VIEW -->
+        <section id="vendor-view" class="role-section hidden space-y-6">
+            <div class="bg-white p-4 rounded shadow">
+                <h2 class="text-lg font-bold text-green-600 mb-3">🏪 Vendor / Shop Keeper Panel</h2>
+                <form id="product-form" onsubmit="addProduct(event)" class="space-y-3">
+                    <input type="text" id="p-name" placeholder="Product Name" required class="w-full p-2 border rounded">
+                    <input type="number" id="p-price" placeholder="Price (₹)" required class="w-full p-2 border rounded">
+                    <input type="text" id="p-image" placeholder="Image URL (optional)" class="w-full p-2 border rounded">
+                    <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded w-full">Upload Product</button>
+                </form>
+            </div>
+            <div class="bg-white p-4 rounded shadow">
+                <h3 class="font-bold text-md mb-2">Incoming Orders (Pack Items)</h3>
+                <div id="vendor-orders" class="space-y-2 text-sm"></div>
+            </div>
+        </section>
+
+        <!-- 3. DELIVERY PARTNER VIEW -->
+        <section id="delivery-view" class="role-section hidden space-y-6">
+            <div class="bg-white p-4 rounded shadow">
+                <h2 class="text-lg font-bold text-orange-600 mb-3">🚚 Delivery Partner App</h2>
+                <p class="text-sm text-gray-600 mb-3">Orders ready for pickup from shops:</p>
+                <div id="delivery-orders" class="space-y-3"></div>
+            </div>
+        </section>
+
+        <!-- 4. MASTER ADMIN VIEW -->
+        <section id="admin-view" class="role-section hidden space-y-6">
+            <div class="bg-white p-4 rounded shadow">
+                <h2 class="text-lg font-bold text-purple-600 mb-3">👑 Master Admin Panel (Owner)</h2>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div class="bg-purple-50 p-3 rounded text-center">
+                        <p class="text-gray-500 text-sm">Total Sales</p>
+                        <p id="admin-sales" class="text-xl font-bold text-purple-700">₹0</p>
+                    </div>
+                    <div class="bg-purple-50 p-3 rounded text-center">
+                        <p class="text-gray-500 text-sm">My Commission (10%)</p>
+                        <p id="admin-commission" class="text-xl font-bold text-purple-700">₹0</p>
+                    </div>
+                </div>
+                <h3 class="font-bold text-md mb-2">All Platform Orders</h3>
+                <div id="admin-orders" class="space-y-2 text-sm"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Initial Mock Data
+        let products = JSON.parse(localStorage.getItem('products')) || [
+            { id: 1, name: 'Fresh Organic Tomatoes (1kg)', price: 40, image: 'https://via.placeholder.com/150' },
+            { id: 2, name: 'Milky Mist Curd (500g)', price: 35, image: 'https://via.placeholder.com/150' }
+        ];
+
+        let orders = JSON.parse(localStorage.getItem('orders')) || [];
+
+        function switchRole(role) {
+            document.querySelectorAll('.role-section').forEach(sec => sec.classList.add('hidden'));
+            document.getElementById(`${role}-view`).classList.remove('hidden');
+            renderAll();
+        }
+
+        function addProduct(e) {
+            e.preventDefault();
+            const name = document.getElementById('p-name').value;
+            const price = parseFloat(document.getElementById('p-price').value);
+            const image = document.getElementById('p-image').value || 'https://via.placeholder.com/150';
+
+            products.push({ id: Date.now(), name, price, image });
+            localStorage.setItem('products', JSON.stringify(products));
+            document.getElementById('product-form').reset();
+            alert('Product Uploaded Successfully!');
+            renderAll();
+        }
+
+        function placeOrder(productId) {
+            const product = products.find(p => p.id === productId);
+            const newOrder = {
+                id: 'ORD' + Math.floor(1000 + Math.random() * 9000),
+                productName: product.name,
+                price: product.price,
+                status: 'Order Placed (Waiting for Vendor)' // Placed -> Packed -> Out for Delivery -> Delivered
+            };
+            orders.push(newOrder);
+            localStorage.setItem('orders', JSON.stringify(orders));
+            alert('Order Placed Successfully!');
+            renderAll();
+        }
+
+        function updateOrderStatus(orderId, newStatus) {
+            orders = orders.map(o => o.id === orderId ? {...o, status: newStatus} : o);
+            localStorage.setItem('orders', JSON.stringify(orders));
+            renderAll();
+        }
+
+        function renderAll() {
+            // 1. Render Customer Products
+            const custProdDiv = document.getElementById('customer-products');
+            custProdDiv.innerHTML = products.map(p => `
+                <div class="border p-3 rounded flex justify-between items-center">
+                    <div>
+                        <h4 class="font-bold">${p.name}</h4>
+                        <p class="text-green-600 font-semibold">₹${p.price}</p>
+                    </div>
+                    <button onclick="placeOrder(${p.id})" class="bg-blue-600 text-white px-3 py-1 rounded text-sm">Buy Now</button>
+                </div>
+            `).join('') || '<p class="text-gray-500">No products available.</p>';
+
+            // 2. Render Customer Orders
+            const custOrdDiv = document.getElementById('customer-orders');
+            custOrdDiv.innerHTML = orders.map(o => `
+                <div class="border p-2 rounded flex justify-between items-center">
+                    <div><b>${o.id}</b>: ${o.productName} (₹${o.price})</div>
+                    <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs font-bold">${o.status}</span>
+                </div>
+            `).join('') || '<p class="text-gray-500">No orders yet.</p>';
+
+            // 3. Render Vendor Orders
+            const vendOrdDiv = document.getElementById('vendor-orders');
+            vendOrdDiv.innerHTML = orders.map(o => `
+                <div class="border p-2 rounded flex justify-between items-center">
+                    <div><b>${o.id}</b>: ${o.productName}</div>
+                    <div>
+                        <span class="text-xs mr-2 font-semibold">Status: ${o.status}</span>
+                        ${o.status.includes('Placed') ? `<button onclick="updateOrderStatus('${o.id}', 'Packed by Vendor')" class="bg-green-600 text-white px-2 py-1 rounded text-xs">Pack Item</button>` : ''}
+                    </div>
+                </div>
+            `).join('') || '<p class="text-gray-500">No incoming orders.</p>';
+
+            // 4. Render Delivery Orders
+            const delOrdDiv = document.getElementById('delivery-orders');
+            delOrdDiv.innerHTML = orders.map(o => `
+                <div class="border p-2 rounded flex justify-between items-center">
+                    <div><b>${o.id}</b>: ${o.productName} <br><small class="text-gray-500">Status: ${o.status}</small></div>
+                    <div>
+                        ${o.status.includes('Packed') ? `<button onclick="updateOrderStatus('${o.id}', 'Out for Delivery')" class="bg-orange-600 text-white px-2 py-1 rounded text-xs mr-1">Accept</button>` : ''}
+                        ${o.status.includes('Out for Delivery') ? `<button onclick="updateOrderStatus('${o.id}', 'Delivered ✅')" class="bg-blue-600 text-white px-2 py-1 rounded text-xs">Mark Delivered</button>` : ''}
+                    </div>
+                </div>
+            `).join('') || '<p class="text-gray-500">No delivery tasks.</p>';
+
+            // 5. Render Admin Panel Stats
+            let totalSales = orders.filter(o => o.status.includes('Delivered')).reduce((sum, o) => sum + o.price, 0);
+            let commission = totalSales * 0.10; // 10% commission
+            document.getElementById('admin-sales').innerText = `₹${totalSales}`;
+            document.getElementById('admin-commission').innerText = `₹${commission}`;
+
+            const adminOrdDiv = document.getElementById('admin-orders');
+            adminOrdDiv.innerHTML = orders.map(o => `
+                <div class="border p-2 rounded flex justify-between items-center">
+                    <div><b>${o.id}</b> - ${o.productName} (₹${o.price})</div>
+                    <span class="text-xs font-bold text-purple-700">${o.status}</span>
+                </div>
+            `).join('') || '<p class="text-gray-500">No platform orders.</p>';
+        }
+
+        // Initial render on load
+        renderAll();
+    </script>
 </body>
 </html>
