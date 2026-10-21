@@ -15,7 +15,7 @@
         .form-group { margin-bottom: 10px; }
         .form-group label { display: block; font-weight: 600; margin-bottom: 4px; font-size: 13px; }
         .form-group input, .form-group select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
-        .btn-main { background: #28a745; color: white; border: none; padding: 10px; width: 100%; font-weight: bold; font-size: 15px; border-radius: 6px; cursor: pointer; }
+        .btn-main { background: #28a745; color: white; border: none; padding: 12px; width: 100%; font-weight: bold; font-size: 16px; border-radius: 6px; cursor: pointer; }
         
         .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
         .product-card { border: 1px solid #e0e0e0; border-radius: 8px; padding: 8px; background: #fff; text-align: center; }
@@ -42,7 +42,7 @@
 
 <header>ಅರ್ಪಿತ್ ಇ-ಶಾಪ್ - ಶಹಾಪುರ</header>
 
-<!-- 1. ಲಾಗಿನ್ / ರಿಜಿಸ್ಟ್ರೇಷನ್ ಪೇಜ್ -->
+<!-- 1. ಲಾಗಿನ್ / ರಿಜಿಸ್ಟ್ರೇಷನ್ ಫಾರ್ಮ್ -->
 <div id="auth-container" class="container">
     <h3>🏪 ಅಂಗಡಿ ಮಾಲೀಕರ ಲಾಗಿನ್ / ನೋಂದಣಿ</h3>
     <div class="form-group"><label>ಅಂಗಡಿ ಮಾಲೀಕರ ಹೆಸರು:</label><input type="text" id="reg-name" placeholder="ನಿಮ್ಮ ಹೆಸರು"></div>
@@ -65,10 +65,10 @@
         </select>
     </div>
     <div class="form-group"><label>ಅಂಗಡಿಯ ಫೋಟೋ (ঐಚ್ಛಿಕ):</label><input type="file" id="reg-img" accept="image/*"></div>
-    <button class="btn-main" onclick="registerShop()">ಲಾಗಿನ್ / ನೋಂದಾಯಿಸಿ</button>
+    <button class="btn-main" id="login-btn" onclick="registerShopFast()">ಲಾಗಿನ್ / ನೋಂದಾಯಿಸಿ</button>
 </div>
 
-<!-- ಮುಖ್ಯ ಆಪ್ ಇಂಟರ್ಫೇಸ್ -->
+<!-- 2. ಮುಖ್ಯ ಅಪ್ಲಿಕೇಶನ್ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ -->
 <div id="main-app" style="display:none;">
     <div class="nav-buttons">
         <button class="tab-btn active" onclick="switchTab('owner')">ಅಂಗಡಿ ಮಾಲೀಕರು</button>
@@ -76,7 +76,7 @@
         <button class="tab-btn" onclick="switchTab('delivery')">ಡೆಲಿವರಿ ಬಾಯ್</button>
     </div>
 
-    <!-- ಅಂಗಡಿ ಮಾಲೀಕರ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ -->
+    <!-- ಅಂಗಡಿ ಮಾಲೀಕರ ವಿಭಾಗ -->
     <div id="owner-section" class="container">
         <h3 id="form-title">ಹೊಸ ವಸ್ತು ಸೇರಿಸಿ / ಎಡಿಟ್ ಮಾಡಿ</h3>
         <input type="hidden" id="edit-index" value="">
@@ -92,7 +92,7 @@
             </select>
         </div>
 
-        <div class="form-group" id="size-container">
+        <div class="form-group">
             <label id="size-label">ಸೈಜ್ / ಅಳತೆ:</label>
             <select id="p-size"></select>
         </div>
@@ -118,7 +118,7 @@
         <div id="owner-product-list" class="product-grid"></div>
     </div>
 
-    <!-- ಗ್ರಾಹಕರ ಶಾಪಿಂಗ್ ಪೇಜ್ -->
+    <!-- ಗ್ರಾಹಕರ ವಿಭಾಗ -->
     <div id="customer-section" class="container" style="display:none;">
         <h3>🛒 ಗ್ರಾಹಕರ ಶಾಪಿಂಗ್ ಪುಟ</h3>
         <div id="customer-product-list" class="product-grid"></div>
@@ -128,7 +128,7 @@
         <div id="customer-orders-list"></div>
     </div>
 
-    <!-- ಡೆಲಿವರಿ ಬಾಯ್ ಪ್ಯಾನೆಲ್ -->
+    <!-- ಡೆಲಿವರಿ ಬಾಯ್ ವಿಭಾಗ -->
     <div id="delivery-section" class="container" style="display:none;">
         <h3>🚴 ಡೆಲಿವರಿ ಬಾಯ್ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್</h3>
         <div id="delivery-orders-list"></div>
@@ -157,40 +157,47 @@
         setTimeout(() => { t.style.display = 'none'; }, 2500);
     }
 
-    function registerShop() {
-        const name = document.getElementById('reg-name').value;
-        const phone = document.getElementById('reg-phone').value;
-        const shopname = document.getElementById('reg-shopname').value;
-        const district = document.getElementById('reg-district').value;
-        const taluk = document.getElementById('reg-taluk').value;
-        const village = document.getElementById('reg-village').value;
-        const pin = document.getElementById('reg-pin').value;
+    // ವೇಗವಾಗಿ ಮತ್ತು ದೋಷರಹಿತವಾಗಿ ನೋಂದಾಯಿಸುವ ಫಂಕ್ಷನ್
+    function registerShopFast() {
+        const name = document.getElementById('reg-name').value.trim();
+        const phone = document.getElementById('reg-phone').value.trim();
+        const shopname = document.getElementById('reg-shopname').value.trim();
+        const district = document.getElementById('reg-district').value.trim();
+        const taluk = document.getElementById('reg-taluk').value.trim();
+        const village = document.getElementById('reg-village').value.trim();
+        const pin = document.getElementById('reg-pin').value.trim();
         const category = document.getElementById('reg-category').value;
         const imgInput = document.getElementById('reg-img');
 
         if(!name || !phone || !shopname) { 
-            alert("ದಯವಿಟ್ಟು ಕನಿಷ್ಠ ಮಾಲೀಕರ ಹೆಸರು, ಮೊಬೈಲ್ ಮತ್ತು ಅಂಗಡಿ ಹೆಸರು ಹಾಕಿ!"); 
+            alert("ದಯವಿಟ್ಟು ಕನಿಷ್ಠ ಮಾಲೀಕರ ಹೆಸರು, ಮೊಬೈಲ್ ಮತ್ತು ಅಂಗಡಿಯ ಹೆಸರು ಭರ್ತಿ ಮಾಡಿ!"); 
             return; 
         }
 
         const uniqueId = 'SH' + Math.floor(1000 + Math.random() * 9000);
+        const profileObj = { name, phone, shopname, district, taluk, village, pin, category, uniqueId, img: '' };
 
-        if(imgInput.files && imgInput.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const imgData = e.target.result;
-                saveShopProfile({name, phone, shopname, district, taluk, village, pin, category, uniqueId, img: imgData});
-            };
-            reader.readAsDataURL(imgInput.files[0]);
-        } else {
-            saveShopProfile({name, phone, shopname, district, taluk, village, pin, category, uniqueId, img: ''});
+        // ಪ್ರೊಫೈಲ್ ಡೇಟಾ ಸೇವ್ ಮಾಡಿ ತಕ್ಷಣ ಮುಂದಿನ ಪೇಜ್‌ಗೆ ಕಳುಹಿಸುವುದು
+        try {
+            if (imgInput.files && imgInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    profileObj.img = e.target.result;
+                    finalizeRegister(profileObj);
+                };
+                reader.readAsDataURL(imgInput.files[0]);
+            } else {
+                finalizeRegister(profileObj);
+            }
+        } catch(err) {
+            finalizeRegister(profileObj);
         }
     }
 
-    function saveShopProfile(profile) {
+    function finalizeRegister(profile) {
         shopData = profile;
         localStorage.setItem('arpit_shop_profile', JSON.stringify(shopData));
-        alert("ನೋಂದಣಿ ಯಶಸ್ವಿಯಾಗಿದೆ! ನಿಮ್ಮ ಡಿಜಿಟಲ್ 4-ಅಂಕಿಯ ಐಡಿ: " + shopData.uniqueId);
+        alert("ನೋಂದಣಿ ಯಶಸ್ವಿಯಾಗಿದೆ! ನಿಮ್ಮ 4-ಅಂಕಿಯ ID: " + shopData.uniqueId);
         document.getElementById('auth-container').style.display = 'none';
         document.getElementById('main-app').style.display = 'block';
         updateSizeOptions();
