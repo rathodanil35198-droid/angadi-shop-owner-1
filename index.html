@@ -18,7 +18,7 @@
     <header class="bg-indigo-700 text-white p-3 shadow-lg sticky top-0 z-50">
         <div class="container mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
             <h1 class="text-xl font-bold flex items-center gap-2">
-                <i class="fa-solid fa-store"></i> local Express Network
+                <i class="fa-solid fa-store"></i> Local Express Network
             </h1>
             <!-- 4 Main Portal Access Buttons -->
             <div class="flex flex-wrap gap-1 sm:gap-2">
@@ -97,9 +97,8 @@
                 </form>
             </div>
 
-            <!-- Shop Owner Main Dashboard (Post-Login Next Page) -->
+            <!-- Shop Owner Main Dashboard -->
             <div id="shop-dashboard" class="hidden space-y-4">
-                <!-- Profile Header -->
                 <div class="bg-indigo-900 text-white p-4 rounded-xl shadow-md flex justify-between items-center">
                     <div class="flex items-center gap-3">
                         <img id="dash-shop-img" src="https://images.unsplash.com/photo-1604719312566-8912e9227c6a?w=150" class="w-12 h-12 rounded-full object-cover border-2 border-white">
@@ -314,7 +313,7 @@
             document.getElementById('old-login-box').classList.toggle('hidden');
         }
 
-        // Image Processing Function (Ultra Lightweight)
+        // Fixed & Safe Image Processing Function
         function processImage(fileInput, targetHiddenId) {
             const file = fileInput.files[0];
             if (file) {
@@ -328,7 +327,7 @@
                         canvas.width = 150; 
                         canvas.height = 150;
                         ctx.drawImage(img, 0, 0, 150, 150);
-                        document.getElementById(targetHiddenId).value = canvas.toDataURL('image/jpeg', 0.4);
+                        document.getElementById(targetHiddenId).value = canvas.toDataURL('image/jpeg', 0.5);
                     }
                 };
                 reader.readAsDataURL(file);
@@ -364,7 +363,7 @@
             document.getElementById('success-popup').classList.remove('hidden');
 
             // Async Save to Firebase Database
-            database.ref('shops/' + random4Digit).set(shopData);
+            database.ref('shops/' + random4Digit).set(shopData).catch(err => console.error(err));
         }
 
         function goToNextDashboardPage() {
