@@ -29,34 +29,30 @@
         <section id="customer-view" class="role-section space-y-6">
             <div class="bg-white p-5 rounded-lg shadow-md border">
                 <h2 class="text-lg font-bold text-blue-700 mb-4 border-b pb-2">🛒 ಲಭ್ಯವಿರುವ ವಸ್ತುಗಳು (Shopping Zone)</h2>
-                <div id="customer-products" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- Dynamic Products -->
-                </div>
+                <div id="customer-products" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
             </div>
 
             <div class="bg-white p-5 rounded-lg shadow-md border">
                 <h3 class="font-bold text-lg text-gray-800 mb-3 border-b pb-2">📦 ನನ್ನ ಆರ್ಡರ್‌ಗಳು & ಲೈವ್ ಟ್ರ್ಯಾಕಿಂಗ್</h3>
-                <div id="customer-orders" class="space-y-3">
-                    <!-- Dynamic Orders -->
-                </div>
+                <div id="customer-orders" class="space-y-3"></div>
             </div>
         </section>
 
         <!-- 2. VENDOR SECTION -->
         <section id="vendor-view" class="role-section hidden space-y-6">
             
-            <!-- Vendor Internal Sub-Navigation -->
+            <!-- Sub Navigation -->
             <div class="flex gap-2 border-b pb-2">
                 <button onclick="switchVendorTab('upload')" id="tab-btn-upload" class="bg-green-700 text-white px-4 py-2 rounded-lg font-bold text-sm">📸 ಫೋಟೋ / ವಸ್ತು ಅಪ್‌ಲೋಡ್</button>
                 <button onclick="switchVendorTab('orders')" id="tab-btn-orders" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg font-bold text-sm">📋 ಆರ್ಡರ್ ನೋಡಿ</button>
             </div>
 
-            <!-- Vendor Success Alert Banner -->
+            <!-- Success Alert Message -->
             <div id="vendor-success-msg" class="hidden bg-green-100 border border-green-400 text-green-800 px-4 py-3 rounded-lg text-sm font-bold shadow">
-                ✅ ನಿಮ್ಮ ಫೋಟೋ ಹಾಗೂ ವಸ್ತುವಿನ ವಿವರಗಳನ್ನು ಗ್ರಾಹಕರಿಗೆ ಸಫಲವಾಗಿ ಕಳುಹಿಸಲಾಗಿದೆ!
+                ✅ ನಿಮ್ಮ ಫೋಟೋ ಹಾಗೂ ವಸ್ತುವಿನ ವಿವರಗಳನ್ನು ಗ್ರಾಹಕರಿಗೆ ಸಫಲವಾಗಿ ಕಳುಹಿಸಲಾಗಿದೆ ಮತ್ತು ಕಾಯಂ ಆಗಿ ಸೇವ್ ಮಾಡಲಾಗಿದೆ!
             </div>
 
-            <!-- A. Upload Form Sub-Tab -->
+            <!-- Upload Tab -->
             <div id="vendor-upload-tab" class="space-y-6">
                 <div class="bg-white p-5 rounded-lg shadow-md border">
                     <h2 class="text-lg font-bold text-green-700 mb-4 border-b pb-2">🏪 ವಸ್ತುವಿನ ಫೋಟೋ & ವಿವರಗಳನ್ನು ಸೇರಿಸಿ</h2>
@@ -69,7 +65,7 @@
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">ವಸ್ತುವಿನ ಹೆಸರು (Product Name):</label>
-                            <input type="text" id="p-name" placeholder="ಉದಾ: ಶೂ / ಚಪ್ಪಲಿ / ಗಿಫ್ಟ್" required class="w-full p-2.5 border rounded-lg outline-none focus:ring-2 focus:ring-green-500">
+                            <input type="text" id="p-name" placeholder="ಉದಾ: ಶೂ / ಚಪ್ಪಲಿ / ಬಟ್ಟೆ" required class="w-full p-2.5 border rounded-lg outline-none focus:ring-2 focus:ring-green-500">
                         </div>
 
                         <div class="grid grid-cols-2 gap-3">
@@ -94,27 +90,23 @@
                             </select>
                         </div>
 
-                        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg w-full text-md transition shadow">
+                        <button type="submit" id="upload-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg w-full text-md transition shadow">
                             👍 ಓಕೆ (ಅಪ್‌ಲೋಡ್ ಮಾಡಿ ಗ್ರಾಹಕರಿಗೆ ಕಳುಹಿಸಿ)
                         </button>
                     </form>
                 </div>
 
-                <!-- Vendor Uploaded Items Management (Edit & Delete) -->
+                <!-- Vendor Uploaded Products Stock View -->
                 <div class="bg-white p-5 rounded-lg shadow-md border">
                     <h3 class="font-bold text-md text-gray-800 mb-3 border-b pb-2">🖼️ ನೀವು ಅಪ್‌ಲೋಡ್ ಮಾಡಿದ ವಸ್ತುಗಳು (ನಿಮ್ಮ ಸ್ಟಾಕ್)</h3>
-                    <div id="vendor-product-list" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                        <!-- Tiny image cards rendered here -->
-                    </div>
+                    <div id="vendor-product-list" class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>
                 </div>
             </div>
 
-            <!-- B. Orders Sub-Tab -->
+            <!-- Orders Tab -->
             <div id="vendor-orders-tab" class="hidden bg-white p-5 rounded-lg shadow-md border">
                 <h3 class="font-bold text-lg text-gray-800 mb-3 border-b pb-2">📋 ಬಂದಿರುವ ಆರ್ಡರ್‌ಗಳು (Pack & Dispatch)</h3>
-                <div id="vendor-orders" class="space-y-3">
-                    <!-- Orders List -->
-                </div>
+                <div id="vendor-orders" class="space-y-3"></div>
             </div>
         </section>
 
@@ -149,16 +141,17 @@
     </main>
 
     <script>
-        // Default Mock Data
         const defaultImg = "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200";
-        let products = JSON.parse(localStorage.getItem('lm_products')) || [
-            { id: 101, name: 'ಸ್ಟೈಲಿಶ್ ಲೇಡೀಸ್ ಚಪ್ಪಲಿ', oldPrice: 499, price: 299, qty: '1 ಪೀಸ್ (1 Pc)', image: defaultImg }
-        ];
+        let products = JSON.parse(localStorage.getItem('lm_products')) || [];
         let orders = JSON.parse(localStorage.getItem('lm_orders')) || [];
 
         function saveData() {
-            localStorage.setItem('lm_products', JSON.stringify(products));
-            localStorage.setItem('lm_orders', JSON.stringify(orders));
+            try {
+                localStorage.setItem('lm_products', JSON.stringify(products));
+                localStorage.setItem('lm_orders', JSON.stringify(orders));
+            } catch (err) {
+                alert("ಮೆಮೊರಿ ಭರ್ತಿಯಾಗಿದೆ! ದಯವಿಟ್ಟು ಹಳೆಯ ಆಸಕ್ತಿಕರವಲ್ಲದ ವಸ್ತುಗಳನ್ನು ಡಿಲೀಟ್ ಮಾಡಿ.");
+            }
         }
 
         function switchRole(role) {
@@ -167,7 +160,6 @@
             renderAll();
         }
 
-        // Sub-tabs in Vendor view
         function switchVendorTab(tab) {
             if (tab === 'upload') {
                 document.getElementById('vendor-upload-tab').classList.remove('hidden');
@@ -182,9 +174,34 @@
             }
         }
 
-        // Add Product with Image File Upload
+        // Auto Image Compression to prevent auto-deletion
+        function compressAndSaveImage(file, callback) {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function (event) {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = function () {
+                    const canvas = document.createElement('canvas');
+                    const maxWidth = 300; // Small width for memory optimization
+                    const scaleSize = maxWidth / img.width;
+                    canvas.width = maxWidth;
+                    canvas.height = img.height * scaleSize;
+
+                    const ctx = canvas.getContext('canvas');
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    const compressedUrl = canvas.toDataURL('image/jpeg', 0.6); // 60% quality
+                    callback(compressedUrl);
+                };
+            };
+        }
+
         function addProduct(e) {
             e.preventDefault();
+            const btn = document.getElementById('upload-btn');
+            btn.innerText = "⏳ ಅಪ್‌ಲೋಡ್ ಆಗುತ್ತಿದೆ...";
+            btn.disabled = true;
+
             const name = document.getElementById('p-name').value.trim();
             const oldPrice = Number(document.getElementById('p-old-price').value);
             const price = Number(document.getElementById('p-price').value);
@@ -192,14 +209,15 @@
             const fileInput = document.getElementById('p-file');
 
             if (fileInput.files && fileInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const imageDataUrl = e.target.result;
-                    saveProductObj(name, oldPrice, price, qty, imageDataUrl);
-                };
-                reader.readAsDataURL(fileInput.files[0]);
+                compressAndSaveImage(fileInput.files[0], function (compressedImg) {
+                    saveProductObj(name, oldPrice, price, qty, compressedImg);
+                    btn.innerText = "👍 ಓಕೆ (ಅಪ್‌ಲೋಡ್ ಮಾಡಿ ಗ್ರಾಹಕರಿಗೆ ಕಳುಹಿಸಿ)";
+                    btn.disabled = false;
+                });
             } else {
                 saveProductObj(name, oldPrice, price, qty, defaultImg);
+                btn.innerText = "👍 ಓಕೆ (ಅಪ್‌ಲೋಡ್ ಮಾಡಿ ಗ್ರಾಹಕರಿಗೆ ಕಳುಹಿಸಿ)";
+                btn.disabled = false;
             }
         }
 
@@ -209,7 +227,6 @@
             saveData();
             document.getElementById('product-form').reset();
             
-            // Show Success Alert
             const alertBox = document.getElementById('vendor-success-msg');
             alertBox.classList.remove('hidden');
             setTimeout(() => alertBox.classList.add('hidden'), 4000);
@@ -217,11 +234,10 @@
             renderAll();
         }
 
-        // Edit Product Present Price
         function editPrice(prodId) {
             const prod = products.find(p => p.id === prodId);
             if (!prod) return;
-            const newPrice = prompt(`"${prod.name}" ವಸ್ತುವಿನ ಹೊಸ ರೇಟ್‌ ನಮೂದಿಸಿ (₹):`, prod.price);
+            const newPrice = prompt(`"${prod.name}" ಹೊಸ ರೇಟ್‌ ನಮೂದಿಸಿ (₹):`, prod.price);
             if (newPrice !== null && !isNaN(newPrice) && Number(newPrice) > 0) {
                 prod.price = Number(newPrice);
                 saveData();
@@ -229,7 +245,6 @@
             }
         }
 
-        // Delete Product
         function deleteProduct(prodId) {
             if (confirm("ಈ ವಸ್ತುವನ್ನು ಆಪ್‌ನಿಂದ ಸಂಪೂರ್ಣವಾಗಿ ಡಿಲೀಟ್ ಮಾಡಲು ಬಯಸುತ್ತೀರಾ?")) {
                 products = products.filter(p => p.id !== prodId);
@@ -238,7 +253,6 @@
             }
         }
 
-        // Customer Order Action
         function placeOrder(productId) {
             const prod = products.find(p => p.id === productId);
             if (!prod) return;
@@ -269,9 +283,8 @@
             renderAll();
         }
 
-        // Dynamic Rendering Engine
         function renderAll() {
-            // 1. Customer Section Products
+            // 1. Customer Section Products View
             const custProdDiv = document.getElementById('customer-products');
             custProdDiv.innerHTML = products.map(p => `
                 <div class="border rounded-lg p-3 flex items-center justify-between bg-white shadow-sm hover:shadow transition">
@@ -308,11 +321,11 @@
                 </div>
             `).join('') || '<p class="text-gray-500 text-sm italic">ಇನ್ನೂ ಯಾವುದೇ ಆರ್ಡರ್ ಮಾಡಲಾಗಿಲ್ಲ.</p>';
 
-            // 3. Vendor Uploaded Stock Cards (Tiny Image View with Edit & Delete)
+            // 3. Vendor Stock View (Tiny Cards with Edit & Delete)
             const vendorProdDiv = document.getElementById('vendor-product-list');
             vendorProdDiv.innerHTML = products.map(p => `
                 <div class="border rounded-lg p-2 bg-gray-50 flex flex-col justify-between items-center text-center shadow-sm">
-                    <img src="${p.image}" class="w-full h-20 object-cover rounded border mb-2" alt="${p.name}">
+                    <img src="${p.image}" class="w-full h-24 object-cover rounded border mb-2" alt="${p.name}">
                     <p class="font-bold text-xs text-gray-800 truncate w-full">${p.name}</p>
                     <p class="text-xs text-green-700 font-bold">₹${p.price} <span class="text-gray-400 text-[10px] line-through">₹${p.oldPrice}</span></p>
                     <p class="text-[10px] text-gray-500 mb-2">${p.qty}</p>
@@ -338,7 +351,7 @@
                 </div>
             `).join('') || '<p class="text-gray-500 text-sm italic">ಹೊಸ ಆರ್ಡರ್‌ಗಳು ಬಂದಿಲ್ಲ.</p>';
 
-            // 5. Delivery Partner View
+            // 5. Delivery View
             const delOrdDiv = document.getElementById('delivery-orders');
             const deliveryTasks = orders.filter(o => o.status.includes('ಪ್ಯಾಕಿಂಗ್ ಪೂರ್ಣಗೊಂಡಿದೆ') || o.status.includes('ದಾರಿಯಲ್ಲಿದೆ'));
             delOrdDiv.innerHTML = deliveryTasks.map(o => `
