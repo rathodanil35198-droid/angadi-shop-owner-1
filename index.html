@@ -65,7 +65,7 @@
         </select>
     </div>
     <div class="form-group"><label>ಅಂಗಡಿಯ ಫೋಟೋ (ঐಚ್ಛಿಕ):</label><input type="file" id="reg-img" accept="image/*"></div>
-    <button class="btn-main" id="login-btn" onclick="registerShopFast()">ಲಾಗಿನ್ / ನೋಂದಾಯಿಸಿ</button>
+    <button class="btn-main" onclick="registerShopDirect()">ಲಾಗಿನ್ / ನೋಂದಾಯಿಸಿ</button>
 </div>
 
 <!-- 2. ಮುಖ್ಯ ಅಪ್ಲಿಕೇಶನ್ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ -->
@@ -141,7 +141,7 @@
     let orders = JSON.parse(localStorage.getItem('arpit_shop_orders')) || [];
 
     window.onload = function() {
-        if(shopData) {
+        if(shopData && shopData.shopname) {
             document.getElementById('auth-container').style.display = 'none';
             document.getElementById('main-app').style.display = 'block';
             updateSizeOptions();
@@ -157,8 +157,7 @@
         setTimeout(() => { t.style.display = 'none'; }, 2500);
     }
 
-    // ವೇಗವಾಗಿ ಮತ್ತು ದೋಷರಹಿತವಾಗಿ ನೋಂದಾಯಿಸುವ ಫಂಕ್ಷನ್
-    function registerShopFast() {
+    function registerShopDirect() {
         const name = document.getElementById('reg-name').value.trim();
         const phone = document.getElementById('reg-phone').value.trim();
         const shopname = document.getElementById('reg-shopname').value.trim();
@@ -170,32 +169,26 @@
         const imgInput = document.getElementById('reg-img');
 
         if(!name || !phone || !shopname) { 
-            alert("ದಯವಿಟ್ಟು ಕನಿಷ್ಠ ಮಾಲೀಕರ ಹೆಸರು, ಮೊಬೈಲ್ ಮತ್ತು ಅಂಗಡಿಯ ಹೆಸರು ಭರ್ತಿ ಮಾಡಿ!"); 
+            alert("ದಯವಿಟ್ಟು ಮಾಲೀಕರ ಹೆಸರು, ಮೊಬೈಲ್ ಮತ್ತು ಅಂಗಡಿಯ ಹೆಸರು ಭರ್ತಿ ಮಾಡಿ!"); 
             return; 
         }
 
         const uniqueId = 'SH' + Math.floor(1000 + Math.random() * 9000);
-        const profileObj = { name, phone, shopname, district, taluk, village, pin, category, uniqueId, img: '' };
+        shopData = { name, phone, shopname, district, taluk, village, pin, category, uniqueId, img: '' };
 
-        // ಪ್ರೊಫೈಲ್ ಡೇಟಾ ಸೇವ್ ಮಾಡಿ ತಕ್ಷಣ ಮುಂದಿನ ಪೇಜ್‌ಗೆ ಕಳುಹಿಸುವುದು
-        try {
-            if (imgInput.files && imgInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    profileObj.img = e.target.result;
-                    finalizeRegister(profileObj);
-                };
-                reader.readAsDataURL(imgInput.files[0]);
-            } else {
-                finalizeRegister(profileObj);
-            }
-        } catch(err) {
-            finalizeRegister(profileObj);
+        if(imgInput.files && imgInput.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                shopData.img = e.target.result;
+                completeRegistration();
+            };
+            reader.readAsDataURL(imgInput.files[0]);
+        } else {
+            completeRegistration();
         }
     }
 
-    function finalizeRegister(profile) {
-        shopData = profile;
+    function completeRegistration() {
         localStorage.setItem('arpit_shop_profile', JSON.stringify(shopData));
         alert("ನೋಂದಣಿ ಯಶಸ್ವಿಯಾಗಿದೆ! ನಿಮ್ಮ 4-ಅಂಕಿಯ ID: " + shopData.uniqueId);
         document.getElementById('auth-container').style.display = 'none';
