@@ -7,7 +7,7 @@
   <title id="pageTitle">ನಮ್ಮ ಶಾಪುರ್ - ಅಂಗಡಿ ಮಾಲೀಕರ ಆಪ್ | Family Shop Shahapur</title>
   <link rel="icon" type="image/png" sizes="192x192" href="AR_Taxi_Booking_Go_Fast_512x512.png">
 
-  <!-- Firebase SDKs (Firestore & App) -->
+  <!-- Firebase SDKs -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, addDoc, onSnapshot, updateDoc, doc, deleteDoc, getDocs, setDoc, getDoc, serverTimestamp, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -48,7 +48,6 @@
 
     header { background-color: var(--primary); color: white; padding: 12px 15px; text-align: center; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); position: relative; }
     
-    /* Top Support Floating Buttons */
     .support-bar { display: flex; justify-content: flex-end; gap: 6px; margin-bottom: 8px; }
     .sup-btn { background: #25d366; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 3px; }
     .sup-btn.call { background: #ff9800; }
@@ -58,14 +57,12 @@
     .form-group { margin-bottom: 12px; }
     label { display: block; font-size: 0.8rem; font-weight: 700; margin-bottom: 4px; color: #4a5568; }
     input, select { width: 100%; padding: 10px; border: 2px solid #cbd5e0; border-radius: 8px; font-size: 0.9rem; background: #fff; }
-    input:focus, select:focus { border-color: var(--primary); outline: none; }
 
     .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.95rem; color: white; background: var(--primary); }
     .btn-success { background: var(--success); }
     .btn-danger { background: var(--danger); }
     .btn-warning { background: var(--warning); }
 
-    /* ID Card Box */
     .id-card {
       background: linear-gradient(135deg, #1e88e5, #1565c0);
       color: white; border-radius: 10px; padding: 15px; margin-bottom: 15px;
@@ -76,13 +73,11 @@
     .id-card-details p { font-size: 0.75rem; opacity: 0.9; }
     .id-number { font-size: 1rem; font-weight: bold; background: #fff; color: #1e88e5; padding: 2px 8px; border-radius: 4px; display: inline-block; margin-top: 4px; }
 
-    /* Stats Header */
     .stats-container { display: flex; gap: 6px; margin-bottom: 12px; }
     .stat-box { flex: 1; background: #e3f2fd; padding: 8px; border-radius: 8px; text-align: center; border: 1px solid #90caf9; }
     .stat-box h4 { font-size: 0.65rem; color: #1565c0; margin-bottom: 2px; }
     .stat-box p { font-size: 0.8rem; font-weight: bold; color: #0d47a1; }
 
-    /* Small Thumbnail Grid for Uploaded Photos */
     .grid-small {
       display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
       gap: 10px; margin-top: 15px;
@@ -92,9 +87,9 @@
     .card-title-small { font-size: 0.75rem; font-weight: bold; margin: 4px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
     .order-item { border-left: 5px solid var(--primary); background: #f9f9f9; padding: 12px; margin-bottom: 12px; border-radius: 6px; font-size: 0.85rem; }
+    .order-item.return-item { border-left-color: var(--danger); background: #ffebee; }
     .order-item.archived { border-left-color: #9e9e9e; background: #f1f1f1; opacity: 0.85; }
 
-    /* Modal Popup */
     .modal { display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); text-align: center; padding: 20px; overflow-y: auto; justify-content: center; align-items: center; }
     .modal-content-box { background: #fff; max-width: 380px; margin: auto; padding: 25px; border-radius: 14px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.4); }
   </style>
@@ -103,20 +98,18 @@
 
   <!-- Support / Help Bar -->
   <div class="support-bar">
-    <button onclick="logoutShop()" class="sup-btn" style="background:#e53935;">🔄 ಮರು ಲಾಗಿನ್ (Logout)</button>
+    <button onclick="logoutShop()" class="sup-btn" style="background:#e53935;">🔄 ಮರು ಲಾಗಿನ್</button>
     <a href="tel:8105010768" class="sup-btn call">📞 ಕಾಲ್ ಮಾಡಿ</a>
-    <a href="https://wa.me/918105010768?text=ನಮಸ್ಕಾರ,%20ನನಗೆ%20ಅಂಗಡಿ%20ಮಾಲೀಕರ%20ಆಪ್‌ನಲ್ಲಿ%20ಸಹಾಯ%20ಬೇಕಿದೆ." target="_blank" class="sup-btn">💬 WhatsApp</a>
+    <a href="https://wa.me/918105010768?text=ನಮಸ್ಕಾರ,%20ನನಗೆ%20ಆಪ್‌ನಲ್ಲಿ%20ಸಹಾಯ%20ಬೇಕಿದೆ." target="_blank" class="sup-btn">💬 WhatsApp</a>
   </div>
 
-  <!-- Success Modal for 4-Digit ID -->
   <div id="successModal" class="modal">
     <div class="modal-content-box">
       <div style="font-size: 2.5rem; margin-bottom: 10px;">🎉</div>
       <h3 style="color: var(--success); margin-bottom: 10px;">ಲಾಗಿನ್ ಯಶಸ್ವಿಯಾಗಿದೆ!</h3>
-      <p style="font-size: 0.9rem; margin-bottom: 10px;">ನಿಮ್ಮ 4-ಡಿಜಿಟ್ ಡಿಜಿಟಲ್ ಐಡಿ:</p>
+      <p style="font-size: 0.9rem; margin-bottom: 10px;">ನಿಮ್ಮ 4-ಡಿಜಿಟ್ ಐಡಿ:</p>
       <div id="popup-id" style="font-size: 1.5rem; font-weight: bold; color: var(--primary); background: #e3f2fd; padding: 10px; border-radius: 6px; margin-bottom: 15px;">0000</div>
-      <p style="font-size: 0.75rem; color: #666; margin-bottom: 15px;">ದಯವಿಟ್ಟು ಈ ಐಡಿಯನ್ನು ನಿಮ್ಮ ಗಮನದಲ್ಲಿಟ್ಟುಕೊಳ್ಳಿ.</p>
-      <button class="btn btn-success" onclick="closeSuccessModal()">ಸರಿ (ಮುಂದಿನ ಪುಟಕ್ಕೆ)</button>
+      <button class="btn btn-success" onclick="closeSuccessModal()">ಸರಿ</button>
     </div>
   </div>
 
@@ -131,7 +124,7 @@
       <h2>🔐 ಅಂಗಡಿ ಮಾಲೀಕರ ನೋಂದಣಿ / ಲಾಗಿನ್</h2>
       
       <div style="margin-bottom: 12px; background: #e3f2fd; padding: 8px; border-radius: 6px;">
-        <label style="font-size:0.75rem; color:#1565c0;">ಹಳೆಯ ಐಡಿ ಇದ್ದರೆ ಇಲ್ಲಿ ಹಾಕಿ ಲಾಗಿನ್ ಆಗಿ:</label>
+        <label style="font-size:0.75rem; color:#1565c0;">ಹಳೆಯ ಐಡಿ ಇದ್ದರೆ ಹಾಕಿ ಲಾಗಿನ್ ಆಗಿ:</label>
         <div style="display:flex; gap:6px; margin-top:4px;">
           <input type="text" id="existingIdInput" placeholder="4-ಡಿಜಿಟ್ ಐಡಿ (ಉದಾ: 1511)" style="flex:1; padding:6px; font-size:0.85rem;">
           <button type="button" class="btn btn-warning" style="padding:6px 12px; font-size:0.8rem;" onclick="loginWithExistingId()">ಲಾಗಿನ್</button>
@@ -146,19 +139,16 @@
         <div class="form-group"><label>ಅಂಗಡಿಯ ಹೆಸರು:</label><input type="text" id="shopName" required placeholder="ಉದಾ: ಶ್ರೀ ಸೇವಾಲಾಲ್ ಸ್ಟೋರ್ಸ್"></div>
         
         <div class="form-group">
-          <label>ಅಂಗಡಿಯ ಪ್ರಕಾರ (1 ರಿಂದ 10 ಆಯ್ಕೆಗಳು):</label>
+          <label>ಅಂಗಡಿಯ ಪ್ರಕಾರ:</label>
           <select id="shopType" required onchange="onShopTypeChange()">
-            <option value="">-- ಅಂಗಡಿಯ ಪ್ರಕಾರ ಆಯ್ಕೆಮಾಡಿ --</option>
-            <option value="ಕಿರಾಣಿ ಅಂಗಡಿ">1. ಕಿರಾಣಿ ಅಂಗಡಿ (Grocery)</option>
-            <option value="ಬಟ್ಟೆ ಅಂಗಡಿ">2. ಬಟ್ಟೆ ಅಂಗಡಿ (Clothes Shop)</option>
-            <option value="ಚಪ್ಪಲಿ ಅಂಗಡಿ">3. ಚಪ್ಪಲಿ ಅಂಗಡಿ (Footwear)</option>
-            <option value="ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್ ಅಂಗಡಿ">4. ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್ (Electronics)</option>
-            <option value="ಗಿಫ್ಟ್ ಸೆಂಟರ್">5. ಗಿಫ್ಟ್ ಸೆಂಟರ್ (Gift Shop)</option>
-            <option value="ಮೊಬೈಲ್ ಶೋರೂಂ">6. ಮೊಬೈಲ್ ಶಾಪ್ (Mobile Shop)</option>
-            <option value="ಹಾರ್ಡ್‌ವೇರ್ ಅಂಗಡಿ">7. ಹಾರ್ಡ್‌ವೇರ್ (Hardware)</option>
-            <option value="ಜ್ಯುವೆಲ್ಲರಿ ಶೋರೂಂ">8. ಜ್ಯುವೆಲ್ಲರಿ (Jewellery)</option>
-            <option value="ಬೇಕರಿ & ಸ್ವೀಟ್ಸ್">9. ಬೇಕರಿ (Bakery & Sweets)</option>
-            <option value="ಇತರ ಅಂಗಡಿ">10. ಇತರ ಅಂಗಡಿ (Other)</option>
+            <option value="">-- ಆಯ್ಕೆಮಾಡಿ --</option>
+            <option value="ಕಿರಾಣಿ ಅಂಗಡಿ">1. ಕಿರಾಣಿ ಅಂಗಡಿ</option>
+            <option value="ಬಟ್ಟೆ ಅಂಗಡಿ">2. ಬಟ್ಟೆ ಅಂಗಡಿ</option>
+            <option value="ಚಪ್ಪಲಿ ಅಂಗಡಿ">3. ಚಪ್ಪಲಿ ಅಂಗಡಿ</option>
+            <option value="ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್ ಅಂಗಡಿ">4. ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್</option>
+            <option value="ಗಿಫ್ಟ್ ಸೆಂಟರ್">5. ಗಿಫ್ಟ್ ಸೆಂಟರ್</option>
+            <option value="ಮೊಬೈಲ್ ಶೋರೂಂ">6. ಮೊಬೈಲ್ ಶಾಪ್</option>
+            <option value="ಇತರ ಅಂಗಡಿ">7. ಇತರ ಅಂಗಡಿ</option>
           </select>
         </div>
 
@@ -166,18 +156,17 @@
           <div class="form-group" style="flex:1;"><label>ಜಿಲ್ಲೆ:</label><input type="text" id="district" value="ಯಾದಗಿರಿ" required></div>
           <div class="form-group" style="flex:1;"><label>ತಾಲೂಕು:</label><input type="text" id="taluk" value="ಶಹಾಪುರ" required></div>
         </div>
-        <div class="form-group"><label>ಪಿನ್‌ಕೋಡ್:</label><input type="text" id="pincode" value="585223" required></div>
 
         <div class="form-group">
-          <label>ಅಂಗಡಿಯ ಮುಂಭಾಗದ ಫೋಟೋ (ನೇರ ಕ್ಯಾಮರಾ ಓಪನ್ ಆಗುತ್ತದೆ):</label>
+          <label>ಅಂಗಡಿಯ ಮುಂಭಾಗದ ಫೋಟೋ:</label>
           <input type="file" accept="image/*" capture="environment" id="shopPhotoFile">
         </div>
 
-        <button type="submit" class="btn btn-success" id="btnLogin">ಹೊಸ ಖಾತೆ & ಐಡಿ ಪಡೆದುಕೊಳ್ಳಿ</button>
+        <button type="submit" class="btn btn-success" id="btnLogin">ಹೊಸ ಖಾತೆ ಪಡೆದುಕೊಳ್ಳಿ</button>
       </form>
     </div>
 
-    <!-- 2. ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ (ಮುಂದಿನ ಪುಟ) -->
+    <!-- 2. ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ -->
     <div id="dashboardSection" style="display:none;">
       <div class="id-card">
         <img id="displayShopPhoto" src="https://via.placeholder.com/100" alt="Shop">
@@ -189,7 +178,6 @@
         </div>
       </div>
 
-      <!-- Stats Summary (Orders, Returns, Net Earnings after 15% commission) -->
       <div class="stats-container">
         <div class="stat-box">
           <h4>ಒಟ್ಟು ಆರ್ಡರ್</h4>
@@ -200,62 +188,51 @@
           <p id="statReturns">0</p>
         </div>
         <div class="stat-box">
-          <h4>ಶುದ್ಧ ಮೊತ್ತ (ನೀವು ಪಡೆಯುವುದು)</h4>
-          <p id="statEarnings">₹0 <br><span style="font-size:0.55rem; color:#c62828;">(15% ಕಮಿಷನ್ ಕಡಿತ)</span></p>
+          <h4>ಶುದ್ಧ ಮೊತ್ತ</h4>
+          <p id="statEarnings">₹0</p>
         </div>
       </div>
 
-      <!-- Action Buttons Bar including Payments Button -->
       <div style="display:flex; gap:6px; margin-bottom:15px;">
-        <button class="btn btn-warning" style="flex:1; font-size:0.8rem; padding:10px 4px;" onclick="showTab('upload')">➕ ಅಪ್ಲೋಡ್</button>
-        <button class="btn btn-success" style="flex:1; font-size:0.8rem; padding:10px 4px;" onclick="showTab('orders')">📦 ಆರ್ಡರ್ (<span id="orderCount">0</span>)</button>
-        <button class="btn" style="flex:1; font-size:0.8rem; padding:10px 4px; background:#8e24aa;" onclick="showTab('payments')">💳 ಪೇಮೆಂಟ್ಸ್</button>
+        <button class="btn btn-warning" style="flex:1; font-size:0.8rem;" onclick="showTab('upload')">➕ ಅಪ್ಲೋಡ್</button>
+        <button class="btn btn-success" style="flex:1; font-size:0.8rem;" onclick="showTab('orders')">📦 ಆರ್ಡರ್ (<span id="orderCount">0</span>)</button>
+        <button class="btn" style="flex:1; font-size:0.8rem; background:#8e24aa;" onclick="showTab('payments')">💳 ಪೇಮೆಂಟ್ಸ್</button>
       </div>
 
-      <!-- ಟ್ಯಾಬ್ 1: ಫೋಟೋ ಅಪ್ಲೋಡ್ (Smart Options based on shop type) -->
+      <!-- ಫೋಟೋ ಅಪ್ಲೋಡ್ -->
       <div id="tabUpload" style="background:#fff; padding:15px; border-radius:10px; border:1px solid #cbd5e0;">
         <h2>➕ ಹೊಸ ವಸ್ತುವಿನ ಫೋಟೋ ಅಪ್ಲೋಡ್ ಮಾಡಿ</h2>
         <form id="addProductForm" onsubmit="saveProduct(event)">
           <input type="hidden" id="editProdId">
-          <div class="form-group"><label>ವಸ್ತುವಿನ ಹೆಸರು:</label><input type="text" id="prodName" required placeholder="ಉದಾ: ಚಪ್ಪಲಿ, ಶರ್ಟ್, ಸಕ್ಕರೆ"></div>
+          <div class="form-group"><label>ವಸ್ತುವಿನ ಹೆಸರು:</label><input type="text" id="prodName" required placeholder="ಉದಾ: ಚಪ್ಪಲಿ, ಶರ್ಟ್"></div>
           
-          <div class="form-group" id="dynamicOptionsGroup">
-            <!-- Dynamic Category Options will appear here -->
-          </div>
-
           <div style="display: flex; gap: 10px;">
             <div class="form-group" style="flex:1;"><label>ಹಳೆಯ ರೇಟು (₹):</label><input type="number" id="prodOldPrice" required placeholder="450"></div>
             <div class="form-group" style="flex:1;"><label>ಈಗಿನ ರೇಟು (₹):</label><input type="number" id="prodPrice" required placeholder="350"></div>
           </div>
           <div class="form-group">
-            <label>ಕ್ವಾಂಟಿಟಿ / ಪೀಸ್ ಆಯ್ಕೆಮಾಡಿ (1 ರಿಂದ 10):</label>
-            <select id="prodQty" required>
-              <option value="1">1 ಪೀಸ್</option><option value="2">2 ಪೀಸ್</option><option value="3">3 ಪೀಸ್</option><option value="4">4 ಪೀಸ್</option><option value="5">5 ಪೀಸ್</option><option value="6">6 ಪೀಸ್</option><option value="7">7 ಪೀಸ್</option><option value="8">8 ಪೀಸ್</option><option value="9">9 ಪೀಸ್</option><option value="10">10 ಪೀಸ್</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>ವಸ್ತುವಿನ ಫೋಟೋ (ನೇರ ಕ್ಯಾಮರಾ ಮೂಲಕ ತೆಗೆಯಿರಿ):</label>
+            <label>ವಸ್ತುವಿನ ಫೋಟೋ:</label>
             <input type="file" accept="image/*" capture="environment" id="prodPhotoFile" required>
           </div>
           <button type="submit" class="btn btn-success" id="btnUploadProd">ಅಪ್ಲೋಡ್ ಮಾಡು</button>
         </form>
 
-        <h3 style="font-size:0.9rem; margin-top:20px; color:#2d3748;">🖼️ ಅಪ್ಲೋಡ್ ಆಗಿರುವ ಫೋಟೋಗಳು (ಕ್ಲೌಡ್ ಡೇಟಾಬೇಸ್)</h3>
+        <h3 style="font-size:0.9rem; margin-top:20px;">🖼️ ಅಪ್ಲೋಡ್ ಆಗಿರುವ ಫೋಟೋಗಳು</h3>
         <div id="shopProductsGrid" class="grid-small"></div>
       </div>
 
-      <!-- ಟ್ಯಾಬ್ 2: ಆರ್ಡರ್‌ಗಳು (New on top, Locked History below) -->
+      <!-- ಆರ್ಡರ್‌ಗಳು -->
       <div id="tabOrders" style="display:none; background:#fff; padding:15px; border-radius:10px; border:1px solid #cbd5e0;">
-        <h2>📦 ಗ್ರಾಹಕರಿಂದ ಬಂದಿರುವ ಹೊಸ ಆರ್ಡರ್‌ಗಳು ಹಾಗೂ ರಿಟರ್ನ್‌ಗಳು</h2>
+        <h2>📦 ಹೊಸ ಆರ್ಡರ್‌ಗಳು ಹಾಗೂ ಕೆಂಪು ಬಣ್ಣದ ರಿಟರ್ನ್‌ಗಳು</h2>
         <div id="shopOrdersList" style="margin-top:10px;"></div>
 
-        <h2 style="margin-top:20px; color:#555;">📜 ಹಳೆಯ ಆರ್ಡರ್‌ಗಳು (History Log)</h2>
+        <h2 style="margin-top:20px; color:#555;">📜 ಹಳೆಯ ಆರ್ಡರ್‌ಗಳು (History)</h2>
         <div id="shopArchivedOrdersList" style="margin-top:10px;"></div>
       </div>
 
-      <!-- ಟ್ಯಾಬ್ 3: ಪೇಮೆಂಟ್ಸ್ (Payments Tab) -->
+      <!-- ಪೇಮೆಂಟ್ಸ್ -->
       <div id="tabPayments" style="display:none; background:#fff; padding:15px; border-radius:10px; border:1px solid #cbd5e0;">
-        <h2>💳 ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್ ವಿವರಗಳು</h2>
+        <h2>💳 ಪೇಮೆಂಟ್ ಬಾಕಿ ವಿವರಗಳು</h2>
         <div id="shopPaymentsList" style="margin-top:10px;"></div>
       </div>
 
@@ -264,93 +241,43 @@
 
   <script>
     let shopOwner = JSON.parse(localStorage.getItem('my_shop_owner_session')) || null;
-    let cachedOrders = [];
+    let lastOrderCount = 0;
+
+    // Siren Sound Generator (Web Audio API)
+    function playSirenSound() {
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.5);
+        gain.gain.setValueAtTime(1, audioCtx.currentTime);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 1.2);
+      } catch(e) {}
+    }
 
     window.addEventListener('DOMContentLoaded', () => {
       if (shopOwner) {
         renderIDCard();
         document.getElementById('loginSection').style.display = 'none';
         document.getElementById('dashboardSection').style.display = 'block';
-        updateDynamicOptions(shopOwner.shopType);
         startRealtimeSync();
       }
 
-      // Handle Mobile Back Button (Browser History State)
       window.history.pushState({ page: 'home' }, '', '');
-      window.addEventListener('popstate', (event) => {
-        const dashboard = document.getElementById('dashboardSection');
-        if (dashboard.style.display === 'block') {
-          // If dashboard is open, switch back to login or stay
-        } else {
-          window.history.pushState({ page: 'home' }, '', '');
-        }
+      window.addEventListener('popstate', () => {
+        window.history.pushState({ page: 'home' }, '', '');
       });
     });
 
-    function pushScreenState() {
-      window.history.pushState({ page: 'subpage' }, '', '');
-    }
-
     function logoutShop() {
-      if (confirm("ನೀವು ಮತ್ತೆ ಹೊಸ ಐಡಿ ಮೂಲಕ ಲಾಗಿನ್ ಮಾಡಲು ಬಯಸುವಿರಾ?")) {
+      if (confirm("ಮರು ಲಾಗಿನ್ ಮಾಡಲು ಬಯಸುವಿರಾ?")) {
         localStorage.removeItem('my_shop_owner_session');
         location.reload();
-      }
-    }
-
-    function onShopTypeChange() {
-      const type = document.getElementById('shopType').value;
-      updateDynamicOptions(type);
-    }
-
-    function updateDynamicOptions(shopType) {
-      const group = document.getElementById('dynamicOptionsGroup');
-      if (!group) return;
-
-      if (shopType === 'ಬಟ್ಟೆ ಅಂಗಡಿ') {
-        group.innerHTML = `
-          <label>ಬಟ್ಟೆಯ ವರ್ಗ & ಸೈಜ್ ಆಯ್ಕೆ:</label>
-          <select id="prodExtraOption" class="form-control">
-            <option value="ಚಿಕ್ಕ ಮಕ್ಕಳ ಬಟ್ಟೆ (5-8 ವರ್ಷ)">ಚಿಕ್ಕ ಮಕ್ಕಳ ಬಟ್ಟೆ (5-8 ವರ್ಷ)</option>
-            <option value="ಚಿಕ್ಕ ಮಕ್ಕಳ ಬಟ್ಟೆ (9-12 ವರ್ಷ)">ಚಿಕ್ಕ ಮಕ್ಕಳ ಬಟ್ಟೆ (9-12 ವರ್ಷ)</option>
-            <option value="ಚಿಕ್ಕ ಮಕ್ಕಳ ಬಟ್ಟೆ (13-18 ವರ್ಷ)">ಚಿಕ್ಕ ಮಕ್ಕಳ ಬಟ್ಟೆ (13-18 ವರ್ಷ)</option>
-            <option value="ದೊಡ್ಡವರು - S (Small)">ದೊಡ್ಡವರು - S (Small)</option>
-            <option value="ದೊಡ್ಡವರು - M (Medium)">ದೊಡ್ಡವರು - M (Medium)</option>
-            <option value="ದೊಡ್ಡವರು - L (Large)">ದೊಡ್ಡವರು - L (Large)</option>
-            <option value="ದೊಡ್ಡವರು - XL / XXL">ದೊಡ್ಡವರು - XL / XXL</option>
-          </select>
-        `;
-      } else if (shopType === 'ಚಪ್ಪಲಿ ಅಂಗಡಿ') {
-        group.innerHTML = `
-          <label>ಚಪ್ಪಲಿ ನಂಬರ್ / ಸೈಜ್ ಆಯ್ಕೆ:</label>
-          <select id="prodExtraOption" class="form-control">
-            <option value="ಚಿಕ್ಕ ಮಕ್ಕಳು - 2 ನಂಬರ್">ಚಿಕ್ಕ ಮಕ್ಕಳು - 2 ನಂಬರ್</option>
-            <option value="ಚಿಕ್ಕ ಮಕ್ಕಳು - 3 ನಂಬರ್">ಚಿಕ್ಕ ಮಕ್ಕಳು - 3 ನಂಬರ್</option>
-            <option value="ಚಿಕ್ಕ ಮಕ್ಕಳು - 4 ನಂಬರ್">ಚಿಕ್ಕ ಮಕ್ಕಳು - 4 ನಂಬರ್</option>
-            <option value="ಮಕ್ಕಳು - 5 ನಂಬರ್">ಮಕ್ಕಳು - 5 ನಂಬರ್</option>
-            <option value="ಮಕ್ಕಳು - 6 ನಂಬರ್">ಮಕ್ಕಳು - 6 ನಂಬರ್</option>
-            <option value="ದೊಡ್ಡವರು - 7 ನಂಬರ್">ದೊಡ್ಡವರು - 7 ನಂಬರ್</option>
-            <option value="ದೊಡ್ಡವರು - 8 ನಂಬರ್">ದೊಡ್ಡವರು - 8 ನಂಬರ್</option>
-            <option value="ದೊಡ್ಡವರು - 9 ನಂಬರ್">ದೊಡ್ಡವರು - 9 ನಂಬರ್</option>
-            <option value="ದೊಡ್ಡವರು - 10 ನಂಬರ್">ದೊಡ್ಡವರು - 10 ನಂಬರ್</option>
-            <option value="ದೊಡ್ಡವರು - 11/12 ನಂಬರ್">ದೊಡ್ಡವರು - 11/12 ನಂಬರ್</option>
-          </select>
-        `;
-      } else if (shopType === 'ಗಿಫ್ಟ್ ಸೆಂಟರ್') {
-        group.innerHTML = `
-          <label>ಗಿಫ್ಟ್ ಅಳತೆ ಮತ್ತು ವಿಧ:</label>
-          <input type="text" id="prodExtraOption" placeholder="ಉದಾ: ಎತ್ತರ 1 ಅಡಿ, ಅಗಡಿ 1/2 ಅಡಿ">
-        `;
-      } else if (shopType === 'ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್ ಅಂಗಡಿ' || shopType === 'ಮೊಬೈಲ್ ಶೋರೂಂ') {
-        group.innerHTML = `
-          <label>ವಾರೆಂಟಿ / ಸಾಮರ್ಥ್ಯದ ವಿವರ:</label>
-          <input type="text" id="prodExtraOption" placeholder="ಉದಾ: 1 ವರ್ಷ ವಾರೆಂಟಿ / 10W Power">
-        `;
-      } else {
-        group.innerHTML = `
-          <label>ವಿಶೇಷ ವಿವರ / ಸೈಜ್:</label>
-          <input type="text" id="prodExtraOption" placeholder="ಅಗತ್ಯವಿರುವ ವಿವರ ಬರೆಯಿರಿ">
-        `;
       }
     }
 
@@ -364,12 +291,12 @@
           img.src = event.target.result;
           img.onload = () => {
             const canvas = document.createElement('canvas');
-            const maxDim = 400;
+            const maxDim = 300; // Ultra Compressed to keep app ultra-fast
             let w = img.width, h = img.height;
             if (w > h && w > maxDim) { h *= maxDim / w; w = maxDim; } else if (h > maxDim) { w *= maxDim / h; h = maxDim; }
             canvas.width = w; canvas.height = h;
             canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-            resolve(canvas.toDataURL('image/jpeg', 0.5));
+            resolve(canvas.toDataURL('image/jpeg', 0.4));
           };
         };
         reader.onerror = () => resolve('');
@@ -378,9 +305,6 @@
 
     async function registerShopOwner(e) {
       e.preventDefault();
-      const btn = document.getElementById('btnLogin');
-      btn.innerText = "ಫೋಟೋ ಅಪ್‌ಲೋಡ್ ಆಗುತ್ತಿದೆ..."; btn.disabled = true;
-
       const photoFile = document.getElementById('shopPhotoFile').files[0];
       const photoBase64 = await convertFileToBase64(photoFile);
       const fourDigitId = Math.floor(1000 + Math.random() * 9000).toString();
@@ -393,49 +317,32 @@
         shopType: document.getElementById('shopType').value,
         district: document.getElementById('district').value.trim(),
         taluk: document.getElementById('taluk').value.trim(),
-        pincode: document.getElementById('pincode').value.trim(),
         photo: photoBase64 || 'https://via.placeholder.com/100'
       };
 
       try {
         await window.addDoc(window.collection(window.db, "shop_owners"), shopOwner);
-        const localSession = { id: shopOwner.id, name: shopOwner.name, shopName: shopOwner.shopName, shopType: shopOwner.shopType, taluk: shopOwner.taluk, district: shopOwner.district, photo: photoBase64 };
-        localStorage.setItem('my_shop_owner_session', JSON.stringify(localSession));
-        
+        localStorage.setItem('my_shop_owner_session', JSON.stringify(shopOwner));
         document.getElementById('popup-id').innerText = fourDigitId;
         document.getElementById('successModal').style.display = 'flex';
-      } catch (err) {
-        alert("Error: " + err.message);
-      } finally {
-        btn.innerText = "ಹೊಸ ಖಾತೆ & ಐಡಿ ಪಡೆದುಕೊಳ್ಳಿ"; btn.disabled = false;
-      }
+      } catch (err) { alert("Error: " + err.message); }
     }
 
     async function loginWithExistingId() {
       const idVal = document.getElementById('existingIdInput').value.trim();
-      if (!idVal) {
-        alert("ದಯವಿಟ್ಟು ನಿಮ್ಮ 4-ಡಿಜಿಟ್ ಐಡಿ ನಮೂದಿಸಿ.");
-        return;
-      }
-
       const q = window.query(window.collection(window.db, "shop_owners"), window.where("id", "==", idVal));
       const snap = await window.getDocs(q);
 
-      if (snap.empty) {
-        alert("ಈ ಐಡಿಗೆ ಸಂಬಂಧಿಸಿದ ಯಾವುದೇ ಅಂಗಡಿ ಮಾಲೀಕರು ಕಂಡುಬಂದಿಲ್ಲ.");
-      } else {
+      if (!snap.empty) {
         snap.forEach(docSnap => {
           shopOwner = docSnap.data();
-          const localSession = { id: shopOwner.id, name: shopOwner.name, shopName: shopOwner.shopName, shopType: shopOwner.shopType, taluk: shopOwner.taluk, district: shopOwner.district, photo: shopOwner.photo };
-          localStorage.setItem('my_shop_owner_session', JSON.stringify(localSession));
+          localStorage.setItem('my_shop_owner_session', JSON.stringify(shopOwner));
           renderIDCard();
           document.getElementById('loginSection').style.display = 'none';
           document.getElementById('dashboardSection').style.display = 'block';
-          updateDynamicOptions(shopOwner.shopType);
           startRealtimeSync();
-          alert("🎉 ಲಾಗಿನ್ ಯಶಸ್ವಿಯಾಗಿದೆ!");
         });
-      }
+      } else { alert("ಐಡಿ ಕಂಡುಬಂದಿಲ್ಲ."); }
     }
 
     function closeSuccessModal() {
@@ -443,7 +350,6 @@
       renderIDCard();
       document.getElementById('loginSection').style.display = 'none';
       document.getElementById('dashboardSection').style.display = 'block';
-      updateDynamicOptions(shopOwner.shopType);
       startRealtimeSync();
     }
 
@@ -453,16 +359,13 @@
       document.getElementById('displayShopType').innerText = shopOwner.shopType;
       document.getElementById('displayLocation').innerText = `${shopOwner.taluk}, ${shopOwner.district}`;
       document.getElementById('displayId').innerText = shopOwner.id;
-      if (shopOwner.photo) {
-        document.getElementById('displayShopPhoto').src = shopOwner.photo;
-      }
+      if (shopOwner.photo) document.getElementById('displayShopPhoto').src = shopOwner.photo;
     }
 
     function showTab(tab) {
       document.getElementById('tabUpload').style.display = tab === 'upload' ? 'block' : 'none';
       document.getElementById('tabOrders').style.display = tab === 'orders' ? 'block' : 'none';
       document.getElementById('tabPayments').style.display = tab === 'payments' ? 'block' : 'none';
-      pushScreenState();
     }
 
     function startRealtimeSync() {
@@ -470,131 +373,37 @@
         let products = [];
         snapshot.forEach(docSnap => {
           const p = docSnap.data();
-          if (p.shopId === shopOwner.id) {
-            products.push({ docId: docSnap.id, ...p });
-          }
+          if (p.shopId === shopOwner.id) products.push({ docId: docSnap.id, ...p });
         });
         renderProducts(products);
       });
 
       window.onSnapshot(window.collection(window.db, "orders"), (snapshot) => {
         let orders = [];
-        const oneMonthAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
-
         snapshot.forEach(docSnap => {
           const o = docSnap.data();
-          if (o.shopId === shopOwner.id) {
-            const orderTime = o.timestamp?.toMillis?.() || Date.now();
-            if (orderTime >= oneMonthAgo) {
-              orders.push({ docId: docSnap.id, ...o });
-            }
-          }
+          if (o.shopId === shopOwner.id) orders.push({ docId: docSnap.id, ...o });
         });
-        orders.sort((a, b) => (b.timestamp?.toMillis?.() || 0) - (a.timestamp?.toMillis?.() || 0));
-        cachedOrders = orders;
+
+        // Siren Trigger for New Orders
+        if (orders.length > lastOrderCount && lastOrderCount !== 0) {
+          playSirenSound();
+        }
+        lastOrderCount = orders.length;
+
         renderDashboard(orders);
       });
     }
 
     function renderDashboard(orders) {
-      const totalOrdersCount = orders.length;
-      const returnsCount = orders.filter(o => o.status === 'RETURNED' || o.isReturned).length;
-      const totalEarnings = orders.reduce((acc, curr) => curr.status === 'DELIVERED' || curr.status === 'STEP_4' ? acc + Number(curr.totalPrice || 0) : acc, 0);
+      document.getElementById('statTotalOrders').innerText = orders.length;
+      document.getElementById('statReturns').innerText = orders.filter(o => o.status === 'RETURNED' || o.isReturned).length;
       
-      const netEarningsAfterCommission = Math.round(totalEarnings * 0.85);
-
-      document.getElementById('statTotalOrders').innerText = totalOrdersCount;
-      document.getElementById('statReturns').innerText = returnsCount;
-      document.getElementById('statEarnings').innerHTML = `₹${netEarningsAfterCommission} <br><span style="font-size:0.55rem; color:#c62828;">(15% ಕಮಿಷನ್ ಕಡಿತ: ₹${Math.round(totalEarnings * 0.15)})</span>`;
-      document.getElementById('orderCount').innerText = orders.filter(o => o.status === 'NEW' || o.status === 'STEP_1' || o.status === 'CONFIRMED' || o.status === 'PACKING' || o.status === 'RETURNED' || o.isReturned).length;
-
-      // Active / New / Returned Orders
-      const activeOrders = orders.filter(o => (o.status !== 'DELIVERED' && o.status !== 'STEP_4' && o.status !== 'CANCELLED') || o.status === 'RETURNED' || o.isReturned);
-      const archivedOrders = orders.filter(o => (o.status === 'DELIVERED' || o.status === 'STEP_4') && !o.isReturned);
+      const activeOrders = orders.filter(o => o.status !== 'DELIVERED' && o.status !== 'RETURN_COMPLETED');
+      const archivedOrders = orders.filter(o => o.status === 'DELIVERED' || o.status === 'RETURN_COMPLETED');
 
       renderOrders(activeOrders);
       renderArchivedOrders(archivedOrders);
-
-      const paymentPendingOrders = orders.filter(o => (o.status === 'DELIVERED' || o.status === 'STEP_4') && !o.isShopPaid);
-      renderPayments(paymentPendingOrders);
-    }
-
-    async function saveProduct(e) {
-      e.preventDefault();
-      const btn = document.getElementById('btnUploadProd');
-      btn.innerText = "ಅಪ್ಲೋಡ್ ಆಗುತ್ತಿದೆ..."; btn.disabled = true;
-
-      const prodPhotoFile = document.getElementById('prodPhotoFile').files[0];
-      const prodPhotoBase64 = await convertFileToBase64(prodPhotoFile);
-      const editProdId = document.getElementById('editProdId').value;
-      const extraOpt = document.getElementById('prodExtraOption') ? document.getElementById('prodExtraOption').value : '';
-
-      const prodData = {
-        shopId: shopOwner.id,
-        shopName: shopOwner.shopName,
-        name: document.getElementById('prodName').value.trim(),
-        extraOption: extraOpt,
-        oldPrice: document.getElementById('prodOldPrice').value.trim(),
-        price: document.getElementById('prodPrice').value.trim(),
-        qty: document.getElementById('prodQty').value,
-        photo: prodPhotoBase64 || 'https://via.placeholder.com/150',
-        timestamp: window.serverTimestamp()
-      };
-
-      try {
-        if (editProdId) {
-          await window.updateDoc(window.doc(window.db, "products", editProdId), prodData);
-          document.getElementById('editProdId').value = '';
-          alert("ವಸ್ತುವಿನ ಮಾಹಿತಿ ಅಪ್ಡೇಟ್ ಆಗಿದೆ!");
-        } else {
-          await window.addDoc(window.collection(window.db, "products"), prodData);
-          alert("🔔 ನಿಮ್ಮ ವಸ್ತುವನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಅಪ್ಲೋಡ್ ಮಾಡಲಾಗಿದೆ!");
-        }
-        document.getElementById('addProductForm').reset();
-      } catch (err) {
-        alert("Error: " + err.message);
-      } finally {
-        btn.innerText = "ಅಪ್ಲೋಡ್ ಮಾಡು"; btn.disabled = false;
-      }
-    }
-
-    async function deleteProduct(docId) {
-      if (confirm("ಈ ವಸ್ತುವನ್ನು ಡಿಲೀಟ್ ಮಾಡಲು ಖಚಿತವೇ?")) {
-        try { await window.deleteDoc(window.doc(window.db, "products", docId)); } catch(e) {}
-      }
-    }
-
-    async function editProduct(docId) {
-      const docSnap = await window.getDoc(window.doc(window.db, "products", docId));
-      if (docSnap.exists()) {
-        const p = docSnap.data();
-        document.getElementById('editProdId').value = docId;
-        document.getElementById('prodName').value = p.name;
-        document.getElementById('prodOldPrice').value = p.oldPrice;
-        document.getElementById('prodPrice').value = p.price;
-        document.getElementById('prodQty').value = p.qty;
-        if(document.getElementById('prodExtraOption')) document.getElementById('prodExtraOption').value = p.extraOption || '';
-        showTab('upload');
-      }
-    }
-
-    function renderProducts(products) {
-      const grid = document.getElementById('shopProductsGrid');
-      if (products.length === 0) {
-        grid.innerHTML = '<p style="font-size:0.8rem; color:#777;">ಯಾವುದೇ ವಸ್ತುಗಳು ಅಪ್ಲೋಡ್ ಆಗಿಲ್ಲ.</p>';
-        return;
-      }
-      grid.innerHTML = products.map(p => `
-        <div class="card-small">
-          <img src="${p.photo}">
-          <div class="card-title-small">${p.name}</div>
-          <div style="font-size:0.7rem; color:#2e7d32; font-weight:bold;">₹${p.price}</div>
-          <div style="display:flex; justify-content:space-between; margin-top:4px;">
-            <button class="btn btn-warning" style="padding:2px 4px; font-size:0.65rem;" onclick="editProduct('${p.docId}')">Edit</button>
-            <button class="btn btn-danger" style="padding:2px 4px; font-size:0.65rem;" onclick="deleteProduct('${p.docId}')">Del</button>
-          </div>
-        </div>
-      `).join('');
     }
 
     function renderOrders(orders) {
@@ -605,38 +414,39 @@
       }
 
       listDiv.innerHTML = orders.map(o => {
+        let isReturn = o.status === 'RETURNED' || o.isReturned;
         let actionButtons = "";
-        if (o.status === 'NEW' || o.status === 'STEP_1') {
-          actionButtons = `<button class="btn btn-success" style="padding:8px; font-size:0.8rem; margin-top:8px;" onclick="updateOrderStatus('${o.docId}', 'CONFIRMED')">✅ ಕನ್ಫರ್ಮ್ ಮಾಡಿ</button>`;
-        } else if (o.status === 'CONFIRMED') {
-          actionButtons = `<button class="btn btn-warning" style="padding:8px; font-size:0.8rem; margin-top:8px;" onclick="updateOrderStatus('${o.docId}', 'PACKING')">📦 ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (Send for Pickup)</button>`;
-        } else if (o.status === 'RETURNED' || o.isReturned) {
-          actionButtons = `<button class="btn btn-danger" style="padding:8px; font-size:0.8rem; margin-top:8px;" onclick="updateOrderStatus('${o.docId}', 'PICKED_UP')">🔄 ರಿಟರ್ನ್ ಸ್ವೀಕರಿಸಲಾಗಿದೆ (Confirm Return Pickup)</button>`;
-        } else {
-          actionButtons = `<div style="background:#e3f2fd; padding:6px; border-radius:6px; margin-top:8px; text-align:center; font-weight:bold; color:#1565c0;">💳 ಡೆಲಿವರಿಗೆ ತಲುಪುತ್ತಿದೆ</div>`;
+
+        if (isReturn) {
+          if (o.returnReceivedByShop) {
+            actionButtons = `<button class="btn btn-success" style="padding:8px; font-size:0.8rem; margin-top:8px;" disabled>✅ ರಿಟರ್ನ್ ಪಿಕ್‌ಅಪ್ ಪಡೆದುಕೊಳ್ಳಲಾಗಿದೆ (Completed)</button>`;
+          } else {
+            actionButtons = `
+              <div style="color:#d32f2f; font-weight:bold; margin-top:6px; font-size:0.8rem;">🚨 ರಿಟರ್ನ್ ಇದೆ, ಡೆಲಿವರಿ ಬಾಯ್ ಪಿಕ್‌ಅಪ್ ಮಾಡಿ ತಲುಪಿಸಬೇಕು</div>
+              <button class="btn btn-danger" style="padding:8px; font-size:0.8rem; margin-top:8px;" onclick="confirmReturnReceived('${o.docId}')">🛑 ಡೆಲಿವರಿ ಬಾಯ್ ರಿಟರ್ನ್ ತಂದಿದ್ದಾರೆ (Confirm Return Pickup)</button>
+            `;
+          }
+        } else if (o.status === 'NEW' || o.status === 'STEP_1') {
+          actionButtons = `<button class="btn btn-success" style="padding:8px; font-size:0.8rem; margin-top:8px;" onclick="acceptOrder('${o.docId}')">✅ ಆರ್ಡರ್ ಸ್ವೀಕರಿಸಿ (Accept Order)</button>`;
         }
 
         let mapLink = o.customer?.gps ? `https://maps.google.com/?q=${o.customer.gps}` : '#';
 
         return `
-          <div class="order-item">
-            <div style="display:flex; gap:10px; align-items:center; margin-bottom:8px;">
-              <img src="${o.productPhoto || 'https://via.placeholder.com/80'}" style="width:60px; height:60px; object-fit:cover; border-radius:6px;">
+          <div class="order-item ${isReturn ? 'return-item' : ''}">
+            <div style="display:flex; gap:10px; align-items:center;">
+              <img src="${o.productPhoto}" style="width:60px; height:60px; object-fit:cover; border-radius:6px;">
               <div>
                 <h4 style="font-size:0.9rem;">${o.productName}</h4>
                 <p style="font-size:0.8rem; color:#2e7d32; font-weight:bold;">₹${o.totalPrice}</p>
-                <p style="font-size:0.75rem; color:#666;">ಸೈಜ್: ${o.selectedSize || 'Standard'} | ಕ್ವಾಂಟಿಟಿ: ${o.quantity || 1}</p>
               </div>
             </div>
 
-            <p><b>ಗ್ರಾಹಕರು:</b> ${o.customer?.name} 
-               <a href="tel:${o.customer?.phone}" style="background:#4caf50; color:#fff; padding:2px 6px; border-radius:4px; text-decoration:none; font-size:0.75rem; margin-left:6px;">📞 ಕಾಲ್ ಮಾಡಿ</a>
-            </p>
-            <p><b>ಮೊಬೈಲ್:</b> ${o.customer?.phone}</p>
-            <p><b>ಊರು:</b> ${o.customer?.village}, ${o.customer?.taluk || ''}</p>
-            <p><b>GPS ಲೊಕೇಶನ್:</b> <a href="${mapLink}" target="_blank" style="color:var(--primary); text-decoration:underline;">ಮ್ಯಾಪ್‌ನಲ್ಲಿ ನೋಡಿ</a></p>
-            <p><b>ಸ್ಟೇಟಸ್:</b> <span style="color:var(--primary); font-weight:bold;">${o.status || 'NEW'}</span></p>
-            
+            <p style="margin-top:6px;"><b>ಗ್ರಾಹಕರು:</b> ${o.customer?.name} (${o.customer?.phone})</p>
+            <p><b>ಊರು / ಸ್ಥಳ:</b> ${o.customer?.village}</p>
+            <p><b>GPS ಲೊಕೇಶನ್:</b> <a href="${mapLink}" target="_blank" style="color:var(--primary);">ಮ್ಯಾಪ್ ವೀಕ್ಷಿಸಿ</a></p>
+            <p><b>ಸ್ಟೇಟಸ್:</b> <span style="font-weight:bold; color:${isReturn ? 'red' : 'green'};">${o.status}</span></p>
+
             ${actionButtons}
           </div>
         `;
@@ -645,63 +455,57 @@
 
     function renderArchivedOrders(orders) {
       const listDiv = document.getElementById('shopArchivedOrdersList');
-      if (orders.length === 0) {
-        listDiv.innerHTML = '<p style="font-size:0.8rem; color:#777;">ಯಾವುದೇ ಹಳೆಯ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>';
-        return;
-      }
-
       listDiv.innerHTML = orders.map(o => `
         <div class="order-item archived">
-          <div style="display:flex; gap:10px; align-items:center; margin-bottom:6px;">
-            <img src="${o.productPhoto || 'https://via.placeholder.com/60'}" style="width:50px; height:50px; object-fit:cover; border-radius:6px;">
-            <div>
-              <h4 style="font-size:0.85rem;">${o.productName} - ₹${o.totalPrice}</h4>
-              <p style="font-size:0.75rem; color:#555;">ಗ್ರಾಹಕರು: ${o.customer?.name} (${o.customer?.phone})</p>
-              <p style="font-size:0.75rem; color:#2e7d32; font-weight:bold;">ಸ್ಟೇಟಸ್: ${o.status}</p>
-            </div>
-          </div>
+          <p><b>${o.productName}</b> - ₹${o.totalPrice}</p>
+          <p style="font-size:0.75rem;">ಸ್ಟೇಟಸ್: ${o.status}</p>
         </div>
       `).join('');
     }
 
-    function renderPayments(list) {
-      const listDiv = document.getElementById('shopPaymentsList');
-      if (list.length === 0) {
-        listDiv.innerHTML = '<p style="font-size:0.8rem; color:#777;">ಯಾವುದೇ ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್ ಇಲ್ಲ.</p>';
-        return;
-      }
+    async function acceptOrder(docId) {
+      try {
+        await window.updateDoc(window.doc(window.db, "orders", docId), { status: 'CONFIRMED', acceptedBy: shopOwner.id });
+        alert("ಆರ್ಡರ್ ಸ್ವೀಕರಿಸಲಾಗಿದೆ! ಇದನ್ನು ಉಳಿದವರಿಂದ ಮರೆಮಾಡಲಾಗಿದೆ.");
+      } catch (e) { alert(e.message); }
+    }
 
-      listDiv.innerHTML = list.map(o => `
-        <div class="order-item" style="border-left-color: var(--danger);">
-          <div style="display:flex; gap:10px; align-items:center; margin-bottom:8px;">
-            <img src="${o.productPhoto || 'https://via.placeholder.com/80'}" style="width:60px; height:60px; object-fit:cover; border-radius:6px;">
-            <div>
-              <h4 style="font-size:0.9rem;">${o.productName}</h4>
-              <p style="font-size:0.8rem; color:#c62828; font-weight:bold;">ಪೇಮೆಂಟ್ ಬಾಕಿ: ₹${o.totalPrice}</p>
-              <p style="font-size:0.75rem; color:#666;">ಗ್ರಾಹಕರು: ${o.customer?.name} (${o.customer?.phone})</p>
-            </div>
-          </div>
-          <button class="btn btn-success" style="padding:8px; font-size:0.85rem; margin-top:6px;" onclick="markPaymentSuccess('${o.docId}')">✅ ಪೇಮೆಂಟ್ OK ಮಾಡಿ (Payment Success)</button>
+    async function confirmReturnReceived(docId) {
+      try {
+        await window.updateDoc(window.doc(window.db, "orders", docId), { status: 'RETURN_COMPLETED', returnReceivedByShop: true });
+        alert("🎉 ರಿಟರ್ನ್ ಪಿಕ್‌ಅಪ್ ಸಫಲವಾಗಿ ಸ್ವೀಕರಿಸಲಾಗಿದೆ!");
+      } catch (e) { alert(e.message); }
+    }
+
+    async function saveProduct(e) {
+      e.preventDefault();
+      const photoFile = document.getElementById('prodPhotoFile').files[0];
+      const photoBase64 = await convertFileToBase64(photoFile);
+
+      const prodData = {
+        shopId: shopOwner.id,
+        shopName: shopOwner.shopName,
+        name: document.getElementById('prodName').value.trim(),
+        oldPrice: document.getElementById('prodOldPrice').value.trim(),
+        price: document.getElementById('prodPrice').value.trim(),
+        photo: photoBase64,
+        timestamp: window.serverTimestamp()
+      };
+
+      await window.addDoc(window.collection(window.db, "products"), prodData);
+      alert("ಫೋಟೋ ಅಪ್ಲೋಡ್ ಆಗಿದೆ!");
+      document.getElementById('addProductForm').reset();
+    }
+
+    function renderProducts(products) {
+      const grid = document.getElementById('shopProductsGrid');
+      grid.innerHTML = products.map(p => `
+        <div class="card-small">
+          <img src="${p.photo}">
+          <div class="card-title-small">${p.name}</div>
+          <div style="font-size:0.7rem; color:#2e7d32; font-weight:bold;">₹${p.price}</div>
         </div>
       `).join('');
-    }
-
-    async function updateOrderStatus(docId, newStatus) {
-      try {
-        await window.updateDoc(window.doc(window.db, "orders", docId), { status: newStatus });
-        alert("ಸ್ಟೇಟಸ್ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್ಡೇಟ್ ಆಗಿದೆ!");
-      } catch (err) {
-        alert("Error: " + err.message);
-      }
-    }
-
-    async function markPaymentSuccess(docId) {
-      try {
-        await window.updateDoc(window.doc(window.db, "orders", docId), { isShopPaid: true });
-        alert("🎉 ಪೇಮೆಂಟ್ ಯಶಸ್ವಿಯಾಗಿ ಪೂರ್ಣಗೊಂಡಿದೆ!");
-      } catch (err) {
-        alert("Error: " + err.message);
-      }
     }
   </script>
 </body>
