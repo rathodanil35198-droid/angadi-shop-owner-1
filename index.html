@@ -123,15 +123,15 @@
     <div id="loginSection" style="background:#f1f8e9; padding:15px; border-radius:10px; border:1px solid #c8e6c9;">
       <h2>🔐 ಅಂಗಡಿ ಮಾಲೀಕರ ನೋಂದಣಿ / ಲಾಗಿನ್</h2>
       
-      <div style="margin-bottom: 12px; background: #e3f2fd; padding: 8px; border-radius: 6px;">
-        <label style="font-size:0.75rem; color:#1565c0;">ಹಳೆಯ ಐಡಿ ಇದ್ದರೆ ಹಾಕಿ ಲಾಗಿನ್ ಆಗಿ:</label>
-        <div style="display:flex; gap:6px; margin-top:4px;">
-          <input type="text" id="existingIdInput" placeholder="4-ಡಿಜಿಟ್ ಐಡಿ (ಉದಾ: 1511)" style="flex:1; padding:6px; font-size:0.85rem;">
-          <button type="button" class="btn btn-warning" style="padding:6px 12px; font-size:0.8rem;" onclick="loginWithExistingId()">ಲಾಗಿನ್</button>
+      <div style="margin-bottom: 12px; background: #e3f2fd; padding: 12px; border-radius: 8px;">
+        <label style="font-size:0.85rem; color:#1565c0; font-weight:bold; margin-bottom:6px;">ಹಳೆಯ 4-ಡಿಜಿಟ್ ಐಡಿ ಹಾಕಿ ಲಾಗಿನ್ ಆಗಿ:</label>
+        <div style="display:flex; gap:8px;">
+          <input type="text" id="existingIdInput" placeholder="ಉದಾ: 6444" maxlength="4" style="flex:1; padding:12px; font-size:1.1rem; font-weight:bold; text-align:center; letter-spacing:2px;">
+          <button type="button" class="btn btn-warning" style="padding:10px 18px; font-size:0.95rem;" onclick="loginWithExistingId()">ಲಾಗಿನ್</button>
         </div>
       </div>
 
-      <hr style="margin: 12px 0; border:0; border-top:1px solid #c8e6c9;">
+      <hr style="margin: 15px 0; border:0; border-top:1px solid #c8e6c9;">
 
       <form onsubmit="registerShopOwner(event)">
         <div class="form-group"><label>ಅಂಗಡಿ ಮಾಲೀಕರ ಹೆಸರು:</label><input type="text" id="ownerName" required placeholder="ನಿಮ್ಮ ಹೆಸರು"></div>
@@ -140,7 +140,7 @@
         
         <div class="form-group">
           <label>ಅಂಗಡಿಯ ಪ್ರಕಾರ:</label>
-          <select id="shopType" required onchange="onShopTypeChange()">
+          <select id="shopType" required>
             <option value="">-- ಆಯ್ಕೆಮಾಡಿ --</option>
             <option value="ಕಿರಾಣಿ ಅಂಗಡಿ">1. ಕಿರಾಣಿ ಅಂಗಡಿ</option>
             <option value="ಬಟ್ಟೆ ಅಂಗಡಿ">2. ಬಟ್ಟೆ ಅಂಗಡಿ</option>
@@ -243,7 +243,6 @@
     let shopOwner = JSON.parse(localStorage.getItem('my_shop_owner_session')) || null;
     let lastOrderCount = 0;
 
-    // Siren Sound Generator (Web Audio API)
     function playSirenSound() {
       try {
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -291,7 +290,7 @@
           img.src = event.target.result;
           img.onload = () => {
             const canvas = document.createElement('canvas');
-            const maxDim = 300; // Ultra Compressed to keep app ultra-fast
+            const maxDim = 300;
             let w = img.width, h = img.height;
             if (w > h && w > maxDim) { h *= maxDim / w; w = maxDim; } else if (h > maxDim) { w *= maxDim / h; h = maxDim; }
             canvas.width = w; canvas.height = h;
@@ -330,6 +329,11 @@
 
     async function loginWithExistingId() {
       const idVal = document.getElementById('existingIdInput').value.trim();
+      if (!idVal) {
+        alert("ದಯವಿಟ್ಟು ನಿಮ್ಮ 4-ಡಿಜಿಟ್ ಐಡಿ ನಮೂದಿಸಿ.");
+        return;
+      }
+
       const q = window.query(window.collection(window.db, "shop_owners"), window.where("id", "==", idVal));
       const snap = await window.getDocs(q);
 
@@ -341,8 +345,11 @@
           document.getElementById('loginSection').style.display = 'none';
           document.getElementById('dashboardSection').style.display = 'block';
           startRealtimeSync();
+          alert("🎉 ಲಾಗಿನ್ ಯಶಸ್ವಿಯಾಗಿದೆ!");
         });
-      } else { alert("ಐಡಿ ಕಂಡುಬಂದಿಲ್ಲ."); }
+      } else {
+        alert("ಈ ಐಡಿಗೆ ಸಂಬಂಧಿಸಿದ ಯಾವುದೇ ಅಂಗಡಿ ಮಾಲೀಕರು ಕಂಡುಬಂದಿಲ್ಲ.");
+      }
     }
 
     function closeSuccessModal() {
@@ -382,10 +389,12 @@
         let orders = [];
         snapshot.forEach(docSnap => {
           const o = docSnap.data();
-          if (o.shopId === shopOwner.id) orders.push({ docId: docSnap.id, ...o });
+          // Show orders if they belong to this shop OR if they are new/unclaimed orders across system
+          if (o.shopId === shopOwner.id || !o.acceptedBy || o.acceptedBy === shopOwner.id) {
+            orders.push({ docId: docSnap.id, ...o });
+          }
         });
 
-        // Siren Trigger for New Orders
         if (orders.length > lastOrderCount && lastOrderCount !== 0) {
           playSirenSound();
         }
@@ -396,11 +405,12 @@
     }
 
     function renderDashboard(orders) {
-      document.getElementById('statTotalOrders').innerText = orders.length;
-      document.getElementById('statReturns').innerText = orders.filter(o => o.status === 'RETURNED' || o.isReturned).length;
+      const myOrders = orders.filter(o => o.shopId === shopOwner.id || o.acceptedBy === shopOwner.id);
+      document.getElementById('statTotalOrders').innerText = myOrders.length;
+      document.getElementById('statReturns').innerText = myOrders.filter(o => o.status === 'RETURNED' || o.isReturned).length;
       
-      const activeOrders = orders.filter(o => o.status !== 'DELIVERED' && o.status !== 'RETURN_COMPLETED');
-      const archivedOrders = orders.filter(o => o.status === 'DELIVERED' || o.status === 'RETURN_COMPLETED');
+      const activeOrders = orders.filter(o => (o.status !== 'DELIVERED' && o.status !== 'RETURN_COMPLETED') && (!o.acceptedBy || o.acceptedBy === shopOwner.id));
+      const archivedOrders = myOrders.filter(o => o.status === 'DELIVERED' || o.status === 'RETURN_COMPLETED');
 
       renderOrders(activeOrders);
       renderArchivedOrders(archivedOrders);
@@ -426,8 +436,10 @@
               <button class="btn btn-danger" style="padding:8px; font-size:0.8rem; margin-top:8px;" onclick="confirmReturnReceived('${o.docId}')">🛑 ಡೆಲಿವರಿ ಬಾಯ್ ರಿಟರ್ನ್ ತಂದಿದ್ದಾರೆ (Confirm Return Pickup)</button>
             `;
           }
-        } else if (o.status === 'NEW' || o.status === 'STEP_1') {
+        } else if (!o.acceptedBy || o.acceptedBy === '') {
           actionButtons = `<button class="btn btn-success" style="padding:8px; font-size:0.8rem; margin-top:8px;" onclick="acceptOrder('${o.docId}')">✅ ಆರ್ಡರ್ ಸ್ವೀಕರಿಸಿ (Accept Order)</button>`;
+        } else if (o.acceptedBy === shopOwner.id) {
+          actionButtons = `<div style="background:#e3f2fd; padding:6px; border-radius:6px; margin-top:8px; text-align:center; font-weight:bold; color:#1565c0;">👍 ನೀವು ಈ ಆರ್ಡರ್ ಸ್ವೀಕರಿಸಿದ್ದೀರಿ</div>`;
         }
 
         let mapLink = o.customer?.gps ? `https://maps.google.com/?q=${o.customer.gps}` : '#';
@@ -455,6 +467,10 @@
 
     function renderArchivedOrders(orders) {
       const listDiv = document.getElementById('shopArchivedOrdersList');
+      if (orders.length === 0) {
+        listDiv.innerHTML = '<p style="font-size:0.8rem; color:#777;">ಯಾವುದೇ ಹಳೆಯ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>';
+        return;
+      }
       listDiv.innerHTML = orders.map(o => `
         <div class="order-item archived">
           <p><b>${o.productName}</b> - ₹${o.totalPrice}</p>
@@ -465,8 +481,8 @@
 
     async function acceptOrder(docId) {
       try {
-        await window.updateDoc(window.doc(window.db, "orders", docId), { status: 'CONFIRMED', acceptedBy: shopOwner.id });
-        alert("ಆರ್ಡರ್ ಸ್ವೀಕರಿಸಲಾಗಿದೆ! ಇದನ್ನು ಉಳಿದವರಿಂದ ಮರೆಮಾಡಲಾಗಿದೆ.");
+        await window.updateDoc(window.doc(window.db, "orders", docId), { status: 'CONFIRMED', acceptedBy: shopOwner.id, shopId: shopOwner.id, shopName: shopOwner.shopName });
+        alert("ಆರ್ಡರ್ ಯಶಸ್ವಿಯಾಗಿ ಸ್ವೀಕರಿಸಲಾಗಿದೆ! ಇದು ಇತರರಿಗೆ ಕಾಣಿಸುವುದಿಲ್ಲ.");
       } catch (e) { alert(e.message); }
     }
 
