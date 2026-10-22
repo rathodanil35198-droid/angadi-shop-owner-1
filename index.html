@@ -103,6 +103,7 @@
 
   <!-- Support / Help Bar -->
   <div class="support-bar">
+    <button onclick="logoutShop()" class="sup-btn" style="background:#e53935;">🔄 ಮರು ಲಾಗಿನ್ (Logout)</button>
     <a href="tel:8105010768" class="sup-btn call">📞 ಕಾಲ್ ಮಾಡಿ</a>
     <a href="https://wa.me/918105010768?text=ನಮಸ್ಕಾರ,%20ನನಗೆ%20ಅಂಗಡಿ%20ಮಾಲೀಕರ%20ಆಪ್‌ನಲ್ಲಿ%20ಸಹಾಯ%20ಬೇಕಿದೆ." target="_blank" class="sup-btn">💬 WhatsApp</a>
   </div>
@@ -245,7 +246,7 @@
 
       <!-- ಟ್ಯಾಬ್ 2: ಆರ್ಡರ್‌ಗಳು (New on top, Locked History below) -->
       <div id="tabOrders" style="display:none; background:#fff; padding:15px; border-radius:10px; border:1px solid #cbd5e0;">
-        <h2>📦 ಗ್ರಾಹಕರಿಂದ ಬಂದಿರುವ ಹೊಸ ಆರ್ಡರ್‌ಗಳು</h2>
+        <h2>📦 ಗ್ರಾಹಕರಿಂದ ಬಂದಿರುವ ಹೊಸ ಆರ್ಡರ್‌ಗಳು ಹಾಗೂ ರಿಟರ್ನ್‌ಗಳು</h2>
         <div id="shopOrdersList" style="margin-top:10px;"></div>
 
         <h2 style="margin-top:20px; color:#555;">📜 ಹಳೆಯ ಆರ್ಡರ್‌ಗಳು (History Log)</h2>
@@ -273,7 +274,29 @@
         updateDynamicOptions(shopOwner.shopType);
         startRealtimeSync();
       }
+
+      // Handle Mobile Back Button (Browser History State)
+      window.history.pushState({ page: 'home' }, '', '');
+      window.addEventListener('popstate', (event) => {
+        const dashboard = document.getElementById('dashboardSection');
+        if (dashboard.style.display === 'block') {
+          // If dashboard is open, switch back to login or stay
+        } else {
+          window.history.pushState({ page: 'home' }, '', '');
+        }
+      });
     });
+
+    function pushScreenState() {
+      window.history.pushState({ page: 'subpage' }, '', '');
+    }
+
+    function logoutShop() {
+      if (confirm("ನೀವು ಮತ್ತೆ ಹೊಸ ಐಡಿ ಮೂಲಕ ಲಾಗಿನ್ ಮಾಡಲು ಬಯಸುವಿರಾ?")) {
+        localStorage.removeItem('my_shop_owner_session');
+        location.reload();
+      }
+    }
 
     function onShopTypeChange() {
       const type = document.getElementById('shopType').value;
@@ -439,6 +462,7 @@
       document.getElementById('tabUpload').style.display = tab === 'upload' ? 'block' : 'none';
       document.getElementById('tabOrders').style.display = tab === 'orders' ? 'block' : 'none';
       document.getElementById('tabPayments').style.display = tab === 'payments' ? 'block' : 'none';
+      pushScreenState();
     }
 
     function startRealtimeSync() {
@@ -474,20 +498,19 @@
 
     function renderDashboard(orders) {
       const totalOrdersCount = orders.length;
-      const returnsCount = orders.filter(o => o.status === 'RETURNED').length;
+      const returnsCount = orders.filter(o => o.status === 'RETURNED' || o.isReturned).length;
       const totalEarnings = orders.reduce((acc, curr) => curr.status === 'DELIVERED' || curr.status === 'STEP_4' ? acc + Number(curr.totalPrice || 0) : acc, 0);
       
-      // Deducting 15% Commission
       const netEarningsAfterCommission = Math.round(totalEarnings * 0.85);
 
       document.getElementById('statTotalOrders').innerText = totalOrdersCount;
       document.getElementById('statReturns').innerText = returnsCount;
       document.getElementById('statEarnings').innerHTML = `₹${netEarningsAfterCommission} <br><span style="font-size:0.55rem; color:#c62828;">(15% ಕಮಿಷನ್ ಕಡಿತ: ₹${Math.round(totalEarnings * 0.15)})</span>`;
-      document.getElementById('orderCount').innerText = orders.filter(o => o.status === 'NEW' || o.status === 'STEP_1' || o.status === 'CONFIRMED' || o.status === 'PACKING').length;
+      document.getElementById('orderCount').innerText = orders.filter(o => o.status === 'NEW' || o.status === 'STEP_1' || o.status === 'CONFIRMED' || o.status === 'PACKING' || o.status === 'RETURNED' || o.isReturned).length;
 
-      // Split into Active (New) and Archived (History Log)
-      const activeOrders = orders.filter(o => o.status !== 'DELIVERED' && o.status !== 'STEP_4' && o.status !== 'CANCELLED');
-      const archivedOrders = orders.filter(o => o.status === 'DELIVERED' || o.status === 'STEP_4' || o.status === 'CANCELLED');
+      // Active / New / Returned Orders
+      const activeOrders = orders.filter(o => (o.status !== 'DELIVERED' && o.status !== 'STEP_4' && o.status !== 'CANCELLED') || o.status === 'RETURNED' || o.isReturned);
+      const archivedOrders = orders.filter(o => (o.status === 'DELIVERED' || o.status === 'STEP_4') && !o.isReturned);
 
       renderOrders(activeOrders);
       renderArchivedOrders(archivedOrders);
@@ -587,8 +610,10 @@
           actionButtons = `<button class="btn btn-success" style="padding:8px; font-size:0.8rem; margin-top:8px;" onclick="updateOrderStatus('${o.docId}', 'CONFIRMED')">✅ ಕನ್ಫರ್ಮ್ ಮಾಡಿ</button>`;
         } else if (o.status === 'CONFIRMED') {
           actionButtons = `<button class="btn btn-warning" style="padding:8px; font-size:0.8rem; margin-top:8px;" onclick="updateOrderStatus('${o.docId}', 'PACKING')">📦 ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (Send for Pickup)</button>`;
-        } else if (o.status === 'PACKING' || o.status === 'PICKED_UP') {
-          actionButtons = `<div style="background:#e3f2fd; padding:6px; border-radius:6px; margin-top:8px; text-align:center; font-weight:bold; color:#1565c0;">💳 ಪೇಮೆಂಟ್: PENDING</div>`;
+        } else if (o.status === 'RETURNED' || o.isReturned) {
+          actionButtons = `<button class="btn btn-danger" style="padding:8px; font-size:0.8rem; margin-top:8px;" onclick="updateOrderStatus('${o.docId}', 'PICKED_UP')">🔄 ರಿಟರ್ನ್ ಸ್ವೀಕರಿಸಲಾಗಿದೆ (Confirm Return Pickup)</button>`;
+        } else {
+          actionButtons = `<div style="background:#e3f2fd; padding:6px; border-radius:6px; margin-top:8px; text-align:center; font-weight:bold; color:#1565c0;">💳 ಡೆಲಿವರಿಗೆ ತಲುಪುತ್ತಿದೆ</div>`;
         }
 
         let mapLink = o.customer?.gps ? `https://maps.google.com/?q=${o.customer.gps}` : '#';
