@@ -265,24 +265,6 @@
         </div>
     </div>
 
-    <!-- SUCCESS POPUP MODAL (4-DIGIT ID DISPLAY) -->
-    <div id="success-popup" class="fixed inset-0 bg-black bg-opacity-70 hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl p-6 max-w-sm w-full text-center space-y-4 shadow-2xl">
-            <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto text-3xl font-bold">
-                ✓
-            </div>
-            <h3 class="text-xl font-extrabold text-gray-800">ನಿಮ್ಮ ಲಾಗಿನ್ ಸಕ್ಸಸ್‌ಫುಲ್ ಆಗಿದೆ!</h3>
-            <div class="bg-indigo-50 border-2 border-indigo-300 p-4 rounded-xl">
-                <p class="text-xs font-bold text-indigo-700 uppercase mb-1">ನಿಮ್ಮ 4-ಡಿಜಿಟ್ ಡಿಜಿಟಲ್ ಐಡಿ:</p>
-                <p id="popup-digit-id" class="text-4xl font-black text-indigo-900 tracking-widest">0000</p>
-            </div>
-            <p class="text-xs text-red-600 font-bold">⚠️ ಈ 4-ಅಂಕಿಯ ಐಡಿಯನ್ನು ನೆನಪಿನಲ್ಲಿಟ್ಟುಕೊಳ್ಳಿ, ಮುಂದೆ ಲಾಗಿನ್ ಮಾಡಲು ಇದು ಬೇಕಾಗುತ್ತದೆ.</p>
-            <button type="button" onclick="goToNextDashboardPage()" class="w-full bg-indigo-700 hover:bg-indigo-800 text-white font-bold py-3 rounded-xl shadow-lg transition">
-                OK / ಮುಂದಿನ ಪೇಜಿಗೆ ಹೋಗಿ 🚀
-            </button>
-        </div>
-    </div>
-
     <!-- SYSTEM JAVASCRIPT LOGIC -->
     <script>
         const firebaseConfig = {
@@ -327,7 +309,6 @@
                         const canvas = document.createElement('canvas');
                         const ctx = canvas.getContext('2d');
                         
-                        // Smart Auto-Resize Logic (Max 200px)
                         let width = img.width;
                         let height = img.height;
                         const maxDimension = 200;
@@ -348,26 +329,21 @@
                         canvas.height = height;
                         ctx.drawImage(img, 0, 0, width, height);
 
-                        // Convert to lightweight DataURL
                         document.getElementById(targetHiddenId).value = canvas.toDataURL('image/jpeg', 0.5);
                     } catch (err) {
-                        console.log("Photo processing bypassed, using default image");
+                        console.log("Photo processing bypassed");
                     }
-                };
-                img.onerror = function() {
-                    console.log("Invalid image, fallback ready");
                 };
                 img.src = e.target.result;
             };
             reader.readAsDataURL(file);
         }
 
-        // Register Shop Owner
+        // Register Shop Owner - DIRECTLY GO TO DASHBOARD (Removed Popup Block)
         function registerShopOwner(e) {
             e.preventDefault();
 
             const random4Digit = Math.floor(1000 + Math.random() * 9000).toString();
-            // Photo validation with fallback default photo
             let photoVal = document.getElementById('shop-photo-str').value;
             if (!photoVal || photoVal.length < 50) {
                 photoVal = 'https://images.unsplash.com/photo-1604719312566-8912e9227c6a?w=150';
@@ -386,24 +362,14 @@
                 photo: photoVal
             };
 
-            // Immediate Save to LocalStorage
+            // Save session and go directly to dashboard
             localStorage.setItem('local_shop_session', JSON.stringify(shopData));
             currentShopSession = shopData;
 
-            // Show 4-Digit ID Popup Instantly
-            document.getElementById('popup-digit-id').innerText = random4Digit;
-            document.getElementById('success-popup').classList.remove('hidden');
+            // Sync with Firebase in background without blocking navigation
+            database.ref('shops/' + random4Digit).set(shopData).catch(err => console.log(err));
 
-            // Async Save to Firebase Database (Error proof)
-            try {
-                database.ref('shops/' + random4Digit).set(shopData);
-            } catch(e) {
-                console.log("Firebase sync skipped, local session active.");
-            }
-        }
-
-        function goToNextDashboardPage() {
-            document.getElementById('success-popup').classList.add('hidden');
+            // Direct jump to next dashboard page
             showShopDashboard();
         }
 
