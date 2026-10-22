@@ -43,72 +43,18 @@
         <!-- ================= 1. SHOP OWNER PORTAL ================= -->
         <div id="portal-shop" class="portal-screen space-y-4">
             
-            <!-- Shop Login / Register Card -->
-            <div id="shop-auth-card" class="bg-white p-5 rounded-xl shadow-md border border-gray-200">
-                <div class="flex justify-between items-center mb-4 border-b pb-2">
-                    <h2 class="text-lg font-bold text-gray-800">🏪 ಅಂಗಡಿ ಮಾಲೀಕರ ನೋಂದಣಿ / ಲಾಗಿನ್</h2>
-                    <button type="button" onclick="toggleOldLogin()" class="text-xs bg-indigo-50 text-indigo-700 px-3 py-1 rounded-lg font-bold border border-indigo-200">
-                        <i class="fa-solid fa-key"></i> ಹಳೆಯ 4-Digit ID ಲಾಗಿನ್
-                    </button>
-                </div>
-
-                <!-- Old ID Login Box -->
-                <div id="old-login-box" class="hidden bg-indigo-50 p-4 rounded-xl mb-4 border border-indigo-200 space-y-2">
-                    <label class="block text-xs font-bold text-indigo-900 uppercase">ನಿಮ್ಮ 4-ಅಂಕಿಯ ಡಿಜಿಟಲ್ ಐಡಿ ನಮೂದಿಸಿ</label>
-                    <div class="flex gap-2">
-                        <input type="number" id="old-digit-id" maxlength="4" placeholder="Ex: 4821" class="p-2 border rounded-lg text-sm w-full font-bold">
-                        <button type="button" onclick="loginWithOldID()" class="bg-indigo-700 text-white px-4 py-2 rounded-lg font-bold text-xs">Login</button>
-                    </div>
-                </div>
-
-                <!-- Registration Form -->
-                <form id="shop-reg-form" onsubmit="registerShopOwner(event)" class="space-y-3">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <input type="text" id="shop-owner-name" placeholder="ಮಾಲೀಕರ ಹೆಸರು (Owner Name)" required class="p-2.5 border rounded-lg text-sm">
-                        <input type="tel" id="shop-phone" placeholder="ಮೊಬೈಲ್ ಸಂಖ್ಯೆ (10-digits)" pattern="[0-9]{10}" required class="p-2.5 border rounded-lg text-sm">
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <input type="text" id="shop-name" placeholder="ಅಂಗಡಿಯ ಹೆಸರು (Shop Name)" required class="p-2.5 border rounded-lg text-sm">
-                        <select id="shop-category" required class="p-2.5 border rounded-lg text-sm bg-white">
-                            <option value="">ಅಂಗಡಿಯ ಪ್ರಕಾರ ಆರಿಸಿ (Category)</option>
-                            <option>ದಿನಸಿ ಮತ್ತು ಕಿರಾಣಿ ಅಪ್‌ಡೇಟ್ಸ್ (Grocery Store)</option>
-                            <option>ಫುಡ್ & ಹೋಟೆಲ್ (Restaurant & Food)</option>
-                            <option>ಬಟ್ಟೆ ಅಂಗಡಿ (Apparel & Fashion)</option>
-                            <option>ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್ & ಮೊಬೈಲ್ (Electronics)</option>
-                            <option>ಮೆಡಿಕಲ್ ಸ್ಟೋರ್ (Pharmacy)</option>
-                            <option>ತರಕಾರಿ & ಹಣ್ಣುಗಳು (Vegetables & Fruits)</option>
-                            <option>ಇತರ ಸಾಮಾನ್ಯ ಅಂಗಡಿ (General Store)</option>
-                        </select>
-                    </div>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
-                        <input type="text" id="shop-district" placeholder="ಜಿಲ್ಲೆ (District)" required class="p-2 border rounded-lg text-xs">
-                        <input type="text" id="shop-taluk" placeholder="ತಾಲೂಕು (Taluk)" required class="p-2 border rounded-lg text-xs">
-                        <input type="text" id="shop-town" placeholder="ಊರಿನ ಹೆಸರು (Town/Village)" required class="p-2 border rounded-lg text-xs">
-                        <input type="text" id="shop-pincode" placeholder="ಪಿನ್‌ಕೋಡ್ (Pincode)" required class="p-2 border rounded-lg text-xs">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-600 mb-1">ಅಂಗಡಿಯ ಫೋಟೋ ಅಪ್‌ಲೋಡ್ (Shop Photo Upload)</label>
-                        <input type="file" id="shop-photo" accept="image/*" onchange="processImage(this, 'shop-photo-str')" class="block w-full text-xs border rounded-lg p-2">
-                        <input type="hidden" id="shop-photo-str">
-                    </div>
-                    <button type="submit" id="reg-submit-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg shadow-md transition flex justify-center items-center gap-2">
-                        <span>✅ ಲಾಗಿನ್ ಸಬ್ಮಿಟ್ ಮಾಡಿ (Submit Registration)</span>
-                    </button>
-                </form>
-            </div>
-
-            <!-- Shop Owner Main Dashboard (Post-Login Next Page) -->
-            <div id="shop-dashboard" class="hidden space-y-4">
+            <!-- Shop Owner Main Dashboard (Direct Access - No Login Required) -->
+            <div id="shop-dashboard" class="space-y-4">
                 <!-- Profile Header -->
                 <div class="bg-indigo-900 text-white p-4 rounded-xl shadow-md flex justify-between items-center">
                     <div class="flex items-center gap-3">
                         <img id="dash-shop-img" src="https://images.unsplash.com/photo-1604719312566-8912e9227c6a?w=150" class="w-12 h-12 rounded-full object-cover border-2 border-white">
                         <div>
-                            <h3 id="dash-shop-title" class="font-bold text-base">ಅಂಗಡಿ ಹೆಸರು</h3>
-                            <p id="dash-shop-id" class="text-xs text-amber-300 font-mono font-bold">Digital ID: ----</p>
+                            <h3 id="dash-shop-title" class="font-bold text-base">ಶ್ರೀ ಸೇವಾಲಾಲ್ ಬಟ್ಟೆ ಅಂಗಡಿ</h3>
+                            <p id="dash-shop-id" class="text-xs text-amber-300 font-mono font-bold">Digital ID: 585228</p>
                         </div>
                     </div>
-                    <button type="button" onclick="logoutShop()" class="bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1.5 rounded-lg font-bold">Logout</button>
+                    <span class="bg-green-500 text-white text-xs px-2.5 py-1 rounded-full font-bold">● Active Shop</span>
                 </div>
 
                 <!-- Add New Product Form -->
@@ -273,14 +219,17 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        let currentShopSession = JSON.parse(localStorage.getItem('local_shop_session')) || null;
+        // Direct Shop Session Set
+        const currentShopSession = {
+            digitalId: "585228",
+            shopName: "ಶ್ರೀ ಸೇವಾಲಾಲ್ ಬಟ್ಟೆ ಅಂಗಡಿ",
+            photo: "https://images.unsplash.com/photo-1604719312566-8912e9227c6a?w=150"
+        };
+
         let selectedProductForBuy = null;
         let buyModalQty = 1;
 
         window.onload = function() {
-            if (currentShopSession) {
-                showShopDashboard();
-            }
             loadSavedCustomerAddress();
         };
 
@@ -292,11 +241,7 @@
             document.getElementById(`btn-${portal}`).classList.replace('bg-indigo-600', 'bg-indigo-900');
         }
 
-        function toggleOldLogin() {
-            document.getElementById('old-login-box').classList.toggle('hidden');
-        }
-
-        // Automatic Smart Image Processing & Auto Resize
+        // Automatic Image Processing Logic
         function processImage(fileInput, targetHiddenId) {
             const file = fileInput.files[0];
             if (!file) return;
@@ -339,76 +284,8 @@
             reader.readAsDataURL(file);
         }
 
-        // Register Shop Owner - DIRECTLY GO TO DASHBOARD (Removed Popup Block)
-        function registerShopOwner(e) {
-            e.preventDefault();
-
-            const random4Digit = Math.floor(1000 + Math.random() * 9000).toString();
-            let photoVal = document.getElementById('shop-photo-str').value;
-            if (!photoVal || photoVal.length < 50) {
-                photoVal = 'https://images.unsplash.com/photo-1604719312566-8912e9227c6a?w=150';
-            }
-
-            const shopData = {
-                digitalId: random4Digit,
-                ownerName: document.getElementById('shop-owner-name').value,
-                phone: document.getElementById('shop-phone').value,
-                shopName: document.getElementById('shop-name').value,
-                category: document.getElementById('shop-category').value,
-                district: document.getElementById('shop-district').value,
-                taluk: document.getElementById('shop-taluk').value,
-                town: document.getElementById('shop-town').value,
-                pincode: document.getElementById('shop-pincode').value,
-                photo: photoVal
-            };
-
-            // Save session and go directly to dashboard
-            localStorage.setItem('local_shop_session', JSON.stringify(shopData));
-            currentShopSession = shopData;
-
-            // Sync with Firebase in background without blocking navigation
-            database.ref('shops/' + random4Digit).set(shopData).catch(err => console.log(err));
-
-            // Direct jump to next dashboard page
-            showShopDashboard();
-        }
-
-        function loginWithOldID() {
-            const digitId = document.getElementById('old-digit-id').value;
-            if (!digitId) return alert("ದಯವಿಟ್ಟು 4-ಅಂಕಿಯ ಐಡಿ ನಮೂದಿಸಿ");
-
-            database.ref('shops/' + digitId).once('value', (snap) => {
-                if (snap.exists()) {
-                    const shopData = snap.val();
-                    localStorage.setItem('local_shop_session', JSON.stringify(shopData));
-                    currentShopSession = shopData;
-                    alert("✅ ಪುನಃ ಲಾಗಿನ್ ಯಶಸ್ವಿಯಾಗಿದೆ!");
-                    showShopDashboard();
-                } else {
-                    alert("❌ ಈ 4-ಅಂಕಿಯ ಐಡಿ ಲಭ್ಯವಿಲ್ಲ.");
-                }
-            });
-        }
-
-        function showShopDashboard() {
-            document.getElementById('shop-auth-card').classList.add('hidden');
-            document.getElementById('shop-dashboard').classList.remove('hidden');
-
-            document.getElementById('dash-shop-title').innerText = currentShopSession.shopName;
-            document.getElementById('dash-shop-id').innerText = `Digital ID: ${currentShopSession.digitalId}`;
-            document.getElementById('dash-shop-img').src = currentShopSession.photo || 'https://images.unsplash.com/photo-1604719312566-8912e9227c6a?w=150';
-        }
-
-        function logoutShop() {
-            localStorage.removeItem('local_shop_session');
-            currentShopSession = null;
-            document.getElementById('shop-dashboard').classList.add('hidden');
-            document.getElementById('shop-auth-card').classList.remove('hidden');
-        }
-
         function addNewProduct(e) {
             e.preventDefault();
-            if (!currentShopSession) return alert("ಮಾಲೀಕರ ಲಾಗಿನ್ ಆಗಿಲ್ಲ!");
 
             const prodId = 'PROD-' + Date.now();
             let photoVal = document.getElementById('prod-photo-str').value;
@@ -533,7 +410,7 @@
             const products = Object.values(data);
 
             const shopGrid = document.getElementById('shop-product-grid');
-            if (shopGrid && currentShopSession) {
+            if (shopGrid) {
                 shopGrid.innerHTML = '';
                 const myProds = products.filter(p => p.shopId === currentShopSession.digitalId);
                 if (myProds.length === 0) {
@@ -592,7 +469,7 @@
 
         function renderShopOrders(orders) {
             const container = document.getElementById('shop-orders-list');
-            if (!container || !currentShopSession) return;
+            if (!container) return;
 
             container.innerHTML = '';
             const myOrders = orders.filter(o => o.shopId === currentShopSession.digitalId);
