@@ -96,7 +96,7 @@
 </head>
 <body>
 
-  <!-- Support / Help Bar -->
+  <!-- Support Bar -->
   <div class="support-bar">
     <button onclick="logoutShop()" class="sup-btn" style="background:#e53935;">🔄 ಮರು ಲಾಗಿನ್</button>
     <a href="tel:8105010768" class="sup-btn call">📞 ಕಾಲ್ ಮಾಡಿ</a>
@@ -119,20 +119,21 @@
       <p style="font-size: 0.8rem; opacity: 0.9;">ಅಂಗಡಿ ಮಾಲೀಕರ ಆಪ್ (Shop Owner Panel)</p>
     </header>
 
-    <!-- 1. ಅಂಗಡಿ ಮಾಲೀಕರ ಲಾಗಿನ್ / ನೋಂದಣಿ ಫಾರ್ಮ್ -->
+    <!-- 1. ಲಾಗಿನ್ / ನೋಂದಣಿ ಫಾರ್ಮ್ -->
     <div id="loginSection" style="background:#f1f8e9; padding:15px; border-radius:10px; border:1px solid #c8e6c9;">
-      <h2>🔐 ಅಂಗಡಿ ಮಾಲೀಕರ ನೋಂದಣಿ / ಲಾಗಿನ್</h2>
+      <h2>🔑 ಹಳೆಯ ಐಡಿ ಪಡೆಯಿರಿ / ಲಾಗಿನ್ ಮಾಡಿ</h2>
       
-      <div style="margin-bottom: 12px; background: #e3f2fd; padding: 12px; border-radius: 8px;">
-        <label style="font-size:0.85rem; color:#1565c0; font-weight:bold; margin-bottom:6px;">ಹಳೆಯ 4-ಡಿಜಿಟ್ ಐಡಿ ಹಾಕಿ ಲಾಗಿನ್ ಆಗಿ:</label>
+      <div style="margin-bottom: 15px; background: #e3f2fd; padding: 12px; border-radius: 8px; border: 1px solid #90caf9;">
+        <label style="font-size:0.85rem; color:#1565c0; font-weight:bold; margin-bottom:6px;">ನಿಮ್ಮ 4-ಡಿಜಿಟ್ ನಂಬರ್ ಐಡಿ ಹಾಕಿ:</label>
         <div style="display:flex; gap:8px;">
-          <input type="text" id="existingIdInput" placeholder="ಉದಾ: 6444" maxlength="4" style="flex:1; padding:12px; font-size:1.1rem; font-weight:bold; text-align:center; letter-spacing:2px;">
-          <button type="button" class="btn btn-warning" style="padding:10px 18px; font-size:0.95rem;" onclick="loginWithExistingId()">ಲಾಗಿನ್</button>
+          <input type="number" id="existingIdInput" placeholder="ಉದಾ: 1511" style="flex:1; padding:12px; font-size:1.2rem; font-weight:bold; text-align:center; border:2px solid #1e88e5; border-radius:8px;">
+          <button type="button" class="btn btn-warning" style="padding:10px 18px; font-size:0.95rem; font-weight:bold;" onclick="loginWithExistingId()">ಲಾಗಿನ್</button>
         </div>
       </div>
 
       <hr style="margin: 15px 0; border:0; border-top:1px solid #c8e6c9;">
 
+      <h2 style="font-size:0.95rem;">📝 ಹೊಸ ಅಂಗಡಿ ನೋಂದಣಿ</h2>
       <form onsubmit="registerShopOwner(event)">
         <div class="form-group"><label>ಅಂಗಡಿ ಮಾಲೀಕರ ಹೆಸರು:</label><input type="text" id="ownerName" required placeholder="ನಿಮ್ಮ ಹೆಸರು"></div>
         <div class="form-group"><label>ಮೊಬೈಲ್ ನಂಬರ್:</label><input type="tel" id="ownerPhone" required placeholder="ಮೊಬೈಲ್ ಸಂಖ್ಯೆ"></div>
@@ -223,10 +224,10 @@
 
       <!-- ಆರ್ಡರ್‌ಗಳು -->
       <div id="tabOrders" style="display:none; background:#fff; padding:15px; border-radius:10px; border:1px solid #cbd5e0;">
-        <h2>📦 ಹೊಸ ಆರ್ಡರ್‌ಗಳು ಹಾಗೂ ಕೆಂಪು ಬಣ್ಣದ ರಿಟರ್ನ್‌ಗಳು</h2>
+        <h2>📦 ಪ್ರಸ್ತುತ ಹೊಸ ಆರ್ಡರ್‌ಗಳು ಹಾಗೂ ಕೆಂಪು ರಿಟರ್ನ್‌ಗಳು</h2>
         <div id="shopOrdersList" style="margin-top:10px;"></div>
 
-        <h2 style="margin-top:20px; color:#555;">📜 ಹಳೆಯ ಆರ್ಡರ್‌ಗಳು (History)</h2>
+        <h2 style="margin-top:20px; color:#555;">🔒 ಹಳೆಯ ಪೂರ್ಣಗೊಂಡ ಆರ್ಡರ್‌ಗಳು (History)</h2>
         <div id="shopArchivedOrdersList" style="margin-top:10px;"></div>
       </div>
 
@@ -334,21 +335,25 @@
         return;
       }
 
-      const q = window.query(window.collection(window.db, "shop_owners"), window.where("id", "==", idVal));
-      const snap = await window.getDocs(q);
+      try {
+        const q = window.query(window.collection(window.db, "shop_owners"), window.where("id", "==", String(idVal)));
+        const snap = await window.getDocs(q);
 
-      if (!snap.empty) {
-        snap.forEach(docSnap => {
-          shopOwner = docSnap.data();
-          localStorage.setItem('my_shop_owner_session', JSON.stringify(shopOwner));
-          renderIDCard();
-          document.getElementById('loginSection').style.display = 'none';
-          document.getElementById('dashboardSection').style.display = 'block';
-          startRealtimeSync();
-          alert("🎉 ಲಾಗಿನ್ ಯಶಸ್ವಿಯಾಗಿದೆ!");
-        });
-      } else {
-        alert("ಈ ಐಡಿಗೆ ಸಂಬಂಧಿಸಿದ ಯಾವುದೇ ಅಂಗಡಿ ಮಾಲೀಕರು ಕಂಡುಬಂದಿಲ್ಲ.");
+        if (!snap.empty) {
+          snap.forEach(docSnap => {
+            shopOwner = docSnap.data();
+            localStorage.setItem('my_shop_owner_session', JSON.stringify(shopOwner));
+            renderIDCard();
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('dashboardSection').style.display = 'block';
+            startRealtimeSync();
+            alert("🎉 ನಿಮ್ಮ ಹಳೆಯ ಐಡಿ ಯಶಸ್ವಿಯಾಗಿ ಸಕ್ಸಸ್‌ಫುಲ್ ಆಗಿದೆ!");
+          });
+        } else {
+          alert("ಈ ಐಡಿಗೆ ಸಂಬಂಧಿಸಿದ ಯಾವುದೇ ಅಂಗಡಿ ಮಾಲೀಕರು ಕಂಡುಬಂದಿಲ್ಲ. ದಯವಿಟ್ಟು ಸರಿಯಾದ ಐಡಿ ಹಾಕಿ.");
+        }
+      } catch (err) {
+        alert("ಲಾಗಿನ್ ದೋಷ: " + err.message);
       }
     }
 
@@ -389,8 +394,15 @@
         let orders = [];
         snapshot.forEach(docSnap => {
           const o = docSnap.data();
-          // Show orders if they belong to this shop OR if they are new/unclaimed orders across system
-          if (o.shopId === shopOwner.id || !o.acceptedBy || o.acceptedBy === shopOwner.id) {
+
+          // Return Orders: Strictly only show to the specific shop owner that sold the item
+          if (o.status === 'RETURNED' || o.isReturned) {
+            if (o.shopId === shopOwner.id) {
+              orders.push({ docId: docSnap.id, ...o });
+            }
+          } 
+          // New/Regular Orders: Visible to all or assigned shop owner
+          else if (!o.acceptedBy || o.acceptedBy === shopOwner.id || o.shopId === shopOwner.id) {
             orders.push({ docId: docSnap.id, ...o });
           }
         });
@@ -409,11 +421,16 @@
       document.getElementById('statTotalOrders').innerText = myOrders.length;
       document.getElementById('statReturns').innerText = myOrders.filter(o => o.status === 'RETURNED' || o.isReturned).length;
       
+      // Active / New Orders (Top) vs Completed / History Orders (Bottom)
       const activeOrders = orders.filter(o => (o.status !== 'DELIVERED' && o.status !== 'RETURN_COMPLETED') && (!o.acceptedBy || o.acceptedBy === shopOwner.id));
       const archivedOrders = myOrders.filter(o => o.status === 'DELIVERED' || o.status === 'RETURN_COMPLETED');
 
       renderOrders(activeOrders);
       renderArchivedOrders(archivedOrders);
+
+      // Payment pending list
+      const paymentPendingOrders = myOrders.filter(o => o.status === 'DELIVERED' && !o.isShopPaid);
+      renderPayments(paymentPendingOrders);
     }
 
     function renderOrders(orders) {
@@ -428,18 +445,16 @@
         let actionButtons = "";
 
         if (isReturn) {
-          if (o.returnReceivedByShop) {
-            actionButtons = `<button class="btn btn-success" style="padding:8px; font-size:0.8rem; margin-top:8px;" disabled>✅ ರಿಟರ್ನ್ ಪಿಕ್‌ಅಪ್ ಪಡೆದುಕೊಳ್ಳಲಾಗಿದೆ (Completed)</button>`;
-          } else {
-            actionButtons = `
-              <div style="color:#d32f2f; font-weight:bold; margin-top:6px; font-size:0.8rem;">🚨 ರಿಟರ್ನ್ ಇದೆ, ಡೆಲಿವರಿ ಬಾಯ್ ಪಿಕ್‌ಅಪ್ ಮಾಡಿ ತಲುಪಿಸಬೇಕು</div>
-              <button class="btn btn-danger" style="padding:8px; font-size:0.8rem; margin-top:8px;" onclick="confirmReturnReceived('${o.docId}')">🛑 ಡೆಲಿವರಿ ಬಾಯ್ ರಿಟರ್ನ್ ತಂದಿದ್ದಾರೆ (Confirm Return Pickup)</button>
-            `;
-          }
-        } else if (!o.acceptedBy || o.acceptedBy === '') {
-          actionButtons = `<button class="btn btn-success" style="padding:8px; font-size:0.8rem; margin-top:8px;" onclick="acceptOrder('${o.docId}')">✅ ಆರ್ಡರ್ ಸ್ವೀಕರಿಸಿ (Accept Order)</button>`;
-        } else if (o.acceptedBy === shopOwner.id) {
-          actionButtons = `<div style="background:#e3f2fd; padding:6px; border-radius:6px; margin-top:8px; text-align:center; font-weight:bold; color:#1565c0;">👍 ನೀವು ಈ ಆರ್ಡರ್ ಸ್ವೀಕರಿಸಿದ್ದೀರಿ</div>`;
+          actionButtons = `
+            <div style="color:#d32f2f; font-weight:bold; margin-top:6px; font-size:0.8rem;">🚨 ರಿಟರ್ನ್ ಇದೆ, ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ಪಿಕ್‌ಅಪ್ ಸಂದೇಶ ತಲುಪಿದೆ</div>
+            <button class="btn btn-danger" style="padding:8px; font-size:0.8rem; margin-top:8px;" onclick="confirmReturnReceived('${o.docId}')">🛑 ಡೆಲಿವರಿ ಬಾಯ್ ರಿಟರ್ನ್ ತಂದಿದ್ದಾರೆ (Confirm Return Pickup)</button>
+          `;
+        } else if (!o.status || o.status === 'STEP_1' || o.status === 'NEW') {
+          actionButtons = `<button class="btn btn-success" style="padding:8px; font-size:0.8rem; margin-top:8px;" onclick="confirmOrder('${o.docId}')">✅ ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಮಾಡಿ</button>`;
+        } else if (o.status === 'CONFIRMED') {
+          actionButtons = `<button class="btn btn-warning" style="padding:8px; font-size:0.8rem; margin-top:8px;" onclick="markPackingDone('${o.docId}')">📦 ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (Send to Delivery)</button>`;
+        } else if (o.status === 'PACKING') {
+          actionButtons = `<div style="background:#e3f2fd; padding:6px; border-radius:6px; margin-top:8px; text-align:center; font-weight:bold; color:#1565c0;">🚚 ಡೆಲಿವರಿ ಬಾಯ್ ಪಿಕ್‌ಅಪ್ ಹಾದಿಯಲ್ಲಿದ್ದಾರೆ</div>`;
         }
 
         let mapLink = o.customer?.gps ? `https://maps.google.com/?q=${o.customer.gps}` : '#';
@@ -468,21 +483,52 @@
     function renderArchivedOrders(orders) {
       const listDiv = document.getElementById('shopArchivedOrdersList');
       if (orders.length === 0) {
-        listDiv.innerHTML = '<p style="font-size:0.8rem; color:#777;">ಯಾವುದೇ ಹಳೆಯ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>';
+        listDiv.innerHTML = '<p style="font-size:0.8rem; color:#777;">ಯಾವುದೇ ಹಳೆಯ ಪೂರ್ಣಗೊಂಡ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>';
         return;
       }
       listDiv.innerHTML = orders.map(o => `
         <div class="order-item archived">
           <p><b>${o.productName}</b> - ₹${o.totalPrice}</p>
-          <p style="font-size:0.75rem;">ಸ್ಟೇಟಸ್: ${o.status}</p>
+          <p style="font-size:0.75rem;">ಗ್ರಾಹಕರು: ${o.customer?.name} (${o.customer?.phone})</p>
+          <p style="font-size:0.75rem; color:#2e7d32; font-weight:bold;">🔒 ಸ್ಟೇಟಸ್: ${o.status}</p>
         </div>
       `).join('');
     }
 
-    async function acceptOrder(docId) {
+    function renderPayments(list) {
+      const listDiv = document.getElementById('shopPaymentsList');
+      if (list.length === 0) {
+        listDiv.innerHTML = '<p style="font-size:0.8rem; color:#777;">ಯಾವುದೇ ಪೇಮೆಂಟ್ ಬಾಕಿ ಇಲ್ಲ.</p>';
+        return;
+      }
+
+      listDiv.innerHTML = list.map(o => `
+        <div class="order-item" style="border-left-color: var(--warning);">
+          <p><b>${o.productName}</b> - ಬಾಕಿ ಮೊತ್ತ: ₹${o.totalPrice}</p>
+          <p style="font-size:0.75rem;">ಗ್ರಾಹಕರು: ${o.customer?.name}</p>
+          <button class="btn btn-success" style="padding:6px; font-size:0.8rem; margin-top:6px;" onclick="confirmPaymentReceived('${o.docId}')">💳 ಪೇಮೆಂಟ್ ಬಂದಿದೆ OK ಮಾಡಿ (Payment OK)</button>
+        </div>
+      `).join('');
+    }
+
+    async function confirmOrder(docId) {
       try {
         await window.updateDoc(window.doc(window.db, "orders", docId), { status: 'CONFIRMED', acceptedBy: shopOwner.id, shopId: shopOwner.id, shopName: shopOwner.shopName });
-        alert("ಆರ್ಡರ್ ಯಶಸ್ವಿಯಾಗಿ ಸ್ವೀಕರಿಸಲಾಗಿದೆ! ಇದು ಇತರರಿಗೆ ಕಾಣಿಸುವುದಿಲ್ಲ.");
+        alert("ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಆಗಿದೆ!");
+      } catch (e) { alert(e.message); }
+    }
+
+    async function markPackingDone(docId) {
+      try {
+        await window.updateDoc(window.doc(window.db, "orders", docId), { status: 'PACKING' });
+        alert("ಪ್ಯಾಕಿಂಗ್ ಪೂರ್ಣಗೊಂಡಿದೆ ಮತ್ತು ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ತಲುಪಿಸಲಾಗಿದೆ!");
+      } catch (e) { alert(e.message); }
+    }
+
+    async function confirmPaymentReceived(docId) {
+      try {
+        await window.updateDoc(window.doc(window.db, "orders", docId), { isShopPaid: true });
+        alert("🎉 ಪೇಮೆಂಟ್ ಯಶಸ್ವಿಯಾಗಿ ಸೀಕರಿಸಲಾಗಿದೆ!");
       } catch (e) { alert(e.message); }
     }
 
