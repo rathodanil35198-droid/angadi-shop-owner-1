@@ -140,16 +140,16 @@
         <div class="form-group"><label>ಅಂಗಡಿಯ ಹೆಸರು:</label><input type="text" id="shopName" required placeholder="ಉದಾ: ಶ್ರೀ ಸೇವಾಲಾಲ್ ಸ್ಟೋರ್ಸ್"></div>
         
         <div class="form-group">
-          <label>ಅಂಗಡಿಯ ಪ್ರಕಾರ:</label>
+          <label>ಅಂಗಡಿಯ ಪ್ರಕಾರ (ವಿಭಾಗ):</label>
           <select id="shopType" required>
             <option value="">-- ಆಯ್ಕೆಮಾಡಿ --</option>
-            <option value="1. ಕಿರಾಣಿ ಅಂಗಡಿ">1. ಕಿರಾಣಿ ಅಂಗಡಿ</option>
-            <option value="2. ಬಟ್ಟೆ ಅಂಗಡಿ">2. ಬಟ್ಟೆ ಅಂಗಡಿ</option>
-            <option value="3. ಚಪ್ಪಲಿ ಅಂಗಡಿ">3. ಚಪ್ಪಲಿ ಅಂಗಡಿ</option>
-            <option value="4. ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್">4. ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್</option>
-            <option value="5. ಗಿಫ್ಟ್ ಸೆಂಟರ್">5. ಗಿಫ್ಟ್ ಸೆಂಟರ್</option>
-            <option value="6. ಮೊಬೈಲ್ ಶಾಪ್">6. ಮೊಬೈಲ್ ಶಾಪ್</option>
-            <option value="7. ಇತರ ಅಂಗಡಿ">7. ಇತರ ಅಂಗಡಿ</option>
+            <option value="ಚಪ್ಪಲಿ ಅಂಗಡಿ">ಚಪ್ಪಲಿ ಅಂಗಡಿ (Footwear)</option>
+            <option value="ಬಟ್ಟೆ ಅಂಗಡಿ">ಬಟ್ಟೆ ಅಂಗಡಿ (Clothes)</option>
+            <option value="ಕಿರಾಣಿ ಅಂಗಡಿ">ಕಿರಾಣಿ ಅಂಗಡಿ (Grocery)</option>
+            <option value="ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್">ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್ (Electronics)</option>
+            <option value="ಗಿಫ್ಟ್ ಸೆಂಟರ್">ಗಿಫ್ಟ್ ಸೆಂಟರ್ (Gift Shop)</option>
+            <option value="ಮೊಬೈಲ್ ಶಾಪ್">ಮೊಬೈಲ್ ಶಾಪ್ (Mobile Shop)</option>
+            <option value="ಇತರ ಅಂಗಡಿ">ಇತರ ಅಂಗಡಿ (Other)</option>
           </select>
         </div>
 
@@ -189,7 +189,7 @@
           <p id="statReturns">0</p>
         </div>
         <div class="stat-box">
-          <h4>ಶುದ್ಧ ಮೊತ್ತ</h4>
+          <h4>ಶುದ್ಧ ಮೊತ್ತ (15% ಕಡಿತ)</h4>
           <p id="statEarnings">₹0</p>
         </div>
       </div>
@@ -224,16 +224,17 @@
 
       <!-- ಆರ್ಡರ್‌ಗಳು -->
       <div id="tabOrders" style="display:none; background:#fff; padding:15px; border-radius:10px; border:1px solid #cbd5e0;">
-        <h2>📦 ಪ್ರಸ್ತುತ ಹೊಸ ಆರ್ಡರ್‌ಗಳು ಹಾಗೂ ಕೆಂಪು ರಿಟರ್ನ್‌ಗಳು</h2>
+        <h2>📦 ಪ್ರಸ್ತುತ ಹೊಸ ಆರ್ಡರ್‌ಗಳು ಹಾಗೂ ರಿಟರ್ನ್‌ಗಳು</h2>
         <div id="shopOrdersList" style="margin-top:10px;"></div>
 
         <h2 style="margin-top:20px; color:#555;">🔒 ಹಳೆಯ ಪೂರ್ಣಗೊಂಡ ಆರ್ಡರ್‌ಗಳು (History)</h2>
         <div id="shopArchivedOrdersList" style="margin-top:10px;"></div>
       </div>
 
-      <!-- ಪೇಮೆಂಟ್ಸ್ -->
+      <!-- ಪೇಮೆಂಟ್ಸ್ (1 ತಿಂಗಳ ಲೆಕ್ಕಾಚಾರ & ಕಮಿಷನ್ ವಿವರ) -->
       <div id="tabPayments" style="display:none; background:#fff; padding:15px; border-radius:10px; border:1px solid #cbd5e0;">
-        <h2>💳 ಪೇಮೆಂಟ್ ಬಾಕಿ ವಿವರಗಳು</h2>
+        <h2>💳 1 ತಿಂಗಳ ಪೇಮೆಂಟ್ಸ್ ಮತ್ತು ಲೆಕ್ಕಾಚಾರ (1 Month Ledger)</h2>
+        <div id="paymentLedgerSummary" style="background:#e3f2fd; padding:12px; border-radius:8px; margin-bottom:15px; font-size:0.85rem;"></div>
         <div id="shopPaymentsList" style="margin-top:10px;"></div>
       </div>
 
@@ -244,19 +245,24 @@
     let shopOwner = JSON.parse(localStorage.getItem('my_shop_owner_session')) || null;
     let lastOrderCount = 0;
 
+    // Loud Siren Sound Generator for New Orders
     function playSirenSound() {
       try {
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(600, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.5);
-        gain.gain.setValueAtTime(1, audioCtx.currentTime);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 1.2);
+        for(let i=0; i<3; i++) {
+          setTimeout(() => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(1500, audioCtx.currentTime + 0.3);
+            gain.gain.setValueAtTime(1, audioCtx.currentTime);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.5);
+          }, i * 600);
+        }
       } catch(e) {}
     }
 
@@ -347,10 +353,10 @@
             document.getElementById('loginSection').style.display = 'none';
             document.getElementById('dashboardSection').style.display = 'block';
             startRealtimeSync();
-            alert("🎉 ನಿಮ್ಮ ಹಳೆಯ ಐಡಿ ಯಶಸ್ವಿಯಾಗಿ ಸಕ್ಸಸ್‌ಫುಲ್ ಆಗಿದೆ!");
+            alert("🎉 ನಿಮ್ಮ ಹಳೆಯ ಐಡಿ ಯಶಸ್ವಿಯಾಗಿ ಲಾಗಿನ್ ಆಗಿದೆ!");
           });
         } else {
-          alert("ಈ ಐಡಿಗೆ ಸಂಬಂಧಿಸಿದ ಯಾವುದೇ ಅಂಗಡಿ ಮಾಲೀಕರು ಕಂಡುಬಂದಿಲ್ಲ. ದಯವಿಟ್ಟು ಸರಿಯಾದ ಐಡಿ ಹಾಕಿ.");
+          alert("ಈ ಐಡಿಗೆ ಸಂಬಂಧಿಸಿದ ಯಾವುದೇ ಅಂಗಡಿ ಮಾಲೀಕರು ಕಂಡುಬಂದಿಲ್ಲ.");
         }
       } catch (err) {
         alert("ಲಾಗಿನ್ ದೋಷ: " + err.message);
@@ -392,18 +398,18 @@
 
       window.onSnapshot(window.collection(window.db, "orders"), (snapshot) => {
         let orders = [];
+        const oneMonthAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
+
         snapshot.forEach(docSnap => {
           const o = docSnap.data();
+          const orderTime = o.timestamp?.toMillis?.() || Date.now();
 
-          // Return Orders: Strictly route only to the exact matching shop owner
-          if (o.status === 'RETURNED' || o.isReturned) {
-            if (o.shopId === shopOwner.id) {
+          // Keep 1 month records
+          if (orderTime >= oneMonthAgo) {
+            // Category routing check: Match shopType or direct shopId
+            if (o.shopId === shopOwner.id || o.acceptedBy === shopOwner.id || (!o.acceptedBy && (o.shopType === shopOwner.shopType || shopOwner.shopType === 'ಇತರ ಅಂಗಡಿ'))) {
               orders.push({ docId: docSnap.id, ...o });
             }
-          } 
-          // Regular Orders: Target the respective shop type / matching category or unclaimed orders
-          else if (!o.acceptedBy || o.acceptedBy === shopOwner.id || o.shopId === shopOwner.id) {
-            orders.push({ docId: docSnap.id, ...o });
           }
         });
 
@@ -418,17 +424,44 @@
 
     function renderDashboard(orders) {
       const myOrders = orders.filter(o => o.shopId === shopOwner.id || o.acceptedBy === shopOwner.id);
-      document.getElementById('statTotalOrders').innerText = myOrders.length;
-      document.getElementById('statReturns').innerText = myOrders.filter(o => o.status === 'RETURNED' || o.isReturned).length;
       
+      // 1 Month Calculations
+      const deliveredOrders = myOrders.filter(o => o.status === 'DELIVERED' || o.status === 'STEP_4' || o.status === 'RETURN_COMPLETED');
+      const totalDeliveredAmount = deliveredOrders.reduce((acc, curr) => acc + Number(curr.totalPrice || 0), 0);
+      
+      const returnedOrders = myOrders.filter(o => o.status === 'RETURNED' || o.isReturned || o.status === 'RETURN_COMPLETED');
+      const totalReturnedAmount = returnedOrders.reduce((acc, curr) => acc + Number(curr.totalPrice || 0), 0);
+
+      // Net Earnings after 15% commission deduction (excluding returned amounts)
+      const effectiveSales = Math.max(0, totalDeliveredAmount - totalReturnedAmount);
+      const netEarnings = Math.round(effectiveSales * 0.85);
+      const totalCommission = Math.round(effectiveSales * 0.15);
+
+      document.getElementById('statTotalOrders').innerText = myOrders.length;
+      document.getElementById('statReturns').innerText = returnedOrders.length;
+      document.getElementById('statEarnings').innerText = `₹${netEarnings}`;
+
       const activeOrders = orders.filter(o => (o.status !== 'DELIVERED' && o.status !== 'RETURN_COMPLETED') && (!o.acceptedBy || o.acceptedBy === shopOwner.id));
       const archivedOrders = myOrders.filter(o => o.status === 'DELIVERED' || o.status === 'RETURN_COMPLETED');
 
       renderOrders(activeOrders);
       renderArchivedOrders(archivedOrders);
 
-      const paymentPendingOrders = myOrders.filter(o => o.status === 'DELIVERED' && !o.isShopPaid);
-      renderPayments(paymentPendingOrders);
+      // Render Ledger & Payments Summary
+      renderLedgerSummary(deliveredOrders.length, totalDeliveredAmount, returnedOrders.length, totalReturnedAmount, netEarnings, totalCommission);
+      renderPayments(myOrders.filter(o => (o.status === 'DELIVERED' || o.status === 'STEP_4') && !o.isShopPaid));
+    }
+
+    function renderLedgerSummary(delCount, delAmt, retCount, retAmt, netEarn, commAmt) {
+      const summaryDiv = document.getElementById('paymentLedgerSummary');
+      summaryDiv.innerHTML = `
+        <p><b>📅 ಅವಧಿ:</b> ಕಳೆದ 1 ತಿಂಗಳ ಲೆಕ್ಕಾಚಾರ</p>
+        <p><b>✅ ಯಶಸ್ವಿ ಡೆಲಿವರಿಗಳು:</b> ${delCount} (ಮೊತ್ತ: ₹${delAmt})</p>
+        <p><b>🔄 ರಿಟರ್ನ್ ಆದ ಆರ್ಡರ್‌ಗಳು:</b> ${retCount} (ಮೊತ್ತ: ₹${retAmt})</p>
+        <p><b>🏷️ 15% ಪ್ಲಾಟ್‌ಫಾರ್ಮ್ ಕಮಿಷನ್:</b> -₹${commAmt}</p>
+        <hr style="margin:6px 0; border:0; border-top:1px solid #90caf9;">
+        <p style="font-size:0.95rem; color:#0d47a1;"><b>💰 ನಿಮಗೆ ಬರಬೇಕಾದ ಶುದ್ಧ ಮೊತ್ತ: ₹${netEarn}</b></p>
+      `;
     }
 
     function renderOrders(orders) {
@@ -502,7 +535,7 @@
 
       listDiv.innerHTML = list.map(o => `
         <div class="order-item" style="border-left-color: var(--warning);">
-          <p><b>${o.productName}</b> - ಬಾಕಿ ಮೊತ್ತ: ₹${o.totalPrice}</p>
+          <p><b>${o.productName}</b> - ಡೆಲಿವರಿ ಮುಟ್ಟಿದೆ, ಬಾಕಿ ಮೊತ್ತ: ₹${o.totalPrice}</p>
           <p style="font-size:0.75rem;">ಗ್ರಾಹಕರು: ${o.customer?.name}</p>
           <button class="btn btn-success" style="padding:6px; font-size:0.8rem; margin-top:6px;" onclick="confirmPaymentReceived('${o.docId}')">💳 ಪೇಮೆಂಟ್ ಬಂದಿದೆ OK ಮಾಡಿ (Payment OK)</button>
         </div>
@@ -511,7 +544,7 @@
 
     async function confirmOrder(docId) {
       try {
-        await window.updateDoc(window.doc(window.db, "orders", docId), { status: 'CONFIRMED', acceptedBy: shopOwner.id, shopId: shopOwner.id, shopName: shopOwner.shopName });
+        await window.updateDoc(window.doc(window.db, "orders", docId), { status: 'CONFIRMED', acceptedBy: shopOwner.id, shopId: shopOwner.id, shopName: shopOwner.shopName, shopType: shopOwner.shopType });
         alert("ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಆಗಿದೆ!");
       } catch (e) { alert(e.message); }
     }
@@ -533,7 +566,7 @@
     async function confirmReturnReceived(docId) {
       try {
         await window.updateDoc(window.doc(window.db, "orders", docId), { status: 'RETURN_COMPLETED', returnReceivedByShop: true });
-        alert("🎉 ರಿಟರ್ನ್ ಪಿಕ್‌ಅಪ್ ಸಫಲವಾಗಿ ಸ್ವೀಕರಿಸಲಾಗಿದೆ ಮತ್ತು ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ತಲುಪಿಸಲಾಗಿದೆ!");
+        alert("🎉 ರಿಟರ್ನ್ ಪಿಕ್‌ಅಪ್ ಸಫಲವಾಗಿ ಸ್ವೀಕರಿಸಲಾಗಿದೆ!");
       } catch (e) { alert(e.message); }
     }
 
