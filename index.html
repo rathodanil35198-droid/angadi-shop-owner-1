@@ -7,20 +7,19 @@
   <title id="pageTitle">ನಮ್ಮ ಶಾಪುರ್ - ಅಂಗಡಿ ಮಾಲೀಕರ ಆಪ್ | Family Shop Shahapur</title>
   <link rel="icon" type="image/png" sizes="192x192" href="AR_Taxi_Booking_Go_Fast_512x512.png">
 
-  <meta name="description" content="ನಮ್ಮ ಶಾಪುರ್ - ಸ್ಥಳೀಯ ಅಂಗಡಿಗಳ ಆನ್‌ಲೈನ್ ಮಾರ್ಕೆಟ್ ಅಪ್ಲಿಕೇಶನ್.">
-
   <!-- Firebase SDKs (Firestore & App) -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, addDoc, onSnapshot, updateDoc, doc, deleteDoc, getDocs, setDoc, getDoc, serverTimestamp, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+    // ನಿಮ್ಮ ಫೈರ್‌ಬೇಸ್ ಕಾನ್ಫಿಗರೇಶನ್
     const firebaseConfig = {
-      apiKey: "AIzaSyAm3HFKu101wex1b025-zJZ2BJ_o1Xvw",
-      authDomain: "ar-taxi-booking-shahapur.firebaseapp.com",
-      projectId: "ar-taxi-booking-shahapur",
-      storageBucket: "ar-taxi-booking-shahapur.appspot.com",
-      messagingSenderId: "585815710897",
-      appId: "1:586815710897:web:ab7138b9c016843db95dsa"
+      apiKey: "AIzaSyBvt2oBFM9EJEOwyJrfwUxS3TDfYi10WYE",
+      authDomain: "nammalocal-market.firebaseapp.com",
+      projectId: "nammalocal-market",
+      storageBucket: "nammalocal-market.appspot.com",
+      messagingSenderId: "1958228974",
+      appId: "1:1958228974:web:d87708410a0f0fb4f914ff"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -182,7 +181,7 @@
             </select>
           </div>
           <div class="form-group">
-            <label>ವಸ್ತುವಿನ ಫೋಟೋ (ನೇರ ಕ್ಯಾಮರಾ ಮೂಲಕ ತೆಗೆಯಿರಿ):</label>
+            <label>ವಸ್ತುವಿನ ಫೋಟೋ (ಯಾವುದೇ ಸೈಜ್ ಲಿಮಿಟ್ ಇಲ್ಲದೆ ಸಂಪೂರ್ಣವಾಗಿ ತೆಗೆದುಕೊಳ್ಳಲಾಗುತ್ತದೆ):</label>
             <input type="file" accept="image/*" capture="environment" id="prodPhotoFile" required>
           </div>
           <button type="submit" class="btn btn-success" id="btnUploadProd">ಅಪ್ಲೋಡ್ ಮಾಡು</button>
@@ -213,23 +212,14 @@
       }
     });
 
+    // ಫೋಟೋ ಸೈಜ್ ಲಿಮಿಟ್ ಇಲ್ಲದೆ ನೇರವಾಗಿ ಒರಿಜಿನಲ್ ಫೈಲ್ ರೀಡ್ ಮಾಡುವುದು
     function convertFileToBase64(file) {
       return new Promise((resolve) => {
         if (!file) { resolve(''); return; }
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = (event) => {
-          const img = new Image();
-          img.src = event.target.result;
-          img.onload = () => {
-            const canvas = document.createElement('canvas');
-            const maxDim = 600;
-            let w = img.width, h = img.height;
-            if (w > h && w > maxDim) { h *= maxDim / w; w = maxDim; } else if (h > maxDim) { w *= maxDim / h; h = maxDim; }
-            canvas.width = w; canvas.height = h;
-            canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-            resolve(canvas.toDataURL('image/jpeg', 0.6));
-          };
+          resolve(event.target.result); // ಯಾವುದೇ ಕಂಪ್ರೆಷನ್ ಇಲ್ಲದೆ ಸಂಪೂರ್ಣ ಫೋಟೋ ತೆಗೆದುಕೊಳ್ಳಲಾಗುತ್ತದೆ
         };
         reader.onerror = () => resolve('');
       });
@@ -258,13 +248,22 @@
 
       try {
         await window.addDoc(window.collection(window.db, "shop_owners"), shopOwner);
-        localStorage.setItem('my_shop_owner_session', JSON.stringify(shopOwner));
+        
+        // ಲೋಕಲ್ ಮೆಮೊರಿಯಲ್ಲಿ ಬರೆ ಐಡಿ ಮತ್ತು ಹೆಸರು ಇಡಲಾಗುತ್ತದೆ
+        const localSession = { id: shopOwner.id, name: shopOwner.name, shopName: shopOwner.shopName, shopType: shopOwner.shopType, taluk: shopOwner.taluk, district: shopOwner.district, photo: photoBase64 };
+        try {
+          localStorage.setItem('my_shop_owner_session', JSON.stringify(localSession));
+        } catch(err) {
+          localStorage.clear();
+          localStorage.setItem('my_shop_owner_session', JSON.stringify(localSession));
+        }
         
         pendingGeneratedId = fourDigitId;
         document.getElementById('popup-id').innerText = fourDigitId;
         document.getElementById('successModal').style.display = 'flex';
       } catch (err) {
         alert("Error: " + err.message);
+      } finally {
         btn.innerText = "ಲಾಗಿನ್ / ಐಡಿ ಪಡೆದುಕೊಳ್ಳಿ"; btn.disabled = false;
       }
     }
@@ -341,14 +340,12 @@
 
       try {
         if (editProdId) {
-          // Update existing
           await window.updateDoc(window.doc(window.db, "products", editProdId), prodData);
           document.getElementById('editProdId').value = '';
           alert("ವಸ್ತುವಿನ ಮಾಹಿತಿ ಅಪ್ಡೇಟ್ ಆಗಿದೆ!");
         } else {
-          // Add new
           await window.addDoc(window.collection(window.db, "products"), prodData);
-          alert("🔔 ನಿಮ್ಮ ಫೋಟೋವನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಗ್ರಾಹಕರಿಗೆ ಅಪ್ಲೋಡ್ ಮಾಡಲಾಗಿದೆ!");
+          alert("🔔 ನಿಮ್ಮ ಫೋಟೋವನ್ನು ಯಾವುದೇ ಸೈಜ್ ಮಿತಿಯಿಲ್ಲದೆ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್ಲೋಡ್ ಮಾಡಲಾಗಿದೆ!");
         }
         document.getElementById('addProductForm').reset();
       } catch (err) {
