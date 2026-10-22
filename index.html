@@ -12,14 +12,13 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, addDoc, onSnapshot, updateDoc, doc, deleteDoc, getDocs, setDoc, getDoc, serverTimestamp, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // ನಿಮ್ಮ ಫೈರ್‌ಬೇಸ್ ಕಾನ್ಫಿಗರೇಶನ್
     const firebaseConfig = {
-      apiKey: "AIzaSyBvt2oBFM9EJEOwyJrfwUxS3TDfYi10WYE",
-      authDomain: "nammalocal-market.firebaseapp.com",
-      projectId: "nammalocal-market",
-      storageBucket: "nammalocal-market.appspot.com",
-      messagingSenderId: "1958228974",
-      appId: "1:1958228974:web:d87708410a0f0fb4f914ff"
+      apiKey: "AIzaSyAm3HFKu101wex1b025-zJZ2BJ_o1Xvw",
+      authDomain: "ar-taxi-booking-shahapur.firebaseapp.com",
+      projectId: "ar-taxi-booking-shahapur",
+      storageBucket: "ar-taxi-booking-shahapur.appspot.com",
+      messagingSenderId: "585815710897",
+      appId: "1:586815710897:web:ab7138b9c016843db95dsa"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -181,7 +180,7 @@
             </select>
           </div>
           <div class="form-group">
-            <label>ವಸ್ತುವಿನ ಫೋಟೋ (ಯಾವುದೇ ಸೈಜ್ ಲಿಮಿಟ್ ಇಲ್ಲದೆ ಸಂಪೂರ್ಣವಾಗಿ ತೆಗೆದುಕೊಳ್ಳಲಾಗುತ್ತದೆ):</label>
+            <label>ವಸ್ತುವಿನ ಫೋಟೋ (ನೇರ ಕ್ಯಾಮರಾ ಮೂಲಕ ತೆಗೆಯಿರಿ):</label>
             <input type="file" accept="image/*" capture="environment" id="prodPhotoFile" required>
           </div>
           <button type="submit" class="btn btn-success" id="btnUploadProd">ಅಪ್ಲೋಡ್ ಮಾಡು</button>
@@ -212,14 +211,24 @@
       }
     });
 
-    // ಫೋಟೋ ಸೈಜ್ ಲಿಮಿಟ್ ಇಲ್ಲದೆ ನೇರವಾಗಿ ಒರಿಜಿನಲ್ ಫೈಲ್ ರೀಡ್ ಮಾಡುವುದು
+    // ಬಿಗ್ ಇಮೇಜ್ ಕಂಪ್ರೆಶನ್ (ಸಣ್ಣ ಸೈಜ್ ಮಾಡುವುದು)
     function convertFileToBase64(file) {
       return new Promise((resolve) => {
         if (!file) { resolve(''); return; }
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = (event) => {
-          resolve(event.target.result); // ಯಾವುದೇ ಕಂಪ್ರೆಷನ್ ಇಲ್ಲದೆ ಸಂಪೂರ್ಣ ಫೋಟೋ ತೆಗೆದುಕೊಳ್ಳಲಾಗುತ್ತದೆ
+          const img = new Image();
+          img.src = event.target.result;
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const maxDim = 400; // ಕಂಪ್ರೆಶನ್ ಸೈಜ್ ಮತ್ತಷ್ಟು ಸಣ್ಣದು ಮಾಡಲಾಗಿದೆ
+            let w = img.width, h = img.height;
+            if (w > h && w > maxDim) { h *= maxDim / w; w = maxDim; } else if (h > maxDim) { w *= maxDim / h; h = maxDim; }
+            canvas.width = w; canvas.height = h;
+            canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+            resolve(canvas.toDataURL('image/jpeg', 0.5));
+          };
         };
         reader.onerror = () => resolve('');
       });
@@ -249,12 +258,12 @@
       try {
         await window.addDoc(window.collection(window.db, "shop_owners"), shopOwner);
         
-        // ಲೋಕಲ್ ಮೆಮೊರಿಯಲ್ಲಿ ಬರೆ ಐಡಿ ಮತ್ತು ಹೆಸರು ಇಡಲಾಗುತ್ತದೆ
+        // ಲೋಕಲ್ ಮೆಮೊರಿಯಲ್ಲಿ ಬರೆ ಆಪ್ಷನಲ್ ಐಡಿ ಮತ್ತು ಹೆಸರು ಇಡಲಾಗುತ್ತದೆ (ಫೋಟೋ ಬಿಟ್ಟು)
         const localSession = { id: shopOwner.id, name: shopOwner.name, shopName: shopOwner.shopName, shopType: shopOwner.shopType, taluk: shopOwner.taluk, district: shopOwner.district, photo: photoBase64 };
         try {
           localStorage.setItem('my_shop_owner_session', JSON.stringify(localSession));
         } catch(err) {
-          localStorage.clear();
+          localStorage.clear(); // ಮೆಮೊರಿ ಫುಲ್ ಆಗಿದ್ದರೆ ಕ್ಲಿಯರ್ ಮಾಡಿ ಸೇವ್ ಮಾಡುವುದು
           localStorage.setItem('my_shop_owner_session', JSON.stringify(localSession));
         }
         
@@ -345,7 +354,7 @@
           alert("ವಸ್ತುವಿನ ಮಾಹಿತಿ ಅಪ್ಡೇಟ್ ಆಗಿದೆ!");
         } else {
           await window.addDoc(window.collection(window.db, "products"), prodData);
-          alert("🔔 ನಿಮ್ಮ ಫೋಟೋವನ್ನು ಯಾವುದೇ ಸೈಜ್ ಮಿತಿಯಿಲ್ಲದೆ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್ಲೋಡ್ ಮಾಡಲಾಗಿದೆ!");
+          alert("🔔 ನಿಮ್ಮ ಫೋಟೋವನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಕ್ಲೌಡ್‌ಗೆ ಅಪ್ಲೋಡ್ ಮಾಡಲಾಗಿದೆ!");
         }
         document.getElementById('addProductForm').reset();
       } catch (err) {
