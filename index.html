@@ -71,10 +71,10 @@
     .id-number { font-size: 1rem; font-weight: bold; background: #fff; color: #1e88e5; padding: 2px 8px; border-radius: 4px; display: inline-block; margin-top: 4px; }
 
     /* Stats Header */
-    .stats-container { display: flex; gap: 8px; margin-bottom: 15px; }
-    .stat-box { flex: 1; background: #e3f2fd; padding: 10px; border-radius: 8px; text-align: center; border: 1px solid #90caf9; }
-    .stat-box h4 { font-size: 0.7rem; color: #1565c0; margin-bottom: 2px; }
-    .stat-box p { font-size: 0.95rem; font-weight: bold; color: #0d47a1; }
+    .stats-container { display: flex; gap: 6px; margin-bottom: 12px; }
+    .stat-box { flex: 1; background: #e3f2fd; padding: 8px; border-radius: 8px; text-align: center; border: 1px solid #90caf9; }
+    .stat-box h4 { font-size: 0.65rem; color: #1565c0; margin-bottom: 2px; }
+    .stat-box p { font-size: 0.85rem; font-weight: bold; color: #0d47a1; }
 
     /* Small Thumbnail Grid for Uploaded Photos */
     .grid-small {
@@ -171,7 +171,7 @@
           <p id="statTotalOrders">0</p>
         </div>
         <div class="stat-box">
-          <h4>ರಿಟರ್ನ್ ಬಂದಿರುವುದು</h4>
+          <h4>ರಿಟರ್ನ್</h4>
           <p id="statReturns">0</p>
         </div>
         <div class="stat-box">
@@ -180,9 +180,11 @@
         </div>
       </div>
 
-      <div style="display:flex; gap:10px; margin-bottom:15px;">
-        <button class="btn btn-warning" style="flex:1;" onclick="showTab('upload')">➕ ಹೊಸ ಫೋಟೋ ಅಪ್ಲೋಡ್</button>
-        <button class="btn btn-success" style="flex:1;" onclick="showTab('orders')">📦 ಆರ್ಡರ್‌ಗಳು (<span id="orderCount">0</span>)</button>
+      <!-- Action Buttons Bar including Payments Button -->
+      <div style="display:flex; gap:6px; margin-bottom:15px;">
+        <button class="btn btn-warning" style="flex:1; font-size:0.8rem; padding:10px 4px;" onclick="showTab('upload')">➕ ಅಪ್ಲೋಡ್</button>
+        <button class="btn btn-success" style="flex:1; font-size:0.8rem; padding:10px 4px;" onclick="showTab('orders')">📦 ಆರ್ಡರ್ (<span id="orderCount">0</span>)</button>
+        <button class="btn" style="flex:1; font-size:0.8rem; padding:10px 4px; background:#8e24aa;" onclick="showTab('payments')">💳 ಪೇಮೆಂಟ್ಸ್</button>
       </div>
 
       <!-- ಟ್ಯಾಬ್ 1: ಫೋಟೋ ಅಪ್ಲೋಡ್ -->
@@ -217,12 +219,19 @@
         <h2>📦 ಗ್ರಾಹಕರಿಂದ ಬಂದಿರುವ ಆರ್ಡರ್‌ಗಳು</h2>
         <div id="shopOrdersList" style="margin-top:10px;"></div>
       </div>
+
+      <!-- ಟ್ಯಾಬ್ 3: ಪೇಮೆಂಟ್ಸ್ (Payments Tab) -->
+      <div id="tabPayments" style="display:none; background:#fff; padding:15px; border-radius:10px; border:1px solid #cbd5e0;">
+        <h2>💳 ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್ ವಿವರಗಳು</h2>
+        <div id="shopPaymentsList" style="margin-top:10px;"></div>
+      </div>
+
     </div>
   </div>
 
   <script>
     let shopOwner = JSON.parse(localStorage.getItem('my_shop_owner_session')) || null;
-    let pendingGeneratedId = '';
+    let cachedOrders = [];
 
     window.addEventListener('DOMContentLoaded', () => {
       if (shopOwner) {
@@ -233,7 +242,6 @@
       }
     });
 
-    // ಬಿಗ್ ಇಮೇಜ್ ಕಂಪ್ರೆಶನ್ (ಸಣ್ಣ ಸೈಜ್ ಮಾಡುವುದು)
     function convertFileToBase64(file) {
       return new Promise((resolve) => {
         if (!file) { resolve(''); return; }
@@ -279,16 +287,9 @@
 
       try {
         await window.addDoc(window.collection(window.db, "shop_owners"), shopOwner);
-        
         const localSession = { id: shopOwner.id, name: shopOwner.name, shopName: shopOwner.shopName, shopType: shopOwner.shopType, taluk: shopOwner.taluk, district: shopOwner.district, photo: photoBase64 };
-        try {
-          localStorage.setItem('my_shop_owner_session', JSON.stringify(localSession));
-        } catch(err) {
-          localStorage.clear();
-          localStorage.setItem('my_shop_owner_session', JSON.stringify(localSession));
-        }
+        localStorage.setItem('my_shop_owner_session', JSON.stringify(localSession));
         
-        pendingGeneratedId = fourDigitId;
         document.getElementById('popup-id').innerText = fourDigitId;
         document.getElementById('successModal').style.display = 'flex';
       } catch (err) {
@@ -320,10 +321,10 @@
     function showTab(tab) {
       document.getElementById('tabUpload').style.display = tab === 'upload' ? 'block' : 'none';
       document.getElementById('tabOrders').style.display = tab === 'orders' ? 'block' : 'none';
+      document.getElementById('tabPayments').style.display = tab === 'payments' ? 'block' : 'none';
     }
 
     function startRealtimeSync() {
-      // Products Sync
       window.onSnapshot(window.collection(window.db, "products"), (snapshot) => {
         let products = [];
         snapshot.forEach(docSnap => {
@@ -335,7 +336,6 @@
         renderProducts(products);
       });
 
-      // Orders Sync (Filtering out orders older than 1 month automatically)
       window.onSnapshot(window.collection(window.db, "orders"), (snapshot) => {
         let orders = [];
         const oneMonthAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
@@ -350,8 +350,29 @@
           }
         });
         orders.sort((a, b) => (b.timestamp?.toMillis?.() || 0) - (a.timestamp?.toMillis?.() || 0));
-        renderOrders(orders);
+        cachedOrders = orders;
+        renderDashboard(orders);
       });
+    }
+
+    function renderDashboard(orders) {
+      // Stats
+      const totalOrdersCount = orders.length;
+      const returnsCount = orders.filter(o => o.status === 'RETURNED').length;
+      const totalEarnings = orders.reduce((acc, curr) => curr.status === 'DELIVERED' ? acc + Number(curr.totalPrice || 0) : acc, 0);
+
+      document.getElementById('statTotalOrders').innerText = totalOrdersCount;
+      document.getElementById('statReturns').innerText = returnsCount;
+      document.getElementById('statEarnings').innerText = "₹" + totalEarnings;
+      document.getElementById('orderCount').innerText = orders.filter(o => o.status === 'NEW' || o.status === 'STEP_1').length;
+
+      // Active / New Orders (Excluding delivered/pending payment orders from active main list if paid)
+      const activeOrders = orders.filter(o => o.status !== 'DELIVERED' && o.status !== 'STEP_4');
+      renderOrders(activeOrders);
+
+      // Payment Pending Orders (Delivered but isShopPaid not true)
+      const paymentPendingOrders = orders.filter(o => (o.status === 'DELIVERED' || o.status === 'STEP_4') && !o.isShopPaid);
+      renderPayments(paymentPendingOrders);
     }
 
     async function saveProduct(e) {
@@ -365,6 +386,7 @@
 
       const prodData = {
         shopId: shopOwner.id,
+        shopName: shopOwner.shopName,
         name: document.getElementById('prodName').value.trim(),
         oldPrice: document.getElementById('prodOldPrice').value.trim(),
         price: document.getElementById('prodPrice').value.trim(),
@@ -429,16 +451,6 @@
     }
 
     function renderOrders(orders) {
-      // Stats Calculation
-      const totalOrdersCount = orders.length;
-      const returnsCount = orders.filter(o => o.status === 'RETURNED').length;
-      const totalEarnings = orders.reduce((acc, curr) => curr.status === 'DELIVERED' ? acc + Number(curr.totalPrice || 0) : acc, 0);
-
-      document.getElementById('statTotalOrders').innerText = totalOrdersCount;
-      document.getElementById('statReturns').innerText = returnsCount;
-      document.getElementById('statEarnings').innerText = "₹" + totalEarnings;
-      document.getElementById('orderCount').innerText = orders.filter(o => o.status === 'NEW' || o.status === 'STEP_1').length;
-
       const listDiv = document.getElementById('shopOrdersList');
       if (orders.length === 0) {
         listDiv.innerHTML = '<p style="font-size:0.8rem; color:#777;">ಯಾವುದೇ ಹೊಸ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>';
@@ -447,7 +459,6 @@
 
       listDiv.innerHTML = orders.map(o => {
         let actionButtons = "";
-        
         if (o.status === 'NEW' || o.status === 'STEP_1') {
           actionButtons = `<button class="btn btn-success" style="padding:8px; font-size:0.8rem; margin-top:8px;" onclick="updateOrderStatus('${o.docId}', 'CONFIRMED')">✅ ಕನ್ಫರ್ಮ್ ಮಾಡಿ</button>`;
         } else if (o.status === 'CONFIRMED') {
@@ -485,10 +496,41 @@
       }).join('');
     }
 
+    function renderPayments(list) {
+      const listDiv = document.getElementById('shopPaymentsList');
+      if (list.length === 0) {
+        listDiv.innerHTML = '<p style="font-size:0.8rem; color:#777;">ಯಾವುದೇ ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್ ಇಲ್ಲ.</p>';
+        return;
+      }
+
+      listDiv.innerHTML = list.map(o => `
+        <div class="order-item" style="border-left-color: var(--danger);">
+          <div style="display:flex; gap:10px; align-items:center; margin-bottom:8px;">
+            <img src="${o.productPhoto || 'https://via.placeholder.com/80'}" style="width:60px; height:60px; object-fit:cover; border-radius:6px;">
+            <div>
+              <h4 style="font-size:0.9rem;">${o.productName}</h4>
+              <p style="font-size:0.8rem; color:#c62828; font-weight:bold;">ಪೇಮೆಂಟ್ ಬಾಕಿ: ₹${o.totalPrice}</p>
+              <p style="font-size:0.75rem; color:#666;">ಗ್ರಾಹಕರು: ${o.customer?.name} (${o.customer?.phone})</p>
+            </div>
+          </div>
+          <button class="btn btn-success" style="padding:8px; font-size:0.85rem; margin-top:6px;" onclick="markPaymentSuccess('${o.docId}')">✅ ಪೇಮೆಂಟ್ OK ಮಾಡಿ (Payment Success)</button>
+        </div>
+      `).join('');
+    }
+
     async function updateOrderStatus(docId, newStatus) {
       try {
         await window.updateDoc(window.doc(window.db, "orders", docId), { status: newStatus });
-        alert("ಆರ್ಡರ್ ಸ್ಟೇಟಸ್ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್ಡೇಟ್ ಆಗಿದೆ!");
+        alert("ಸ್ಟೇಟಸ್ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್ಡೇಟ್ ಆಗಿದೆ!");
+      } catch (err) {
+        alert("Error: " + err.message);
+      }
+    }
+
+    async function markPaymentSuccess(docId) {
+      try {
+        await window.updateDoc(window.doc(window.db, "orders", docId), { isShopPaid: true });
+        alert("🎉 ಪೇಮೆಂಟ್ ಯಶಸ್ವಿಯಾಗಿ ಪೂರ್ಣಗೊಂಡಿದೆ!");
       } catch (err) {
         alert("Error: " + err.message);
       }
