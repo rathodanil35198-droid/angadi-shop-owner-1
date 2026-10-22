@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ನಮ್ಮ ಶಾಪುರ್ - Family Shop Shahapur</title>
+    
+    <!-- Firebase SDK (Cloud Database) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
     <style>
         :root {
             --primary: #1e88e5;
@@ -16,226 +21,83 @@
 
         * {
             box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+            margin: 0; padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        body {
-            background-color: var(--light);
-            color: var(--dark);
-            padding-bottom: 40px;
-        }
+        body { background-color: var(--light); color: var(--dark); padding-bottom: 40px; }
 
         header {
             background-color: var(--primary);
-            color: white;
-            padding: 15px;
-            text-align: center;
+            color: white; padding: 15px; text-align: center;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
-        /* 4 Main Role Buttons Bar */
         .role-nav {
-            display: flex;
-            justify-content: space-around;
-            background: #fff;
-            padding: 12px 5px;
+            display: flex; justify-content: space-around;
+            background: #fff; padding: 12px 5px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            position: sticky; top: 0; z-index: 100;
         }
 
         .role-btn {
-            background: #e3f2fd;
-            border: 1px solid var(--primary);
-            color: var(--primary);
-            padding: 10px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 13px;
-            transition: 0.3s;
+            background: #e3f2fd; border: 1px solid var(--primary);
+            color: var(--primary); padding: 10px 12px;
+            border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 13px;
         }
 
-        .role-btn.active, .role-btn:hover {
-            background: var(--primary);
-            color: white;
-        }
+        .role-btn.active, .role-btn:hover { background: var(--primary); color: white; }
 
-        .container {
-            max-width: 900px;
-            margin: 20px auto;
-            padding: 0 15px;
-        }
+        .container { max-width: 900px; margin: 20px auto; padding: 0 15px; }
 
-        .panel {
-            display: none;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
+        .panel { display: none; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .panel.active { display: block; }
 
-        .panel.active {
-            display: block;
-        }
+        h2 { border-bottom: 2px solid var(--primary); padding-bottom: 8px; margin-bottom: 15px; color: var(--primary); }
 
-        h2 {
-            border-bottom: 2px solid var(--primary);
-            padding-bottom: 8px;
-            margin-bottom: 15px;
-            color: var(--primary);
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
-        }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 14px;
-        }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: 600; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
 
         .btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 10px 18px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 14px;
+            background: var(--primary); color: white; border: none;
+            padding: 10px 18px; border-radius: 6px; cursor: pointer;
+            font-weight: bold; font-size: 14px;
         }
-
         .btn-danger { background: var(--danger); }
         .btn-success { background: #4caf50; }
         .btn-warning { background: var(--warning); }
 
         .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 15px; margin-top: 15px;
         }
 
         .card {
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 10px;
-            background: #fff;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border: 1px solid #e0e0e0; border-radius: 8px;
+            padding: 10px; background: #fff; text-align: center;
         }
 
-        .card img {
-            width: 100%;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 6px;
-        }
+        .card img { width: 100%; height: 110px; object-fit: cover; border-radius: 6px; }
+        .card-title { font-weight: bold; margin: 8px 0 4px; font-size: 14px; }
+        .price-tag { color: #2e7d32; font-weight: bold; }
+        .old-price { text-decoration: line-through; color: #888; font-size: 12px; margin-right: 5px; }
 
-        .card-title {
-            font-weight: bold;
-            margin: 8px 0 4px;
-        }
+        .card-actions { display: flex; justify-content: space-between; margin-top: 10px; }
 
-        .price-tag {
-            color: #2e7d32;
-            font-weight: bold;
-        }
-
-        .old-price {
-            text-decoration: line-through;
-            color: #888;
-            font-size: 12px;
-            margin-right: 5px;
-        }
-
-        .card-actions {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 10px;
-        }
-
-        /* Modal / Popups */
         .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 1000;
         }
+        .modal-content { background: white; padding: 20px; border-radius: 10px; width: 90%; max-width: 450px; }
 
-        .modal-content {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 450px;
-        }
+        .order-item { border-left: 5px solid var(--primary); background: #f9f9f9; padding: 12px; margin-bottom: 12px; border-radius: 4px; }
 
-        .qty-picker {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 15px 0;
-        }
-
-        .qty-btn {
-            width: 35px;
-            height: 35px;
-            font-size: 18px;
-            font-weight: bold;
-            border: 1px solid #ccc;
-            background: #f0f0f0;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .order-item {
-            border-left: 5px solid var(--primary);
-            background: #f9f9f9;
-            padding: 12px;
-            margin-bottom: 12px;
-            border-radius: 4px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-
-        /* FlipKart style timeline route */
         .route-tracker {
-            display: flex;
-            justify-content: space-between;
-            margin: 10px 0;
-            padding: 10px;
-            background: #e3f2fd;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: bold;
-            color: #0d47a1;
+            display: flex; justify-content: space-between; margin: 10px 0; padding: 8px;
+            background: #e3f2fd; border-radius: 6px; font-size: 11px; font-weight: bold; color: #0d47a1;
         }
-
-        .route-step.active {
-            color: #2e7d32;
-        }
-
-        .report-box {
-            background: #e8f5e9;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
+        .route-step.active { color: #2e7d32; }
     </style>
 </head>
 <body>
@@ -245,49 +107,40 @@
         <p>ಸ್ಥಳೀಯ ಆನ್‌ಲೈನ್ ಮಾರ್ಕೆಟ್ ಅಪ್ಲಿಕೇಶನ್</p>
     </header>
 
-    <!-- ಮುಖಪುಟದ 4 ಮುಖ್ಯ ಬಟನ್‌ಗಳು -->
     <nav class="role-nav">
-        <button class="role-btn active" onclick="switchPanel('shop')">🏪 ಅಂಗಡಿ ಮಾಲೀಕರು</button>
-        <button class="role-btn" onclick="switchPanel('customer')">🛍️ ಗ್ರಾಹಕರು</button>
-        <button class="role-btn" onclick="switchPanel('delivery')">🛵 ಡೆಲಿವರಿ ಬಾಯ್</button>
-        <button class="role-btn" onclick="switchPanel('admin')">👑 ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್</button>
+        <button class="role-btn active" onclick="switchPanel('shop', event)">🏪 ಅಂಗಡಿ ಮಾಲೀಕರು</button>
+        <button class="role-btn" onclick="switchPanel('customer', event)">🛍️ ಗ್ರಾಹಕರು</button>
+        <button class="role-btn" onclick="switchPanel('delivery', event)">🛵 ಡೆಲಿವರಿ ಬಾಯ್</button>
+        <button class="role-btn" onclick="switchPanel('admin', event)">👑 ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್</button>
     </nav>
 
     <div class="container">
 
-        <!-- ================= 1. ಅಂಗಡಿ ಮಾಲೀಕರ ಪೇಜ್ ================= -->
+        <!-- 1. ಅಂಗಡಿ ಮಾಲೀಕರ ಪೇಜ್ -->
         <div id="shop-panel" class="panel active">
             <h2>🏪 ಅಂಗಡಿ ಮಾಲೀಕರ ಪೇಜ್</h2>
-            
-            <div class="report-box">
-                <h3>📊 ಈ ತಿಂಗಳ ರಿಪೋರ್ಟ್ (Monthly Report)</h3>
-                <p>ಒಟ್ಟು ಆರ್ಡರ್‌ಗಳು: <b id="shop-total-orders">0</b> | ತಲುಪಿದವು: <b id="shop-delivered-orders">0</b> | ರಿಟರ್ನ್/ಕ್ಯಾನ್ಸಲ್: <b id="shop-returned-orders">0</b></p>
-                <p>ಒಟ್ಟು ಸಂಪಾದನೆ (Earnings): <b id="shop-total-earnings">₹0</b></p>
-            </div>
 
-            <!-- "ನನ್ನ ಆರ್ಡರ್‌ಗಳು" ನೋಡಲು ಪ್ರಮುಖ ಬಟನ್ -->
-            <button class="btn btn-warning" style="width:100%; margin-bottom:20px; font-size:16px;" onclick="toggleShopOrdersView()">📦 ನನ್ನ ಆರ್ಡರ್‌ಗಳು ನೋಡಿ (Click to View Orders)</button>
+            <button class="btn btn-warning" style="width:100%; margin-bottom:20px;" onclick="toggleShopOrdersView()">📦 ಬಂದಿರುವ ಆರ್ಡರ್‌ಗಳು ನೋಡಿ</button>
 
-            <!-- ಪ್ರಾಡಕ್ಟ್ ಅಪ್ಲೋಡ್ ಫಾರ್ಮ್ -->
             <form id="add-product-form" onsubmit="saveProduct(event)">
                 <h3>➕ ಹೊಸ ವಸ್ತು/ಫೋಟೋ ಅಪ್ಲೋಡ್ ಮಾಡಿ</h3>
                 <input type="hidden" id="edit-prod-id">
                 <div class="form-group">
                     <label>ವಸ್ತುವಿನ ಹೆಸರು:</label>
-                    <input type="text" id="prod-name" required placeholder="ಉದಾ: ಬಟ್ಟೆ, ಕಿರಾಣಿ ವಸ್ತು">
+                    <input type="text" id="prod-name" required placeholder="ಉದಾ: ಬಟ್ಟೆ, ಕಿರಾಣಿ">
                 </div>
                 <div style="display: flex; gap: 10px;">
                     <div class="form-group" style="flex:1;">
-                        <label>ಹಳೆಯ ರೇಟು (Old MRP ₹):</label>
+                        <label>ಹಳೆಯ ರೇಟು (₹):</label>
                         <input type="number" id="prod-old-price" required placeholder="100">
                     </div>
                     <div class="form-group" style="flex:1;">
-                        <label>ಪ್ರೆಸೆಂಟ್ ರೇಟು (Selling Price ₹):</label>
+                        <label>ಪ್ರೆಸೆಂಟ್ ರೇಟು (₹):</label>
                         <input type="number" id="prod-price" required placeholder="80">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>ಕ್ವಾಂಟಿಟಿ / ಪೀಸ್ ಆಯ್ಕೆ (1 ರಿಂದ 10):</label>
+                    <label>ಕ್ವಾಂಟಿಟಿ (1 ರಿಂದ 10):</label>
                     <select id="prod-qty" required>
                         <option value="1">1 ಪೀಸ್</option>
                         <option value="2">2 ಪೀಸ್</option>
@@ -302,70 +155,52 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>ವಸ್ತುವಿನ ಫೋಟೋ ಅಪ್ಲೋಡ್:</label>
+                    <label>ಫೋಟೋ ಅಪ್ಲೋಡ್:</label>
                     <input type="file" id="prod-photo" accept="image/*" onchange="previewImage(event)">
                     <input type="hidden" id="prod-photo-base64">
                 </div>
                 <button type="submit" class="btn btn-success">ಅಪ್ಲೋಡ್ ಮಾಡು</button>
             </form>
 
-            <h3 style="margin-top:25px;">🖼️ ಅಪ್ಲೋಡ್ ಆಗಿರುವ ಫೋಟೋಗಳು (ಪರ್ಮನೆಂಟ್ ಗ್ಯಾಲರಿ)</h3>
-            <p style="font-size:13px; color:#666;">ಮಾಲೀಕರು ಡಿಲೀಟ್ ಬಟನ್ ಒತ್ತಿ ಕನ್ಫರ್ಮ್ ಮಾಡುವವರೆಗೆ ಫೋಟೋಗಳು ಮಾಯವಾಗುವುದಿಲ್ಲ.</p>
+            <h3 style="margin-top:25px;">🖼️ ಅಪ್ಲೋಡ್ ಆಗಿರುವ ಫೋಟೋಗಳು (ಕ್ಲೌಡ್ ಡೇಟಾಬೇಸ್)</h3>
             <div id="shop-products-grid" class="grid"></div>
 
-            <!-- ಬಂದಿರುವ ಆರ್ಡರ್‌ಗಳ ಸೆಕ್ಷನ್ -->
             <div id="shop-orders-section" style="margin-top:30px; display:none;">
                 <h3>📦 ಬಂದಿರುವ ಆರ್ಡರ್‌ಗಳ ವಿವರ</h3>
                 <div id="shop-orders-list"></div>
             </div>
         </div>
 
-        <!-- ================= 2. ಗ್ರಾಹಕರ ಪೇಜ್ ================= -->
+        <!-- 2. ಗ್ರಾಹಕರ ಪೇಜ್ -->
         <div id="customer-panel" class="panel">
             <h2>🛍️ ಗ್ರಾಹಕರ ಪೇಜ್ (Customer Shopping)</h2>
             <h3>ಅಂಗಡಿಯಿಂದ ಲಭ್ಯವಿರುವ ವಸ್ತುಗಳು</h3>
             <div id="customer-products-grid" class="grid"></div>
 
-            <h3 style="margin-top:30px;">📜 ನನ್ನ ಆರ್ಡರ್‌ಗಳು ಹಾಗೂ ಲೈವ್ ರೂಟ್ (My Orders & Live Route)</h3>
+            <h3 style="margin-top:30px;">📜 ನನ್ನ ಆರ್ಡರ್‌ಗಳು ಹಾಗೂ ಲೈವ್ ರೂಟ್</h3>
             <div id="customer-orders-list"></div>
         </div>
 
-        <!-- ================= 3. ಡೆಲಿವರಿ ಬಾಯ್ ಪ್ಯಾನಲ್ ================= -->
+        <!-- 3. ಡೆಲಿವರಿ ಬಾಯ್ ಪ್ಯಾನಲ್ -->
         <div id="delivery-panel" class="panel">
             <h2>🛵 ಡೆಲಿವರಿ ಬಾಯ್ ಪ್ಯಾನಲ್</h2>
-            <p>ಪ್ಯಾಕ್ ಆಗಿರುವ ಮತ್ತು ಡೆಲಿವರಿಗೆ ಬಂದಿರುವ ಆರ್ಡರ್‌ಗಳು:</p>
             <div id="delivery-orders-list" style="margin-top:15px;"></div>
         </div>
 
-        <!-- ================= 4. ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್ ================= -->
+        <!-- 4. ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್ -->
         <div id="admin-panel" class="panel">
             <h2>👑 ಮಾಸ್ಟರ್ ಐಡಿ ಪ್ಯಾನಲ್</h2>
-            <div class="report-box">
-                <h3>📊 ಒಟ್ಟು ಬಿಸಿನೆಸ್ ಅವಲೋಕನ</h3>
-                <p>ಒಟ್ಟು ಆರ್ಡರ್‌ಗಳು: <b id="admin-total-orders">0</b></p>
-                <p>ಒಟ್ಟು ವ್ಯಾಪಾರ: <b id="admin-total-sales">₹0</b></p>
-            </div>
-            <h3>ಎಲ್ಲಾ ಲೈವ್ ಆರ್ಡರ್‌ಗಳು</h3>
             <div id="admin-orders-list"></div>
         </div>
 
     </div>
 
-    <!-- BUY / CHECKOUT MODAL -->
+    <!-- BUY MODAL -->
     <div id="buy-modal" class="modal">
         <div class="modal-content">
             <h3 id="modal-prod-name">ಖರೀದಿಸಿ</h3>
-            <img id="modal-prod-img" src="" style="width:100%; height:150px; object-fit:cover; margin:10px 0; border-radius:6px;">
+            <img id="modal-prod-img" src="" style="width:100%; height:140px; object-fit:cover; margin:10px 0; border-radius:6px;">
             <p>ಪ್ರೆಸೆಂಟ್ ರೇಟು: <b>₹<span id="modal-prod-price"></span></b></p>
-            
-            <div class="qty-picker">
-                <label>ಪೀಸ್ ಆಯ್ಕೆ (Quantity):</label>
-                <button class="qty-btn" onclick="updateQty(-1)">-</button>
-                <span id="modal-qty-val" style="font-weight:bold; font-size:16px;">1</span>
-                <button class="qty-btn" onclick="updateQty(1)">+</button>
-            </div>
-            <p>ಒಟ್ಟು ಮೊತ್ತ: <b>₹<span id="modal-total-price">0</span></b></p>
-
             <button class="btn btn-success" style="width:100%; margin-top:10px;" onclick="showAddressScreen()">ಮುಂದೆ ಹೋಗಿ (ಅಡ್ರೆಸ್ ಹಾಕಿ)</button>
             <button class="btn btn-danger" style="width:100%; margin-top:5px;" onclick="closeModal('buy-modal')">ರದ್ದುಗೊಳಿಸಿ</button>
         </div>
@@ -385,20 +220,8 @@
                     <input type="tel" id="cust-phone" required placeholder="10 ಅಂಕಿಗಳ ಮೊಬೈಲ್ ನಂಬರ್">
                 </div>
                 <div class="form-group">
-                    <label>ಜಿಲ್ಲೆಯ ಹೆಸರು:</label>
-                    <input type="text" id="cust-district" value="ಯಾದಗಿರಿ" required>
-                </div>
-                <div class="form-group">
-                    <label>ತಾಲೂಕಿನ ಹೆಸರು:</label>
-                    <input type="text" id="cust-taluk" value="ಶಹಾಪುರ" required>
-                </div>
-                <div class="form-group">
-                    <label>ಊರಿನ ಹೆಸರು (City/Village):</label>
-                    <input type="text" id="cust-village" required placeholder="ಊರು/ಬಡಾವಣೆ ಹೆಸರು">
-                </div>
-                <div class="form-group">
-                    <label>ಪಿನ್‌ಕೋಡ್:</label>
-                    <input type="text" id="cust-pincode" value="585223" required>
+                    <label>ಊರಿನ ಹೆಸರು:</label>
+                    <input type="text" id="cust-village" required placeholder="ಊರು/ಬಡಾವಣೆ">
                 </div>
                 <button type="submit" class="btn btn-success" style="width:100%;">ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಮಾಡಿ</button>
                 <button type="button" class="btn btn-danger" style="width:100%; margin-top:5px;" onclick="closeModal('address-modal')">ಹಿಂದಕ್ಕೆ</button>
@@ -406,26 +229,45 @@
         </div>
     </div>
 
+    <!-- Firebase Connection & App Logic -->
     <script>
-        // LocalStorage ಮೂಲಕ ಡೇಟಾ ಪರ್ಮನೆಂಟ್ ಆಗಿ ಸೇವ್ ಆಗಿರುತ್ತದೆ (ಮಾಯವಾಗುವುದಿಲ್ಲ)
-        let products = JSON.parse(localStorage.getItem('shahapur_products')) || [];
-        let orders = JSON.parse(localStorage.getItem('shahapur_orders')) || [];
+        // ನಿಮ್ಮ ಫೈರ್‌ಬೇಸ್ ಕಾನ್ಫಿಗರೇಶನ್ (Firebase Configuration)
+        const firebaseConfig = {
+            apiKey: "AIzaSyBvt2oBFM9EJEOwyJrfwUxS3TDfYi10WYE",
+            authDomain: "nammalocal-market.firebaseapp.com",
+            projectId: "nammalocal-market",
+            storageBucket: "nammalocal-market.appspot.com",
+            messagingSenderId: "1958228974",
+            appId: "1:1958228974:web:d87708410a0f0fb4f914ff",
+            measurementId: "G-4EQH2SB8XH"
+        };
 
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        let products = [];
+        let orders = [];
         let currentBuyProduct = null;
-        let selectedQty = 1;
 
-        function saveData() {
-            localStorage.setItem('shahapur_products', JSON.stringify(products));
-            localStorage.setItem('shahapur_orders', JSON.stringify(orders));
+        // Realtime Data Sync from Firebase Cloud
+        db.ref('products').on('value', (snapshot) => {
+            const data = snapshot.val();
+            products = data ? Object.values(data) : [];
             renderAll();
-        }
+        });
 
-        function switchPanel(panelName) {
+        db.ref('orders').on('value', (snapshot) => {
+            const data = snapshot.val();
+            orders = data ? Object.values(data) : [];
+            renderAll();
+        });
+
+        function switchPanel(panelName, evt) {
             document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
-            
             document.getElementById(panelName + '-panel').classList.add('active');
-            event.target.classList.add('active');
+            evt.target.classList.add('active');
             renderAll();
         }
 
@@ -439,8 +281,21 @@
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    document.getElementById('prod-photo-base64').value = e.target.result;
-                }
+                    const img = new Image();
+                    img.src = e.target.result;
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        const maxWidth = 300;
+                        const scaleSize = maxWidth / img.width;
+                        canvas.width = maxWidth;
+                        canvas.height = img.height * scaleSize;
+
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.6);
+                        document.getElementById('prod-photo-base64').value = compressedBase64;
+                    };
+                };
                 reader.readAsDataURL(file);
             }
         }
@@ -454,71 +309,35 @@
             const qty = document.getElementById('prod-qty').value;
             const photo = document.getElementById('prod-photo-base64').value || 'https://via.placeholder.com/150';
 
-            if (editId) {
-                const index = products.findIndex(p => p.id == editId);
-                if (index !== -1) {
-                    products[index] = { ...products[index], name, oldPrice, price, qty, photo };
-                    alert("ವಸ್ತು ಯಶಸ್ವಿಯಾಗಿ ಎಡಿಟ್ ಆಗಿದೆ!");
-                }
-            } else {
-                const newProd = {
-                    id: Date.now(),
-                    name, oldPrice, price, qty, photo
-                };
-                products.push(newProd);
-                alert("ನಿಮ್ಮ ಫೋಟೋ ಅಪ್ಲೋಡ್ ಆಗಿದೆ - Success!");
-            }
+            const prodId = editId ? editId : 'PROD_' + Date.now();
+            const prodData = { id: prodId, name, oldPrice, price, qty, photo };
 
-            document.getElementById('add-product-form').reset();
-            document.getElementById('edit-prod-id').value = '';
-            document.getElementById('prod-photo-base64').value = '';
-            saveData();
+            db.ref('products/' + prodId).set(prodData, (error) => {
+                if (error) {
+                    alert("ಅಪ್ಲೋಡ್ ವಿಫಲವಾಗಿದೆ!");
+                } else {
+                    alert("ನಿಮ್ಮ ಫೋಟೋ ಮತ್ತು ವಸ್ತು ಕ್ಲೌಡ್ ಸರ್ವರ್‌ನಲ್ಲಿ ಸಕ್ಸಸ್ ಆಗಿ ಸೇವ್ ಆಗಿದೆ!");
+                    document.getElementById('add-product-form').reset();
+                    document.getElementById('edit-prod-id').value = '';
+                    document.getElementById('prod-photo-base64').value = '';
+                }
+            });
         }
 
         function deleteProduct(id) {
-            if (confirm("ಈ ಫೋಟೋ/ವಸ್ತುವನ್ನು ಪರ್ಮನೆಂಟ್ ಆಗಿ ಡಿಲೀಟ್ ಮಾಡಲು ಬಯಸುವಿರಾ?")) {
-                products = products.filter(p => p.id != id);
-                saveData();
+            if (confirm("ಈ ಫೋಟೋವನ್ನು ಪರ್ಮನೆಂಟ್ ಆಗಿ ಡಿಲೀಟ್ ಮಾಡಲು ಖಚಿತವೇ?")) {
+                db.ref('products/' + id).remove();
             }
         }
 
-        function editProduct(id) {
-            const p = products.find(prod => prod.id == id);
-            if (p) {
-                document.getElementById('edit-prod-id').value = p.id;
-                document.getElementById('prod-name').value = p.name;
-                document.getElementById('prod-old-price').value = p.oldPrice;
-                document.getElementById('prod-price').value = p.price;
-                document.getElementById('prod-qty').value = p.qty;
-                document.getElementById('prod-photo-base64').value = p.photo;
-                alert("ವಸ್ತುವಿನ ವಿವರಗಳನ್ನು ಫಾರ್ಮ್‌ನಲ್ಲಿ ತುಂಬಲಾಗಿದೆ. ತಿದ್ದಿ ಅಪ್ಲೋಡ್ ಒತ್ತಿ.");
-            }
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-        }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
         function openBuyModal(prodId) {
             currentBuyProduct = products.find(p => p.id == prodId);
-            selectedQty = 1;
-            
             document.getElementById('modal-prod-name').innerText = currentBuyProduct.name;
             document.getElementById('modal-prod-img').src = currentBuyProduct.photo;
             document.getElementById('modal-prod-price').innerText = currentBuyProduct.price;
-            document.getElementById('modal-qty-val').innerText = selectedQty;
-            document.getElementById('modal-total-price').innerText = currentBuyProduct.price * selectedQty;
-            
             document.getElementById('buy-modal').style.display = 'flex';
-        }
-
-        function updateQty(change) {
-            let newQty = selectedQty + change;
-            if (newQty >= 1 && newQty <= parseInt(currentBuyProduct.qty)) {
-                selectedQty = newQty;
-                document.getElementById('modal-qty-val').innerText = selectedQty;
-                document.getElementById('modal-total-price').innerText = currentBuyProduct.price * selectedQty;
-            }
         }
 
         function showAddressScreen() {
@@ -528,172 +347,66 @@
 
         function confirmFinalOrder(event) {
             event.preventDefault();
+            const orderId = 'ORD_' + Math.floor(1000 + Math.random() * 9000);
             const newOrder = {
-                orderId: 'ORD' + Math.floor(1000 + Math.random() * 9000),
+                orderId: orderId,
                 timestamp: Date.now(),
                 productName: currentBuyProduct.name,
                 productPhoto: currentBuyProduct.photo,
-                unitPrice: currentBuyProduct.price,
-                qty: selectedQty,
-                totalPrice: currentBuyProduct.price * selectedQty,
+                totalPrice: currentBuyProduct.price,
                 customer: {
                     name: document.getElementById('cust-name').value,
                     phone: document.getElementById('cust-phone').value,
-                    district: document.getElementById('cust-district').value,
-                    taluk: document.getElementById('cust-taluk').value,
-                    village: document.getElementById('cust-village').value,
-                    pincode: document.getElementById('cust-pincode').value
+                    village: document.getElementById('cust-village').value
                 },
-                status: 'NEW', // NEW -> CONFIRMED -> PACKING -> ON_THE_WAY -> DELIVERED
-                paymentStatus: 'PENDING'
+                status: 'NEW'
             };
 
-            orders.unshift(newOrder); // ಹೊಸ ಆರ್ಡರ್ ಯಾವಾಗಲೂ ಮೇಲೆ ಕಾಣಿಸುತ್ತದೆ
-            saveData();
-            closeModal('address-modal');
-            alert("ನಿಮ್ಮ ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಆಗಿದೆ! ಅಂಗಡಿ ಮಾಲೀಕರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ.");
-        }
-
-        function updateOrderStatus(orderId, newStatus) {
-            const order = orders.find(o => o.orderId == orderId);
-            if (order) {
-                order.status = newStatus;
-                saveData();
-                alert(`ಆರ್ಡರ್ ಸ್ಟೇಟಸ್ ಬದಲಾಗಿದೆ: ${newStatus}`);
-            }
-        }
-
-        function updatePaymentStatus(orderId, newStatus) {
-            const order = orders.find(o => o.orderId == orderId);
-            if (order) {
-                order.paymentStatus = newStatus;
-                saveData();
-                alert(`ಪೇಮೆಂಟ್ ಸ್ಟೇಟಸ್: ${newStatus}`);
-            }
+            db.ref('orders/' + orderId).set(newOrder, (error) => {
+                if (!error) {
+                    closeModal('address-modal');
+                    alert("ನಿಮ್ಮ ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಆಗಿದೆ! ಅಂಗಡಿ ಮಾಲೀಕರಿಗೆ ರವಾನಿಸಲಾಗಿದೆ.");
+                }
+            });
         }
 
         function renderAll() {
-            orders.sort((a,b) => b.timestamp - a.timestamp);
-
-            // 1. ಅಂಗಡಿ ಪ್ರಾಡಕ್ಟ್ಸ್ ಗ್ಯಾಲರಿ
+            // 1. ಅಂಗಡಿ ಗ್ಯಾಲರಿ
             const shopGrid = document.getElementById('shop-products-grid');
             shopGrid.innerHTML = products.map(p => `
                 <div class="card">
                     <img src="${p.photo}">
                     <div class="card-title">${p.name}</div>
                     <div><span class="old-price">₹${p.oldPrice}</span><span class="price-tag">₹${p.price}</span></div>
-                    <div>ಸ್ಟಾಕ್: <b>${p.qty} Pcs</b></div>
                     <div class="card-actions">
-                        <button class="btn btn-warning" onclick="editProduct(${p.id})">✏️ Edit</button>
-                        <button class="btn btn-danger" onclick="deleteProduct(${p.id})">🗑️ Delete</button>
+                        <button class="btn btn-danger" style="width:100%;" onclick="deleteProduct('${p.id}')">🗑️ Delete</button>
                     </div>
                 </div>
             `).join('') || '<p>ಯಾವುದೇ ಫೋಟೋಗಳು ಅಪ್ಲೋಡ್ ಆಗಿಲ್ಲ.</p>';
 
-            // 2. ಗ್ರಾಹಕರ ಪ್ರಾಡಕ್ಟ್ಸ್ ಗ್ಯಾಲರಿ
+            // 2. ಗ್ರಾಹಕರ ಗ್ಯಾಲರಿ
             const custGrid = document.getElementById('customer-products-grid');
             custGrid.innerHTML = products.map(p => `
                 <div class="card">
                     <img src="${p.photo}">
                     <div class="card-title">${p.name}</div>
-                    <div><span class="old-price">₹${p.oldPrice}</span><span class="price-tag">₹${p.price}</span></div>
-                    <div style="margin-top:8px;">
-                        <button class="btn btn-success" style="width:100%;" onclick="openBuyModal(${p.id})">ಖರೀದಿಸಿ / Buy Now</button>
-                    </div>
+                    <div><span class="price-tag">₹${p.price}</span></div>
+                    <button class="btn btn-success" style="width:100%; margin-top:5px;" onclick="openBuyModal('${p.id}')">ಖರೀದಿಸಿ</button>
                 </div>
-            `).join('') || '<p>ಪ್ರಸ್ತುತ ಯಾವುದೇ ವಸ್ತುಗಳು ಲಭ್ಯವಿಲ್ಲ.</p>';
+            `).join('') || '<p>ಯಾವುದೇ ವಸ್ತುಗಳು ಲಭ್ಯವಿಲ್ಲ.</p>';
 
-            // 3. ಅಂಗಡಿ ಮಾಲೀಕರ ಆರ್ಡರ್ ಪಟ್ಟಿ ಹಾಗೂ ರಿಪೋರ್ಟ್
-            let totalEarned = 0;
-            let deliveredCount = 0;
-            let returnedCount = 0;
-
-            const shopOrdersHTML = orders.map(o => {
-                if (o.status === 'DELIVERED') {
-                    totalEarned += o.totalPrice;
-                    deliveredCount++;
-                }
-                if (o.status === 'CANCELLED' || o.status === 'RETURNED') returnedCount++;
-
-                return `
-                    <div class="order-item">
-                        <h4>ಆರ್ಡರ್ ಐಡಿ: ${o.orderId} - ${o.productName} (x${o.qty})</h4>
-                        <p>ಒಟ್ಟು ಮೊತ್ತ: <b>₹${o.totalPrice}</b> | ಗ್ರಾಹಕ: ${o.customer.name} (${o.customer.phone})</p>
-                        <p>ಅಡ್ರೆಸ್: ${o.customer.village}, ${o.customer.taluk}, ${o.customer.district} - ${o.customer.pincode}</p>
-                        <p>ಸ್ಟೇಟಸ್: <b>${o.status}</b> | ಪೇಮೆಂಟ್: <b style="color:${o.paymentStatus==='SUCCESS'?'green':'red'}">${o.paymentStatus}</b></p>
-                        <div style="margin-top:8px; display:flex; gap:5px; flex-wrap:wrap;">
-                            ${o.status === 'NEW' ? `<button class="btn btn-success" onclick="updateOrderStatus('${o.orderId}', 'CONFIRMED')">Confirm Order</button>` : ''}
-                            ${o.status === 'CONFIRMED' ? `<button class="btn btn-warning" onclick="updateOrderStatus('${o.orderId}', 'PACKING')">Packing Complete</button>` : ''}
-                            ${o.paymentStatus === 'PENDING' ? `<button class="btn btn-success" onclick="updatePaymentStatus('${o.orderId}', 'SUCCESS')">Payment Received (Success)</button>` : ''}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-            document.getElementById('shop-orders-list').innerHTML = shopOrdersHTML || '<p>ಯಾವುದೇ ಹೊಸ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>';
-
-            document.getElementById('shop-total-orders').innerText = orders.length;
-            document.getElementById('shop-delivered-orders').innerText = deliveredCount;
-            document.getElementById('shop-returned-orders').innerText = returnedCount;
-            document.getElementById('shop-total-earnings').innerText = '₹' + totalEarned;
-
-            // 4. ಗ್ರಾಹಕರ ಆರ್ಡರ್ ಹಿಸ್ಟರಿ ಮತ್ತು ರೂಟ್ (FlipKart Style Route Tracker)
-            document.getElementById('customer-orders-list').innerHTML = orders.map(o => {
-                let step1 = o.status !== 'CANCELLED' ? 'active' : '';
-                let step2 = ['CONFIRMED', 'PACKING', 'ON_THE_WAY', 'DELIVERED'].includes(o.status) ? 'active' : '';
-                let step3 = ['PACKING', 'ON_THE_WAY', 'DELIVERED'].includes(o.status) ? 'active' : '';
-                let step4 = o.status === 'DELIVERED' ? 'active' : '';
-
-                return `
-                    <div class="order-item">
-                        <h4>ಆರ್ಡರ್: ${o.productName} (x${o.qty}) - ₹${o.totalPrice}</h4>
-                        <p><b>ಆರ್ಡರ್ ಐಡಿ (ID):</b> ${o.orderId}</p>
-                        
-                        <!-- ಫ್ಲಿಪ್‌ಕಾರ್ಟ್ ತರಹದ 4 ಹಂತಗಳ ಲೈವ್ ರೂಟ್ ಟ್ರ್ಯಾಕರ್ -->
-                        <div class="route-tracker">
-                            <span class="route-step ${step1}">1. ಕನ್ಫರ್ಮ್</span> > 
-                            <span class="route-step ${step2}">2. ಪ್ಯಾಕಿಂಗ್</span> > 
-                            <span class="route-step ${step3}">3. ಡೆಲಿವರಿ ಕಳುಹಿಸಲಾಗಿದೆ</span> > 
-                            <span class="route-step ${step4}">4. ಯಶಸ್ವಿಯಾಗಿ ತಲುಪಿದೆ</span>
-                        </div>
-
-                        <p style="margin-top:5px; font-size:13px; color:#333;">
-                            ${o.status === 'ON_THE_WAY' ? '🚚 ಡೆಲಿವರಿ ಬಾಯ್ ಹೊರಟಿದ್ದಾರೆ, 3 ಗಂಟೆಯೊಳಗೆ ತಲುಪುತ್ತದೆ!' : ''}
-                            ${o.status === 'DELIVERED' ? '✅ ನಿಮ್ಮ ಆರ್ಡರ್ ಯಶಸ್ವಿಯಾಗಿ ತಲುಪಿದೆ!' : ''}
-                        </p>
-                        <div style="margin-top:8px;">
-                            ${(o.status === 'NEW' || o.status === 'CONFIRMED') ? `<button class="btn btn-danger" onclick="updateOrderStatus('${o.orderId}', 'CANCELLED')">Cancel Order</button>` : ''}
-                            ${o.status === 'DELIVERED' ? `<button class="btn btn-warning" onclick="updateOrderStatus('${o.orderId}', 'RETURNED')">Return Product</button>` : ''}
-                        </div>
-                    </div>
-                `;
-            }).join('') || '<p>ನೀವು ಇನ್ನೂ ಯಾವುದೇ ಆರ್ಡರ್ ಮಾಡಿಲ್ಲ.</p>';
-
-            // 5. ಡೆಲಿವರಿ ಬಾಯ್ ಪ್ಯಾನಲ್
-            document.getElementById('delivery-orders-list').innerHTML = orders.filter(o => o.status !== 'CANCELLED').map(o => `
+            // 3. ಗ್ರಾಹಕರ ಆರ್ಡರ್ ಹಿಸ್ಟರಿ
+            document.getElementById('customer-orders-list').innerHTML = orders.map(o => `
                 <div class="order-item">
-                    <h4>📦 ಆರ್ಡರ್: ${o.productName} (x${o.qty})</h4>
-                    <p><b>ಪಿಕ್-ಅಪ್ ಅಂಗಡಿ:</b> ನಮ್ಮ ಶಾಪುರ್ ಮೇನ್ ಶಾಪ್, ಗ್ಯಾರೇಜ್ ಲೈನ್</p>
-                    <p><b>ಗ್ರಾಹಕರ ಅಡ್ರೆಸ್:</b> ${o.customer.name}, ${o.customer.village}, ${o.customer.taluk} (Ph: ${o.customer.phone})</p>
-                    <p>ಸ್ಟೇಟಸ್: <b>${o.status}</b></p>
-                    <div style="margin-top:8px; display:flex; gap:5px; flex-wrap:wrap;">
-                        ${o.status === 'PACKING' ? `<button class="btn btn-warning" onclick="updateOrderStatus('${o.orderId}', 'ON_THE_WAY')">Picked Up (ಡೆಲಿವರಿಗೆ ಕಳುಹಿಸಿ)</button>` : ''}
-                        ${o.status === 'ON_THE_WAY' ? `<button class="btn btn-success" onclick="updateOrderStatus('${o.orderId}', 'DELIVERED')">Delivery Successful (ತಲುಪಿಸಲಾಗಿದೆ)</button>` : ''}
+                    <h4>ಆರ್ಡರ್: ${o.productName} - ₹${o.totalPrice} (ID: ${o.orderId})</h4>
+                    <div class="route-tracker">
+                        <span class="route-step active">1. ಕನ್ಫರ್ಮ್</span> > 
+                        <span class="route-step">2. ಪ್ಯಾಕಿಂಗ್</span> > 
+                        <span class="route-step">3. ಡೆಲಿವರಿ</span>
                     </div>
                 </div>
-            `).join('') || '<p>ಯಾವುದೇ ಡೆಲಿವರಿ ಟಾಸ್ಕ್ ಇಲ್ಲ.</p>';
-
-            // 6. ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್
-            document.getElementById('admin-total-orders').innerText = orders.length;
-            document.getElementById('admin-total-sales').innerText = '₹' + orders.reduce((acc, o) => acc + o.totalPrice, 0);
-            document.getElementById('admin-orders-list').innerHTML = orders.map(o => `
-                <div class="order-item">
-                    <p><b>ID:</b> ${o.orderId} | <b>ವಸ್ತು:</b> ${o.productName} | <b>ಗ್ರಾಹಕ:</b> ${o.customer.name} | <b>ಸ್ಟೇಟಸ್:</b> ${o.status}</p>
-                </div>
-            `).join('') || '<p>ಯಾವುದೇ ಡೇಟಾ ಇಲ್ಲ.</p>';
+            `).join('') || '<p>ನೀವು ಇನ್ನು ಆರ್ಡರ್ ಮಾಡಿಲ್ಲ.</p>';
         }
-
-        // ಪೇಜ್ ಓಪನ್ ಆದ ಕೂಡಲೇ ಡೇಟಾ ಲೋಡ್ ಆಗುವುದು
-        renderAll();
     </script>
 </body>
 </html>
