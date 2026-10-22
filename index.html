@@ -143,13 +143,13 @@
           <label>ಅಂಗಡಿಯ ಪ್ರಕಾರ:</label>
           <select id="shopType" required>
             <option value="">-- ಆಯ್ಕೆಮಾಡಿ --</option>
-            <option value="ಕಿರಾಣಿ ಅಂಗಡಿ">1. ಕಿರಾಣಿ ಅಂಗಡಿ</option>
-            <option value="ಬಟ್ಟೆ ಅಂಗಡಿ">2. ಬಟ್ಟೆ ಅಂಗಡಿ</option>
-            <option value="ಚಪ್ಪಲಿ ಅಂಗಡಿ">3. ಚಪ್ಪಲಿ ಅಂಗಡಿ</option>
-            <option value="ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್ ಅಂಗಡಿ">4. ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್</option>
-            <option value="ಗಿಫ್ಟ್ ಸೆಂಟರ್">5. ಗಿಫ್ಟ್ ಸೆಂಟರ್</option>
-            <option value="ಮೊಬೈಲ್ ಶೋರೂಂ">6. ಮೊಬೈಲ್ ಶಾಪ್</option>
-            <option value="ಇತರ ಅಂಗಡಿ">7. ಇತರ ಅಂಗಡಿ</option>
+            <option value="1. ಕಿರಾಣಿ ಅಂಗಡಿ">1. ಕಿರಾಣಿ ಅಂಗಡಿ</option>
+            <option value="2. ಬಟ್ಟೆ ಅಂಗಡಿ">2. ಬಟ್ಟೆ ಅಂಗಡಿ</option>
+            <option value="3. ಚಪ್ಪಲಿ ಅಂಗಡಿ">3. ಚಪ್ಪಲಿ ಅಂಗಡಿ</option>
+            <option value="4. ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್">4. ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್</option>
+            <option value="5. ಗಿಫ್ಟ್ ಸೆಂಟರ್">5. ಗಿಫ್ಟ್ ಸೆಂಟರ್</option>
+            <option value="6. ಮೊಬೈಲ್ ಶಾಪ್">6. ಮೊಬೈಲ್ ಶಾಪ್</option>
+            <option value="7. ಇತರ ಅಂಗಡಿ">7. ಇತರ ಅಂಗಡಿ</option>
           </select>
         </div>
 
@@ -395,13 +395,13 @@
         snapshot.forEach(docSnap => {
           const o = docSnap.data();
 
-          // Return Orders: Strictly only show to the specific shop owner that sold the item
+          // Return Orders: Strictly route only to the exact matching shop owner
           if (o.status === 'RETURNED' || o.isReturned) {
             if (o.shopId === shopOwner.id) {
               orders.push({ docId: docSnap.id, ...o });
             }
           } 
-          // New/Regular Orders: Visible to all or assigned shop owner
+          // Regular Orders: Target the respective shop type / matching category or unclaimed orders
           else if (!o.acceptedBy || o.acceptedBy === shopOwner.id || o.shopId === shopOwner.id) {
             orders.push({ docId: docSnap.id, ...o });
           }
@@ -421,14 +421,12 @@
       document.getElementById('statTotalOrders').innerText = myOrders.length;
       document.getElementById('statReturns').innerText = myOrders.filter(o => o.status === 'RETURNED' || o.isReturned).length;
       
-      // Active / New Orders (Top) vs Completed / History Orders (Bottom)
       const activeOrders = orders.filter(o => (o.status !== 'DELIVERED' && o.status !== 'RETURN_COMPLETED') && (!o.acceptedBy || o.acceptedBy === shopOwner.id));
       const archivedOrders = myOrders.filter(o => o.status === 'DELIVERED' || o.status === 'RETURN_COMPLETED');
 
       renderOrders(activeOrders);
       renderArchivedOrders(archivedOrders);
 
-      // Payment pending list
       const paymentPendingOrders = myOrders.filter(o => o.status === 'DELIVERED' && !o.isShopPaid);
       renderPayments(paymentPendingOrders);
     }
@@ -446,7 +444,7 @@
 
         if (isReturn) {
           actionButtons = `
-            <div style="color:#d32f2f; font-weight:bold; margin-top:6px; font-size:0.8rem;">🚨 ರಿಟರ್ನ್ ಇದೆ, ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ಪಿಕ್‌ಅಪ್ ಸಂದೇಶ ತಲುಪಿದೆ</div>
+            <div style="color:#d32f2f; font-weight:bold; margin-top:6px; font-size:0.8rem;">🚨 ರಿಟರ್ನ್ ಇದೆ, ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ಪಿಕ್‌ಅಪ್ ಮಾಡಲು ಸಂದೇಶ ತಲುಪಿಸಲಾಗಿದೆ</div>
             <button class="btn btn-danger" style="padding:8px; font-size:0.8rem; margin-top:8px;" onclick="confirmReturnReceived('${o.docId}')">🛑 ಡೆಲಿವರಿ ಬಾಯ್ ರಿಟರ್ನ್ ತಂದಿದ್ದಾರೆ (Confirm Return Pickup)</button>
           `;
         } else if (!o.status || o.status === 'STEP_1' || o.status === 'NEW') {
@@ -528,14 +526,14 @@
     async function confirmPaymentReceived(docId) {
       try {
         await window.updateDoc(window.doc(window.db, "orders", docId), { isShopPaid: true });
-        alert("🎉 ಪೇಮೆಂಟ್ ಯಶಸ್ವಿಯಾಗಿ ಸೀಕರಿಸಲಾಗಿದೆ!");
+        alert("🎉 ಪೇಮೆಂಟ್ ಯಶಸ್ವಿಯಾಗಿ ಸ್ವೀಕರಿಸಲಾಗಿದೆ!");
       } catch (e) { alert(e.message); }
     }
 
     async function confirmReturnReceived(docId) {
       try {
         await window.updateDoc(window.doc(window.db, "orders", docId), { status: 'RETURN_COMPLETED', returnReceivedByShop: true });
-        alert("🎉 ರಿಟರ್ನ್ ಪಿಕ್‌ಅಪ್ ಸಫಲವಾಗಿ ಸ್ವೀಕರಿಸಲಾಗಿದೆ!");
+        alert("🎉 ರಿಟರ್ನ್ ಪಿಕ್‌ಅಪ್ ಸಫಲವಾಗಿ ಸ್ವೀಕರಿಸಲಾಗಿದೆ ಮತ್ತು ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ತಲುಪಿಸಲಾಗಿದೆ!");
       } catch (e) { alert(e.message); }
     }
 
@@ -547,6 +545,7 @@
       const prodData = {
         shopId: shopOwner.id,
         shopName: shopOwner.shopName,
+        shopType: shopOwner.shopType,
         name: document.getElementById('prodName').value.trim(),
         oldPrice: document.getElementById('prodOldPrice').value.trim(),
         price: document.getElementById('prodPrice').value.trim(),
