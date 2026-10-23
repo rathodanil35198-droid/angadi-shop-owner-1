@@ -62,6 +62,7 @@
     .btn-success { background: var(--success); }
     .btn-danger { background: var(--danger); }
     .btn-warning { background: var(--warning); }
+    .btn-call-cust { background: #388e3c; color: #fff; padding: 6px 12px; border-radius: 4px; text-decoration: none; font-size: 0.75rem; font-weight: bold; display: inline-block; margin-top: 4px; }
 
     .id-card {
       background: linear-gradient(135deg, #1e88e5, #1565c0);
@@ -143,12 +144,12 @@
           <label>ಅಂಗಡಿಯ ಪ್ರಕಾರ (ವಿಭಾಗ):</label>
           <select id="shopType" required>
             <option value="">-- ಆಯ್ಕೆಮಾಡಿ --</option>
-            <option value="ಚಪ್ಪಲಿ ಅಂಗಡಿ">ಚಪ್ಪಲಿ ಅಂಗಡಿ (Footwear)</option>
+            <option value="ಮೊಬೈಲ್ ಶಾಪ್">ಮೊಬೈಲ್ ಶಾಪ್ (Mobile Shop)</option>
             <option value="ಬಟ್ಟೆ ಅಂಗಡಿ">ಬಟ್ಟೆ ಅಂಗಡಿ (Clothes)</option>
+            <option value="ಚಪ್ಪಲಿ ಅಂಗಡಿ">ಚಪ್ಪಲಿ ಅಂಗಡಿ (Footwear)</option>
             <option value="ಕಿರಾಣಿ ಅಂಗಡಿ">ಕಿರಾಣಿ ಅಂಗಡಿ (Grocery)</option>
             <option value="ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್">ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್ (Electronics)</option>
             <option value="ಗಿಫ್ಟ್ ಸೆಂಟರ್">ಗಿಫ್ಟ್ ಸೆಂಟರ್ (Gift Shop)</option>
-            <option value="ಮೊಬೈಲ್ ಶಾಪ್">ಮೊಬೈಲ್ ಶಾಪ್ (Mobile Shop)</option>
             <option value="ಇತರ ಅಂಗಡಿ">ಇತರ ಅಂಗಡಿ (Other)</option>
           </select>
         </div>
@@ -181,11 +182,11 @@
 
       <div class="stats-container">
         <div class="stat-box">
-          <h4>ಒಟ್ಟು ಆರ್ಡರ್</h4>
+          <h4>ಒಟ್ಟು ಆರ್ಡರ್ (3 ದಿನ)</h4>
           <p id="statTotalOrders">0</p>
         </div>
         <div class="stat-box">
-          <h4>ರಿಟರ್ನ್</h4>
+          <h4>ರಿಟರ್ನ್ (3 ದಿನ)</h4>
           <p id="statReturns">0</p>
         </div>
         <div class="stat-box">
@@ -205,8 +206,11 @@
         <h2>➕ ಹೊಸ ವಸ್ತುವಿನ ಫೋಟೋ ಅಪ್ಲೋಡ್ ಮಾಡಿ</h2>
         <form id="addProductForm" onsubmit="saveProduct(event)">
           <input type="hidden" id="editProdId">
-          <div class="form-group"><label>ವಸ್ತುವಿನ ಹೆಸರು:</label><input type="text" id="prodName" required placeholder="ಉದಾ: ಚಪ್ಪಲಿ, ಶರ್ಟ್"></div>
+          <div class="form-group"><label>ವಸ್ತುವಿನ ಹೆಸರು:</label><input type="text" id="prodName" required placeholder="ಉದಾ: ಮೊಬೈಲ್, ಶರ್ಟ್, ಚಪ್ಪಲಿ"></div>
           
+          <!-- Dynamic Category Options based on Shop Type -->
+          <div id="dynamicCategoryOptions" style="margin-bottom:12px;"></div>
+
           <div style="display: flex; gap: 10px;">
             <div class="form-group" style="flex:1;"><label>ಹಳೆಯ ರೇಟು (₹):</label><input type="number" id="prodOldPrice" required placeholder="450"></div>
             <div class="form-group" style="flex:1;"><label>ಈಗಿನ ರೇಟು (₹):</label><input type="number" id="prodPrice" required placeholder="350"></div>
@@ -224,16 +228,16 @@
 
       <!-- ಆರ್ಡರ್‌ಗಳು -->
       <div id="tabOrders" style="display:none; background:#fff; padding:15px; border-radius:10px; border:1px solid #cbd5e0;">
-        <h2>📦 ಪ್ರಸ್ತುತ ಹೊಸ ಆರ್ಡರ್‌ಗಳು ಹಾಗೂ ರಿಟರ್ನ್‌ಗಳು</h2>
+        <h2>📦 ಪ್ರಸ್ತುತ ಹೊಸ ಆರ್ಡರ್‌ಗಳು ಹಾಗೂ ರಿಟರ್ನ್‌ಗಳು (ಕಳೆದ 3 ದಿನಗಳು)</h2>
         <div id="shopOrdersList" style="margin-top:10px;"></div>
 
         <h2 style="margin-top:20px; color:#555;">🔒 ಹಳೆಯ ಪೂರ್ಣಗೊಂಡ ಆರ್ಡರ್‌ಗಳು (History)</h2>
         <div id="shopArchivedOrdersList" style="margin-top:10px;"></div>
       </div>
 
-      <!-- ಪೇಮೆಂಟ್ಸ್ (1 ತಿಂಗಳ ಲೆಕ್ಕಾಚಾರ & ಕಮಿಷನ್ ವಿವರ) -->
+      <!-- ಪೇಮೆಂಟ್ಸ್ (3 ದಿನಗಳ ಲೆಕ್ಕಾಚಾರ & ಕಮಿಷನ್ ವಿವರ) -->
       <div id="tabPayments" style="display:none; background:#fff; padding:15px; border-radius:10px; border:1px solid #cbd5e0;">
-        <h2>💳 1 ತಿಂಗಳ ಪೇಮೆಂಟ್ಸ್ ಮತ್ತು ಲೆಕ್ಕಾಚಾರ (1 Month Ledger)</h2>
+        <h2>💳 3 ದಿನಗಳ ಪೇಮೆಂಟ್ಸ್ ಮತ್ತು ಲೆಕ್ಕಾಚಾರ (3 Days Ledger)</h2>
         <div id="paymentLedgerSummary" style="background:#e3f2fd; padding:12px; border-radius:8px; margin-bottom:15px; font-size:0.85rem;"></div>
         <div id="shopPaymentsList" style="margin-top:10px;"></div>
       </div>
@@ -249,19 +253,19 @@
     function playSirenSound() {
       try {
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        for(let i=0; i<3; i++) {
+        for(let i=0; i<5; i++) {
           setTimeout(() => {
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
-            osc.type = 'square';
-            osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(1500, audioCtx.currentTime + 0.3);
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(1400, audioCtx.currentTime + 0.4);
             gain.gain.setValueAtTime(1, audioCtx.currentTime);
             osc.connect(gain);
             gain.connect(audioCtx.destination);
             osc.start();
             osc.stop(audioCtx.currentTime + 0.5);
-          }, i * 600);
+          }, i * 500);
         }
       } catch(e) {}
     }
@@ -269,6 +273,7 @@
     window.addEventListener('DOMContentLoaded', () => {
       if (shopOwner) {
         renderIDCard();
+        renderProductCategoryOptions();
         document.getElementById('loginSection').style.display = 'none';
         document.getElementById('dashboardSection').style.display = 'block';
         startRealtimeSync();
@@ -284,6 +289,56 @@
       if (confirm("ಮರು ಲಾಗಿನ್ ಮಾಡಲು ಬಯಸುವಿರಾ?")) {
         localStorage.removeItem('my_shop_owner_session');
         location.reload();
+      }
+    }
+
+    function renderProductCategoryOptions() {
+      const container = document.getElementById('dynamicCategoryOptions');
+      if (!shopOwner) return;
+
+      if (shopOwner.shopType === 'ಮೊಬೈಲ್ ಶಾಪ್') {
+        container.innerHTML = `
+          <label>ಮೊಬೈಲ್ ಬ್ರ್ಯಾಂಡ್ / ಕಂಪನಿ ಆಯ್ಕೆಮಾಡಿ:</label>
+          <select id="prodBrand">
+            <option value="Samsung">Samsung</option>
+            <option value="Apple iPhone">Apple iPhone</option>
+            <option value="Redmi / Xiaomi">Redmi / Xiaomi</option>
+            <option value="Realme">Realme</option>
+            <option value="Vivo / Oppo">Vivo / Oppo</option>
+            <option value="OnePlus">OnePlus</option>
+            <option value="ಇತರ ಕಂಪನಿ">ಇತರ ಕಂಪನಿ (Other)</option>
+          </select>
+        `;
+      } else if (shopOwner.shopType === 'ಬಟ್ಟೆ ಅಂಗಡಿ') {
+        container.innerHTML = `
+          <label>ಬಟ್ಟೆ ವಿಭಾಗ / ವಯಸ್ಸು / ಸೈಜ್ ಆಯ್ಕೆಮಾಡಿ:</label>
+          <select id="prodSize">
+            <option value="ಚಿಕ್ಕ ಮಕ್ಕಳು (2 ರಿಂದ 5 ವರ್ಷ)">ಚಿಕ್ಕ ಮಕ್ಕಳು (2 ರಿಂದ 5 ವರ್ಷ)</option>
+            <option value="ಮಕ್ಕಳು (6 ರಿಂದ 12 ವರ್ಷ)">ಮಕ್ಕಳು (6 ರಿಂದ 12 ವರ್ಷ)</option>
+            <option value="ಯುವಕರು / ಹದಿಹರೆಯದವರು (13 ರಿಂದ 18 ವರ್ಷ)">ಯುವಕರು / ಹದಿಹರೆಯದವರು (13 ರಿಂದ 18 ವರ್ಷ)</option>
+            <option value="ದೊಡ್ಡವರು - M Size">ದೊಡ್ಡವರು - M Size</option>
+            <option value="ದೊಡ್ಡವರು - L Size">ದೊಡ್ಡವರು - L Size</option>
+            <option value="ದೊಡ್ಡವರು - XL Size">ದೊಡ್ಡವರು - XL Size</option>
+            <option value="ದೊಡ್ಡವರು - XXL Size">ದೊಡ್ಡವರು - XXL Size</option>
+          </select>
+        `;
+      } else if (shopOwner.shopType === 'ಚಪ್ಪಲಿ ಅಂಗಡಿ') {
+        container.innerHTML = `
+          <label>ಚಪ್ಪಲಿ ನಂಬರ್ (Size 12 ರಿಂದ 36):</label>
+          <select id="prodFootwearSize">
+            <option value="Size 12-14 (ಮಕ್ಕಳು)">Size 12-14 (ಮಕ್ಕಳು)</option>
+            <option value="Size 15-18">Size 15-18</option>
+            <option value="Size 19-22">Size 19-22</option>
+            <option value="Size 23-26">Size 23-26</option>
+            <option value="Size 27-30">Size 27-30</option>
+            <option value="Size 31-36 (ದೊಡ್ಡವರು)">Size 31-36 (ದೊಡ್ಡವರು)</option>
+          </select>
+        `;
+      } else {
+        container.innerHTML = `
+          <label>ವಿವರ / ಅಳತೆ:</label>
+          <input type="text" id="prodExtraDetails" placeholder="ಉದಾ: ಪ್ರಮಾಣ / ಅಳತೆ">
+        `;
       }
     }
 
@@ -350,6 +405,7 @@
             shopOwner = docSnap.data();
             localStorage.setItem('my_shop_owner_session', JSON.stringify(shopOwner));
             renderIDCard();
+            renderProductCategoryOptions();
             document.getElementById('loginSection').style.display = 'none';
             document.getElementById('dashboardSection').style.display = 'block';
             startRealtimeSync();
@@ -366,6 +422,7 @@
     function closeSuccessModal() {
       document.getElementById('successModal').style.display = 'none';
       renderIDCard();
+      renderProductCategoryOptions();
       document.getElementById('loginSection').style.display = 'none';
       document.getElementById('dashboardSection').style.display = 'block';
       startRealtimeSync();
@@ -398,15 +455,14 @@
 
       window.onSnapshot(window.collection(window.db, "orders"), (snapshot) => {
         let orders = [];
-        const oneMonthAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
+        const threeDaysAgo = Date.now() - (3 * 24 * 60 * 60 * 1000);
 
         snapshot.forEach(docSnap => {
           const o = docSnap.data();
           const orderTime = o.timestamp?.toMillis?.() || Date.now();
 
-          // Keep 1 month records
-          if (orderTime >= oneMonthAgo) {
-            // Category routing check: Match shopType or direct shopId
+          // Keep 3 days records for active panel
+          if (orderTime >= threeDaysAgo) {
             if (o.shopId === shopOwner.id || o.acceptedBy === shopOwner.id || (!o.acceptedBy && (o.shopType === shopOwner.shopType || shopOwner.shopType === 'ಇತರ ಅಂಗಡಿ'))) {
               orders.push({ docId: docSnap.id, ...o });
             }
@@ -425,7 +481,7 @@
     function renderDashboard(orders) {
       const myOrders = orders.filter(o => o.shopId === shopOwner.id || o.acceptedBy === shopOwner.id);
       
-      // 1 Month Calculations
+      // 3 Days Calculations
       const deliveredOrders = myOrders.filter(o => o.status === 'DELIVERED' || o.status === 'STEP_4' || o.status === 'RETURN_COMPLETED');
       const totalDeliveredAmount = deliveredOrders.reduce((acc, curr) => acc + Number(curr.totalPrice || 0), 0);
       
@@ -440,6 +496,7 @@
       document.getElementById('statTotalOrders').innerText = myOrders.length;
       document.getElementById('statReturns').innerText = returnedOrders.length;
       document.getElementById('statEarnings').innerText = `₹${netEarnings}`;
+      document.getElementById('orderCount').innerText = myOrders.length;
 
       const activeOrders = orders.filter(o => (o.status !== 'DELIVERED' && o.status !== 'RETURN_COMPLETED') && (!o.acceptedBy || o.acceptedBy === shopOwner.id));
       const archivedOrders = myOrders.filter(o => o.status === 'DELIVERED' || o.status === 'RETURN_COMPLETED');
@@ -447,7 +504,7 @@
       renderOrders(activeOrders);
       renderArchivedOrders(archivedOrders);
 
-      // Render Ledger & Payments Summary
+      // Render Ledger & Payments Summary (3 Days)
       renderLedgerSummary(deliveredOrders.length, totalDeliveredAmount, returnedOrders.length, totalReturnedAmount, netEarnings, totalCommission);
       renderPayments(myOrders.filter(o => (o.status === 'DELIVERED' || o.status === 'STEP_4') && !o.isShopPaid));
     }
@@ -455,9 +512,9 @@
     function renderLedgerSummary(delCount, delAmt, retCount, retAmt, netEarn, commAmt) {
       const summaryDiv = document.getElementById('paymentLedgerSummary');
       summaryDiv.innerHTML = `
-        <p><b>📅 ಅವಧಿ:</b> ಕಳೆದ 1 ತಿಂಗಳ ಲೆಕ್ಕಾಚಾರ</p>
+        <p><b>📅 ಅವಧಿ:</b> ಕಳೆದ 3 ದಿನಗಳ ಲೆಕ್ಕಾಚಾರ</p>
         <p><b>✅ ಯಶಸ್ವಿ ಡೆಲಿವರಿಗಳು:</b> ${delCount} (ಮೊತ್ತ: ₹${delAmt})</p>
-        <p><b>🔄 ರಿಟರ್ನ್ ಆದ ಆರ್ಡರ್‌ಗಳು:</b> ${retCount} (ಮೊತ್ತ: ₹${retAmt})</p>
+        <p><b>🔄 ರಿಟರ್ನ್ ಆದ ಆರ್ಡರ್‌ಗಳು:</b> ${retCount} (ಮೈನಸ್ ಮೊತ್ತ: ₹${retAmt})</p>
         <p><b>🏷️ 15% ಪ್ಲಾಟ್‌ಫಾರ್ಮ್ ಕಮಿಷನ್:</b> -₹${commAmt}</p>
         <hr style="margin:6px 0; border:0; border-top:1px solid #90caf9;">
         <p style="font-size:0.95rem; color:#0d47a1;"><b>💰 ನಿಮಗೆ ಬರಬೇಕಾದ ಶುದ್ಧ ಮೊತ್ತ: ₹${netEarn}</b></p>
@@ -474,11 +531,18 @@
       listDiv.innerHTML = orders.map(o => {
         let isReturn = o.status === 'RETURNED' || o.isReturned;
         let actionButtons = "";
+        let shopOtpBox = "";
+
+        // Show OTP to shop owner when order is confirmed/packing or when return is picked up
+        if (o.shopPin) {
+          shopOtpBox = `<div style="background:#e8f5e9; border:1px solid #c8e6c9; padding:8px; border-radius:6px; margin-top:6px; font-weight:bold; color:#2e7d32;">🔐 ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ನೀಡಬೇಕಾದ ಅಂಗಡಿ ಪಿಕ್‌ಅಪ್ OTP: ${o.shopPin}</div>`;
+        }
 
         if (isReturn) {
           actionButtons = `
             <div style="color:#d32f2f; font-weight:bold; margin-top:6px; font-size:0.8rem;">🚨 ರಿಟರ್ನ್ ಇದೆ, ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ಪಿಕ್‌ಅಪ್ ಮಾಡಲು ಸಂದೇಶ ತಲುಪಿಸಲಾಗಿದೆ</div>
-            <button class="btn btn-danger" style="padding:8px; font-size:0.8rem; margin-top:8px;" onclick="confirmReturnReceived('${o.docId}')">🛑 ಡೆಲಿವರಿ ಬಾಯ್ ರಿಟರ್ನ್ ತಂದಿದ್ದಾರೆ (Confirm Return Pickup)</button>
+            ${o.shopReturnPin ? `<div style="background:#ffebee; border:1px solid #ffcdd2; padding:8px; border-radius:6px; margin-top:6px; font-weight:bold; color:#c62828;">🔐 ರಿಟರ್ನ್ ಸ್ವೀಕರಿಸಲು OTP: ${o.shopReturnPin}</div>` : ''}
+            <button class="btn btn-danger" style="padding:8px; font-size:0.8rem; margin-top:8px;" onclick="confirmReturnReceived('${o.docId}')">🛑 ಡೆಲಿವರಿ ಬಾಯ್ ರಿಟರ್ನ್ ತಂದಿದ್ದಾರೆ (Confirm Return)</button>
           `;
         } else if (!o.status || o.status === 'STEP_1' || o.status === 'NEW') {
           actionButtons = `<button class="btn btn-success" style="padding:8px; font-size:0.8rem; margin-top:8px;" onclick="confirmOrder('${o.docId}')">✅ ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಮಾಡಿ</button>`;
@@ -501,10 +565,13 @@
             </div>
 
             <p style="margin-top:6px;"><b>ಗ್ರಾಹಕರು:</b> ${o.customer?.name} (${o.customer?.phone})</p>
-            <p><b>ಊರು / ಸ್ಥಳ:</b> ${o.customer?.village}</p>
+            <a href="tel:${o.customer?.phone}" class="btn-call-cust">📞 ಗ್ರಾಹಕರಿಗೆ ಕಾಲ್ ಮಾಡಿ</a>
+            
+            <p style="margin-top:4px;"><b>ಊರು / ಸ್ಥಳ:</b> ${o.customer?.village}</p>
             <p><b>GPS ಲೊಕೇಶನ್:</b> <a href="${mapLink}" target="_blank" style="color:var(--primary);">ಮ್ಯಾಪ್ ವೀಕ್ಷಿಸಿ</a></p>
             <p><b>ಸ್ಟೇಟಸ್:</b> <span style="font-weight:bold; color:${isReturn ? 'red' : 'green'};">${o.status}</span></p>
 
+            ${shopOtpBox}
             ${actionButtons}
           </div>
         `;
@@ -550,9 +617,10 @@
     }
 
     async function markPackingDone(docId) {
+      const shopOtp = Math.floor(1000 + Math.random() * 9000).toString();
       try {
-        await window.updateDoc(window.doc(window.db, "orders", docId), { status: 'PACKING' });
-        alert("ಪ್ಯಾಕಿಂಗ್ ಪೂರ್ಣಗೊಂಡಿದೆ ಮತ್ತು ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ತಲುಪಿಸಲಾಗಿದೆ!");
+        await window.updateDoc(window.doc(window.db, "orders", docId), { status: 'PACKING', shopPin: shopOtp });
+        alert(`📦 ಪ್ಯಾಕಿಂಗ್ ಪೂರ್ಣಗೊಂಡಿದೆ! ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ನೀಡಲು ನಿಮ್ಮ OTP: ${shopOtp}`);
       } catch (e) { alert(e.message); }
     }
 
@@ -564,9 +632,10 @@
     }
 
     async function confirmReturnReceived(docId) {
+      const shopReturnOtp = Math.floor(1000 + Math.random() * 9000).toString();
       try {
-        await window.updateDoc(window.doc(window.db, "orders", docId), { status: 'RETURN_COMPLETED', returnReceivedByShop: true });
-        alert("🎉 ರಿಟರ್ನ್ ಪಿಕ್‌ಅಪ್ ಸಫಲವಾಗಿ ಸ್ವೀಕರಿಸಲಾಗಿದೆ!");
+        await window.updateDoc(window.doc(window.db, "orders", docId), { shopReturnPin: shopReturnOtp, status: 'RETURN_COMPLETED', returnReceivedByShop: true });
+        alert(`🎉 ರಿಟರ್ನ್ ಸ್ವೀಕರಿಸಲಾಗಿದೆ! ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ನೀಡಲು ನಿಮ್ಮ ರಿಟರ್ನ್ OTP: ${shopReturnOtp}`);
       } catch (e) { alert(e.message); }
     }
 
@@ -575,11 +644,22 @@
       const photoFile = document.getElementById('prodPhotoFile').files[0];
       const photoBase64 = await convertFileToBase64(photoFile);
 
+      let extraMeta = "";
+      if (shopOwner.shopType === 'ಮೊಬೈಲ್ ಶಾಪ್') {
+        extraMeta = "ಬ್ರ್ಯಾಂಡ್: " + document.getElementById('prodBrand').value;
+      } else if (shopOwner.shopType === 'ಬಟ್ಟೆ ಅಂಗಡಿ') {
+        extraMeta = "ಸೈಜ್/ವಯಸ್ಸು: " + document.getElementById('prodSize').value;
+      } else if (shopOwner.shopType === 'ಚಪ್ಪಲಿ ಅಂಗಡಿ') {
+        extraMeta = "ಚಪ್ಪಲಿ ಸೈಜ್: " + document.getElementById('prodFootwearSize').value;
+      } else {
+        extraMeta = document.getElementById('prodExtraDetails')?.value || '';
+      }
+
       const prodData = {
         shopId: shopOwner.id,
         shopName: shopOwner.shopName,
         shopType: shopOwner.shopType,
-        name: document.getElementById('prodName').value.trim(),
+        name: document.getElementById('prodName').value.trim() + " (" + extraMeta + ")",
         oldPrice: document.getElementById('prodOldPrice').value.trim(),
         price: document.getElementById('prodPrice').value.trim(),
         photo: photoBase64,
