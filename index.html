@@ -74,7 +74,7 @@
     .id-card-details p { font-size: 0.75rem; opacity: 0.9; }
     .id-number { font-size: 1rem; font-weight: bold; background: #fff; color: #1e88e5; padding: 2px 8px; border-radius: 4px; display: inline-block; margin-top: 4px; }
 
-    /* Membership Badge Styles */
+    /* Green / Red Membership Badge Styles */
     .membership-badge { font-size: 0.85rem; font-weight: bold; padding: 10px; border-radius: 8px; margin-top: 10px; display: block; text-align: center; line-height: 1.4; }
     .membership-pending { background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
     .membership-active { background: #e8f5e9; color: #1b5e20; border: 1px solid #81c784; }
@@ -183,7 +183,7 @@
         </div>
       </div>
 
-      <!-- Membership Payment Status Card -->
+      <!-- Membership Payment Status Card (Realtime Updating Green / Red Card) -->
       <div id="membershipStatusBox"></div>
 
       <div class="stats-container" style="margin-top:10px;">
@@ -211,6 +211,7 @@
       <div id="tabUpload" style="background:#fff; padding:15px; border-radius:10px; border:1px solid #cbd5e0;">
         <h2>➕ ಹೊಸ ವಸ್ತುವಿನ ವಿವರಗಳು & 3 ಫೋಟೋ ಅಪ್ಲೋಡ್</h2>
         
+        <!-- Upload Blocked Notice (Visible when payment pending) -->
         <div id="uploadBlockedWarning" style="display:none; background:#ffebee; border:1px solid #ef9a9a; color:#c62828; padding:12px; border-radius:8px; margin-bottom:12px; font-weight:bold; font-size:0.85rem;">
           ⚠️ ನಿಮ್ಮ ಮೆಂಬರ್‌ಶಿಪ್ ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್ ಇದೆ! ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್‌ನಲ್ಲಿ ಪೇಮೆಂಟ್ ಸಕ್ಸಸ್ ಲಭಿಸಿದ ನಂತರವೇ ವಸ್ತುಗಳನ್ನು ಅಪ್ಲೋಡ್ ಮಾಡುವ ಆಪ್ಷನ್ ಲಭ್ಯವಾಗಲಿದೆ.
         </div>
@@ -295,13 +296,13 @@
               <option value="ಇತರ ಕಂಪನಿ">ಇತರ ಕಂಪನಿ</option>
             </select>
           </div>
-          <div class="form-group"><label>ಮೊಬೈಲ್ ಹೆಸರು & ಮಾಡೆಲ್:</label><input type="text" id="mobNameModel" required placeholder="ಉದಾ: Galaxy A14 / Reno 10"></div>
+          <div class="form-group"><label>ಮೊಬೈಲ್ ಹೆಸರು & ಮಾಡೆಲ್ (ಹೊಸದು / ಹಳೆಯದು):</label><input type="text" id="mobNameModel" required placeholder="ಉದಾ: Galaxy A14 / Reno 10"></div>
           <div style="display:flex; gap:10px;">
             <div class="form-group" style="flex:1;"><label>ಹಳೆಯ ರೇಟು (₹):</label><input type="number" id="prodOldPrice" required placeholder="15000"></div>
             <div class="form-group" style="flex:1;"><label>ಈಗಿನ ರೇಟು (₹):</label><input type="number" id="prodPrice" required placeholder="12999"></div>
           </div>
           <div class="form-group">
-            <label>ಫೋಟೋಗಳು (3 ಫೋಟೋಗಳು):</label>
+            <label>ಮೊಬೈಲ್ ಫೋಟೋಗಳು (3 ಫೋಟೋಗಳು):</label>
             <input type="file" accept="image/*" id="mobPhoto1" required style="margin-bottom:6px;">
             <input type="file" accept="image/*" id="mobPhoto2" style="margin-bottom:6px;">
             <input type="file" accept="image/*" id="mobPhoto3">
@@ -463,6 +464,7 @@
     }
 
     function startRealtimeSync() {
+      // Real-time Master Panel Payment & Expiry Sync Check
       const shopOwnerQuery = window.query(window.collection(window.db, "shop_owners"), window.where("id", "==", shopOwner.id));
       window.onSnapshot(shopOwnerQuery, (snapshot) => {
         if (snapshot.empty) {
@@ -476,9 +478,10 @@
           const freshData = docSnap.data();
           const now = Date.now();
 
+          // Check 1 Year Expiry (365 Days Check)
           let isValidPaid = freshData.isPaid || false;
           if (freshData.paidExpiryDate && now > freshData.paidExpiryDate) {
-            isValidPaid = false; // Expiry check after 1 year
+            isValidPaid = false; // Expired after 1 year
           }
 
           shopOwner.isPaid = isValidPaid;
@@ -492,7 +495,7 @@
             badgeBox.innerHTML = `
               <div class="membership-badge membership-active">
                 🟢 ಮೆಂಬರ್‌ಶಿಪ್ ಪೇಮೆಂಟ್ ಯಶಸ್ವಿಯಾಗಿದೆ!<br>
-                <span style="font-size:0.75rem; font-weight:normal;">ನಿಮ್ಮ ವಸ್ತುಗಳನ್ನು ಗ್ರಾಹಕರಿಗೆ ಕಳಿಸಿ ಸಂಪೂರ್ಣವಾಗಿ (1 ವರ್ಷದವರೆಗೆ ಚಾಲ್ತಿಯಲ್ಲಿದೆ).</span>
+                <span style="font-size:0.75rem; font-weight:normal;">ನಿಮ್ಮ ವಸ್ತುಗಳನ್ನು ಗ್ರಾಹಕರಿಗೆ ಅಪ್ಲೋಡ್ ಮಾಡಲು ಪರ್ಮಿಷನ್ ನೀಡಲಾಗಿದೆ. (1 ವರ್ಷದವರೆಗೆ ಚಾಲ್ತಿಯಲ್ಲಿರುತ್ತದೆ)</span>
               </div>
             `;
             if (uploadBtn) uploadBtn.disabled = false;
@@ -510,6 +513,7 @@
         });
       });
 
+      // Products Realtime Fetch
       window.onSnapshot(window.collection(window.db, "products"), (snapshot) => {
         let products = [];
         snapshot.forEach(docSnap => {
@@ -519,6 +523,7 @@
         renderProducts(products);
       });
 
+      // Orders Realtime Fetch
       window.onSnapshot(window.collection(window.db, "orders"), (snapshot) => {
         let orders = [];
         const threeDaysAgo = Date.now() - (3 * 24 * 60 * 60 * 1000);
