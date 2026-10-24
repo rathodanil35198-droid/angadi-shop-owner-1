@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-  <title id="pageTitle">ನಮ್ಮ ಶಾಪುರ್ - ಅಂಗಡಿ ಮಾಲೀಕರ ಆಪ್ | Family Shop Shahapur</title>
+  <title id="pageTitle">ನಮ್ಮ ಶಾಪುರ್ - ಅಂಗಡಿ ಮಾಲೀಕರ ಆಪ್ | Shop Owner Panel</title>
   <link rel="icon" type="image/png" sizes="192x192" href="AR_Taxi_Booking_Go_Fast_512x512.png">
 
   <!-- Firebase SDKs -->
@@ -203,11 +203,10 @@
 
       <!-- ಫೋಟೋ ಅಪ್ಲೋಡ್ -->
       <div id="tabUpload" style="background:#fff; padding:15px; border-radius:10px; border:1px solid #cbd5e0;">
-        <h2>➕ ಹೊಸ ವಸ್ತುವಿನ ವಿವರಗಳು & ಫೋಟೋ ಅಪ್ಲೋಡ್</h2>
+        <h2>➕ ಹೊಸ ವಸ್ತುವಿನ ವಿವರಗಳು & 3 ಫೋಟೋ ಅಪ್ಲೋಡ್</h2>
         <form id="addProductForm" onsubmit="saveProduct(event)">
           <input type="hidden" id="editProdId">
           
-          <!-- Dynamic Form Fields Based on Shop Type -->
           <div id="dynamicUploadFormFields"></div>
 
           <button type="submit" class="btn btn-success" id="btnUploadProd" style="margin-top:10px;">ಅಪ್ಲೋಡ್ ಮಾಡು</button>
@@ -282,7 +281,6 @@
       }
     }
 
-    // Dynamic Form Builder per Shop Category
     function renderDynamicUploadForm() {
       const container = document.getElementById('dynamicUploadFormFields');
       if (!shopOwner) return;
@@ -292,25 +290,33 @@
       if (shopOwner.shopType === 'ಮೊಬೈಲ್ ಶಾಪ್') {
         html = `
           <div class="form-group">
-            <label>ಮೊಬೈಲ್ ಕಂಪನಿ ಆಯ್ಕೆಮಾಡಿ (12 ಆಪ್ಷನ್ಸ್):</label>
-            <div style="display:flex; flex-direction:column; gap:6px; margin-bottom:10px;">
-              ${['Samsung', 'Apple iPhone', 'Redmi / Xiaomi', 'Realme', 'Vivo', 'Oppo', 'OnePlus', 'Poco', 'Motorola', 'iQOO', 'Nokia', 'ಇತರ ಕಂಪನಿ'].map(brand => `
-                <label style="font-weight:normal; display:flex; align-items:center; gap:8px; cursor:pointer; background:#f8f9fa; padding:8px; border-radius:6px; border:1px solid #ddd;">
-                  <input type="radio" name="mobileBrand" value="${brand}" required style="width:auto;"> ${brand}
-                </label>
-              `).join('')}
-            </div>
+            <label>ಮೊಬೈಲ್ ಕಂಪನಿ ಆಯ್ಕೆಮಾಡಿ:</label>
+            <select id="mobBrandSelect" required style="margin-bottom:8px;">
+              <option value="">-- ಕಂಪನಿ ಆಯ್ಕೆಮಾಡಿ --</option>
+              <option value="Samsung">Samsung</option>
+              <option value="Apple iPhone">Apple iPhone</option>
+              <option value="Redmi / Xiaomi">Redmi / Xiaomi</option>
+              <option value="Realme">Realme</option>
+              <option value="Vivo">Vivo</option>
+              <option value="Oppo">Oppo</option>
+              <option value="OnePlus">OnePlus</option>
+              <option value="Poco">Poco</option>
+              <option value="Motorola">Motorola</option>
+              <option value="iQOO">iQOO</option>
+              <option value="Nokia">Nokia</option>
+              <option value="ಇತರ ಕಂಪನಿ">ಇತರ ಕಂಪನಿ</option>
+            </select>
           </div>
-          <div class="form-group"><label>ಮೊಬೈಲ್ ಹೆಸರು & ಮಾಡೆಲ್:</label><input type="text" id="mobNameModel" required placeholder="ಉದಾ: Galaxy A14 / Reno 10"></div>
+          <div class="form-group"><label>ಮೊಬೈಲ್ ಹೆಸರು & ಮಾಡೆಲ್ (ಹೊಸದು / ಹಳೆಯದು):</label><input type="text" id="mobNameModel" required placeholder="ಉದಾ: Galaxy A14 / Reno 10"></div>
           <div style="display:flex; gap:10px;">
             <div class="form-group" style="flex:1;"><label>ಹಳೆಯ ರೇಟು (₹):</label><input type="number" id="prodOldPrice" required placeholder="15000"></div>
             <div class="form-group" style="flex:1;"><label>ಈಗಿನ ರೇಟು (₹):</label><input type="number" id="prodPrice" required placeholder="12999"></div>
           </div>
           <div class="form-group">
             <label>ಮೊಬೈಲ್ ಫೋಟೋಗಳು (ಗ್ಯಾಲರಿಯಿಂದ 3 ಫೋಟೋಗಳು):</label>
-            <input type="file" accept="image/*" id="mobPhoto1" required style="margin-bottom:6px;">
-            <input type="file" accept="image/*" id="mobPhoto2" style="margin-bottom:6px;">
-            <input type="file" accept="image/*" id="mobPhoto3">
+            <input type="file" accept="image/*" id="mobPhoto1" required style="margin-bottom:6px;" title="ಫೋಟೋ 1">
+            <input type="file" accept="image/*" id="mobPhoto2" style="margin-bottom:6px;" title="ಫೋಟೋ 2">
+            <input type="file" accept="image/*" id="mobPhoto3" title="ಫೋಟೋ 3">
           </div>
         `;
       } else if (shopOwner.shopType === 'ಬಟ್ಟೆ ಅಂಗಡಿ') {
@@ -325,16 +331,20 @@
             </select>
           </div>
           <div class="form-group">
-            <label>ವರ್ಗ / ಅಳತೆ ಆಯ್ಕೆಮಾಡಿ:</label>
+            <label>ಸೈಜ್ / ವಯಸ್ಸು / ನಂಬರ್ ಆಯ್ಕೆಮಾಡಿ:</label>
             <select id="clothCategory" required>
-              <option value="ಚಿಕ್ಕ ಮಕ್ಕಳು (4 ರಿಂದ 8 ವರ್ಷ)">ಚಿಕ್ಕ ಮಕ್ಕಳು (4 ರಿಂದ 8 ವರ್ಷ)</option>
-              <option value="ಮಕ್ಕಳು (9 ರಿಂದ 14 ವರ್ಷ)">ಮಕ್ಕಳು (9 ರಿಂದ 14 ವರ್ಷ)</option>
-              <option value="ಹದಿಹರೆಯದವರು (15 ರಿಂದ 18 ವರ್ಷ)">ಹದಿಹರೆಯದವರು (15 ರಿಂದ 18 ವರ್ಷ)</option>
-              <option value="S Size (ದೊಡ್ಡವರು)">S Size (ದೊಡ್ಡವರು)</option>
-              <option value="M Size (ದೊಡ್ಡವರು)">M Size (ದೊಡ್ಡವರು)</option>
-              <option value="L Size (ದೊಡ್ಡವರು)">L Size (ದೊಡ್ಡವರು)</option>
-              <option value="XL Size (ದೊಡ್ಡವರು)">XL Size (ದೊಡ್ಡವರು)</option>
-              <option value="XXL / SL / ML Size">XXL / SL / ML Size</option>
+              <option value="5 ವರ್ಷ (ಚಿಕ್ಕ ಮಕ್ಕಳು)">5 ವರ್ಷ (ಚಿಕ್ಕ ಮಕ್ಕಳು)</option>
+              <option value="10 ವರ್ಷ (ಮಕ್ಕಳು)">10 ವರ್ಷ (ಮಕ್ಕಳು)</option>
+              <option value="18 ವರ್ಷ (ಹದಿಹರೆಯದವರು)">18 ವರ್ಷ (ಹದಿಹರೆಯದವರು)</option>
+              <option value="28 ನಂಬರ್ (ಪ್ಯಾಂಟ್)">28 ನಂಬರ್ (ಪ್ಯಾಂಟ್)</option>
+              <option value="32 ನಂಬರ್ (ಪ್ಯಾಂಟ್)">32 ನಂಬರ್ (ಪ್ಯಾಂಟ್)</option>
+              <option value="36 ನಂಬರ್ (ಪ್ಯಾಂಟ್)">36 ನಂಬರ್ (ಪ್ಯಾಂಟ್)</option>
+              <option value="40 ನಂಬರ್ (ಪ್ಯಾಂಟ್)">40 ನಂಬರ್ (ಪ್ಯಾಂಟ್)</option>
+              <option value="S Size">S Size</option>
+              <option value="M Size">M Size</option>
+              <option value="L Size">L Size</option>
+              <option value="XL Size">XL Size</option>
+              <option value="XXL Size">XXL Size</option>
             </select>
           </div>
           <div class="form-group"><label>ಬಟ್ಟೆಯ ಹೆಸರು / ವಿವರಣೆ:</label><input type="text" id="clothName" required placeholder="ಉದಾ: ಕಾಟನ್ ಶರ್ಟ್ / ಡಿಸೈನರ್ ಸೀರೆ"></div>
@@ -343,85 +353,10 @@
             <div class="form-group" style="flex:1;"><label>ಈಗಿನ ರೇಟು (₹):</label><input type="number" id="prodPrice" required placeholder="599"></div>
           </div>
           <div class="form-group">
-            <label>ಫ್ರಂಟ್ (ಮುಂಭಾಗ) ಫೋಟೋ:</label>
-            <input type="file" accept="image/*" id="clothFrontPhoto" required style="margin-bottom:6px;">
-            <label>ಬ್ಯಾಕ್ (ಹಿಂಭಾಗ) ಫೋಟೋ:</label>
-            <input type="file" accept="image/*" id="clothBackPhoto" required>
-          </div>
-        `;
-      } else if (shopOwner.shopType === 'ಚಪ್ಪಲಿ ಅಂಗಡಿ') {
-        html = `
-          <div class="form-group">
-            <label>ವಿಭಾಗ ಆಯ್ಕೆಮಾಡಿ:</label>
-            <select id="footwearType" required>
-              <option value="ಚಪ್ಪಲಿ (Slippers)">ಚಪ್ಪಲಿ (Slippers)</option>
-              <option value="ಶೂಸ್ (Shoes)">ಶೂಸ್ (Shoes)</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>ಅಳತೆ / ನಂಬರ್ (Size):</label>
-            <select id="footwearSize" required>
-              <option value="ನಂಬರ್ 5 ರಿಂದ 8 (ಚಿಕ್ಕ ಮಕ್ಕಳು)">ನಂಬರ್ 5 ರಿಂದ 8 (ಚಿಕ್ಕ ಮಕ್ಕಳು)</option>
-              <option value="ನಂಬರ್ 9 ರಿಂದ 12">ನಂಬರ್ 9 ರಿಂದ 12</option>
-              <option value="ನಂಬರ್ 13 ರಿಂದ 20">ನಂಬರ್ 13 ರಿಂದ 20</option>
-              <option value="ನಂಬರ್ 21 ರಿಂದ 28">ನಂಬರ್ 21 ರಿಂದ 28</option>
-              <option value="ನಂಬರ್ 29 ರಿಂದ 36 (ದೊಡ್ಡವರು)">ನಂಬರ್ 29 ರಿಂದ 36 (ದೊಡ್ಡವರು)</option>
-            </select>
-          </div>
-          <div class="form-group"><label>ಬ್ರ್ಯಾಂಡ್ / ಹೆಸರು:</label><input type="text" id="footwearName" required placeholder="ಉದಾ: ಲೆದರ್ ಶೂಸ್ / ಹವಾಯಿ ಚಪ್ಪಲಿ"></div>
-          <div style="display:flex; gap:10px;">
-            <div class="form-group" style="flex:1;"><label>ಹಳೆಯ ರೇಟು (₹):</label><input type="number" id="prodOldPrice" required placeholder="500"></div>
-            <div class="form-group" style="flex:1;"><label>ಈಗಿನ ರೇಟು (₹):</label><input type="number" id="prodPrice" required placeholder="350"></div>
-          </div>
-          <div class="form-group">
-            <label>ಫೋಟೋ ಅಪ್ಲೋಡ್ (2 ಫೋಟೋಗಳು):</label>
-            <input type="file" accept="image/*" id="footwearPhoto1" required style="margin-bottom:6px;">
-            <input type="file" accept="image/*" id="footwearPhoto2" required>
-          </div>
-        `;
-      } else if (shopOwner.shopType === 'ಕಿರಾಣಿ ಅಂಗಡಿ') {
-        html = `
-          <div class="form-group"><label>ವಸ್ತುವಿನ ಹೆಸರು:</label><input type="text" id="groceryName" required placeholder="ಉದಾ: ತೊಗರಿ ಬೇಳೆ / ಸಕ್ಕರೆ"></div>
-          <div class="form-group"><label>ಪ್ರಮಾಣ / ತೂಕ (Kg / Gram / Packet):</label><input type="text" id="groceryQty" required placeholder="ಉದಾ: 1 Kg / 500 Gram"></div>
-          <div style="display:flex; gap:10px;">
-            <div class="form-group" style="flex:1;"><label>ಹಳೆಯ ರೇಟು (₹):</label><input type="number" id="prodOldPrice" required placeholder="120"></div>
-            <div class="form-group" style="flex:1;"><label>ಈಗಿನ ರೇಟು (₹):</label><input type="number" id="prodPrice" required placeholder="100"></div>
-          </div>
-          <div class="form-group">
-            <label>ಮುಖ್ಯ ಮಾಲಿನ ಫೋಟೋಗಳು (2 ಫೋಟೋಗಳು):</label>
-            <input type="file" accept="image/*" id="groceryPhoto1" required style="margin-bottom:6px;">
-            <input type="file" accept="image/*" id="groceryPhoto2" required>
-          </div>
-        `;
-      } else if (shopOwner.shopType === 'ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್') {
-        html = `
-          <div class="form-group"><label>ಎಲೆಕ್ಟ್ರಾನಿಕ್ ವಸ್ತುವಿನ ಹೆಸರು:</label><input type="text" id="elecName" required placeholder="ಉದಾ: ಮಿಕ್ಸರ್ ಗ್ರಾಂಡರ್ / ಎಲ್ಇಡಿ ಬಲ್ಬ್"></div>
-          <div style="display:flex; gap:10px;">
-            <div class="form-group" style="flex:1;"><label>ಪ್ರೈಸ್ (₹):</label><input type="number" id="prodPrice" required placeholder="1200"></div>
-            <div class="form-group" style="flex:1;"><label>ಪೀಸ್ (Pieces):</label><input type="number" id="elecPieces" required placeholder="1 Piece"></div>
-          </div>
-          <div class="form-group"><label>ಹಳೆಯ ರೇಟು (₹):</label><input type="number" id="prodOldPrice" required placeholder="1500"></div>
-          <div class="form-group">
-            <label>ಗ್ಯಾಲರಿಯಿಂದ 2 ಫೋಟೋಗಳು:</label>
-            <input type="file" accept="image/*" id="elecPhoto1" required style="margin-bottom:6px;">
-            <input type="file" accept="image/*" id="elecPhoto2" required>
-          </div>
-        `;
-      } else if (shopOwner.shopType === 'ಗಿಫ್ಟ್ ಸೆಂಟರ್') {
-        html = `
-          <div class="form-group"><label>ಗಿಫ್ಟ್ ವಸ್ತುವಿನ ಹೆಸರು:</label><input type="text" id="giftName" required placeholder="ಉದಾ: ಕಪಲ್ ಶೋಪೀಸ್ / ಫೋಟೋ ಫ್ರೇಮ್"></div>
-          <div style="display:flex; gap:10px;">
-            <div class="form-group" style="flex:1;"><label>ಉದ್ದ (Length):</label><input type="text" id="giftLength" required placeholder="ಉದಾ: 10 Inch"></div>
-            <div class="form-group" style="flex:1;"><label>ಪೀಸ್ (Pieces):</label><input type="number" id="giftPieces" required placeholder="1"></div>
-          </div>
-          <div style="display:flex; gap:10px;">
-            <div class="form-group" style="flex:1;"><label>ಹಳೆಯ ರೇಟು (₹):</label><input type="number" id="prodOldPrice" required placeholder="400"></div>
-            <div class="form-group" style="flex:1;"><label>ಹೊಸ ರೇಟು (₹):</label><input type="number" id="prodPrice" required placeholder="299"></div>
-          </div>
-          <div class="form-group">
-            <label>ಗಿಫ್ಟ್ ಫೋಟೋಗಳು (2 ಫೋಟೋಗಳು):</label>
-            <input type="file" accept="image/*" id="giftPhoto1" required style="margin-bottom:6px;">
-            <input type="file" accept="image/*" id="giftPhoto2" required>
+            <label>ಫೋಟೋಗಳು (ಗ್ಯಾಲರಿಯಿಂದ 3 ಫೋಟೋಗಳು):</label>
+            <input type="file" accept="image/*" id="clothPhoto1" required style="margin-bottom:6px;">
+            <input type="file" accept="image/*" id="clothPhoto2" style="margin-bottom:6px;">
+            <input type="file" accept="image/*" id="clothPhoto3">
           </div>
         `;
       } else {
@@ -433,9 +368,10 @@
             <div class="form-group" style="flex:1;"><label>ಈಗಿನ ರೇಟು (₹):</label><input type="number" id="prodPrice" required placeholder="400"></div>
           </div>
           <div class="form-group">
-            <label>ಫೋಟೋಗಳು ಅಪ್ಲೋಡ್ ಮಾಡಿ:</label>
+            <label>ಫೋಟೋಗಳು (3 ಫೋಟೋಗಳು):</label>
             <input type="file" accept="image/*" id="otherPhoto1" required style="margin-bottom:6px;">
-            <input type="file" accept="image/*" id="otherPhoto2">
+            <input type="file" accept="image/*" id="otherPhoto2" style="margin-bottom:6px;">
+            <input type="file" accept="image/*" id="otherPhoto3">
           </div>
         `;
       }
@@ -453,7 +389,7 @@
           img.src = event.target.result;
           img.onload = () => {
             const canvas = document.createElement('canvas');
-            const maxDim = 300; // Size limit & compression optimization
+            const maxDim = 300;
             let w = img.width, h = img.height;
             if (w > h && w > maxDim) { h *= maxDim / w; w = maxDim; } else if (h > maxDim) { w *= maxDim / h; h = maxDim; }
             canvas.width = w; canvas.height = h;
@@ -741,57 +677,33 @@
       let prodName = "";
       let oldPrice = document.getElementById('prodOldPrice')?.value.trim() || '0';
       let price = document.getElementById('prodPrice')?.value.trim() || '0';
-      let photoBase64 = "";
-
+      
+      let f1, f2, f3;
       if (shopOwner.shopType === 'ಮೊಬೈಲ್ ಶಾಪ್') {
-        const brand = document.querySelector('input[name="mobileBrand"]:checked')?.value || 'Brand';
+        const brand = document.getElementById('mobBrandSelect').value;
         const model = document.getElementById('mobNameModel').value.trim();
         prodName = `${brand} - ${model}`;
-        const f1 = document.getElementById('mobPhoto1').files[0];
-        const f2 = document.getElementById('mobPhoto2').files[0];
-        const f3 = document.getElementById('mobPhoto3').files[0];
-        const b1 = await convertFileToBase64(f1);
-        const b2 = await convertFileToBase64(f2);
-        const b3 = await convertFileToBase64(f3);
-        photoBase64 = b1 || 'https://via.placeholder.com/100';
+        f1 = document.getElementById('mobPhoto1').files[0];
+        f2 = document.getElementById('mobPhoto2').files[0];
+        f3 = document.getElementById('mobPhoto3').files[0];
       } else if (shopOwner.shopType === 'ಬಟ್ಟೆ ಅಂಗಡಿ') {
         const cType = document.getElementById('clothType').value;
         const cCat = document.getElementById('clothCategory').value;
         const cName = document.getElementById('clothName').value.trim();
         prodName = `${cType} (${cCat}) - ${cName}`;
-        const fFront = document.getElementById('clothFrontPhoto').files[0];
-        photoBase64 = await convertFileToBase64(fFront);
-      } else if (shopOwner.shopType === 'ಚಪ್ಪಲಿ ಅಂಗಡಿ') {
-        const fType = document.getElementById('footwearType').value;
-        const fSize = document.getElementById('footwearSize').value;
-        const fName = document.getElementById('footwearName').value.trim();
-        prodName = `${fType} [${fSize}] - ${fName}`;
-        const fPhoto = document.getElementById('footwearPhoto1').files[0];
-        photoBase64 = await convertFileToBase64(fPhoto);
-      } else if (shopOwner.shopType === 'ಕಿರಾಣಿ ಅಂಗಡಿ') {
-        const gName = document.getElementById('groceryName').value.trim();
-        const gQty = document.getElementById('groceryQty').value.trim();
-        prodName = `${gName} (${gQty})`;
-        const gPhoto = document.getElementById('groceryPhoto1').files[0];
-        photoBase64 = await convertFileToBase64(gPhoto);
-      } else if (shopOwner.shopType === 'ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್') {
-        const eName = document.getElementById('elecName').value.trim();
-        const pieces = document.getElementById('elecPieces').value.trim();
-        prodName = `${eName} (${pieces} Pcs)`;
-        const ePhoto = document.getElementById('elecPhoto1').files[0];
-        photoBase64 = await convertFileToBase64(ePhoto);
-      } else if (shopOwner.shopType === 'ಗಿಫ್ಟ್ ಸೆಂಟರ್') {
-        const gName = document.getElementById('giftName').value.trim();
-        const gLen = document.getElementById('giftLength').value.trim();
-        const gPcs = document.getElementById('giftPieces').value.trim();
-        prodName = `${gName} (Length: ${gLen}, Pcs: ${gPcs})`;
-        const gPhoto = document.getElementById('giftPhoto1').files[0];
-        photoBase64 = await convertFileToBase64(gPhoto);
+        f1 = document.getElementById('clothPhoto1').files[0];
+        f2 = document.getElementById('clothPhoto2').files[0];
+        f3 = document.getElementById('clothPhoto3').files[0];
       } else {
         prodName = document.getElementById('otherName').value.trim() + " (" + (document.getElementById('otherDetails')?.value || '') + ")";
-        const oPhoto = document.getElementById('otherPhoto1').files[0];
-        photoBase64 = await convertFileToBase64(oPhoto);
+        f1 = document.getElementById('otherPhoto1').files[0];
+        f2 = document.getElementById('otherPhoto2').files[0];
+        f3 = document.getElementById('otherPhoto3').files[0];
       }
+
+      const b1 = await convertFileToBase64(f1);
+      const b2 = await convertFileToBase64(f2);
+      const b3 = await convertFileToBase64(f3);
 
       const prodData = {
         shopId: shopOwner.id,
@@ -800,12 +712,14 @@
         name: prodName,
         oldPrice: oldPrice,
         price: price,
-        photo: photoBase64,
+        photo: b1 || 'https://via.placeholder.com/100',
+        photo2: b2 || '',
+        photo3: b3 || '',
         timestamp: window.serverTimestamp()
       };
 
       await window.addDoc(window.collection(window.db, "products"), prodData);
-      alert("ವಸ್ತು ಯಶಸ್ವಿಯಾಗಿ ಅಪ್ಲೋಡ್ ಆಗಿದೆ!");
+      alert("ವಸ್ತು ಯಶಸ್ವಿಯಾಗಿ 3 ಫೋಟೋಗಳೊಂದಿಗೆ ಅಪ್ಲೋಡ್ ಆಗಿದೆ!");
       document.getElementById('addProductForm').reset();
       renderDynamicUploadForm();
     }
