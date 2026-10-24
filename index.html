@@ -74,6 +74,11 @@
     .id-card-details p { font-size: 0.75rem; opacity: 0.9; }
     .id-number { font-size: 1rem; font-weight: bold; background: #fff; color: #1e88e5; padding: 2px 8px; border-radius: 4px; display: inline-block; margin-top: 4px; }
 
+    /* Membership Badge */
+    .membership-badge { font-size: 0.8rem; font-weight: bold; padding: 6px 10px; border-radius: 6px; margin-top: 6px; display: block; text-align: center; }
+    .membership-pending { background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
+    .membership-active { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+
     .stats-container { display: flex; gap: 6px; margin-bottom: 12px; }
     .stat-box { flex: 1; background: #e3f2fd; padding: 8px; border-radius: 8px; text-align: center; border: 1px solid #90caf9; }
     .stat-box h4 { font-size: 0.65rem; color: #1565c0; margin-bottom: 2px; }
@@ -110,6 +115,7 @@
       <h3 style="color: var(--success); margin-bottom: 10px;">ಲಾಗಿನ್ ಯಶಸ್ವಿಯಾಗಿದೆ!</h3>
       <p style="font-size: 0.9rem; margin-bottom: 10px;">ನಿಮ್ಮ 4-ಡಿಜಿಟ್ ಐಡಿ:</p>
       <div id="popup-id" style="font-size: 1.5rem; font-weight: bold; color: var(--primary); background: #e3f2fd; padding: 10px; border-radius: 6px; margin-bottom: 15px;">0000</div>
+      <p style="font-size: 0.8rem; color: #d32f2f; margin-bottom: 10px;">⚠️ ಮೆಂಬರ್‍ಶಿಪ್ ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್ ಇದೆ. ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್ ಸಮ್ಮತಿಸಿದ ನಂತರ ಅಪ್ಲೋಡ್ ಮಾಡಲು ಪರ್ಮಿಷನ್ ಸಿಗುತ್ತದೆ.</p>
       <button class="btn btn-success" onclick="closeSuccessModal()">ಸರಿ</button>
     </div>
   </div>
@@ -161,7 +167,7 @@
 
         <div class="form-group">
           <label>ಅಂಗಡಿಯ ಮುಂಭಾಗದ ಫೋಟೋ:</label>
-          <input type="file" accept="image/*" capture="environment" id="shopPhotoFile">
+          <input type="file" accept="image/*" id="shopPhotoFile">
         </div>
 
         <button type="submit" class="btn btn-success" id="btnLogin">ಹೊಸ ಖಾತೆ ಪಡೆದುಕೊಳ್ಳಿ</button>
@@ -180,7 +186,10 @@
         </div>
       </div>
 
-      <div class="stats-container">
+      <!-- Membership Payment Status Badge -->
+      <div id="membershipStatusBox"></div>
+
+      <div class="stats-container" style="margin-top:10px;">
         <div class="stat-box">
           <h4>ಒಟ್ಟು ಆರ್ಡರ್ (3 ದಿನ)</h4>
           <p id="statTotalOrders">0</p>
@@ -204,6 +213,12 @@
       <!-- ಫೋಟೋ ಅಪ್ಲೋಡ್ -->
       <div id="tabUpload" style="background:#fff; padding:15px; border-radius:10px; border:1px solid #cbd5e0;">
         <h2>➕ ಹೊಸ ವಸ್ತುವಿನ ವಿವರಗಳು & 3 ಫೋಟೋ ಅಪ್ಲೋಡ್</h2>
+        
+        <!-- Payment Pending Warning Box -->
+        <div id="uploadBlockedWarning" style="display:none; background:#ffebee; border:1px solid #ef9a9a; color:#c62828; padding:12px; border-radius:8px; margin-bottom:12px; font-weight:bold; font-size:0.85rem;">
+          ⚠️ ನಿಮ್ಮ ಮೆಂಬರ್‍ಶಿಪ್ ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್ ಇದೆ! ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್‌ನಲ್ಲಿ ಪೇಮೆಂಟ್ ಸಕ್ಸಸ್ ಲಭಿಸಿದ ನಂತರವೇ ವಸ್ತುಗಳನ್ನು ಅಪ್ಲೋಡ್ ಮಾಡುವ ಆಪ್ಷನ್ ಲಭ್ಯವಾಗಲಿದೆ.
+        </div>
+
         <form id="addProductForm" onsubmit="saveProduct(event)">
           <input type="hidden" id="editProdId">
           
@@ -415,7 +430,8 @@
         shopType: document.getElementById('shopType').value,
         district: document.getElementById('district').value.trim(),
         taluk: document.getElementById('taluk').value.trim(),
-        photo: photoBase64 || 'https://via.placeholder.com/100'
+        photo: photoBase64 || 'https://via.placeholder.com/100',
+        isPaid: false // Default Membership Pending
       };
 
       try {
@@ -481,6 +497,39 @@
     }
 
     function startRealtimeSync() {
+      // 1. Check ID status in master panel in realtime (Auto logout if deleted)
+      const shopOwnerQuery = window.query(window.collection(window.db, "shop_owners"), window.where("id", "==", shopOwner.id));
+      window.onSnapshot(shopOwnerQuery, (snapshot) => {
+        if (snapshot.empty) {
+          alert("⚠️ ನಿಮ್ಮ ಐಡಿಯನ್ನು ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್‌ನಿಂದ ಡಿಲೀಟ್ ಮಾಡಲಾಗಿದೆ. ದಯವಿಟ್ಟು ಹೊಸದಾಗಿ ಲಾಗಿನ್ ಆಗಿ.");
+          localStorage.removeItem('my_shop_owner_session');
+          location.reload();
+          return;
+        }
+
+        snapshot.forEach(docSnap => {
+          const freshData = docSnap.data();
+          shopOwner.isPaid = freshData.isPaid || false;
+          localStorage.setItem('my_shop_owner_session', JSON.stringify(shopOwner));
+
+          // Update Membership Status Badge & Form Access
+          const badgeBox = document.getElementById('membershipStatusBox');
+          const uploadBtn = document.getElementById('btnUploadProd');
+          const blockWarning = document.getElementById('uploadBlockedWarning');
+
+          if (shopOwner.isPaid) {
+            badgeBox.innerHTML = '<div class="membership-badge membership-active">🟢 ಮೆಂಬರ್‍ಶಿಪ್ ಪೇಮೆಂಟ್ ಯಶಸ್ವಿಯಾಗಿದೆ (ಪ್ರಾಡಕ್ಟ್ ಅಪ್ಲೋಡ್ ಅನುಮತಿ ಸಿಕ್ಕಿದೆ)</div>';
+            if (uploadBtn) uploadBtn.disabled = false;
+            if (blockWarning) blockWarning.style.display = 'none';
+          } else {
+            badgeBox.innerHTML = '<div class="membership-badge membership-pending">🔴 ಮೆಂಬರ್‍ಶಿಪ್ ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್ ಇದೆ (ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್‌ನಲ್ಲಿ ಪೇಮೆಂಟ್ ಸಕ್ಸಸ್ ಲಭ್ಯವಾಗಿಲ್ಲ)</div>';
+            if (uploadBtn) uploadBtn.disabled = true;
+            if (blockWarning) blockWarning.style.display = 'block';
+          }
+        });
+      });
+
+      // 2. Fetch Products
       window.onSnapshot(window.collection(window.db, "products"), (snapshot) => {
         let products = [];
         snapshot.forEach(docSnap => {
@@ -490,6 +539,7 @@
         renderProducts(products);
       });
 
+      // 3. Fetch Orders
       window.onSnapshot(window.collection(window.db, "orders"), (snapshot) => {
         let orders = [];
         const threeDaysAgo = Date.now() - (3 * 24 * 60 * 60 * 1000);
@@ -673,6 +723,11 @@
 
     async function saveProduct(e) {
       e.preventDefault();
+
+      if (!shopOwner.isPaid) {
+        alert("⚠️ ನಿಮ್ಮ ಮೆಂಬರ್‍ಶಿಪ್ ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್ ಇದೆ. ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್ ಸಮ್ಮತಿಸಿದ ನಂತರವೇ ವಸ್ತುಗಳನ್ನು ಅಪ್ಲೋಡ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗುತ್ತದೆ.");
+        return;
+      }
       
       let prodName = "";
       let oldPrice = document.getElementById('prodOldPrice')?.value.trim() || '0';
