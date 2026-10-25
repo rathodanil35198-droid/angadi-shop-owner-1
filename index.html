@@ -206,9 +206,9 @@
         <button class="btn" style="flex:1; font-size:0.8rem; background:#8e24aa;" onclick="showTab('payments')">💳 ಪೇಮೆಂಟ್ಸ್</button>
       </div>
 
-      <!-- ಫೋಟೋ ಅಪ್ಲೋಡ್ (Multi-Color & RAM/ROM Support) -->
+      <!-- ಫೋಟೋ ಅಪ್ಲೋಡ್ (Multi-Color with 4 Photos Each & RAM/ROM Support) -->
       <div id="tabUpload" style="background:#fff; padding:15px; border-radius:10px; border:1px solid #cbd5e0;">
-        <h2>➕ ಹೊಸ ವಸ್ತುವಿನ ವಿವರಗಳು & 4 ಬಣ್ಣಗಳ ಫೋಟೋ ಅಪ್ಲೋಡ್</h2>
+        <h2>➕ ಹೊಸ ವಸ್ತುವಿನ ವಿವರಗಳು & ಬಣ್ಣಗಳ ಪ್ರತ್ಯೇಕ 4 ಫೋಟೋಗಳು</h2>
         
         <div id="uploadBlockedWarning" style="display:none; background:#ffebee; border:1px solid #ef9a9a; color:#c62828; padding:12px; border-radius:8px; margin-bottom:12px; font-weight:bold; font-size:0.85rem;">
           ⚠️ ನಿಮ್ಮ ಮೆಂಬರ್‌ಶಿಪ್ ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್ ಇದೆ! ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್‌ನಲ್ಲಿ ಪೇಮೆಂಟ್ ಸಕ್ಸಸ್ ಲಭಿಸಿದ ನಂತರವೇ ವಸ್ತುಗಳನ್ನು ಅಪ್ಲೋಡ್ ಮಾಡುವ ಆಪ್ಷನ್ ಲಭ್ಯವಾಗಲಿದೆ.
@@ -272,11 +272,11 @@
       if (!shopOwner) return;
 
       let html = `
-        <div class="form-group"><label>ವಸ್ತುವಿನ ಹೆಸರು / ಮಾಡೆಲ್:</label><input type="text" id="prodNameInput" required placeholder="ಉದಾ: Vivo T5x 5G / Saree / Shirt"></div>
+        <div class="form-group"><label>ವಸ್ತುವಿನ ಹೆಸರು / ಮಾಡೆಲ್:</label><input type="text" id="prodNameInput" required placeholder="ಉದಾ: Vivo T5x 5G / Saree"></div>
         
         <div style="display:flex; gap:10px;">
           <div class="form-group" style="flex:1;"><label>RAM & ROM (ಉದಾ: 128 GB + 6 GB):</label><input type="text" id="prodVariant" placeholder="128 GB + 6 GB"></div>
-          <div class="form-group" style="flex:1;"><label>ಬಣ್ಣದ ಹೆಸರು (Color Name):</label><input type="text" id="prodColorName" placeholder="Flame Red"></div>
+          <div class="form-group" style="flex:1;"><label>ಬಣ್ಣ 1 ರ ಹೆಸರು (Color 1 Name):</label><input type="text" id="color1Name" placeholder="Flame Red"></div>
         </div>
 
         <div style="display:flex; gap:10px;">
@@ -284,12 +284,23 @@
           <div class="form-group" style="flex:1;"><label>ಈಗಿನ ರೇಟು (₹):</label><input type="number" id="prodPrice" required placeholder="27999"></div>
         </div>
 
-        <div class="form-group" style="background:#f8f9fa; padding:10px; border-radius:8px; border:1px solid #e2e8f0;">
-          <label style="color:#2874f0;">🎨 4 ಬಣ್ಣಗಳ ಫೋಟೋಗಳನ್ನು ಅಪ್ಲೋಡ್ ಮಾಡಿ (ಖಾಲಿ ಬಿಟ್ಟರೆ ಹಾಗೆಯೇ ಬಿಡಬಹುದು):</label>
-          <div style="margin-top:6px;"><label style="font-size:0.75rem;">ಫೋಟೋ 1 (ಬಣ್ಣ 1):</label><input type="file" accept="image/*" id="colorPhoto1"></div>
-          <div style="margin-top:6px;"><label style="font-size:0.75rem;">ಫೋಟೋ 2 (ಬಣ್ಣ 2):</label><input type="file" accept="image/*" id="colorPhoto2"></div>
-          <div style="margin-top:6px;"><label style="font-size:0.75rem;">ಫೋಟೋ 3 (ಬಣ್ಣ 3):</label><input type="file" accept="image/*" id="colorPhoto3"></div>
-          <div style="margin-top:6px;"><label style="font-size:0.75rem;">ಫೋಟೋ 4 (ಬಣ್ಣ 4):</label><input type="file" accept="image/*" id="colorPhoto4"></div>
+        <!-- Color 1 with 4 Photos -->
+        <div style="background:#f8f9fa; padding:10px; border-radius:8px; border:1px solid #e2e8f0; margin-bottom:10px;">
+          <label style="color:#2874f0; font-weight:bold;">🎨 ಬಣ್ಣ 1 ರ ಪ್ರತ್ಯೇಕ 4 ಫೋಟೋಗಳು:</label>
+          <div style="margin-top:6px;"><label style="font-size:0.75rem;">ಫೋಟೋ 1:</label><input type="file" accept="image/*" id="c1_p1"></div>
+          <div style="margin-top:6px;"><label style="font-size:0.75rem;">ಫೋಟೋ 2:</label><input type="file" accept="image/*" id="c1_p2"></div>
+          <div style="margin-top:6px;"><label style="font-size:0.75rem;">ಫೋಟೋ 3:</label><input type="file" accept="image/*" id="c1_p3"></div>
+          <div style="margin-top:6px;"><label style="font-size:0.75rem;">ಫೋಟೋ 4:</label><input type="file" accept="image/*" id="c1_p4"></div>
+        </div>
+
+        <div class="form-group"><label>ಬಣ್ಣ 2 ರ ಹೆಸರು (Color 2 Name - ಐಚ್ಛಿಕ):</label><input type="text" id="color2Name" placeholder="Forest Green"></div>
+        <!-- Color 2 with 4 Photos -->
+        <div style="background:#f8f9fa; padding:10px; border-radius:8px; border:1px solid #e2e8f0; margin-bottom:10px;">
+          <label style="color:#2874f0; font-weight:bold;">🎨 ಬಣ್ಣ 2 ರ ಪ್ರತ್ಯೇಕ 4 ಫೋಟೋಗಳು:</label>
+          <div style="margin-top:6px;"><label style="font-size:0.75rem;">ಫೋಟೋ 1:</label><input type="file" accept="image/*" id="c2_p1"></div>
+          <div style="margin-top:6px;"><label style="font-size:0.75rem;">ಫೋಟೋ 2:</label><input type="file" accept="image/*" id="c2_p2"></div>
+          <div style="margin-top:6px;"><label style="font-size:0.75rem;">ಫೋಟೋ 3:</label><input type="file" accept="image/*" id="c2_p3"></div>
+          <div style="margin-top:6px;"><label style="font-size:0.75rem;">ಫೋಟೋ 4:</label><input type="file" accept="image/*" id="c2_p4"></div>
         </div>
       `;
 
@@ -563,20 +574,33 @@
       
       const prodName = document.getElementById('prodNameInput').value.trim();
       const variant = document.getElementById('prodVariant').value.trim();
-      const colorName = document.getElementById('prodColorName').value.trim();
       const oldPrice = document.getElementById('prodOldPrice').value.trim() || '0';
       const price = document.getElementById('prodPrice').value.trim() || '0';
 
-      // 4 Color Photos Conversion (Optional - if left blank, stores empty string)
-      const f1 = document.getElementById('colorPhoto1').files[0];
-      const f2 = document.getElementById('colorPhoto2').files[0];
-      const f3 = document.getElementById('colorPhoto3').files[0];
-      const f4 = document.getElementById('colorPhoto4').files[0];
+      const color1Name = document.getElementById('color1Name').value.trim() || 'Default';
+      const color2Name = document.getElementById('color2Name').value.trim() || '';
 
-      const b1 = await convertFileToBase64(f1);
-      const b2 = await convertFileToBase64(f2);
-      const b3 = await convertFileToBase64(f3);
-      const b4 = await convertFileToBase64(f4);
+      // Color 1 Photos
+      const c1_f1 = document.getElementById('c1_p1').files[0];
+      const c1_f2 = document.getElementById('c1_p2').files[0];
+      const c1_f3 = document.getElementById('c1_p3').files[0];
+      const c1_f4 = document.getElementById('c1_p4').files[0];
+
+      const c1_b1 = await convertFileToBase64(c1_f1);
+      const c1_b2 = await convertFileToBase64(c1_f2);
+      const c1_b3 = await convertFileToBase64(c1_f3);
+      const c1_b4 = await convertFileToBase64(c1_f4);
+
+      // Color 2 Photos
+      const c2_f1 = document.getElementById('c2_p1').files[0];
+      const c2_f2 = document.getElementById('c2_p2').files[0];
+      const c2_f3 = document.getElementById('c2_p3').files[0];
+      const c2_f4 = document.getElementById('c2_p4').files[0];
+
+      const c2_b1 = await convertFileToBase64(c2_f1);
+      const c2_b2 = await convertFileToBase64(c2_f2);
+      const c2_b3 = await convertFileToBase64(c2_f3);
+      const c2_b4 = await convertFileToBase64(c2_f4);
 
       const prodData = {
         shopId: shopOwner.id,
@@ -584,19 +608,18 @@
         shopType: shopOwner.shopType,
         name: prodName,
         variant: variant,
-        colorName: colorName,
         oldPrice: oldPrice,
         price: price,
-        photo: b1 || b2 || b3 || b4 || 'https://via.placeholder.com/100',
-        photo1: b1 || '',
-        photo2: b2 || '',
-        photo3: b3 || '',
-        photo4: b4 || '',
+        colors: [
+          { name: color1Name, photos: [c1_b1, c1_b2, c1_b3, c1_b4].filter(Boolean) },
+          { name: color2Name, photos: [c2_b1, c2_b2, c2_b3, c2_b4].filter(Boolean) }
+        ].filter(c => c.name && c.photos.length > 0),
+        photo: c1_b1 || 'https://via.placeholder.com/100',
         timestamp: window.serverTimestamp()
       };
 
       await window.addDoc(window.collection(window.db, "products"), prodData);
-      alert("🎉 ವಸ್ತು ಯಶಸ್ವಿಯಾಗಿ ಅಪ್ಲೋಡ್ ಆಗಿದೆ!");
+      alert("🎉 ವಸ್ತು ಮತ್ತು ಬಣ್ಣಗಳ ಪ್ರತ್ಯೇಕ ಫೋಟೋಗಳು ಯಶಸ್ವಿಯಾಗಿ ಅಪ್ಲೋಡ್ ಆಗಿವೆ!");
       document.getElementById('addProductForm').reset();
       renderDynamicUploadForm();
     }
