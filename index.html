@@ -63,6 +63,7 @@
     .btn-danger { background: var(--danger); }
     .btn-warning { background: var(--warning); }
     .btn-call-cust { background: #388e3c; color: #fff; padding: 6px 12px; border-radius: 4px; text-decoration: none; font-size: 0.75rem; font-weight: bold; display: inline-block; margin-top: 4px; }
+    .btn-pack { background: #ff9f00; color: #fff; border: none; padding: 6px 12px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; cursor: pointer; margin-top: 6px; }
 
     .id-card {
       background: linear-gradient(135deg, #1e88e5, #1565c0);
@@ -74,7 +75,6 @@
     .id-card-details p { font-size: 0.75rem; opacity: 0.9; }
     .id-number { font-size: 1rem; font-weight: bold; background: #fff; color: #1e88e5; padding: 2px 8px; border-radius: 4px; display: inline-block; margin-top: 4px; }
 
-    /* Green / Red Membership Badge Styles */
     .membership-badge { font-size: 0.85rem; font-weight: bold; padding: 10px; border-radius: 8px; margin-top: 10px; display: block; text-align: center; line-height: 1.4; }
     .membership-pending { background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
     .membership-active { background: #e8f5e9; color: #1b5e20; border: 1px solid #81c784; }
@@ -90,7 +90,6 @@
     .card-title-small { font-size: 0.75rem; font-weight: bold; margin: 4px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
     .order-item { border-left: 5px solid var(--primary); background: #f9f9f9; padding: 12px; margin-bottom: 12px; border-radius: 6px; font-size: 0.85rem; }
-    .order-item.return-item { border-left-color: var(--danger); background: #ffebee; }
     .order-item.archived { border-left-color: #9e9e9e; background: #f1f1f1; opacity: 0.85; }
 
     .modal { display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); text-align: center; padding: 20px; overflow-y: auto; justify-content: center; align-items: center; }
@@ -183,7 +182,7 @@
         </div>
       </div>
 
-      <!-- Membership Payment Status Card (Realtime Updating Green / Red Card) -->
+      <!-- Membership Payment Status Card -->
       <div id="membershipStatusBox"></div>
 
       <div class="stats-container" style="margin-top:10px;">
@@ -211,7 +210,6 @@
       <div id="tabUpload" style="background:#fff; padding:15px; border-radius:10px; border:1px solid #cbd5e0;">
         <h2>➕ ಹೊಸ ವಸ್ತುವಿನ ವಿವರಗಳು & 3 ಫೋಟೋ ಅಪ್ಲೋಡ್</h2>
         
-        <!-- Upload Blocked Notice (Visible when payment pending) -->
         <div id="uploadBlockedWarning" style="display:none; background:#ffebee; border:1px solid #ef9a9a; color:#c62828; padding:12px; border-radius:8px; margin-bottom:12px; font-weight:bold; font-size:0.85rem;">
           ⚠️ ನಿಮ್ಮ ಮೆಂಬರ್‌ಶಿಪ್ ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್ ಇದೆ! ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್‌ನಲ್ಲಿ ಪೇಮೆಂಟ್ ಸಕ್ಸಸ್ ಲಭಿಸಿದ ನಂತರವೇ ವಸ್ತುಗಳನ್ನು ಅಪ್ಲೋಡ್ ಮಾಡುವ ಆಪ್ಷನ್ ಲಭ್ಯವಾಗಲಿದೆ.
         </div>
@@ -246,7 +244,6 @@
 
   <script>
     let shopOwner = JSON.parse(localStorage.getItem('my_shop_owner_session')) || null;
-    let lastOrderCount = 0;
 
     window.addEventListener('DOMContentLoaded', () => {
       if (shopOwner) {
@@ -478,10 +475,9 @@
           const freshData = docSnap.data();
           const now = Date.now();
 
-          // Check 1 Year Expiry (365 Days Check)
           let isValidPaid = freshData.isPaid || false;
           if (freshData.paidExpiryDate && now > freshData.paidExpiryDate) {
-            isValidPaid = false; // Expired after 1 year
+            isValidPaid = false;
           }
 
           shopOwner.isPaid = isValidPaid;
@@ -523,14 +519,14 @@
         renderProducts(products);
       });
 
-      // Orders Realtime Fetch
+      // Orders Realtime Fetch (New orders on top, old orders at the bottom)
       window.onSnapshot(window.collection(window.db, "orders"), (snapshot) => {
         let orders = [];
         const threeDaysAgo = Date.now() - (3 * 24 * 60 * 60 * 1000);
 
         snapshot.forEach(docSnap => {
           const o = docSnap.data();
-          const orderTime = o.timestamp?.toMillis?.() || Date.now();
+          const orderTime = o.timestamp?.toMillis?.() || o.timestamp || Date.now();
 
           if (orderTime >= threeDaysAgo) {
             if (o.shopId === shopOwner.id || o.acceptedBy === shopOwner.id || (!o.acceptedBy && (o.shopType === shopOwner.shopType || shopOwner.shopType === 'ಇತರ ಅಂಗಡಿ'))) {
@@ -538,6 +534,9 @@
             }
           }
         });
+
+        // Sort descending: New orders appear on top
+        orders.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
 
         renderDashboard(orders);
       });
@@ -586,6 +585,7 @@
           <p style="margin-top:6px;"><b>ಗ್ರಾಹಕರು:</b> ${o.customer?.name} (${o.customer?.phone})</p>
           <a href="tel:${o.customer?.phone}" class="btn-call-cust">📞 ಗ್ರಾಹಕರಿಗೆ ಕಾಲ್ ಮಾಡಿ</a>
           <p style="margin-top:4px;"><b>ಸ್ಥಳ:</b> ${o.customer?.village}</p>
+          ${o.status === 'STEP_1' ? `<button onclick="updateOrderStatus('${o.docId}', 'STEP_2')" class="btn-pack">📦 ಪ್ಯಾಕಿಂಗ್ ಮಾಡಿ (Pack Order)</button>` : ''}
         </div>
       `).join('');
     }
@@ -602,6 +602,17 @@
           <p style="font-size:0.75rem;">ಗ್ರಾಹಕರು: ${o.customer?.name}</p>
         </div>
       `).join('');
+    }
+
+    async function updateOrderStatus(orderId, newStatus) {
+      try {
+        await window.updateDoc(window.doc(window.db, "orders", orderId), {
+          status: newStatus
+        });
+        alert("✅ ಆರ್ಡರ್ ಪ್ಯಾಕಿಂಗ್ ಸ್ಥಿತಿಗೆ ಬದಲಾಯಿಸಲಾಗಿದೆ!");
+      } catch (e) {
+        alert("ದೋಷ: " + e.message);
+      }
     }
 
     async function saveProduct(e) {
