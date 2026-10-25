@@ -461,7 +461,6 @@
     }
 
     function startRealtimeSync() {
-      // Real-time Master Panel Payment & Expiry Sync Check
       const shopOwnerQuery = window.query(window.collection(window.db, "shop_owners"), window.where("id", "==", shopOwner.id));
       window.onSnapshot(shopOwnerQuery, (snapshot) => {
         if (snapshot.empty) {
@@ -585,6 +584,12 @@
           <p style="margin-top:6px;"><b>ಗ್ರಾಹಕರು:</b> ${o.customer?.name} (${o.customer?.phone})</p>
           <a href="tel:${o.customer?.phone}" class="btn-call-cust">📞 ಗ್ರಾಹಕರಿಗೆ ಕಾಲ್ ಮಾಡಿ</a>
           <p style="margin-top:4px;"><b>ಸ್ಥಳ:</b> ${o.customer?.village}</p>
+          
+          <!-- Pickup OTP Display for Shop Owner -->
+          <div style="background:#fff3e0; border:1px dashed #ffa726; padding:8px; border-radius:6px; margin-top:8px;">
+            <p style="font-size:0.8rem; font-weight:bold; color:#e65100;">🔑 ಪಿಕ್ಅಪ್ ಒಟಿಪಿ (Pickup OTP): <span style="font-size:1rem; color:#d32f2f;">${o.deliveryPin || 'ಲಭ್ಯವಿಲ್ಲ'}</span></p>
+          </div>
+
           ${o.status === 'STEP_1' ? `<button onclick="updateOrderStatus('${o.docId}', 'STEP_2')" class="btn-pack">📦 ಪ್ಯಾಕಿಂಗ್ ಮಾಡಿ (Pack Order)</button>` : ''}
         </div>
       `).join('');
