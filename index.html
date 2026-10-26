@@ -63,7 +63,8 @@
     .btn-danger { background: var(--danger); }
     .btn-warning { background: var(--warning); }
     .btn-call-cust { background: #388e3c; color: #fff; padding: 6px 12px; border-radius: 4px; text-decoration: none; font-size: 0.75rem; font-weight: bold; display: inline-block; margin-top: 4px; }
-    .btn-pack { background: #ff9f00; color: #fff; border: none; padding: 6px 12px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; cursor: pointer; margin-top: 6px; }
+    .btn-pack { background: #ff9f00; color: #fff; border: none; padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; margin-top: 6px; width: 100%; }
+    .btn-confirm { background: #2874f0; color: #fff; border: none; padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; margin-top: 6px; width: 100%; }
 
     .id-card {
       background: linear-gradient(135deg, #1e88e5, #1565c0);
@@ -89,7 +90,7 @@
     .card-small img { width: 100%; height: 70px; object-fit: cover; border-radius: 4px; }
     .card-title-small { font-size: 0.75rem; font-weight: bold; margin: 4px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-    .order-item { border-left: 5px solid var(--primary); background: #f9f9f9; padding: 12px; margin-bottom: 12px; border-radius: 6px; font-size: 0.85rem; }
+    .order-item { border-left: 5px solid var(--primary); background: #f9f9f9; padding: 12px; margin-bottom: 12px; border-radius: 6px; font-size: 0.85rem; border: 1px solid #e0e0e0; border-left-width: 5px; }
     .order-item.archived { border-left-color: #9e9e9e; background: #f1f1f1; opacity: 0.85; }
 
     .modal { display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); text-align: center; padding: 20px; overflow-y: auto; justify-content: center; align-items: center; }
@@ -507,22 +508,36 @@
         return;
       }
 
-      listDiv.innerHTML = orders.map(o => `
-        <div class="order-item">
-          <div style="display:flex; gap:10px; align-items:center;">
-            <img src="${o.productPhoto}" style="width:60px; height:60px; object-fit:cover; border-radius:6px;">
-            <div>
-              <h4 style="font-size:0.9rem;">${o.productName}</h4>
-              <p style="font-size:0.8rem; color:#2e7d32; font-weight:bold;">₹${o.totalPrice}</p>
-            </div>
-          </div>
-          <p style="margin-top:6px;"><b>ಗ್ರಾಹಕರು:</b> ${o.customer?.name} (${o.customer?.phone})</p>
-          <a href="tel:${o.customer?.phone}" class="btn-call-cust">📞 ಗ್ರಾಹಕರಿಗೆ ಕಾಲ್ ಮಾಡಿ</a>
-          <p style="margin-top:4px;"><b>ಸ್ಥಳ:</b> ${o.customer?.village}</p>
+      listDiv.innerHTML = orders.map(o => {
+        let orderStatus = o.status || 'STEP_1';
+        let actionButtonHTML = '';
 
-          ${o.status === 'STEP_1' ? `<button onclick="updateOrderStatus('${o.docId}', 'STEP_2')" class="btn-pack">📦 ಪ್ಯಾಕಿಂಗ್ ಮಾಡಿ (Pack Order)</button>` : ''}
-        </div>
-      `).join('');
+        if (orderStatus === 'STEP_1') {
+          actionButtonHTML = `<button onclick="updateOrderStatus('${o.docId}', 'CONFIRMED')" class="btn-confirm">✅ ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಮಾಡಿ (Confirm Order)</button>`;
+        } else if (orderStatus === 'CONFIRMED') {
+          actionButtonHTML = `<button onclick="updateOrderStatus('${o.docId}', 'STEP_2')" class="btn-pack">📦 ಪ್ಯಾಕಿಂಗ್ ಮಾಡಿ (Pack Order)</button>`;
+        } else {
+          actionButtonHTML = `<p style="font-size:0.8rem; font-weight:bold; color:var(--success); margin-top:6px;">✔ ಪ್ಯಾಕಿಂಗ್ ಪೂರ್ಣಗೊಂಡಿದೆ (Packed)</p>`;
+        }
+
+        return `
+          <div class="order-item">
+            <div style="display:flex; gap:10px; align-items:center;">
+              <img src="${o.productPhoto}" style="width:60px; height:60px; object-fit:cover; border-radius:6px;">
+              <div>
+                <h4 style="font-size:0.9rem;">${o.productName}</h4>
+                <p style="font-size:0.8rem; color:#2e7d32; font-weight:bold;">₹${o.totalPrice}</p>
+              </div>
+            </div>
+            <p style="margin-top:6px;"><b>ಗ್ರಾಹಕರು:</b> ${o.customer?.name} (${o.customer?.phone})</p>
+            <a href="tel:${o.customer?.phone}" class="btn-call-cust">📞 ಗ್ರಾಹಕರಿಗೆ ಕಾಲ್ ಮಾಡಿ</a>
+            <p style="margin-top:4px;"><b>ಸ್ಥಳ:</b> ${o.customer?.village}</p>
+            <p style="margin-top:4px; font-size:0.75rem; color:#666;"><b>ಸ್ಥಿತಿ (Status):</b> ${orderStatus}</p>
+
+            ${actionButtonHTML}
+          </div>
+        `;
+      }).join('');
     }
 
     function renderArchivedOrders(orders) {
@@ -544,7 +559,11 @@
         await window.updateDoc(window.doc(window.db, "orders", orderId), {
           status: newStatus
         });
-        alert("✅ ಆರ್ಡರ್ ಪ್ಯಾಕಿಂಗ್ ಸ್ಥಿತಿಗೆ ಬದಲಾಯಿಸಲಾಗಿದೆ!");
+        if (newStatus === 'CONFIRMED') {
+          alert("✅ ಆರ್ಡರ್ ಯಶಸ್ವಿಯಾಗಿ ಕನ್ಫರ್ಮ್ ಮಾಡಲಾಗಿದೆ!");
+        } else if (newStatus === 'STEP_2') {
+          alert("✅ ಆರ್ಡರ್ ಪ್ಯಾಕಿಂಗ್ ಸ್ಥಿತಿಗೆ ಬದಲಾಯಿಸಲಾಗಿದೆ!");
+        }
       } catch (e) {
         alert("ದೋಷ: " + e.message);
       }
