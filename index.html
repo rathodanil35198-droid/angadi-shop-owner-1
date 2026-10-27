@@ -285,7 +285,7 @@
           <div class="form-group" style="flex:1;"><label>ಈಗಿನ ರೇಟು (₹):</label><input type="number" id="prodPrice" required placeholder="27999"></div>
         </div>
 
-        <!-- Strictly 4 Photos Only -->
+        <!-- Strictly 4 Photos -->
         <div style="background:#f8f9fa; padding:10px; border-radius:8px; border:1px solid #e2e8f0; margin-bottom:10px;">
           <label style="color:#2874f0; font-weight:bold;">📸 ಕೇವಲ 4 ಫೋಟೋಗಳನ್ನು ಅಪ್ಲೋಡ್ ಮಾಡಿ (ಖಾಲಿ ಬಿಡಬಹುದು):</label>
           <div style="margin-top:6px;"><label style="font-size:0.75rem;">ಫೋಟೋ 1:</label><input type="file" accept="image/*" id="c1_p1"></div>
@@ -514,14 +514,25 @@
 
         if (orderStatus === 'STEP_1') {
           actionButtonHTML = `<button onclick="updateOrderStatus('${o.docId}', 'CONFIRMED')" class="btn-confirm">✅ ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಮಾಡಿ (Confirm Order)</button>`;
-        } else if (orderStatus === 'CONFIRMED') {
-          actionButtonHTML = `<button onclick="updateOrderStatus('${o.docId}', 'STEP_2')" class="btn-pack">📦 ಪ್ಯಾಕಿಂಗ್ ಮಾಡಿ (Pack Order)</button>`;
-        } else {
-          actionButtonHTML = `<p style="font-size:0.8rem; font-weight:bold; color:var(--success); margin-top:6px;">✔ ಪ್ಯಾಕಿಂಗ್ ಪೂರ್ಣಗೊಂಡಿದೆ (Packed)</p>`;
+        } else if (orderStatus === 'CONFIRMED' || orderStatus === 'STEP_2') {
+          actionButtonHTML = `
+            <button onclick="updateOrderStatus('${o.docId}', 'PACKING')" class="btn-pack">📦 ಪ್ಯಾಕಿಂಗ್ ಮಾಡಿ (Pack Order)</button>
+            <p style="font-size:0.75rem; color:#e65100; margin-top:4px; font-weight:bold;">⏳ ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ ಬಟನ್ ಒತ್ತಿದ ಮೇಲೆ ಡೆಲಿವರಿ ಬಾಯ್ ಬತ್ತಿದ್ದಾರೆ, ದಯವಿಟ್ಟು ಕಾಯಿರಿ.</p>
+          `;
+        } else if (orderStatus === 'PACKING' || orderStatus === 'PICKED_UP' || orderStatus === 'STEP_3') {
+          actionButtonHTML = `<p style="font-size:0.8rem; font-weight:bold; color:var(--success); margin-top:6px;">✔ ಡೆಲಿವರಿ ಬಾಯ್ ಪಿಕ್ ಅಪ್ ಮಾಡಿಕೊಂಡಿದ್ದಾರೆ. ಆರ್ಡರ್ ತಲುಪುತ್ತಿದೆ.</p>`;
         }
+
+        let mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.customer?.village + ', ' + (o.customer?.taluk || 'Shahapur'))}`;
 
         return `
           <div class="order-item">
+            <!-- Top Bar Code / Order ID for Printing & Scanning -->
+            <div style="background:#e3f2fd; border:1px solid #bbdefb; border-radius:6px; padding:6px; margin-bottom:8px; text-align:center;">
+              <span style="font-size:0.7rem; color:#1565c0; font-weight:bold;">📷 ಪ್ರಿಂಟ್ / ಸ್ಕ್ಯಾನ್ ಐಡಿ (Order ID):</span>
+              <div style="font-size:0.95rem; font-weight:bold; color:#0d47a1; letter-spacing:1px;">${o.orderId || 'OD000000'}</div>
+            </div>
+
             <div style="display:flex; gap:10px; align-items:center;">
               <img src="${o.productPhoto}" style="width:60px; height:60px; object-fit:cover; border-radius:6px;">
               <div>
@@ -533,6 +544,10 @@
             <a href="tel:${o.customer?.phone}" class="btn-call-cust">📞 ಗ್ರಾಹಕರಿಗೆ ಕಾಲ್ ಮಾಡಿ</a>
             <p style="margin-top:4px;"><b>ಸ್ಥಳ:</b> ${o.customer?.village}</p>
             <p style="margin-top:4px; font-size:0.75rem; color:#666;"><b>ಸ್ಥಿತಿ (Status):</b> ${orderStatus}</p>
+
+            <div style="margin-top:6px;">
+              <a href="${mapsUrl}" target="_blank" style="display:block; background:#1976d2; color:#fff; text-align:center; padding:5px; border-radius:4px; text-decoration:none; font-size:0.75rem; font-weight:bold; margin-bottom:6px;">🗺️ ಡೆಲಿವರಿ ರೂಟ್ ಮ್ಯಾಪ್ ಟ್ರ್ಯಾಕ್ ಮಾಡಿ</a>
+            </div>
 
             ${actionButtonHTML}
           </div>
@@ -549,20 +564,21 @@
       listDiv.innerHTML = orders.map(o => `
         <div class="order-item archived">
           <p><b>${o.productName}</b> - ₹${o.totalPrice}</p>
-          <p style="font-size:0.75rem;">ಗ್ರಾಹಕರು: ${o.customer?.name}</p>
+          <p style="font-size:0.75rem;">ಗ್ರಾಹಕರು: ${o.customer?.name} | ಸ್ಟೇಟಸ್: ${o.status}</p>
         </div>
       `).join('');
     }
 
     async function updateOrderStatus(orderId, newStatus) {
       try {
+        let dbStatus = newStatus === 'PACKING' ? 'STEP_3' : newStatus;
         await window.updateDoc(window.doc(window.db, "orders", orderId), {
-          status: newStatus
+          status: dbStatus
         });
         if (newStatus === 'CONFIRMED') {
           alert("✅ ಆರ್ಡರ್ ಯಶಸ್ವಿಯಾಗಿ ಕನ್ಫರ್ಮ್ ಮಾಡಲಾಗಿದೆ!");
-        } else if (newStatus === 'STEP_2') {
-          alert("✅ ಆರ್ಡರ್ ಪ್ಯಾಕಿಂಗ್ ಸ್ಥಿತಿಗೆ ಬದಲಾಯಿಸಲಾಗಿದೆ!");
+        } else if (newStatus === 'PACKING') {
+          alert("📦 ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ! ಹತ್ತಿರದ ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ನೋಟಿಫಿಕೇಶನ್ ಕಳುಹಿಸಲಾಗಿದೆ.");
         }
       } catch (e) {
         alert("ದೋಷ: " + e.message);
