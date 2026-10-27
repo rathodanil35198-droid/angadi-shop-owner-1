@@ -65,6 +65,8 @@
     .btn-call-cust { background: #388e3c; color: #fff; padding: 6px 12px; border-radius: 4px; text-decoration: none; font-size: 0.75rem; font-weight: bold; display: inline-block; margin-top: 4px; }
     .btn-pack { background: #ff9f00; color: #fff; border: none; padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; margin-top: 6px; width: 100%; }
     .btn-confirm { background: #2874f0; color: #fff; border: none; padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; margin-top: 6px; width: 100%; }
+    .btn-print { background: #00838f; color: #fff; border: none; padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; margin-top: 6px; width: 100%; }
+    .btn-share { background: #25d366; color: #fff; border: none; padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; margin-top: 6px; width: 100%; }
 
     .id-card {
       background: linear-gradient(135deg, #1e88e5, #1565c0);
@@ -114,6 +116,17 @@
       <div id="popup-id" style="font-size: 1.5rem; font-weight: bold; color: var(--primary); background: #e3f2fd; padding: 10px; border-radius: 6px; margin-bottom: 15px;">0000</div>
       <p style="font-size: 0.8rem; color: #d32f2f; margin-bottom: 10px;">⚠️ ಮೆಂಬರ್‌ಶಿಪ್ ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್ ಇದೆ. ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್ ಸಮ್ಮತಿಸಿದ ನಂತರ ಅಪ್ಲೋಡ್ ಮಾಡಲು ಪರ್ಮಿಷನ್ ಸಿಗುತ್ತದೆ.</p>
       <button class="btn btn-success" onclick="closeSuccessModal()">ಸರಿ</button>
+    </div>
+  </div>
+
+  <!-- PRINT / SHARE MODAL -->
+  <div id="printModal" class="modal">
+    <div class="modal-content-box" style="text-align: left; max-width: 400px;">
+      <h3 style="color: var(--primary); text-align: center; margin-bottom: 10px;">🧾 ಆರ್ಡರ್ ಪ್ರಿಂಟ್ ವಿವರಗಳು</h3>
+      <div id="printModalBody" style="font-size: 0.85rem; line-height: 1.5; background: #f8f9fa; padding: 12px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 12px;"></div>
+      <button class="btn btn-print" onclick="window.print()">🖨️ ಪ್ರಿಂಟ್ ತೆಗೆದುಕೊಳ್ಳಿ (Print)</button>
+      <button class="btn btn-share" style="margin-top: 6px;" onclick="shareOrderDetails()">📤 ಎಲ್ಲರಿಗೂ ಶೇರ್ ಮಾಡಿ (Share)</button>
+      <button class="btn btn-danger" style="margin-top: 6px; padding: 8px;" onclick="closePrintModal()">ಮುಚ್ಚಿ</button>
     </div>
   </div>
 
@@ -245,6 +258,7 @@
 
   <script>
     let shopOwner = JSON.parse(localStorage.getItem('my_shop_owner_session')) || null;
+    let currentShareText = "";
 
     window.addEventListener('DOMContentLoaded', () => {
       if (shopOwner) {
@@ -513,10 +527,13 @@
         let actionButtonHTML = '';
 
         if (orderStatus === 'STEP_1') {
-          actionButtonHTML = `<button onclick="updateOrderStatus('${o.docId}', 'CONFIRMED')" class="btn-confirm">✅ ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಮಾಡಿ (Confirm Order)</button>`;
+          actionButtonHTML = `
+            <button onclick="updateOrderStatus('${o.docId}', 'CONFIRMED')" class="btn-confirm">✅ ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಮಾಡಿ (Confirm Order)</button>
+          `;
         } else if (orderStatus === 'CONFIRMED' || orderStatus === 'STEP_2') {
           actionButtonHTML = `
-            <button onclick="updateOrderStatus('${o.docId}', 'PACKING')" class="btn-pack">📦 ಪ್ಯಾಕಿಂಗ್ ಮಾಡಿ (Pack Order)</button>
+            <button onclick="openPrintModalForOrder('${o.docId}', '${o.orderId}', '${o.productName}', '${o.totalPrice}', '${o.customer?.name}', '${o.customer?.phone}', '${o.customer?.village}')" class="btn-print">🖨️ ಪ್ರಿಂಟ್ & ಶೇರ್ ಮಾಡಿ</button>
+            <button onclick="updateOrderStatus('${o.docId}', 'PACKING')" class="btn-pack" style="margin-top:6px;">📦 ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (Pack Order)</button>
             <p style="font-size:0.75rem; color:#e65100; margin-top:4px; font-weight:bold;">⏳ ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ ಬಟನ್ ಒತ್ತಿದ ಮೇಲೆ ಡೆಲಿವರಿ ಬಾಯ್ ಬತ್ತಿದ್ದಾರೆ, ದಯವಿಟ್ಟು ಕಾಯಿರಿ.</p>
           `;
         } else if (orderStatus === 'PACKING' || orderStatus === 'PICKED_UP' || orderStatus === 'STEP_3') {
@@ -527,9 +544,8 @@
 
         return `
           <div class="order-item">
-            <!-- Top Bar Code / Order ID for Printing & Scanning -->
             <div style="background:#e3f2fd; border:1px solid #bbdefb; border-radius:6px; padding:6px; margin-bottom:8px; text-align:center;">
-              <span style="font-size:0.7rem; color:#1565c0; font-weight:bold;">📷 ಪ್ರಿಂಟ್ / ಸ್ಕ್ಯಾನ್ ಐಡಿ (Order ID):</span>
+              <span style="font-size:0.7rem; color:#1565c0; font-weight:bold;">📷 ಆರ್ಡರ್ ಐಡಿ (Order ID):</span>
               <div style="font-size:0.95rem; font-weight:bold; color:#0d47a1; letter-spacing:1px;">${o.orderId || 'OD000000'}</div>
             </div>
 
@@ -555,6 +571,52 @@
       }).join('');
     }
 
+    function openPrintModalForOrder(docId, orderId, productName, totalPrice, custName, custPhone, custVillage) {
+      const body = document.getElementById('printModalBody');
+      
+      currentShareText = `🧾 *ನಮ್ಮ ಶಾಪುರ್ - ಆರ್ಡರ್ ಬಿಲ್* \n\n` +
+        `🏷️ ಆರ್ಡರ್ ಐಡಿ: ${orderId}\n` +
+        `📦 ವಸ್ತು: ${productName}\n` +
+        `💰 ಬೆಲೆ: ₹${totalPrice}\n\n` +
+        `👤 ಗ್ರಾಹಕರು: ${custName} (${custPhone})\n` +
+        `📍 ವಿಳಾಸ: ${custVillage}\n\n` +
+        `🏪 ಅಂಗಡಿ ಹೆಸರು: ${shopOwner.shopName}\n` +
+        `📍 ಸ್ಥಳ: ${shopOwner.taluk}, ${shopOwner.district}\n` +
+        `📞 ಮಾಲೀಕರ ಫೋನ್: ${shopOwner.phone}`;
+
+      body.innerHTML = `
+        <div style="text-align:center; border-bottom:1px dashed #ccc; padding-bottom:8px; margin-bottom:8px;">
+          <h4 style="color:#1e88e5;">🏪 ${shopOwner.shopName}</h4>
+          <p style="font-size:0.75rem; color:#555;">ಸ್ಥಳ: ${shopOwner.taluk}, ${shopOwner.district} | ಮೊಬೈಲ್: ${shopOwner.phone}</p>
+        </div>
+        <p><b>ಆರ್ಡರ್ ಐಡಿ:</b> ${orderId}</p>
+        <p><b>ಪ್ರಾಡಕ್ಟ್:</b> ${productName}</p>
+        <p><b>ಬೆಲೆ:</b> ₹${totalPrice}</p>
+        <hr style="margin:8px 0; border:0; border-top:1px dashed #ccc;">
+        <p><b>ಗ್ರಾಹಕರು:</b> ${custName} (${custPhone})</p>
+        <p><b>ವಿಳಾಸ:</b> ${custVillage}</p>
+        <p style="margin-top:8px; font-size:0.75rem; color:#666; text-align:center;">[ಆರ್ಡರ್ ಟ್ರ್ಯಾಕಿಂಗ್ & ಡೆಲಿವರಿ ಚಾಲ್ತಿಯಲ್ಲಿದೆ]</p>
+      `;
+
+      document.getElementById('printModal').style.display = 'flex';
+    }
+
+    function closePrintModal() {
+      document.getElementById('printModal').style.display = 'none';
+    }
+
+    function shareOrderDetails() {
+      if (navigator.share) {
+        navigator.share({
+          title: 'Order Details',
+          text: currentShareText,
+        }).catch((error) => console.log('Sharing failed', error));
+      } else {
+        navigator.clipboard.writeText(currentShareText);
+        alert("📋 ಆರ್ಡರ್ ವಿವರಗಳು ಕಾಪಿ ಆಗಿವೆ! ನೀವು ವಾಟ್ಸಾಪ್ ಅಥವಾ ಇತರ ಆಪ್‌ಗಳಲ್ಲಿ ಶೇರ್ ಮಾಡಬಹುದು.");
+      }
+    }
+
     function renderArchivedOrders(orders) {
       const listDiv = document.getElementById('shopArchivedOrdersList');
       if (orders.length === 0) {
@@ -576,7 +638,7 @@
           status: dbStatus
         });
         if (newStatus === 'CONFIRMED') {
-          alert("✅ ಆರ್ಡರ್ ಯಶಸ್ವಿಯಾಗಿ ಕನ್ಫರ್ಮ್ ಮಾಡಲಾಗಿದೆ!");
+          alert("✅ ಆರ್ಡರ್ ಯಶಸ್ವಿಯಾಗಿ ಕನ್ಫರ್ಮ್ ಮಾಡಲಾಗಿದೆ! ಈಗ ಪ್ರಿಂಟ್ ಅಥವಾ ಶೇರ್ ಮಾಡಬಹುದು.");
         } else if (newStatus === 'PACKING') {
           alert("📦 ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ! ಹತ್ತಿರದ ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ನೋಟಿಫಿಕೇಶನ್ ಕಳುಹಿಸಲಾಗಿದೆ.");
         }
