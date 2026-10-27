@@ -220,7 +220,7 @@
         <button class="btn" style="flex:1; font-size:0.8rem; background:#8e24aa;" onclick="showTab('payments')">💳 ಪೇಮೆಂಟ್ಸ್</button>
       </div>
 
-      <!-- ಫೋಟೋ ಅಪ್ಲೋಡ್ (Strictly 4 Photos Only) -->
+      <!-- ಫೋಟೋ ಅಪ್ಲೋಡ್ -->
       <div id="tabUpload" style="background:#fff; padding:15px; border-radius:10px; border:1px solid #cbd5e0;">
         <h2>➕ ಹೊಸ ವಸ್ತುವಿನ ವಿವರಗಳು & ಕೇವಲ 4 ಫೋಟೋಗಳು</h2>
         
@@ -239,7 +239,7 @@
 
       <!-- ಆರ್ಡರ್‌ಗಳು -->
       <div id="tabOrders" style="display:none; background:#fff; padding:15px; border-radius:10px; border:1px solid #cbd5e0;">
-        <h2>📦 ಪ್ರಸ್ತುತ ಹೊಸ ಆರ್ಡರ್‌ಗಳು ಹಾಗೂ ರಿಟರ್ನ್‌ಗಳು (ಕಳೆದ 3 ದಿನಗಳು)</h2>
+        <h2>📦 ಪ್ರಸ್ತುತ ಹೊಸ ಆರ್ಡರ್‌ಗಳು ಹಾಗೂ ರಿಟರ್ನ್‌ಗಳು (ಸ್ಥಳೀಯ ತಾಲ್ಲೂಕು/ಜಿಲ್ಲೆ)</h2>
         <div id="shopOrdersList" style="margin-top:10px;"></div>
 
         <h2 style="margin-top:20px; color:#555;">🔒 ಹಳೆಯ ಪೂರ್ಣಗೊಂಡ ಆರ್ಡರ್‌ಗಳು (History)</h2>
@@ -470,7 +470,7 @@
         renderProducts(products);
       });
 
-      // Orders Realtime Fetch
+      // Orders Realtime Fetch (Filtered strictly by local Taluk/District and Shop ID)
       window.onSnapshot(window.collection(window.db, "orders"), (snapshot) => {
         let orders = [];
         const threeDaysAgo = Date.now() - (3 * 24 * 60 * 60 * 1000);
@@ -480,7 +480,11 @@
           const orderTime = o.timestamp?.toMillis?.() || o.timestamp || Date.now();
 
           if (orderTime >= threeDaysAgo) {
-            if (o.shopId === shopOwner.id || o.acceptedBy === shopOwner.id || (!o.acceptedBy && (o.shopType === shopOwner.shopType || shopOwner.shopType === 'ಇತರ ಅಂಗಡಿ'))) {
+            let custTaluk = (o.customer?.taluk || '').toLowerCase();
+            let shopTaluk = (shopOwner.taluk || '').toLowerCase();
+            let matchTaluk = (custTaluk === '' || shopTaluk === '' || custTaluk.includes(shopTaluk) || shopTaluk.includes(custTaluk));
+
+            if (o.shopId === shopOwner.id || o.acceptedBy === shopOwner.id || (!o.acceptedBy && matchTaluk && (o.shopType === shopOwner.shopType || shopOwner.shopType === 'ಇತರ ಅಂಗಡಿ'))) {
               orders.push({ docId: docSnap.id, ...o });
             }
           }
@@ -518,7 +522,7 @@
     function renderOrders(orders) {
       const listDiv = document.getElementById('shopOrdersList');
       if (orders.length === 0) {
-        listDiv.innerHTML = '<p style="font-size:0.8rem; color:#777;">ಯಾವುದೇ ಹೊಸ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>';
+        listDiv.innerHTML = '<p style="font-size:0.8rem; color:#777;">ನಿಮ್ಮ ಸ್ಥಳೀಯ ತಾಲ್ಲೂಕು ವ್ಯಾಪ್ತಿಯಲ್ಲಿ ಯಾವುದೇ ಹೊಸ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>';
         return;
       }
 
@@ -534,13 +538,13 @@
           actionButtonHTML = `
             <button onclick="openPrintModalForOrder('${o.docId}', '${o.orderId}', '${o.productName}', '${o.totalPrice}', '${o.customer?.name}', '${o.customer?.phone}', '${o.customer?.village}')" class="btn-print">🖨️ ಪ್ರಿಂಟ್ & ಶೇರ್ ಮಾಡಿ</button>
             <button onclick="updateOrderStatus('${o.docId}', 'PACKING')" class="btn-pack" style="margin-top:6px;">📦 ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (Pack Order)</button>
-            <p style="font-size:0.75rem; color:#e65100; margin-top:4px; font-weight:bold;">⏳ ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ ಬಟನ್ ಒತ್ತಿದ ಮೇಲೆ ಡೆಲಿವರಿ ಬಾಯ್ ಬತ್ತಿದ್ದಾರೆ, ದಯವಿಟ್ಟು ಕಾಯಿರಿ.</p>
+            <p style="font-size:0.75rem; color:#e65100; margin-top:4px; font-weight:bold;">⏳ ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ ಬಟನ್ ಒತ್ತಿದ ಮೇಲೆ ಸ್ಥಳೀಯ ಡೆಲಿವರಿ ಬಾಯ್ ಬಂದು ಪಿಕ್ ಅಪ್ ಮಾಡಿಕೊಳ್ಳುತ್ತಾರೆ.</p>
           `;
         } else if (orderStatus === 'PACKING' || orderStatus === 'PICKED_UP' || orderStatus === 'STEP_3') {
           actionButtonHTML = `<p style="font-size:0.8rem; font-weight:bold; color:var(--success); margin-top:6px;">✔ ಡೆಲಿವರಿ ಬಾಯ್ ಪಿಕ್ ಅಪ್ ಮಾಡಿಕೊಂಡಿದ್ದಾರೆ. ಆರ್ಡರ್ ತಲುಪುತ್ತಿದೆ.</p>`;
         }
 
-        let mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.customer?.village + ', ' + (o.customer?.taluk || 'Shahapur'))}`;
+        let mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.customer?.village + ', ' + (o.customer?.taluk || shopOwner.taluk))}`;
 
         return `
           <div class="order-item">
@@ -558,7 +562,7 @@
             </div>
             <p style="margin-top:6px;"><b>ಗ್ರಾಹಕರು:</b> ${o.customer?.name} (${o.customer?.phone})</p>
             <a href="tel:${o.customer?.phone}" class="btn-call-cust">📞 ಗ್ರಾಹಕರಿಗೆ ಕಾಲ್ ಮಾಡಿ</a>
-            <p style="margin-top:4px;"><b>ಸ್ಥಳ:</b> ${o.customer?.village}</p>
+            <p style="margin-top:4px;"><b>ಸ್ಥಳ:</b> ${o.customer?.village}, ${o.customer?.taluk || shopOwner.taluk}</p>
             <p style="margin-top:4px; font-size:0.75rem; color:#666;"><b>ಸ್ಥಿತಿ (Status):</b> ${orderStatus}</p>
 
             <div style="margin-top:6px;">
@@ -640,7 +644,7 @@
         if (newStatus === 'CONFIRMED') {
           alert("✅ ಆರ್ಡರ್ ಯಶಸ್ವಿಯಾಗಿ ಕನ್ಫರ್ಮ್ ಮಾಡಲಾಗಿದೆ! ಈಗ ಪ್ರಿಂಟ್ ಅಥವಾ ಶೇರ್ ಮಾಡಬಹುದು.");
         } else if (newStatus === 'PACKING') {
-          alert("📦 ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ! ಹತ್ತಿರದ ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ನೋಟಿಫಿಕೇಶನ್ ಕಳುಹಿಸಲಾಗಿದೆ.");
+          alert("📦 ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ! ಸ್ಥಳೀಯ ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ನೋಟಿಫಿಕೇಶನ್ ಕಳುಹಿಸಲಾಗಿದೆ.");
         }
       } catch (e) {
         alert("ದೋಷ: " + e.message);
@@ -676,6 +680,8 @@
         shopId: shopOwner.id,
         shopName: shopOwner.shopName,
         shopType: shopOwner.shopType,
+        taluk: shopOwner.taluk,
+        district: shopOwner.district,
         name: prodName,
         variant: variant,
         oldPrice: oldPrice,
