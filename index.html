@@ -67,7 +67,6 @@
     .btn-confirm { background: #2874f0; color: #fff; border: none; padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; margin-top: 6px; width: 100%; }
     .btn-print { background: #00838f; color: #fff; border: none; padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; margin-top: 6px; width: 100%; }
     .btn-share { background: #25d366; color: #fff; border: none; padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; margin-top: 6px; width: 100%; }
-    .btn-regen { background: #d32f2f; color: #fff; border: none; padding: 6px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; cursor: pointer; margin-top: 4px; width: 100%; }
 
     .id-card {
       background: linear-gradient(135deg, #1e88e5, #1565c0);
@@ -532,7 +531,7 @@
         let orderStatus = o.status || 'STEP_1';
         let actionButtonHTML = '';
 
-        // Generate fixed OTP only once when packing, if not present
+        // Generate fixed OTP once when packing, and keep it strictly fixed unless changed by delivery boy/system elsewhere
         if (!o.pickupOtp) {
           o.pickupOtp = Math.floor(1000 + Math.random() * 9000).toString();
         }
@@ -541,8 +540,7 @@
           <div style="background:#e8f5e9; border:1px solid #c8e6c9; border-radius:6px; padding:8px; margin-top:8px; text-align:center;">
             <span style="font-size:0.8rem; color:#2e7d32; font-weight:bold;">🔑 ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ನೀಡಬೇಕಾದ ಪಿಕ್ ಅಪ್ ಒಟಿಪಿ (Pickup OTP):</span>
             <div style="font-size:1.2rem; font-weight:bold; color:#1b5e20; letter-spacing:2px; margin-top:2px;">${o.pickupOtp}</div>
-            <div style="font-size:0.7rem; color:#555; margin-top:2px;">(ಈ ಒಟಿಪಿ ಸ್ಥಿರವಾಗಿರುತ್ತದೆ. ಬದಲಾಯಿಸಲು ಕೆಳಗಿನ ಬಟನ್ ಒತ್ತಿ)</div>
-            <button onclick="regenerateOtp('${o.docId}')" class="btn-regen">🔄 ರಿಟರ್ನ್ / ಹೊಸ ಒಟಿಪಿ ಪಡೆದುಕೊಳ್ಳಿ (Regenerate OTP)</button>
+            <div style="font-size:0.7rem; color:#555; margin-top:2px;">(ಈ ಒಟಿಪಿ ಸ್ಥಿರವಾಗಿರುತ್ತದೆ. ಡೆಲಿವರಿ ಬಾಯ್ ರಿಟರ್ನ್ ಕೇಳಿದರೆ ಮಾತ್ರ ಬದಲಾಗುತ್ತದೆ)</div>
           </div>
         `;
 
@@ -554,7 +552,7 @@
           actionButtonHTML = `
             <button onclick="openPrintModalForOrder('${o.docId}', '${o.orderId}', '${o.productName}', '${o.totalPrice}', '${o.customer?.name}', '${o.customer?.phone}', '${o.customer?.village}')" class="btn-print">🖨️ ಪ್ರಿಂಟ್ & ಶೇರ್ ಮಾಡಿ</button>
             <button onclick="updateOrderStatus('${o.docId}', 'PACKING', '${o.pickupOtp}')" class="btn-pack" style="margin-top:6px;">📦 ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (Pack Order)</button>
-            <p style="font-size:0.75rem; color:#e65100; margin-top:4px; font-weight:bold;">⏳ ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ ಬಟನ್ ಒತ್ತಿದ ತಕ್ಷಣವೇ ಒಟಿಪಿ ಬರುತ್ತದೆ ಮತ್ತು ಸ್ಥಿರವಾಗಿರುತ್ತದೆ.</p>
+            <p style="font-size:0.75rem; color:#e65100; margin-top:4px; font-weight:bold;">⏳ ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ ಬಟನ್ ಒತ್ತಿದ ತಕ್ಷಣ ಒಟಿಪಿ ಬರುತ್ತದೆ ಮತ್ತು ಫಿಕ್ಸ್ ಆಗಿರುತ್ತದೆ.</p>
           `;
         } else if (orderStatus === 'PACKING' || orderStatus === 'PICKED_UP' || orderStatus === 'STEP_3') {
           actionButtonHTML = `<p style="font-size:0.8rem; font-weight:bold; color:var(--success); margin-top:6px;">✔ ಡೆಲಿವರಿ ಬಾಯ್ ಪಿಕ್ ಅಪ್ ಮಾಡಿಕೊಂಡಿದ್ದಾರೆ. ಆರ್ಡರ್ ತಲುಪುತ್ತಿದೆ.</p>`;
@@ -591,18 +589,6 @@
           </div>
         `;
       }).join('');
-    }
-
-    async function regenerateOtp(docId) {
-      const newOtp = Math.floor(1000 + Math.random() * 9000).toString();
-      try {
-        await window.updateDoc(window.doc(window.db, "orders", docId), {
-          pickupOtp: newOtp
-        });
-        alert("🔄 ಹೊಸ ಒಟಿಪಿ (Regenerated OTP) ಯಶಸ್ವಿಯಾಗಿ ಸೃಷ್ಟಿಯಾಗಿದೆ: " + newOtp);
-      } catch (e) {
-        alert("ದೋಷ: " + e.message);
-      }
     }
 
     function renderPaymentsLedger(orders) {
@@ -718,7 +704,7 @@
         if (newStatus === 'CONFIRMED') {
           alert("✅ ಆರ್ಡರ್ ಯಶಸ್ವಿಯಾಗಿ ಕನ್ಫರ್ಮ್ ಮಾಡಲಾಗಿದೆ!");
         } else if (newStatus === 'PACKING') {
-          alert("📦 ಪ್ಯಾಕಿಂಗ್ ಯಶಸ್ವಿಯಾಗಿದೆ! ಒಟಿಪಿ ಈಗ ಸ್ಥಿರವಾಗಿದೆ.");
+          alert("📦 ಪ್ಯಾಕಿಂಗ್ ಯಶಸ್ವಿಯಾಗಿದೆ! ಒಟಿಪಿ ಈಗ ಫಿಕ್ಸ್ ಆಗಿದೆ.");
         }
       } catch (e) {
         alert("ದೋಷ: " + e.message);
