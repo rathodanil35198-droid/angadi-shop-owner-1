@@ -158,7 +158,7 @@
         
         <div class="form-group">
           <label>ಅಂಗಡಿಯ ಪ್ರಕಾರ (ವಿಭಾಗ):</label>
-          <select id="shopType" required>
+          <select id="shopType" required onchange="renderDynamicUploadForm()">
             <option value="">-- ಆಯ್ಕೆಮಾಡಿ --</option>
             <option value="ಮೊಬೈಲ್ ಶಾಪ್">ಮೊಬೈಲ್ ಶಾಪ್ (Mobile Shop)</option>
             <option value="ಬಟ್ಟೆ ಅಂಗಡಿ">ಬಟ್ಟೆ ಅಂಗಡಿ (Clothes)</option>
@@ -230,6 +230,23 @@
 
         <form id="addProductForm" onsubmit="saveProduct(event)">
           <div id="dynamicUploadFormFields"></div>
+          
+          <div class="form-group" style="margin-top:10px;">
+            <label>ಲಭ್ಯವಿರುವ ಪ್ರಮಾಣ (Quantity - 1 ರಿಂದ 10):</label>
+            <select id="prodQuantity" required>
+              <option value="1">1 ಪೀಸ್</option>
+              <option value="2">2 ಪೀಸ್‌ಗಳು</option>
+              <option value="3">3 ಪೀಸ್‌ಗಳು</option>
+              <option value="4">4 ಪೀಸ್‌ಗಳು</option>
+              <option value="5">5 ಪೀಸ್‌ಗಳು</option>
+              <option value="6">6 ಪೀಸ್‌ಗಳು</option>
+              <option value="7">7 ಪೀಸ್‌ಗಳು</option>
+              <option value="8">8 ಪೀಸ್‌ಗಳು</option>
+              <option value="9">9 ಪೀಸ್‌ಗಳು</option>
+              <option value="10">10 ಪೀಸ್‌ಗಳು</option>
+            </select>
+          </div>
+
           <button type="submit" class="btn btn-success" id="btnUploadProd" style="margin-top:10px;">ಅಪ್ಲೋಡ್ ಮಾಡು</button>
         </form>
 
@@ -284,32 +301,80 @@
 
     function renderDynamicUploadForm() {
       const container = document.getElementById('dynamicUploadFormFields');
-      if (!shopOwner) return;
+      const shopTypeSelect = document.getElementById('shopType');
+      const currentShopType = shopOwner ? shopOwner.shopType : (shopTypeSelect ? shopTypeSelect.value : '');
 
-      let html = `
-        <div class="form-group"><label>ವಸ್ತುವಿನ ಹೆಸರು / ಮಾಡೆಲ್:</label><input type="text" id="prodNameInput" required placeholder="ಉದಾ: Vivo T5x 5G / Saree"></div>
-        
+      let specificFields = '';
+
+      if (currentShopType === 'ಮೊಬೈಲ್ ಶಾಪ್') {
+        specificFields = `
+          <div class="form-group"><label>ಮೊಬೈಲ್ ಹೆಸರು ಮತ್ತು ಮಾಡೆಲ್:</label><input type="text" id="mobModel" required placeholder="ಉದಾ: Vivo T5x 5G / Redmi Note 13"></div>
+          <div style="display:flex; gap:10px;">
+            <div class="form-group" style="flex:1;"><label>RAM:</label>
+              <select id="mobRam" required>
+                <option value="4GB">4GB RAM</option>
+                <option value="6GB">6GB RAM</option>
+                <option value="8GB">8GB RAM</option>
+                <option value="12GB">12GB RAM</option>
+              </select>
+            </div>
+            <div class="form-group" style="flex:1;"><label>ನೆಟ್‌ವರ್ಕ್ (Network):</label>
+              <select id="mobNetwork" required>
+                <option value="4G">4G</option>
+                <option value="5G">5G</option>
+                <option value="6G">6G</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group"><label>ವಾರಂಟಿ (Warranty):</label><input type="text" id="mobWarranty" placeholder="ಉದಾ: 1 Year Brand Warranty"></div>
+        `;
+      } else if (currentShopType === 'ಬಟ್ಟೆ ಅಂಗಡಿ') {
+        specificFields = `
+          <div class="form-group"><label>ವಸ್ತುವಿನ ಹೆಸರು / ವಿಧ (ಉದಾ: Saree, Pant, T-Shirt, Lungi):</label><input type="text" id="clothType" required placeholder="ಉದಾ: Cotton Saree / Formal Pant / T-Shirt"></div>
+          <div class="form-group"><label>ಬಟ್ಟೆ ವಿಭಾಗ & ಸೈಜ್ ಆಯ್ಕೆ:</label>
+            <select id="clothCategory" required onchange="toggleClothSizeInputs()">
+              <option value="ಸೀರೆ/ಲುಂಗಿ">ಸೀರೆ / ಲುಂಗಿ (Free Size / Standard)</option>
+              <option value="ಚಿಕ್ಕ ಮಕ್ಕಳ ಪ್ಯಾಂಟ್">ಚಿಕ್ಕ ಮಕ್ಕಳ ಪ್ಯಾಂಟ್ (5 ರಿಂದ 20 ವರ್ಷ)</option>
+              <option value="ದೊಡ್ಡವರ ಪ್ಯಾಂಟ್">ದೊಡ್ಡವರ ಪ್ಯಾಂಟ್ (28 ರಿಂದ 42 ಸೈಜ್)</option>
+              <option value="ಟಿ-ಶರ್ಟ್/ಅಂಗಿ">ಟಿ-ಶರ್ಟ್ / ಅಂಗಿ (M, L, XL, XXL)</option>
+            </select>
+          </div>
+          <div class="form-group" id="sizeOptionsBox">
+            <label>ನಿರ್ದಿಷ್ಟ ಸೈಜ್ ಆಯ್ಕೆಮಾಡಿ:</label>
+            <input type="text" id="clothSizeDetail" placeholder="ಉದಾ: 32 Size / XL / 10 Years">
+          </div>
+        `;
+      } else if (currentShopType === 'ಗಿಫ್ಟ್ ಸೆಂಟರ್') {
+        specificFields = `
+          <div class="form-group"><label>ಗಿಫ್ಟ್ ವಸ್ತುವಿನ ಹೆಸರು:</label><input type="text" id="giftName" required placeholder="ಉದಾ: Birthday Special Photo Frame / Couple Showpiece"></div>
+        `;
+      } else {
+        specificFields = `
+          <div class="form-group"><label>ವಸ್ತುವಿನ ಹೆಸರು & ವಿವರಣೆ:</label><input type="text" id="generalName" required placeholder="ವಸ್ತುವಿನ ಹೆಸರು ಬರೆಯಿರಿ"></div>
+        `;
+      }
+
+      let commonPriceAndPhotos = `
+        ${specificFields}
         <div style="display:flex; gap:10px;">
-          <div class="form-group" style="flex:1;"><label>RAM & ROM (ಉದಾ: 128 GB + 6 GB):</label><input type="text" id="prodVariant" placeholder="128 GB + 6 GB"></div>
-          <div class="form-group" style="flex:1;"><label>ಬಣ್ಣದ ಹೆಸರು (Color Name):</label><input type="text" id="color1Name" placeholder="Flame Red"></div>
+          <div class="form-group" style="flex:1;"><label>ಹಳೆಯ ರೇಟು (₹):</label><input type="number" id="prodOldPrice" placeholder="999"></div>
+          <div class="form-group" style="flex:1;"><label>ಈಗಿನ ರೇಟು (₹):</label><input type="number" id="prodPrice" required placeholder="799"></div>
         </div>
 
-        <div style="display:flex; gap:10px;">
-          <div class="form-group" style="flex:1;"><label>ಹಳೆಯ ರೇಟು (₹):</label><input type="number" id="prodOldPrice" placeholder="29999"></div>
-          <div class="form-group" style="flex:1;"><label>ಈಗಿನ ರೇಟು (₹):</label><input type="number" id="prodPrice" required placeholder="27999"></div>
-        </div>
-
-        <!-- Strictly 4 Photos -->
         <div style="background:#f8f9fa; padding:10px; border-radius:8px; border:1px solid #e2e8f0; margin-bottom:10px;">
-          <label style="color:#2874f0; font-weight:bold;">📸 ಕೇವಲ 4 ಫೋಟೋಗಳನ್ನು ಅಪ್ಲೋಡ್ ಮಾಡಿ (ಖಾಲಿ ಬಿಡಬಹುದು):</label>
-          <div style="margin-top:6px;"><label style="font-size:0.75rem;">ಫೋಟೋ 1:</label><input type="file" accept="image/*" id="c1_p1"></div>
+          <label style="color:#2874f0; font-weight:bold;">📸 ಕೇವಲ 4 ಫೋಟೋಗಳನ್ನು ಅಪ್ಲೋಡ್ ಮಾಡಿ:</label>
+          <div style="margin-top:6px;"><label style="font-size:0.75rem;">ಫೋಟೋ 1:</label><input type="file" accept="image/*" id="c1_p1" required></div>
           <div style="margin-top:6px;"><label style="font-size:0.75rem;">ಫೋಟೋ 2:</label><input type="file" accept="image/*" id="c1_p2"></div>
           <div style="margin-top:6px;"><label style="font-size:0.75rem;">ಫೋಟೋ 3:</label><input type="file" accept="image/*" id="c1_p3"></div>
           <div style="margin-top:6px;"><label style="font-size:0.75rem;">ಫೋಟೋ 4:</label><input type="file" accept="image/*" id="c1_p4"></div>
         </div>
       `;
 
-      container.innerHTML = html;
+      container.innerHTML = commonPriceAndPhotos;
+    }
+
+    function toggleClothSizeInputs() {
+      // Dynamic helper if needed for clothes category sizing
     }
 
     function convertFileToBase64(file) {
@@ -442,7 +507,7 @@
             badgeBox.innerHTML = `
               <div class="membership-badge membership-active">
                 🟢 ಮೆಂಬರ್‌ಶಿಪ್ ಪೇಮೆಂಟ್ ಯಶಸ್ವಿಯಾಗಿದೆ!<br>
-                <span style="font-size:0.75rem; font-weight:normal;">ನಿಮ್ಮ ವಸ್ತುಗಳನ್ನು ಗ್ರಾಹಕರಿಗೆ ಅಪ್ಲೋಡ್ ಮಾಡಲು ಪರ್ಮಿಷನ್ ನೀಡಲಾಗಿದೆ. (1 ವರ್ಷದವರೆಗೆ ಚಾಲ್ತಿಯಲ್ಲಿರುತ್ತದೆ)</span>
+                <span style="font-size:0.75rem; font-weight:normal;">ನಿಮ್ಮ ವಸ್ತುಗಳನ್ನು ಗ್ರಾಹಕರಿಗೆ ಅಪ್ಲೋಡ್ ಮಾಡಲು ಪರ್ಮಿಷನ್ ನೀಡಲಾಗಿದೆ.</span>
               </div>
             `;
             if (uploadBtn) uploadBtn.disabled = false;
@@ -531,14 +596,12 @@
         let orderStatus = o.status || 'STEP_1';
         let actionButtonHTML = '';
 
-        // FIX: Ensure OTP is permanently generated and saved in database once packing starts, preventing any change on app reload
         let otpDisplayHTML = '';
         if (o.pickupOtp) {
           otpDisplayHTML = `
             <div style="background:#e8f5e9; border:1px solid #c8e6c9; border-radius:6px; padding:8px; margin-top:8px; text-align:center;">
               <span style="font-size:0.8rem; color:#2e7d32; font-weight:bold;">🔑 ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ನೀಡಬೇಕಾದ ಪಿಕ್ ಅಪ್ ಒಟಿಪಿ (Pickup OTP):</span>
               <div style="font-size:1.2rem; font-weight:bold; color:#1b5e20; letter-spacing:2px; margin-top:2px;">${o.pickupOtp}</div>
-              <div style="font-size:0.7rem; color:#555; margin-top:2px;">(ಈ ಒಟಿಪಿ ಸಂಪೂರ್ಣವಾಗಿ ಸ್ಥಿರವಾಗಿದೆ, ಆಪ್ ಮುಚ್ಚಿ ತೆರೆದರೂ ಬದಲಾಗುವುದಿಲ್ಲ)</div>
             </div>
           `;
         }
@@ -548,15 +611,13 @@
             <button onclick="updateOrderStatus('${o.docId}', 'CONFIRMED')" class="btn-confirm">✅ ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಮಾಡಿ (Confirm Order)</button>
           `;
         } else if (orderStatus === 'CONFIRMED' || orderStatus === 'STEP_2') {
-          // Generate OTP on pack button click if not already present
           let generatedOtp = o.pickupOtp || Math.floor(1000 + Math.random() * 9000).toString();
           actionButtonHTML = `
             <button onclick="openPrintModalForOrder('${o.docId}', '${o.orderId}', '${o.productName}', '${o.totalPrice}', '${o.customer?.name}', '${o.customer?.phone}', '${o.customer?.village}')" class="btn-print">🖨️ ಪ್ರಿಂಟ್ & ಶೇರ್ ಮಾಡಿ</button>
             <button onclick="updateOrderStatus('${o.docId}', 'PACKING', '${generatedOtp}')" class="btn-pack" style="margin-top:6px;">📦 ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (Pack Order)</button>
-            <p style="font-size:0.75rem; color:#e65100; margin-top:4px; font-weight:bold;">⏳ ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ ಬಟನ್ ಒತ್ತಿದ ತಕ್ಷಣ ಒಟಿಪಿ ಫಿಕ್ಸ್ ಆಗುತ್ತದೆ.</p>
           `;
         } else if (orderStatus === 'PACKING' || orderStatus === 'PICKED_UP' || orderStatus === 'STEP_3') {
-          actionButtonHTML = `<p style="font-size:0.8rem; font-weight:bold; color:var(--success); margin-top:6px;">✔ ಡೆಲಿವರಿ ಬಾಯ್ ಪಿಕ್ ಅಪ್ ಮಾಡಿಕೊಂಡಿದ್ದಾರೆ. ಆರ್ಡರ್ ತಲುಪುತ್ತಿದೆ.</p>`;
+          actionButtonHTML = `<p style="font-size:0.8rem; font-weight:bold; color:var(--success); margin-top:6px;">✔ ಡೆಲಿವರಿ ಬಾಯ್ ಪಿಕ್ ಅಪ್ ಮಾಡಿಕೊಂಡಿದ್ದಾರೆ.</p>`;
         }
 
         let mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.customer?.village + ', ' + (o.customer?.taluk || shopOwner.taluk))}`;
@@ -598,7 +659,7 @@
 
       const delivered = orders.filter(o => o.status === 'DELIVERED' || o.status === 'STEP_4');
       let totalSales = delivered.reduce((acc, curr) => acc + Number(curr.totalPrice || 0), 0);
-      let netPayable = Math.round(totalSales * 0.85); // 15% commission deducted
+      let netPayable = Math.round(totalSales * 0.85);
 
       let isCleared = delivered.length > 0 && delivered.every(o => o.isPaymentClearedByMaster);
 
@@ -623,7 +684,7 @@
             <p><b>${o.productName}</b> (ID: ${o.orderId}) - ₹${itemAmt}</p>
             <p style="font-size:0.75rem; color:#555;">ನಿಮ್ಮ ಪಾಲು (15% ಕಡಿತದ ನಂತರ): <b>₹${shopNet}</b></p>
             <p style="font-size:0.75rem; font-weight:bold; margin-top:4px; color:${cleared ? 'var(--success)' : 'var(--danger)'};">
-              ${cleared ? '✔ ಪೇಮೆಂಟ್ ಯಶಸ್ವಿಯಾಗಿದೆ (₹0 Pending)' : '⏳ ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್ ಇದೆ (ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್ ಅಪ್ರೂವಲ್ ಬಾಕಿ)'}
+              ${cleared ? '✔ ಪೇಮೆಂಟ್ ಯಶಸ್ವಿಯಾಗಿದೆ (₹0 Pending)' : '⏳ ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್ ಇದೆ'}
             </p>
           </div>
         `;
@@ -651,10 +712,6 @@
         <p><b>ಆರ್ಡರ್ ಐಡಿ:</b> ${orderId}</p>
         <p><b>ಪ್ರಾಡಕ್ಟ್:</b> ${productName}</p>
         <p><b>ಬೆಲೆ:</b> ₹${totalPrice}</p>
-        <hr style="margin:8px 0; border:0; border-top:1px dashed #ccc;">
-        <p><b>ಗ್ರಾಹಕರು:</b> ${custName} (${custPhone})</p>
-        <p><b>ವಿಳಾಸ:</b> ${custVillage}</p>
-        <p style="margin-top:8px; font-size:0.75rem; color:#666; text-align:center;">[ಆರ್ಡರ್ ಟ್ರ್ಯಾಕಿಂಗ್ & ಡೆಲಿವರಿ ಚಾಲ್ತಿಯಲ್ಲಿದೆ]</p>
       `;
 
       document.getElementById('printModal').style.display = 'flex';
@@ -666,13 +723,10 @@
 
     function shareOrderDetails() {
       if (navigator.share) {
-        navigator.share({
-          title: 'Order Details',
-          text: currentShareText,
-        }).catch((error) => console.log('Sharing failed', error));
+        navigator.share({ title: 'Order Details', text: currentShareText }).catch((error) => console.log('Sharing failed', error));
       } else {
         navigator.clipboard.writeText(currentShareText);
-        alert("📋 ಆರ್ಡರ್ ವಿವರಗಳು ಕಾಪಿ ಆಗಿವೆ! ನೀವು ವಾಟ್ಸಾಪ್ ಅಥವಾ ಇತರ ಆಪ್‌ಗಳಲ್ಲಿ ಶೇರ್ ಮಾಡಬಹುದು.");
+        alert("📋 ಆರ್ಡರ್ ವಿವರಗಳು ಕಾಪಿ ಆಗಿವೆ!");
       }
     }
 
@@ -701,12 +755,7 @@
         }
 
         await window.updateDoc(window.doc(window.db, "orders", orderId), updateData);
-
-        if (newStatus === 'CONFIRMED') {
-          alert("✅ ಆರ್ಡರ್ ಯಶಸ್ವಿಯಾಗಿ ಕನ್ಫರ್ಮ್ ಮಾಡಲಾಗಿದೆ!");
-        } else if (newStatus === 'PACKING') {
-          alert("📦 ಪ್ಯಾಕಿಂಗ್ ಯಶಸ್ವಿಯಾಗಿದೆ! ಒಟಿಪಿ ಈಗ ಸಂಪೂರ್ಣವಾಗಿ ಫಿಕ್ಸ್ ಆಗಿದೆ.");
-        }
+        alert(newStatus === 'CONFIRMED' ? "✅ ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಮಾಡಲಾಗಿದೆ!" : "📦 ಪ್ಯಾಕಿಂಗ್ ಯಶಸ್ವಿಯಾಗಿದೆ!");
       } catch (e) {
         alert("ದೋಷ: " + e.message);
       }
@@ -716,15 +765,38 @@
       e.preventDefault();
 
       if (!shopOwner.isPaid) {
-        alert("⚠️ ನಿಮ್ಮ ಮೆಂಬರ್‌ಶಿಪ್ ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್ ಇದೆ! ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್‌ನಲ್ಲಿ ಪೇಮೆಂಟ್ ಓಕೆ ಮಾಡಿದ ನಂತರವೇ ಅಪ್ಲೋಡ್ ಮಾಡಲು ಸಾಧ್ಯ.");
+        alert("⚠️ ನಿಮ್ಮ ಮೆಂಬರ್‌ಶಿಪ್ ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್ ಇದೆ!");
         return;
       }
       
-      const prodName = document.getElementById('prodNameInput').value.trim();
-      const variant = document.getElementById('prodVariant').value.trim();
+      let finalName = '';
+      let finalVariant = '';
+
+      const currentShopType = shopOwner.shopType;
+      if (currentShopType === 'ಮೊಬೈಲ್ ಶಾಪ್') {
+        const model = document.getElementById('mobModel').value.trim();
+        const ram = document.getElementById('mobRam').value;
+        const net = document.getElementById('mobNetwork').value;
+        const warranty = document.getElementById('mobWarranty').value.trim();
+        finalName = model;
+        finalVariant = `RAM: ${ram} | Network: ${net} | Warranty: ${warranty}`;
+      } else if (currentShopType === 'ಬಟ್ಟೆ ಅಂಗಡಿ') {
+        const cloth = document.getElementById('clothType').value.trim();
+        const cat = document.getElementById('clothCategory').value;
+        const sizeDetail = document.getElementById('clothSizeDetail').value.trim();
+        finalName = cloth;
+        finalVariant = `Category: ${cat} | Size: ${sizeDetail}`;
+      } else if (currentShopType === 'ಗಿಫ್ಟ್ ಸೆಂಟರ್') {
+        finalName = document.getElementById('giftName').value.trim();
+        finalVariant = 'Gift Item';
+      } else {
+        finalName = document.getElementById('generalName').value.trim();
+        finalVariant = 'Standard Item';
+      }
+
       const oldPrice = document.getElementById('prodOldPrice').value.trim() || '0';
       const price = document.getElementById('prodPrice').value.trim() || '0';
-      const color1Name = document.getElementById('color1Name').value.trim() || 'Default';
+      const quantity = document.getElementById('prodQuantity').value;
 
       const c1_f1 = document.getElementById('c1_p1').files[0];
       const c1_f2 = document.getElementById('c1_p2').files[0];
@@ -742,12 +814,13 @@
         shopType: shopOwner.shopType,
         taluk: shopOwner.taluk,
         district: shopOwner.district,
-        name: prodName,
-        variant: variant,
+        name: finalName,
+        variant: finalVariant,
         oldPrice: oldPrice,
         price: price,
+        quantity: quantity,
         colors: [
-          { name: color1Name, photos: [c1_b1, c1_b2, c1_b3, c1_b4].filter(Boolean) }
+          { name: 'Default', photos: [c1_b1, c1_b2, c1_b3, c1_b4].filter(Boolean) }
         ],
         photo: c1_b1 || 'https://via.placeholder.com/100',
         timestamp: window.serverTimestamp()
@@ -765,7 +838,7 @@
         <div class="card-small">
           <img src="${p.photo}">
           <div class="card-title-small">${p.name}</div>
-          <div style="font-size:0.7rem; color:#2e7d32; font-weight:bold;">₹${p.price}</div>
+          <div style="font-size:0.7rem; color:#2e7d32; font-weight:bold;">₹${p.price} (Qty: ${p.quantity || 1})</div>
         </div>
       `).join('');
     }
