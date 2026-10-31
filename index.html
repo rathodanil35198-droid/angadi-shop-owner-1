@@ -49,9 +49,31 @@
 
     header { background-color: var(--primary); color: white; padding: 12px 15px; text-align: center; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); position: relative; }
     
-    .support-bar { display: flex; justify-content: flex-end; gap: 6px; margin-bottom: 8px; }
+    .support-bar { display: flex; justify-content: flex-end; gap: 6px; margin-bottom: 8px; align-items: center; }
     .sup-btn { background: #25d366; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 3px; }
     .sup-btn.call { background: #ff9800; }
+
+    /* ಸೈಡ್‌ನಲ್ಲಿ ಮಿನುಗುವ (Glow & Pulse) ಚಿಕ್ಕ WhatsApp ಶೇರ್ ಬಟನ್ */
+    .mini-share-btn {
+      background: #25d366;
+      color: white;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      animation: glowing-pulse 1.5s infinite;
+    }
+
+    @keyframes glowing-pulse {
+      0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+      70% { box-shadow: 0 0 0 6px rgba(37, 211, 102, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+    }
 
     h2 { font-size: 1rem; margin-bottom: 10px; color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 5px; }
     
@@ -101,11 +123,12 @@
 </head>
 <body>
 
-  <!-- Support Bar -->
+  <!-- Support Bar & Mini Glowing Share Button -->
   <div class="support-bar">
     <button onclick="logoutShop()" class="sup-btn" style="background:#e53935;">🔄 ಮರು ಲಾಗಿನ್</button>
     <a href="tel:8105010768" class="sup-btn call">📞 ಕಾಲ್ ಮಾಡಿ</a>
     <a href="https://wa.me/918105010768?text=ನಮಸ್ಕಾರ,%20ನನಗೆ%20ಆಪ್‌ನಲ್ಲಿ%20ಸಹಾಯ%20ಬೇಕಿದೆ." target="_blank" class="sup-btn">💬 WhatsApp</a>
+    <button onclick="shareAppViaWhatsApp()" class="mini-share-btn">🟢 ಶೇರ್</button>
   </div>
 
   <div id="successModal" class="modal">
@@ -208,16 +231,6 @@
         </div>
       </div>
 
-      <!-- WhatsApp Share App Button Card -->
-      <div style="background: #e8f5e9; border: 1px solid #c8e6c9; border-radius: 8px; padding: 12px; margin-bottom: 15px; text-align: center;">
-        <p style="font-size: 0.85rem; color: #2e7d32; font-weight: bold; margin-bottom: 8px;">
-          🤝 ಇತರ ಅಂಗಡಿ ಮಾಲೀಕರಿಗೆ ಈ ಆಪ್ ಶೇರ್ ಮಾಡಿ:
-        </p>
-        <button onclick="shareAppViaWhatsApp()" style="background: #25d366; color: white; border: none; padding: 10px 16px; border-radius: 6px; font-size: 0.9rem; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; width: 100%; justify-content: center;">
-          💬 WhatsApp ನಲ್ಲಿ ಆಪ್ ಶೇರ್ ಮಾಡಿ (Share App)
-        </button>
-      </div>
-
       <div class="membership-badge membership-active">
         🟢 ಸಕ್ರಿಯ ಖಾತೆ (Permanent System Active - No Time Limit)
       </div>
@@ -318,7 +331,7 @@
       }
     }
 
-    // WhatsApp ಆಪ್ ಶೇರ್ ಮಾಡುವ ಫಂಕ್ಷನ್
+    // ಸೈಡ್‌ನಲ್ಲಿ ಮಿನುಗುವ ಚಿಕ್ಕ WhatsApp ಶೇರ್ ಬಟನ್ ಕಾರ್ಯ
     function shareAppViaWhatsApp() {
       const appUrl = window.location.href;
       const shareText = `🏪 *ನಮ್ಮ ಶಾಪಿಂಗ್ - ಅಂಗಡಿ ಮಾಲೀಕರ ಆಪ್* \n\n` +
@@ -329,7 +342,7 @@
       window.open(whatsappUrl, '_blank');
     }
 
-    // ಗ್ರಾಹಕರು ಹಾಕುವ 20+ ಹಳ್ಳಿಗಳ ಪ್ರತಿಯೊಂದು ಹೆಸರಿಗೂ ನೈಜ ಅಂದಾಜು ಕಿಲೋಮೀಟರ್ ಲೆಕ್ಕಹಾಕುವ ಆಟೋಮ್ಯಾಟಿಕ್ ಸ್ಮಾರ್ಟ್ ಸಿಸ್ಟಮ್
+    // ಗ್ರಾಹಕರು ಹಾಕುವ ಹಳ್ಳಿಗಳಿಗೆ ತಕ್ಕಂತೆ ನೈಜ ಕಿ.ಮೀ ಲೆಕ್ಕಾಚಾರ ಮಾಡುವ ಸಿಸ್ಟಮ್
     function calculateRealDistanceKm(villageStr) {
       if (!villageStr) return "3";
       let v = villageStr.toLowerCase().trim();
@@ -348,7 +361,6 @@
       if (v.includes("ಜೇವರ್ಗಿ") || v.includes("jewargi")) return "18";
       if (v.includes("ಶೋರಾಪುರ") || v.includes("surpur") || v.includes("ಸೋರಾಪುರ")) return "16";
 
-      // 20+ ಇತರ ಹಳ್ಳಿಗಳ ಹೆಸರಿನ ಆಧಾರದ ಮೇಲೆ ಸ್ಮಾರ್ಟ್ ಲೆಕ್ಕಾಚಾರ
       let hashVal = 0;
       for (let i = 0; i < v.length; i++) hashVal += v.charCodeAt(i);
       let dynamicKm = 3 + (hashVal % 10);
@@ -466,7 +478,7 @@
         district: document.getElementById('district').value.trim(),
         taluk: document.getElementById('taluk').value.trim(),
         photo: photoBase64 || 'https://via.placeholder.com/100',
-        isPaid: true // ಕಾಯಂ ಸಕ್ರಿಯ ಖಾತೆ (No Time Expiry)
+        isPaid: true
       };
 
       try {
@@ -530,7 +542,6 @@
     }
 
     function startRealtimeSync() {
-      // Products Realtime Fetch
       window.onSnapshot(window.collection(window.db, "products"), (snapshot) => {
         let products = [];
         snapshot.forEach(docSnap => {
@@ -540,7 +551,6 @@
         renderProducts(products);
       });
 
-      // ತ್ವರಿತ ಲೋಡಿಂಗ್ ಮತ್ತು ನೋ-ಹ್ಯಾಂಗ್ ಬ್ಯಾಚ್ ಶೈಲಿ (Optimized Query)
       const ordersRef = window.collection(window.db, "orders");
       const qOrders = window.query(ordersRef, window.limit(100));
 
@@ -625,11 +635,7 @@
         let custVillage = o.customer?.village || 'ಶಹಾಪುರ';
         let custTaluk = o.customer?.taluk || shopOwner.taluk;
         let custDistrict = o.customer?.district || shopOwner.district;
-
-        // ಗ್ರಾಹಕರು ನಮೂದಿಸಿದ 20+ ಪ್ರತಿಯೊಂದು ಹಳ್ಳಿಗೂ ನೈಜ ಅಂದಾಜು ಕಿ.ಮೀ
         let realDistanceKm = calculateRealDistanceKm(custVillage);
-
-        // ಗೂಗಲ್ ಮ್ಯಾಪ್ಸ್ ನಾವಿಗೇಷನ್ ಜಿಪಿಎಸ್ ಲಿಂಕ್
         let mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(shopOwner.taluk + ', ' + shopOwner.district)}&destination=${encodeURIComponent(custVillage + ', ' + custTaluk + ', ' + custDistrict)}&travelmode=driving`;
 
         return `
@@ -639,7 +645,6 @@
               <div style="font-size:0.95rem; font-weight:bold; color:#0d47a1; letter-spacing:1px;">${o.orderId || 'OD000000'}</div>
             </div>
 
-            <!-- ಹಳ್ಳಿಯ ಹೆಸರು ಮತ್ತು ನೈಜ ಕಿ.ಮೀ ದೂರದ ಕಾರ್ಡ್ -->
             <div style="background:#fff3e0; border:1px solid #ffe0b2; border-radius:6px; padding:8px; margin-bottom:8px;">
               <div style="font-size:0.88rem; color:#d32f2f; font-weight:bold; margin-bottom:2px;">
                 📍 ಅಂಗಡಿಯಿಂದ ದೂರ: ಅಂದಾಜು ${realDistanceKm} ಕಿ.ಮೀ ಸನಿಹದಲ್ಲಿದೆ
