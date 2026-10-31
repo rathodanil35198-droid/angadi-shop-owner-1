@@ -621,12 +621,28 @@
         }
 
         let mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.customer?.village + ', ' + (o.customer?.taluk || shopOwner.taluk))}`;
+        
+        // ಗ್ರಾಹಕರ ದೂರ ಮತ್ತು ವಿಳಾಸದ ಸ್ಪಷ್ಟ ಮಾಹಿತಿ (ಮೂಲತಃ 15 ಕಿ.ಮೀ ವ್ಯಾಪ್ತಿಯ ಅಂದಾಜು ಅಥವಾ ಆರ್ಡರ್ ದತ್ತಾಂಶ)
+        let distanceKm = o.distanceKm || '6';
+        let custVillage = o.customer?.village || 'ಗ್ರಾಮ ನಮೂದಿಸಿಲ್ಲ';
+        let custTaluk = o.customer?.taluk || shopOwner.taluk;
+        let custDistrict = o.customer?.district || shopOwner.district;
 
         return `
           <div class="order-item">
             <div style="background:#e3f2fd; border:1px solid #bbdefb; border-radius:6px; padding:6px; margin-bottom:8px; text-align:center;">
               <span style="font-size:0.7rem; color:#1565c0; font-weight:bold;">📷 ಆರ್ಡರ್ ಐಡಿ (Order ID):</span>
               <div style="font-size:0.95rem; font-weight:bold; color:#0d47a1; letter-spacing:1px;">${o.orderId || 'OD000000'}</div>
+            </div>
+
+            <!-- ಗ್ರಾಹಕರ ದೂರ ಮತ್ತು ವಿಳಾಸದ ಮಾಹಿತಿ ಬ್ಯಾನರ್ -->
+            <div style="background:#fff3e0; border:1px solid #ffe0b2; border-radius:6px; padding:8px; margin-bottom:8px;">
+              <div style="font-size:0.85rem; color:#d32f2f; font-weight:bold; margin-bottom:2px;">
+                📍 ಅಂಗಡಿಯಿಂದ ದೂರ: ಅಂದಾಜು ${distanceKm} ಕಿ.ಮೀ ಸನಿಹದಲ್ಲಿದೆ
+              </div>
+              <div style="font-size:0.8rem; color:#333; line-height:1.4;">
+                <b>ಗ್ರಾಹಕರ ಸ್ಥಳ:</b> ${custVillage}, ತಾಲ್ಲೂಕು: ${custTaluk}, ಜಿಲ್ಲೆ: ${custDistrict}
+              </div>
             </div>
 
             <div style="display:flex; gap:10px; align-items:center;">
@@ -638,7 +654,6 @@
             </div>
             <p style="margin-top:6px;"><b>ಗ್ರಾಹಕರು:</b> ${o.customer?.name} (${o.customer?.phone})</p>
             <a href="tel:${o.customer?.phone}" class="btn-call-cust">📞 ಗ್ರಾಹಕರಿಗೆ ಕಾಲ್ ಮಾಡಿ</a>
-            <p style="margin-top:4px;"><b>ಸ್ಥಳ:</b> ${o.customer?.village}, ${o.customer?.taluk || shopOwner.taluk}</p>
             <p style="margin-top:4px; font-size:0.75rem; color:#666;"><b>ಸ್ಥಿತಿ (Status):</b> ${orderStatus}</p>
 
             ${otpDisplayHTML}
