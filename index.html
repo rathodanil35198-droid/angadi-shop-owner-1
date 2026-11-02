@@ -52,125 +52,42 @@
     html, body { width: 100%; height: 100%; overflow-x: hidden; background-color: var(--bg); color: var(--text); padding: 8px; }
     .container { width: 100%; max-width: 500px; margin: 0 auto; background: #fff; padding: 15px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin-bottom: 30px; }
 
-    /* --- ಕಲರ್‌ಫುಲ್ ಮಿಂಚುವ ಸ್ಪಲ್ಯಾಶ್ ಸ್ಕ್ರೀನ್ (Splash Screen) --- */
+    /* --- ಕಲರ್‌ಫುಲ್ ಮಿಂಚುವ ಸ್ಪಲ್ಯಾಶ್ ಸ್ಕ್ರೀನ್ --- */
     #splashScreen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
       background: linear-gradient(-45deg, #1e88e5, #00c853, #ff6d00, #aa00ff, #29b6f6);
-      background-size: 400% 400%;
-      animation: gradientBG 4s ease infinite;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      z-index: 99999;
-      transition: opacity 0.6s ease, visibility 0.6s;
+      background-size: 400% 400%; animation: gradientBG 4s ease infinite;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      z-index: 99999; transition: opacity 0.6s ease, visibility 0.6s;
     }
-
-    @keyframes gradientBG {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
+    @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
     .splash-logo-box {
-      width: 180px;
-      height: 180px;
-      border-radius: 35px;
-      padding: 10px;
-      background: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(10px);
+      width: 180px; height: 180px; border-radius: 35px; padding: 10px;
+      background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px);
       box-shadow: 0 10px 30px rgba(0,0,0,0.3), 0 0 20px rgba(255,255,255,0.8);
       animation: pulseGlow 2s infinite alternate, zoomIn 0.8s ease-out;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      display: flex; justify-content: center; align-items: center;
     }
+    .splash-logo-box img { width: 100%; height: 100%; object-fit: cover; border-radius: 28px; }
 
-    .splash-logo-box img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 28px;
-    }
+    @keyframes pulseGlow { 0% { transform: scale(0.98); box-shadow: 0 0 15px rgba(255,255,255,0.6); } 100% { transform: scale(1.05); box-shadow: 0 0 35px rgba(255,255,255,1), 0 0 50px rgba(255,215,0,0.8); } }
+    @keyframes zoomIn { 0% { opacity: 0; transform: scale(0.5); } 100% { opacity: 1; transform: scale(1); } }
 
-    @keyframes pulseGlow {
-      0% { transform: scale(0.98); box-shadow: 0 0 15px rgba(255,255,255,0.6); }
-      100% { transform: scale(1.05); box-shadow: 0 0 35px rgba(255,255,255,1), 0 0 50px rgba(255,215,0,0.8); }
-    }
+    .splash-text { color: #ffffff; margin-top: 25px; font-size: 1.4rem; font-weight: 800; text-shadow: 0 2px 10px rgba(0,0,0,0.4); }
 
-    @keyframes zoomIn {
-      0% { opacity: 0; transform: scale(0.5); }
-      100% { opacity: 1; transform: scale(1); }
-    }
-
-    .splash-text {
-      color: #ffffff;
-      margin-top: 25px;
-      font-size: 1.4rem;
-      font-weight: 800;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.4);
-      letter-spacing: 0.5px;
-      animation: fadeIn 1.2s ease-in-out;
-    }
-
-    header { background-color: var(--primary); color: white; padding: 12px 15px; text-align: center; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); position: relative; }
-    
+    header { background-color: var(--primary); color: white; padding: 12px 15px; text-align: center; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
     .support-bar { display: flex; justify-content: flex-end; gap: 6px; margin-bottom: 8px; align-items: center; }
     .sup-btn { background: #25d366; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 3px; }
     .sup-btn.call { background: #ff9800; }
 
-    .mini-share-btn {
-      background: #25d366;
-      color: white;
-      border: none;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 0.7rem;
-      font-weight: bold;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 3px;
-      animation: glowing-pulse 1.5s infinite;
-    }
+    .mini-share-btn { background: #25d366; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 3px; animation: glowing-pulse 1.5s infinite; }
+    @keyframes glowing-pulse { 0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); } 70% { box-shadow: 0 0 0 6px rgba(37, 211, 102, 0); } 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); } }
 
-    @keyframes glowing-pulse {
-      0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
-      70% { box-shadow: 0 0 0 6px rgba(37, 211, 102, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
-    }
-
-    /* ಗ್ರಾಹಕರ ಆಪ್‌ನಂತೆ ನೇರವಾದ ಇನ್‌ಸ್ಟಾಲ್ ಬಟನ್ ವಿನ್ಯಾಸ */
-    .install-app-banner {
-      background: linear-gradient(135deg, #2e7d32, #4caf50);
-      color: white;
-      padding: 12px 15px;
-      border-radius: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 15px;
-      box-shadow: 0 4px 10px rgba(46, 125, 50, 0.3);
-    }
-    .install-app-banner span { font-size: 0.85rem; font-weight: bold; }
-    .install-action-btn {
-      background: #fff;
-      color: #2e7d32;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 6px;
-      font-size: 0.85rem;
-      font-weight: bold;
-      cursor: pointer;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    }
+    .install-app-banner { background: linear-gradient(135deg, #2e7d32, #4caf50); color: white; padding: 12px 15px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+    .install-action-btn { background: #fff; color: #2e7d32; border: none; padding: 8px 14px; border-radius: 6px; font-size: 0.85rem; font-weight: bold; cursor: pointer; }
 
     h2 { font-size: 1rem; margin-bottom: 10px; color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 5px; }
-    
     .form-group { margin-bottom: 12px; }
     label { display: block; font-size: 0.8rem; font-weight: 700; margin-bottom: 4px; color: #4a5568; }
     input, select { width: 100%; padding: 10px; border: 2px solid #cbd5e0; border-radius: 8px; font-size: 0.9rem; background: #fff; }
@@ -185,11 +102,7 @@
     .btn-print { background: #00838f; color: #fff; border: none; padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; margin-top: 6px; width: 100%; }
     .btn-share { background: #25d366; color: #fff; border: none; padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; margin-top: 6px; width: 100%; }
 
-    .id-card {
-      background: linear-gradient(135deg, #1e88e5, #1565c0);
-      color: white; border-radius: 10px; padding: 15px; margin-bottom: 15px;
-      display: flex; gap: 15px; align-items: center; box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
+    .id-card { background: linear-gradient(135deg, #1e88e5, #1565c0); color: white; border-radius: 10px; padding: 15px; margin-bottom: 15px; display: flex; gap: 15px; align-items: center; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
     .id-card img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid #fff; }
     .id-card-details h3 { font-size: 1rem; margin-bottom: 3px; }
     .id-card-details p { font-size: 0.75rem; opacity: 0.9; }
@@ -211,6 +124,11 @@
     .order-item.archived { border-left-color: #9e9e9e; background: #f1f1f1; opacity: 0.85; }
     .order-item.return-alert { border-left-color: var(--danger); background: #ffebee; }
 
+    /* 📍 ಗ್ರಾಹಕರ ಸಂಪೂರ್ಣ ವಿಳಾಸದ ಬಾಕ್ಸ್ */
+    .cust-address-box {
+      background: #e8f5e9; border: 1px dashed #2e7d32; border-radius: 8px; padding: 10px; margin: 8px 0; font-size: 0.85rem; line-height: 1.4; color: #1b5e20;
+    }
+
     .modal { display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); text-align: center; padding: 20px; overflow-y: auto; justify-content: center; align-items: center; }
     .modal-content-box { background: #fff; max-width: 380px; margin: auto; padding: 25px; border-radius: 14px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.4); }
   </style>
@@ -225,7 +143,6 @@
     <div class="splash-text">🏪 ನಮ್ಮ ಶಾಪಿಂಗ್ ಪ್ಯಾನಲ್</div>
   </div>
 
-  <!-- Support Bar & Mini Glowing Share Button -->
   <div class="support-bar">
     <button onclick="logoutShop()" class="sup-btn" style="background:#e53935;">🔄 ಮರು ಲಾಗಿನ್</button>
     <a href="tel:8105010768" class="sup-btn call">📞 ಕಾಲ್ ಮಾಡಿ</a>
@@ -239,7 +156,6 @@
       <p style="font-size: 0.8rem; opacity: 0.9;">ಅಂಗಡಿ ಮಾಲೀಕರ ಆಪ್ (Shop Owner Panel)</p>
     </header>
 
-    <!-- ಗ್ರಾಹಕರ ಆಪ್‌ನಂತೆ ನೇರವಾದ ಇನ್‌ಸ್ಟಾಲ್ ಬಟನ್ -->
     <div class="install-app-banner" id="installBanner">
       <span>📱 "ಅಂಗಡಿ ಮಾಲೀಕರ ಪ್ಯಾನಲ್" ಆಪ್ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ!</span>
       <button class="install-action-btn" onclick="triggerAppInstall()">📲 ಇನ್‌ಸ್ಟಾಲ್</button>
@@ -372,7 +288,6 @@
         <form id="addProductForm" onsubmit="saveProduct(event)">
           <div id="dynamicUploadFormFields"></div>
           
-          <!-- Return Available Option -->
           <div class="form-group" style="background:#fff3e0; padding:10px; border-radius:8px; border:1px solid #ffe0b2; margin-top:10px;">
             <label style="color:#d32f2f;">🔄 ಈ ವಸ್ತುವಿಗೆ ರಿಟರ್ನ್ / ಎಕ್ಸ್ಚೇಂಜ್ ಸೌಲಭ್ಯವಿದೆಯೇ?</label>
             <select id="prodReturnPolicy" required style="font-weight:bold;">
@@ -422,7 +337,7 @@
 
       <!-- ಪೇಮೆಂಟ್ಸ್ -->
       <div id="tabPayments" style="display:none; background:#fff; padding:15px; border-radius:10px; border:1px solid #cbd5e0;">
-        <h2>💳 ಪೇಮೆಂಟ್ಸ್ ಮತ್ತು ಲೆಕ್ಕಾಚಾರ (15% ಕಮಿಷನ್ ಕಡಿತ)</h2>
+        <h2>💳 ಪೇಮೆಂಟ್ಸ್ ಮತ್ತು ಲೆಕ್ಕಾಚಾರ (15% ಕಮಿಷನ್ ಕಡಿತ & ಡೆಲಿವರಿ ಚಾರ್ಜ್)</h2>
         <div id="paymentLedgerSummary" style="background:#e3f2fd; padding:12px; border-radius:8px; margin-bottom:15px; font-size:0.85rem;"></div>
         <div id="shopPaymentsList" style="margin-top:10px;"></div>
       </div>
@@ -438,7 +353,6 @@
     let currentTab = 'upload';
 
     window.addEventListener('DOMContentLoaded', () => {
-      // 2 ಸೆಕೆಂಡುಗಳ ನಂತರ ಕಲರ್‌ಫುಲ್ ಸ್ಪಲ್ಯಾಶ್ ಸ್ಕ್ರೀನ್ ಮರೆಯಾಗುತ್ತದೆ
       setTimeout(() => {
         const splash = document.getElementById('splashScreen');
         splash.style.opacity = '0';
@@ -465,7 +379,6 @@
         startRealtimeSync();
       }
 
-      // 📱 ಮೊಬೈಲ್ ಬ್ಯಾಕ್ ಬಟನ್ (Hardware Back Button) ಸರಿಪಡಿಸುವ ಸಿಸ್ಟಮ್
       window.history.pushState({ page: 'home' }, '', '');
       window.addEventListener('popstate', (e) => {
         const printModal = document.getElementById('printModal');
@@ -480,8 +393,6 @@
         } else if (currentTab !== 'upload') {
           showTab('upload');
           window.history.pushState({ page: 'home' }, '', '');
-        } else {
-          // ಹೋಮ್ ತಲುಪಿದ ಮೇಲೆ ಮತ್ತೆ ಹಿಂದಕ್ಕೆ ಹೋದರೆ ಆಪ್‌ನಿಂದ ನಿರ್ಗಮಿಸಲು ಅವಕಾಶ ನೀಡುತ್ತದೆ
         }
       });
     });
@@ -507,20 +418,26 @@
       }
     }
 
-    function playAlarmSound() {
-      try {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const oscillator = audioCtx.createOscillator();
-        const gainNode = audioCtx.createGain();
-        oscillator.type = 'sine';
-        oscillator.frequency.setValueAtTime(880, audioCtx.currentTime);
-        oscillator.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
-        oscillator.start();
-        oscillator.stop(audioCtx.currentTime + 1.2);
-      } catch (e) {
-        console.log("Audio play error", e);
-      }
+    /* 🚨 6 ಬಾರಿ ಆಟೋಮ್ಯಾಟಿಕ್ ಆಗಿ ಜೋರಾಗಿ ಮೊಳಗುವ ಆರ್ಡರ್ ಸೈರನ್ ಶಬ್ದ */
+    function playAlarmSound6Times() {
+      let count = 0;
+      const interval = setInterval(() => {
+        try {
+          const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          const oscillator = audioCtx.createOscillator();
+          const gainNode = audioCtx.createGain();
+          oscillator.type = 'sawtooth';
+          oscillator.frequency.setValueAtTime(950, audioCtx.currentTime);
+          oscillator.connect(gainNode);
+          gainNode.connect(audioCtx.destination);
+          oscillator.start();
+          oscillator.stop(audioCtx.currentTime + 0.8);
+        } catch (e) {
+          console.log("Audio error", e);
+        }
+        count++;
+        if (count >= 6) clearInterval(interval);
+      }, 1000);
     }
 
     function logoutShop() {
@@ -540,6 +457,7 @@
       window.open(whatsappUrl, '_blank');
     }
 
+    /* 👠 👞 ಚಪ್ಪಲಿ / ಶೂ 6 ರಿಂದ 14 ನಂಬರ್ ಸೈಜ್ ಆಯ್ಕೆ ವ್ಯವಸ್ಥೆ */
     function renderDynamicUploadForm() {
       const container = document.getElementById('dynamicUploadFormFields');
       const shopTypeSelect = document.getElementById('shopType');
@@ -567,6 +485,23 @@
           </div>
           <div class="form-group"><label>ಸೈಜ್ ವಿವರ:</label><input type="text" id="clothSizeDetail" placeholder="ಉದಾ: 32 Size / XL"></div>
         `;
+      } else if (currentShopType === 'ಚಪ್ಪಲಿ ಅಂಗಡಿ') {
+        specificFields = `
+          <div class="form-group"><label>ಚಪ್ಪಲಿ / ಶೂ ಹೆಸರು:</label><input type="text" id="footwearName" required placeholder="ಉದಾ: Men Leather Sandals / Running Shoes"></div>
+          <div class="form-group"><label>ಚಪ್ಪಲಿ/ಶೂ ಸೈಜ್ ಆಯ್ಕೆ (Select Size 6 to 14):</label>
+            <select id="footwearSize" required>
+              <option value="6 No">6 ನಂಬರ್ (Size 6)</option>
+              <option value="7 No">7 ನಂಬರ್ (Size 7)</option>
+              <option value="8 No">8 ನಂಬರ್ (Size 8)</option>
+              <option value="9 No">9 ನಂಬರ್ (Size 9)</option>
+              <option value="10 No">10 ನಂಬರ್ (Size 10)</option>
+              <option value="11 No">11 ನಂಬರ್ (Size 11)</option>
+              <option value="12 No">12 ನಂಬರ್ (Size 12)</option>
+              <option value="13 No">13 ನಂಬರ್ (Size 13)</option>
+              <option value="14 No">14 ನಂಬರ್ (Size 14)</option>
+            </select>
+          </div>
+        `;
       } else {
         specificFields = `<div class="form-group"><label>ವಸ್ತುವಿನ ಹೆಸರು & ವಿವರಣೆ:</label><input type="text" id="generalName" required placeholder="ವಸ್ತುವಿನ ಹೆಸರು ಬರೆಯಿರಿ"></div>`;
       }
@@ -579,7 +514,7 @@
         </div>
 
         <div style="background:#f8f9fa; padding:10px; border-radius:8px; border:1px solid #e2e8f0; margin-bottom:10px;">
-          <label style="color:#1e88e5; font-weight:bold;">📸 ಕೇವಲ 4 ಫೋಟೋಗಳನ್ನು ಅಪ್ಲೋಡ್ ಮಾಡಿ:</label>
+          <label style="color:#1e88e5; font-weight:bold;">📸 4 ಫೋಟೋಗಳನ್ನು ಅಪ್ಲೋಡ್ ಮಾಡಿ:</label>
           <div style="margin-top:6px;"><label style="font-size:0.75rem;">ಫೋಟೋ 1:</label><input type="file" accept="image/*" id="c1_p1" required></div>
           <div style="margin-top:6px;"><label style="font-size:0.75rem;">ಫೋಟೋ 2:</label><input type="file" accept="image/*" id="c1_p2"></div>
           <div style="margin-top:6px;"><label style="font-size:0.75rem;">ಫೋಟೋ 3:</label><input type="file" accept="image/*" id="c1_p3"></div>
@@ -712,7 +647,7 @@
         });
 
         if (orders.length > previousOrdersCount && previousOrdersCount > 0) {
-          playAlarmSound();
+          playAlarmSound6Times();
         }
         previousOrdersCount = orders.length;
 
@@ -748,6 +683,7 @@
       renderPaymentsLedger(myOrders);
     }
 
+    /* 📦 ಗ್ರಾಹಕರ ಸಂಪೂರ್ಣ ಅಡ್ರೆಸ್ ಮತ್ತು ಪೇಮೆಂಟ್ ಮೆಸೇಜ್ ಸಿಗುವ ಆರ್ಡರ್ ಡಿಸ್ಪ್ಲೇ */
     function renderOrders(orders) {
       const listDiv = document.getElementById('shopOrdersList');
       if (orders.length === 0) {
@@ -759,6 +695,7 @@
         let orderStatus = o.status || 'STEP_1';
         let actionButtonHTML = '';
         let returnAlertBanner = '';
+        let paymentStatusBanner = '';
 
         if (o.isReturnRequested) {
           returnAlertBanner = `
@@ -768,33 +705,59 @@
           `;
         }
 
+        if (orderStatus === 'PACKING') {
+          paymentStatusBanner = `
+            <div style="background:#fff3e0; border:1.5px solid #ff9800; border-radius:6px; padding:8px; margin-top:8px; text-align:center;">
+              <span style="color:#e65100; font-weight:bold; font-size:0.8rem;">⏳ ಈ ಆರ್ಡರ್‌ನ ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್ ಇದೆ. 24 ಗಂಟೆಯೊಳಗೆ ನಿಮ್ಮ ಖಾತೆಗೆ ಹಣ ಜಮೆಯಾಗುತ್ತದೆ.</span>
+            </div>
+          `;
+        }
+
         if (orderStatus === 'STEP_1') {
           actionButtonHTML = `<button onclick="updateOrderStatus('${o.docId}', 'CONFIRMED')" class="btn-confirm">✅ ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಮಾಡಿ</button>`;
         } else if (orderStatus === 'CONFIRMED' || orderStatus === 'STEP_2') {
           let generatedOtp = o.pickupOtp || Math.floor(1000 + Math.random() * 9000).toString();
           actionButtonHTML = `
-            <button onclick="openPrintModalForOrder('${o.docId}', '${o.orderId}', '${o.productName}', '${o.totalPrice}', '${o.customer?.name}', '${o.customer?.phone}', '${o.customer?.village}')" class="btn-print">🖨️ ಪ್ರಿಂಟ್ & ಶೇರ್ ಮಾಡಿ</button>
-            <button onclick="updateOrderStatus('${o.docId}', 'PACKING', '${generatedOtp}')" class="btn-pack" style="margin-top:6px;">📦 ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ</button>
+            <button onclick="openPrintModalForOrder('${o.docId}', '${o.orderId}', '${o.productName}', '${o.totalPrice}', '${o.customer?.name}', '${o.customer?.phone}', '${o.customer?.village || o.customer?.address}')" class="btn-print">🖨️ ಪ್ರಿಂಟ್ & ಶೇರ್ ಮಾಡಿ</button>
+            <button onclick="updateOrderStatus('${o.docId}', 'PACKING', '${generatedOtp}')" class="btn-pack" style="margin-top:6px;">📦 ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (ಫೈನಲ್ ಡೆಲಿವರಿಗೆ ಕಳಿಸಿ)</button>
           `;
         }
+
+        /* 🏠 ಗ್ರಾಹಕರ ಸಂಪೂರ್ಣ ವಿಳಾಸದ ಡೀಟೇಲ್ಸ್ */
+        const custName = o.customer?.name || 'ಗ್ರಾಹಕರು';
+        const custPhone = o.customer?.phone || 'ಸಂಖ್ಯೆ ಇಲ್ಲ';
+        const custVillage = o.customer?.village || o.customer?.address || 'ವಿಳಾಸ ಲಭ್ಯವಿಲ್ಲ';
+        const custTaluk = o.customer?.taluk || shopOwner.taluk || '';
+        const custDistrict = o.customer?.district || shopOwner.district || '';
+        const custLandmark = o.customer?.landmark ? ` (ಲ್ಯಾಂಡ್‌ಮಾರ್ಕ್: ${o.customer.landmark})` : '';
+        const custPincode = o.customer?.pincode ? ` - ${o.customer.pincode}` : '';
 
         return `
           <div class="order-item ${o.isReturnRequested ? 'return-alert' : ''}">
             ${returnAlertBanner}
             <div style="background:#e3f2fd; border-radius:6px; padding:6px; margin-bottom:8px; text-align:center;">
-              <span style="font-size:0.7rem; color:#1565c0; font-weight:bold;">ಆರ್ಡರ್ ಐಡಿ: ${o.orderId || 'OD000000'}</span>
+              <span style="font-size:0.75rem; color:#1565c0; font-weight:bold;">ಆರ್ಡರ್ ಐಡಿ: ${o.orderId || 'OD000000'}</span>
             </div>
             <div style="display:flex; gap:10px; align-items:center;">
-              <img src="${o.productPhoto}" style="width:60px; height:60px; object-fit:cover; border-radius:6px;">
+              <img src="${o.productPhoto}" style="width:65px; height:65px; object-fit:cover; border-radius:6px;">
               <div>
-                <h4 style="font-size:0.9rem;">${o.productName}</h4>
-                <p style="font-size:0.8rem; color:#2e7d32; font-weight:bold;">₹${o.totalPrice}</p>
+                <h4 style="font-size:0.95rem;">${o.productName} ${o.selectedSize ? `[Size: ${o.selectedSize}]` : ''}</h4>
+                <p style="font-size:0.85rem; color:#2e7d32; font-weight:bold;">₹${o.totalPrice}</p>
               </div>
             </div>
-            <p style="margin-top:6px;"><b>ಗ್ರಾಹಕರು:</b> ${o.customer?.name} (${o.customer?.phone})</p>
-            <a href="tel:${o.customer?.phone}" class="btn-call-cust">📞 ಕಾಲ್ ಮಾಡಿ</a>
-            <p style="margin-top:4px; font-size:0.75rem; color:#666;"><b>ಸ್ಥಿತಿ:</b> ${orderStatus}</p>
+            
+            <div class="cust-address-box">
+              <p style="font-weight:bold; font-size:0.9rem; color:#1b5e20;">📍 ಗ್ರಾಹಕರ ಪೂರ್ಣ ವಿಳಾಸ (Full Customer Address):</p>
+              <p><b>ಹೆಸರು:</b> ${custName}</p>
+              <p><b>ಮೊಬೈಲ್ ನಂಬರ್:</b> ${custPhone}</p>
+              <p><b>ವಿಳಾಸ:</b> ${custVillage}${custLandmark}</p>
+              <p><b>ತಾಲೂಕು/ಜಿಲ್ಲೆ:</b> ${custTaluk}, ${custDistrict} ${custPincode}</p>
+            </div>
+
+            <a href="tel:${custPhone}" class="btn-call-cust">📞 ಗ್ರಾಹಕರಿಗೆ ಕಾಲ್ ಮಾಡಿ</a>
+            <p style="margin-top:6px; font-size:0.75rem; color:#666;"><b>ಪ್ರಸ್ತುತ ಸ್ಥಿತಿ:</b> ${orderStatus}</p>
             ${actionButtonHTML}
+            ${paymentStatusBanner}
           </div>
         `;
       }).join('');
@@ -851,29 +814,53 @@
       }
     }
 
+    /* 💵 ಡೆಲಿವರಿ ಚಾರ್ಜ್ ಲೆಕ್ಕಾಚಾರ (₹1000 ಒಳಗೆ ₹100 ಚಾರ್ಜ್, ₹1000 ಮೇಲ್ಪಟ್ಟು ₹50 ಹೆಚ್ಚುವರಿ) */
     function renderPaymentsLedger(orders) {
       const summaryDiv = document.getElementById('paymentLedgerSummary');
       const listDiv = document.getElementById('shopPaymentsList');
       const delivered = orders.filter(o => o.status === 'DELIVERED' || o.status === 'STEP_4');
-      let totalSales = delivered.reduce((acc, curr) => acc + Number(curr.totalPrice || 0), 0);
-      let netPayable = Math.round(totalSales * 0.85);
+      
+      let totalSales = 0;
+      let totalDeliveryCharges = 0;
+
+      delivered.forEach(o => {
+        let price = Number(o.totalPrice || 0);
+        totalSales += price;
+        if (price <= 1000) {
+          totalDeliveryCharges += 100;
+        } else {
+          totalDeliveryCharges += 50;
+        }
+      });
+
+      let netPayable = Math.round((totalSales * 0.85) - totalDeliveryCharges);
 
       summaryDiv.innerHTML = `
-        <p><b>ಒಟ್ಟು ಡೆಲಿವರಿ ಆದ ಮಾರಾಟ:</b> ₹${totalSales}</p>
-        <p><b>15% ಕಮಿಷನ್ ಕಡಿತ ಹೋಗಿ ನಿಮಗೆ ಬರಬೇಕಾದ ಶುದ್ಧ ಮೊತ್ತ:</b> <span style="color:#2e7d32; font-weight:bold; font-size:1rem;">₹${netPayable}</span></p>
+        <p><b>ಒಟ್ಟು ಡೆಲಿವರಿ ಆದ ಒಟ್ಟು ಆನ್‌ಲೈನ್ ಮಾರಾಟ:</b> ₹${totalSales}</p>
+        <p><b>ಡೆಲಿವರಿ ಬಾಯ್ ಒಟ್ಟು ಚಾರ್ಜ್:</b> ₹${totalDeliveryCharges}</p>
+        <p><b>15% ಕಮಿಷನ್ & ಡೆಲಿವರಿ ಚಾರ್ಜ್ ಹೋಗಿ ನಿಮ್ಮ ನಿವ್ವಳ ಲಾಭ:</b> <span style="color:#2e7d32; font-weight:bold; font-size:1.1rem;">₹${netPayable}</span></p>
       `;
-      listDiv.innerHTML = delivered.map(o => `<div class="order-item" style="border-left-color: var(--success);"><p><b>${o.productName}</b> - ₹${o.totalPrice}</p></div>`).join('') || '<p style="font-size:0.8rem; color:#777;">ಯಾವುದೇ ಪೇಮೆಂಟ್ ಹಿಸ್ಟರಿ ಇಲ್ಲ.</p>';
+      listDiv.innerHTML = delivered.map(o => {
+        let price = Number(o.totalPrice || 0);
+        let delCharge = price <= 1000 ? 100 : 50;
+        return `
+          <div class="order-item" style="border-left-color: var(--success);">
+            <p><b>${o.productName}</b> - ಬೆಲೆ: ₹${price}</p>
+            <p style="font-size:0.75rem; color:#555;">ಡೆಲಿವರಿ ಬಾಯ್ ಚಾರ್ಜ್ ಕಡಿತ: ₹${delCharge}</p>
+          </div>
+        `;
+      }).join('') || '<p style="font-size:0.8rem; color:#777;">ಯಾವುದೇ ಪೇಮೆಂಟ್ ಹಿಸ್ಟರಿ ಇಲ್ಲ.</p>';
     }
 
-    function openPrintModalForOrder(docId, orderId, productName, totalPrice, custName, custPhone, custVillage) {
-      currentShareText = `🧾 ಆರ್ಡರ್ ಐಡಿ: ${orderId}\n📦 ವಸ್ತು: ${productName}\n💰 ಬೆಲೆ: ₹${totalPrice}\n👤 ಗ್ರಾಹಕರು: ${custName} (${custPhone})\n📍 ವಿಳಾಸ: ${custVillage}`;
-      document.getElementById('printModalBody').innerHTML = `<p><b>ಆರ್ಡರ್ ಐಡಿ:</b> ${orderId}</p><p><b>ಪ್ರಾಡಕ್ಟ್:</b> ${productName}</p><p><b>ಬೆಲೆ:</b> ₹${totalPrice}</p>`;
+    function openPrintModalForOrder(docId, orderId, productName, totalPrice, custName, custPhone, custAddress) {
+      currentShareText = `🧾 ಆರ್ಡರ್ ಐಡಿ: ${orderId}\n📦 ವಸ್ತು: ${productName}\n💰 ಬೆಲೆ: ₹${totalPrice}\n👤 ಗ್ರಾಹಕರು: ${custName} (${custPhone})\n📍 ವಿಳಾಸ: ${custAddress}`;
+      document.getElementById('printModalBody').innerHTML = `<p><b>ಆರ್ಡರ್ ಐಡಿ:</b> ${orderId}</p><p><b>ಪ್ರಾಡಕ್ಟ್:</b> ${productName}</p><p><b>ಬೆಲೆ:</b> ₹${totalPrice}</p><p><b>ಗ್ರಾಹಕರು & ವಿಳಾಸ:</b> ${custName}, ${custAddress}</p>`;
       document.getElementById('printModal').style.display = 'flex';
       window.history.pushState({ page: 'modal' }, '', '');
     }
 
     function closePrintModal() { document.getElementById('printModal').style.display = 'none'; }
-    function shareOrderDetails() { navigator.clipboard.writeText(currentShareText); alert("📋 ಕಾಪಿ ಆಗಿದೆ!"); }
+    function shareOrderDetails() { navigator.clipboard.writeText(currentShareText); alert("📋 ವಿವರಗಳು ಕಾಪಿ ಆಗಿವೆ!"); }
 
     function renderArchivedOrders(orders) {
       const listDiv = document.getElementById('shopArchivedOrdersList');
@@ -893,7 +880,8 @@
     async function saveProduct(e) {
       e.preventDefault();
       const returnPolicy = document.getElementById('prodReturnPolicy').value;
-      const finalName = document.getElementById('mobModel')?.value || document.getElementById('clothType')?.value || document.getElementById('generalName')?.value || 'Item';
+      const footwearSize = document.getElementById('footwearSize')?.value || '';
+      const finalName = document.getElementById('mobModel')?.value || document.getElementById('clothType')?.value || document.getElementById('footwearName')?.value || document.getElementById('generalName')?.value || 'Item';
       const price = document.getElementById('prodPrice').value.trim() || '0';
       const quantity = document.getElementById('prodQuantity').value;
 
@@ -909,6 +897,7 @@
         taluk: shopOwner.taluk,
         district: shopOwner.district,
         name: finalName,
+        footwearSize: footwearSize,
         price: price,
         quantity: quantity,
         returnPolicy: returnPolicy,
@@ -918,7 +907,7 @@
       };
 
       await window.addDoc(window.collection(window.db, "products"), prodData);
-      alert("🎉 ವಸ್ತು ಮತ್ತು ರಿಟರ್ನ್ ನೀತಿ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್ಲೋಡ್ ಆಗಿದೆ!");
+      alert("🎉 ವಸ್ತು ಮತ್ತು ವಿವರಗಳು ಯಶಸ್ವಿಯಾಗಿ ಅಪ್ಲೋಡ್ ಆಗಿದೆ!");
       document.getElementById('addProductForm').reset();
       renderDynamicUploadForm();
     }
@@ -929,7 +918,7 @@
         <div class="card-small">
           <img src="${p.photo}">
           <div class="card-title-small">${p.name}</div>
-          <div style="font-size:0.7rem; color:#2e7d32; font-weight:bold;">₹${p.price} (${p.returnPolicy === 'YES' ? 'ರಿಟರ್ನ್ ಇದೆ' : 'ರಿಟರ್ನ್ ಇಲ್ಲ'})</div>
+          <div style="font-size:0.7rem; color:#2e7d32; font-weight:bold;">₹${p.price} ${p.footwearSize ? `[${p.footwearSize}]` : ''}</div>
         </div>
       `).join('');
     }
