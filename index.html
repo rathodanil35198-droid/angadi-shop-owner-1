@@ -79,8 +79,30 @@
       100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
     }
 
-    .install-banner { background: #e3f2fd; border: 2px dashed var(--primary); padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem; color: #0d47a1; font-weight: bold; margin-bottom: 12px; border-radius: 8px; }
-    .install-btn { background: var(--primary); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.78rem; cursor: pointer; font-weight: bold; }
+    /* ಖಾಯಂ ಆಗಿ ಕಾಣುವ ದೊಡ್ಡ ಇನ್‌ಸ್ಟಾಲ್ ಬಟನ್ */
+    .permanent-install-box {
+      background: linear-gradient(135deg, #2e7d32, #4caf50);
+      color: white;
+      padding: 12px;
+      border-radius: 10px;
+      text-align: center;
+      margin-bottom: 15px;
+      box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
+    }
+    .permanent-install-box h3 { font-size: 0.95rem; margin-bottom: 6px; }
+    .big-install-btn {
+      background: #fff;
+      color: #2e7d32;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      display: inline-block;
+      width: 100%;
+    }
 
     h2 { font-size: 1rem; margin-bottom: 10px; color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 5px; }
     
@@ -138,38 +160,38 @@
     <button onclick="shareAppViaWhatsApp()" class="mini-share-btn">🟢 ಶೇರ್</button>
   </div>
 
-  <!-- Direct Install Banner -->
-  <div class="install-banner" id="installBanner" style="display:none;">
-    <span>📱 ನಿಮ್ಮ ಮೊಬೈಲ್ ಹೋಮ್ ಸ್ಕ್ರೀನ್ ಮೇಲೆ ಆಪ್ ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಿ!</span>
-    <button class="install-btn" onclick="triggerAppInstall()">📲 ಇನ್‌ಸ್ಟಾಲ್</button>
-  </div>
-
-  <div id="successModal" class="modal">
-    <div class="modal-content-box">
-      <div style="font-size: 2.5rem; margin-bottom: 10px;">🎉</div>
-      <h3 style="color: var(--success); margin-bottom: 10px;">ಲಾಗಿನ್ ಯಶಸ್ವಿಯಾಗಿದೆ!</h3>
-      <p style="font-size: 0.9rem; margin-bottom: 10px;">ನಿಮ್ಮ 4-ಡಿಜಿಟ್ ಐಡಿ:</p>
-      <div id="popup-id" style="font-size: 1.5rem; font-weight: bold; color: var(--primary); background: #e3f2fd; padding: 10px; border-radius: 6px; margin-bottom: 15px;">0000</div>
-      <button class="btn btn-success" onclick="closeSuccessModal()">ಸರಿ</button>
-    </div>
-  </div>
-
-  <!-- PRINT / SHARE MODAL -->
-  <div id="printModal" class="modal">
-    <div class="modal-content-box" style="text-align: left; max-width: 400px;">
-      <h3 style="color: var(--primary); text-align: center; margin-bottom: 10px;">🧾 ಆರ್ಡರ್ ಪ್ರಿಂಟ್ ವಿವರಗಳು</h3>
-      <div id="printModalBody" style="font-size: 0.85rem; line-height: 1.5; background: #f8f9fa; padding: 12px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 12px;"></div>
-      <button class="btn btn-print" onclick="window.print()">🖨️ ಪ್ರಿಂಟ್ ತೆಗೆದುಕೊಳ್ಳಿ (Print)</button>
-      <button class="btn btn-share" style="margin-top: 6px;" onclick="shareOrderDetails()">📤 ಎಲ್ಲರಿಗೂ ಶೇರ್ ಮಾಡಿ (Share)</button>
-      <button class="btn btn-danger" style="margin-top: 6px; padding: 8px;" onclick="closePrintModal()">ಮುಚ್ಚಿ</button>
-    </div>
-  </div>
-
   <div class="container">
     <header>
       <h1>🏪 ನಮ್ಮ ಶಾಪಿಂಗ್</h1>
       <p style="font-size: 0.8rem; opacity: 0.9;">ಅಂಗಡಿ ಮಾಲೀಕರ ಆಪ್ (Shop Owner Panel)</p>
     </header>
+
+    <!-- ಖಾಯಂ ಆಗಿ ಕಾಣುವ ದೊಡ್ಡ ಇನ್‌ಸ್ಟಾಲ್ ಬಟನ್ -->
+    <div class="permanent-install-box" id="permanentInstallBox">
+      <h3>📲 ನಿಮ್ಮ ಮೊಬೈಲ್ ಸ್ಕ್ರೀನ್ ಮೇಲೆ ಆಪ್ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ</h3>
+      <button class="big-install-btn" onclick="triggerAppInstall()">📥 ಇನ್‌ಸ್ಟಾಲ್ ಆಪ್ (Install App)</button>
+    </div>
+
+    <div id="successModal" class="modal">
+      <div class="modal-content-box">
+        <div style="font-size: 2.5rem; margin-bottom: 10px;">🎉</div>
+        <h3 style="color: var(--success); margin-bottom: 10px;">ಲಾಗಿನ್ ಯಶಸ್ವಿಯಾಗಿದೆ!</h3>
+        <p style="font-size: 0.9rem; margin-bottom: 10px;">ನಿಮ್ಮ 4-ಡಿಜಿಟ್ ಐಡಿ:</p>
+        <div id="popup-id" style="font-size: 1.5rem; font-weight: bold; color: var(--primary); background: #e3f2fd; padding: 10px; border-radius: 6px; margin-bottom: 15px;">0000</div>
+        <button class="btn btn-success" onclick="closeSuccessModal()">ಸರಿ</button>
+      </div>
+    </div>
+
+    <!-- PRINT / SHARE MODAL -->
+    <div id="printModal" class="modal">
+      <div class="modal-content-box" style="text-align: left; max-width: 400px;">
+        <h3 style="color: var(--primary); text-align: center; margin-bottom: 10px;">🧾 ಆರ್ಡರ್ ಪ್ರಿಂಟ್ ವಿವರಗಳು</h3>
+        <div id="printModalBody" style="font-size: 0.85rem; line-height: 1.5; background: #f8f9fa; padding: 12px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 12px;"></div>
+        <button class="btn btn-print" onclick="window.print()">🖨️ ಪ್ರಿಂಟ್ ತೆಗೆದುಕೊಳ್ಳಿ (Print)</button>
+        <button class="btn btn-share" style="margin-top: 6px;" onclick="shareOrderDetails()">📤 ಎಲ್ಲರಿಗೂ ಶೇರ್ ಮಾಡಿ (Share)</button>
+        <button class="btn btn-danger" style="margin-top: 6px; padding: 8px;" onclick="closePrintModal()">ಮುಚ್ಚಿ</button>
+      </div>
+    </div>
 
     <!-- 1. ಲಾಗಿನ್ / ನೋಂದಣಿ ಫಾರ್ಮ್ -->
     <div id="loginSection" style="background:#f1f8e9; padding:15px; border-radius:10px; border:1px solid #c8e6c9;">
@@ -318,7 +340,7 @@
         <div id="shopArchivedOrdersList" style="margin-top:10px;"></div>
       </div>
 
-      <!-- ರಿಟರ್ನ್‌ಗಳು (Dedicated Return Section) -->
+      <!-- ರಿಟರ್ನ್‌ಗಳು -->
       <div id="tabReturns" style="display:none; background:#fff; padding:15px; border-radius:10px; border:1px solid #cbd5e0;">
         <h2>🔄 ಗ್ರಾಹಕರು ರಿಟರ್ನ್ / ಎಕ್ಸ್ಚೇಂಜ್ ಮಾಡಿದ ವಸ್ತುಗಳು</h2>
         <p style="font-size:0.8rem; color:#666; margin-bottom:10px;">ಇಲ್ಲಿ ಗ್ರಾಹಕರು ಕಳುಹಿಸಿದ ಡ್ಯಾಮೇಜ್ ಫೋಟೋಗಳು ಮತ್ತು ರಿಟರ್ನ್ ವಿನಂತಿಗಳು ಕಾಣಿಸುತ್ತವೆ.</p>
@@ -347,7 +369,6 @@
       window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
-        document.getElementById('installBanner').style.display = 'flex';
       });
 
       if ('serviceWorker' in navigator) {
@@ -371,7 +392,7 @@
     function checkIfAlreadyInstalled() {
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
       if (isStandalone) {
-        document.getElementById('installBanner').style.display = 'none';
+        document.getElementById('permanentInstallBox').style.display = 'none';
       }
     }
 
@@ -380,12 +401,12 @@
         deferredPrompt.prompt();
         deferredPrompt.userChoice.then((choiceResult) => {
           if (choiceResult.outcome === 'accepted') {
-            document.getElementById('installBanner').style.display = 'none';
+            document.getElementById('permanentInstallBox').style.display = 'none';
           }
           deferredPrompt = null;
         });
       } else {
-        alert("📱 ನಿಮ್ಮ ಬ್ರೌಸರ್‌ನ ಮೇಲ್ಭಾಗದಲ್ಲಿರುವ ಮೂರು ಚುಕ್ಕೆಗಳ (⋮) ಮೆನು ಕ್ಲಿಕ್ ಮಾಡಿ, ನಂತರ 'Install app' ಆಯ್ಕೆಮಾಡಿ.");
+        alert("📱 ಬ್ರೌಸರ್ ಮೆನು (ಮೂರು ಚುಕ್ಕೆಗಳು ⋮) ಕ್ಲಿಕ್ ಮಾಡಿ, ನಂತರ 'Add to Home screen' ಅಥವಾ 'Install app' ಆಯ್ಕೆಮಾಡಿ ಆಪ್ ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಿ!");
       }
     }
 
@@ -779,7 +800,7 @@
 
       const c1_b1 = await convertFileToBase64(document.getElementById('c1_p1').files[0]);
       const c1_b2 = await convertFileToBase64(document.getElementById('c1_p2').files[0]);
-      const c1_b3 = await convertFileToBase64(document.getElementById('c1_p3').files[0]);
+      const c1_b3 = await convertFileToBase64(document.getElementById('c1_p2').files[0]);
       const c1_b4 = await convertFileToBase64(document.getElementById('c1_p4').files[0]);
 
       const prodData = {
