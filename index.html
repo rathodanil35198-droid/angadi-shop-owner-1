@@ -395,11 +395,11 @@
         const oscillator = audioCtx.createOscillator();
         const gainNode = audioCtx.createGain();
         oscillator.type = 'sine';
-        oscillator.frequency.setValueAtTime(880, audioCtx.currentTime); // High pitch siren sound
+        oscillator.frequency.setValueAtTime(880, audioCtx.currentTime);
         oscillator.connect(gainNode);
         gainNode.connect(audioCtx.destination);
         oscillator.start();
-        oscillator.stop(audioCtx.currentTime + 1.2); // play for 1.2 seconds
+        oscillator.stop(audioCtx.currentTime + 1.2);
       } catch (e) {
         console.log("Audio play error", e);
       }
@@ -420,16 +420,6 @@
 
       const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
       window.open(whatsappUrl, '_blank');
-    }
-
-    function calculateRealDistanceKm(villageStr) {
-      if (!villageStr) return "3";
-      let v = villageStr.toLowerCase().trim();
-      if (v.includes("ಭೀಮರಾಯನ") || v.includes("bheemrayangudi")) return "3.5";
-      if (v.includes("ಹೊತ್ತಪೇಟ್") || v.includes("hottapet")) return "2.5";
-      if (v.includes("ಕನ್ಯಾ") || v.includes("kanya")) return "1.5";
-      if (v.includes("ಶಹಾಪುರ") || v.includes("shahapur")) return "1";
-      return "4.0";
     }
 
     function renderDynamicUploadForm() {
@@ -591,8 +581,6 @@
       const ordersRef = window.collection(window.db, "orders");
       window.onSnapshot(ordersRef, (snapshot) => {
         let orders = [];
-        let newOrderDetected = false;
-
         snapshot.forEach(docSnap => {
           const o = docSnap.data();
           let custTaluk = (o.customer?.taluk || '').toLowerCase();
@@ -760,7 +748,7 @@
 
     function openPrintModalForOrder(docId, orderId, productName, totalPrice, custName, custPhone, custVillage) {
       currentShareText = `🧾 ಆರ್ಡರ್ ಐಡಿ: ${orderId}\n📦 ವಸ್ತು: ${productName}\n💰 ಬೆಲೆ: ₹${totalPrice}\n👤 ಗ್ರಾಹಕರು: ${custName} (${custPhone})\n📍 ವಿಳಾಸ: ${custVillage}`;
-      document.getElementById('printModalBody.innerHTML = `<p><b>ಆರ್ಡರ್ ಐಡಿ:</b> ${orderId}</p><p><b>ಪ್ರಾಡಕ್ಟ್:</b> ${productName}</p><p><b>ಬೆಲೆ:</b> ₹${totalPrice}</p>`;
+      document.getElementById('printModalBody').innerHTML = `<p><b>ಆರ್ಡರ್ ಐಡಿ:</b> ${orderId}</p><p><b>ಪ್ರಾಡಕ್ಟ್:</b> ${productName}</p><p><b>ಬೆಲೆ:</b> ₹${totalPrice}</p>`;
       document.getElementById('printModal').style.display = 'flex';
     }
 
@@ -803,7 +791,7 @@
         name: finalName,
         price: price,
         quantity: quantity,
-        returnPolicy: returnPolicy, // 'YES' ಅಥವಾ 'NO'
+        returnPolicy: returnPolicy,
         colors: [{ name: 'Default', photos: [c1_b1, c1_b2, c1_b3, c1_b4].filter(Boolean) }],
         photo: c1_b1 || 'https://via.placeholder.com/100',
         timestamp: window.serverTimestamp()
