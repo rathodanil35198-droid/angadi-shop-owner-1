@@ -79,29 +79,29 @@
       100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
     }
 
-    /* ಖಾಯಂ ಆಗಿ ಕಾಣುವ ದೊಡ್ಡ ಇನ್‌ಸ್ಟಾಲ್ ಬಟನ್ */
-    .permanent-install-box {
+    /* ಗ್ರಾಹಕರ ಆಪ್‌ನಂತೆ ನೇರವಾದ ಇನ್‌ಸ್ಟಾಲ್ ಬಟನ್ ವಿನ್ಯಾಸ */
+    .install-app-banner {
       background: linear-gradient(135deg, #2e7d32, #4caf50);
       color: white;
-      padding: 12px;
+      padding: 12px 15px;
       border-radius: 10px;
-      text-align: center;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       margin-bottom: 15px;
-      box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
+      box-shadow: 0 4px 10px rgba(46, 125, 50, 0.3);
     }
-    .permanent-install-box h3 { font-size: 0.95rem; margin-bottom: 6px; }
-    .big-install-btn {
+    .install-app-banner span { font-size: 0.85rem; font-weight: bold; }
+    .install-action-btn {
       background: #fff;
       color: #2e7d32;
       border: none;
-      padding: 10px 20px;
-      border-radius: 8px;
-      font-size: 0.95rem;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 0.85rem;
       font-weight: bold;
       cursor: pointer;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-      display: inline-block;
-      width: 100%;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
 
     h2 { font-size: 1rem; margin-bottom: 10px; color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 5px; }
@@ -166,10 +166,10 @@
       <p style="font-size: 0.8rem; opacity: 0.9;">ಅಂಗಡಿ ಮಾಲೀಕರ ಆಪ್ (Shop Owner Panel)</p>
     </header>
 
-    <!-- ಖಾಯಂ ಆಗಿ ಕಾಣುವ ದೊಡ್ಡ ಇನ್‌ಸ್ಟಾಲ್ ಬಟನ್ -->
-    <div class="permanent-install-box" id="permanentInstallBox">
-      <h3>📲 ನಿಮ್ಮ ಮೊಬೈಲ್ ಸ್ಕ್ರೀನ್ ಮೇಲೆ ಆಪ್ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ</h3>
-      <button class="big-install-btn" onclick="triggerAppInstall()">📥 ಇನ್‌ಸ್ಟಾಲ್ ಆಪ್ (Install App)</button>
+    <!-- ಗ್ರಾಹಕರ ಆಪ್‌ನಂತೆ ನೇರವಾದ ಇನ್‌ಸ್ಟಾಲ್ ಬಟನ್ -->
+    <div class="install-app-banner" id="installBanner">
+      <span>📱 "ಅಂಗಡಿ ಮಾಲೀಕರ ಪ್ಯಾನಲ್" ಆಪ್ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ!</span>
+      <button class="install-action-btn" onclick="triggerAppInstall()">📲 ಇನ್‌ಸ್ಟಾಲ್</button>
     </div>
 
     <div id="successModal" class="modal">
@@ -369,6 +369,7 @@
       window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
+        document.getElementById('installBanner').style.display = 'flex';
       });
 
       if ('serviceWorker' in navigator) {
@@ -392,7 +393,7 @@
     function checkIfAlreadyInstalled() {
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
       if (isStandalone) {
-        document.getElementById('permanentInstallBox').style.display = 'none';
+        document.getElementById('installBanner').style.display = 'none';
       }
     }
 
@@ -401,12 +402,12 @@
         deferredPrompt.prompt();
         deferredPrompt.userChoice.then((choiceResult) => {
           if (choiceResult.outcome === 'accepted') {
-            document.getElementById('permanentInstallBox').style.display = 'none';
+            document.getElementById('installBanner').style.display = 'none';
           }
           deferredPrompt = null;
         });
       } else {
-        alert("📱 ಬ್ರೌಸರ್ ಮೆನು (ಮೂರು ಚುಕ್ಕೆಗಳು ⋮) ಕ್ಲಿಕ್ ಮಾಡಿ, ನಂತರ 'Add to Home screen' ಅಥವಾ 'Install app' ಆಯ್ಕೆಮಾಡಿ ಆಪ್ ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಿ!");
+        alert("📱 ಬ್ರೌಸರ್ ಮೆನು (ಮೂರು ಚುಕ್ಕೆಗಳು ⋮) ಕ್ಲಿಕ್ ಮಾಡಿ, ನಂತರ 'Install app' ಅಥವಾ 'Add to Home screen' ಆಯ್ಕೆಮಾಡಿ ಆಪ್ ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಿ!");
       }
     }
 
@@ -800,7 +801,7 @@
 
       const c1_b1 = await convertFileToBase64(document.getElementById('c1_p1').files[0]);
       const c1_b2 = await convertFileToBase64(document.getElementById('c1_p2').files[0]);
-      const c1_b3 = await convertFileToBase64(document.getElementById('c1_p2').files[0]);
+      const c1_b3 = await convertFileToBase64(document.getElementById('c1_p3').files[0]);
       const c1_b4 = await convertFileToBase64(document.getElementById('c1_p4').files[0]);
 
       const prodData = {
