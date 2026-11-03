@@ -52,7 +52,7 @@
     html, body { width: 100%; height: 100%; overflow-x: hidden; background-color: var(--bg); color: var(--text); padding: 8px; }
     .container { width: 100%; max-width: 500px; margin: 0 auto; background: #fff; padding: 15px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin-bottom: 30px; }
 
-    /* --- ಕಲರ್‌ಫುಲ್ ಮಿಂಚುವ ಸ್ಪಲ್ಯಾಶ್ ಸ್ಕ್ರೀನ್ --- */
+    /* 🌈 ಕಲರ್‌ಫುಲ್ ಸ್ಪಲ್ಯಾಶ್ ಸ್ಕ್ರೀನ್ */
     #splashScreen {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
       background: linear-gradient(-45deg, #1e88e5, #00c853, #ff6d00, #aa00ff, #29b6f6);
@@ -70,10 +70,8 @@
       display: flex; justify-content: center; align-items: center;
     }
     .splash-logo-box img { width: 100%; height: 100%; object-fit: cover; border-radius: 28px; }
-
     @keyframes pulseGlow { 0% { transform: scale(0.98); box-shadow: 0 0 15px rgba(255,255,255,0.6); } 100% { transform: scale(1.05); box-shadow: 0 0 35px rgba(255,255,255,1), 0 0 50px rgba(255,215,0,0.8); } }
     @keyframes zoomIn { 0% { opacity: 0; transform: scale(0.5); } 100% { opacity: 1; transform: scale(1); } }
-
     .splash-text { color: #ffffff; margin-top: 25px; font-size: 1.4rem; font-weight: 800; text-shadow: 0 2px 10px rgba(0,0,0,0.4); }
 
     header { background-color: var(--primary); color: white; padding: 12px 15px; text-align: center; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
@@ -124,7 +122,6 @@
     .order-item.archived { border-left-color: #9e9e9e; background: #f1f1f1; opacity: 0.85; }
     .order-item.return-alert { border-left-color: var(--danger); background: #ffebee; }
 
-    /* 📍 ಗ್ರಾಹಕರ ಸಂಪೂರ್ಣ ವಿಳಾಸದ ಬಾಕ್ಸ್ */
     .cust-address-box {
       background: #e8f5e9; border: 1px dashed #2e7d32; border-radius: 8px; padding: 10px; margin: 8px 0; font-size: 0.85rem; line-height: 1.4; color: #1b5e20;
     }
@@ -135,7 +132,6 @@
 </head>
 <body>
 
-  <!-- 🌈 ಅತ್ಯಂತ ಆಕರ್ಷಕ ಕಲರ್‌ಫುಲ್ ಸ್ಪಲ್ಯಾಶ್ ಸ್ಕ್ರೀನ್ -->
   <div id="splashScreen">
     <div class="splash-logo-box">
       <img src="logo.png" alt="Logo" onerror="this.src='https://via.placeholder.com/180/1e88e5/ffffff?text=SHOP+PANEL'">
@@ -171,7 +167,6 @@
       </div>
     </div>
 
-    <!-- PRINT / SHARE MODAL -->
     <div id="printModal" class="modal">
       <div class="modal-content-box" style="text-align: left; max-width: 400px;">
         <h3 style="color: var(--primary); text-align: center; margin-bottom: 10px;">🧾 ಆರ್ಡರ್ ಪ್ರಿಂಟ್ ವಿವರಗಳು</h3>
@@ -457,7 +452,6 @@
       window.open(whatsappUrl, '_blank');
     }
 
-    /* 👠 👞 ಚಪ್ಪಲಿ / ಶೂ 6 ರಿಂದ 14 ನಂಬರ್ ಸೈಜ್ ಆಯ್ಕೆ ವ್ಯವಸ್ಥೆ */
     function renderDynamicUploadForm() {
       const container = document.getElementById('dynamicUploadFormFields');
       const shopTypeSelect = document.getElementById('shopType');
@@ -683,7 +677,6 @@
       renderPaymentsLedger(myOrders);
     }
 
-    /* 📦 ಗ್ರಾಹಕರ ಸಂಪೂರ್ಣ ಅಡ್ರೆಸ್ ಮತ್ತು ಪೇಮೆಂಟ್ ಮೆಸೇಜ್ ಸಿಗುವ ಆರ್ಡರ್ ಡಿಸ್ಪ್ಲೇ */
     function renderOrders(orders) {
       const listDiv = document.getElementById('shopOrdersList');
       if (orders.length === 0) {
@@ -705,7 +698,7 @@
           `;
         }
 
-        if (orderStatus === 'PACKING') {
+        if (orderStatus === 'PACKING' || orderStatus === 'STEP_2' || orderStatus === 'STEP_3') {
           paymentStatusBanner = `
             <div style="background:#fff3e0; border:1.5px solid #ff9800; border-radius:6px; padding:8px; margin-top:8px; text-align:center;">
               <span style="color:#e65100; font-weight:bold; font-size:0.8rem;">⏳ ಈ ಆರ್ಡರ್‌ನ ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್ ಇದೆ. 24 ಗಂಟೆಯೊಳಗೆ ನಿಮ್ಮ ಖಾತೆಗೆ ಹಣ ಜಮೆಯಾಗುತ್ತದೆ.</span>
@@ -719,11 +712,12 @@
           let generatedOtp = o.pickupOtp || Math.floor(1000 + Math.random() * 9000).toString();
           actionButtonHTML = `
             <button onclick="openPrintModalForOrder('${o.docId}', '${o.orderId}', '${o.productName}', '${o.totalPrice}', '${o.customer?.name}', '${o.customer?.phone}', '${o.customer?.village || o.customer?.address}')" class="btn-print">🖨️ ಪ್ರಿಂಟ್ & ಶೇರ್ ಮಾಡಿ</button>
-            <button onclick="updateOrderStatus('${o.docId}', 'PACKING', '${generatedOtp}')" class="btn-pack" style="margin-top:6px;">📦 ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (ಫೈನಲ್ ಡೆಲಿವರಿಗೆ ಕಳಿಸಿ)</button>
+            <button onclick="updateOrderStatus('${o.docId}', 'PACKING', '${generatedOtp}')" class="btn-pack" style="margin-top:6px;">📦 ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ಕಳಿಸಿ)</button>
           `;
+        } else {
+          actionButtonHTML = `<p style="margin-top:6px; font-size:0.8rem; color:#2e7d32; font-weight:bold;">🚚 ಡೆಲಿವರಿ ಪ್ರಕ್ರಿಯೆಯಲ್ಲಿದೆ...</p>`;
         }
 
-        /* 🏠 ಗ್ರಾಹಕರ ಸಂಪೂರ್ಣ ವಿಳಾಸದ ಡೀಟೇಲ್ಸ್ */
         const custName = o.customer?.name || 'ಗ್ರಾಹಕರು';
         const custPhone = o.customer?.phone || 'ಸಂಖ್ಯೆ ಇಲ್ಲ';
         const custVillage = o.customer?.village || o.customer?.address || 'ವಿಳಾಸ ಲಭ್ಯವಿಲ್ಲ';
@@ -814,7 +808,6 @@
       }
     }
 
-    /* 💵 ಡೆಲಿವರಿ ಚಾರ್ಜ್ ಲೆಕ್ಕಾಚಾರ (₹1000 ಒಳಗೆ ₹100 ಚಾರ್ಜ್, ₹1000 ಮೇಲ್ಪಟ್ಟು ₹50 ಹೆಚ್ಚುವರಿ) */
     function renderPaymentsLedger(orders) {
       const summaryDiv = document.getElementById('paymentLedgerSummary');
       const listDiv = document.getElementById('shopPaymentsList');
@@ -865,15 +858,18 @@
     function renderArchivedOrders(orders) {
       const listDiv = document.getElementById('shopArchivedOrdersList');
       const archived = orders.filter(o => o.status === 'DELIVERED' || o.status === 'RETURN_COMPLETED');
-      listDiv.innerHTML = archived.map(o => `<div class="order-item archived"><p><b>${o.productName}</b> - ₹${o.totalPrice}</p></div>`).join('') || '<p style="font-size:0.8rem; color:#777;">ಯಾವುದೇ ಹಳೆಯ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>';
+      listDiv.innerHTML = archived.map(o => `<div class="order-item archived"><p><b>${o.productName}</b> - ₹${o.totalPrice} (ಪೇಮೆಂಟ್ ಯಶಸ್ವಿಯಾಗಿದೆ ✔)</p></div>`).join('') || '<p style="font-size:0.8rem; color:#777;">ಯಾವುದೇ ಹಳೆಯ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>';
     }
 
     async function updateOrderStatus(orderId, newStatus, existingOtp) {
       try {
         let updateData = { status: newStatus };
-        if (newStatus === 'PACKING') updateData.pickupOtp = existingOtp;
+        if (newStatus === 'PACKING') {
+          updateData.pickupOtp = existingOtp;
+          updateData.status = 'STEP_2'; // ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ಪಿಕ್ಅಪ್‌ಗೆ ಕಳುಹಿಸುವುದು
+        }
         await window.updateDoc(window.doc(window.db, "orders", orderId), updateData);
-        alert("✅ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್‌ಡೇಟ್ ಆಗಿದೆ!");
+        alert("✅ ಯಶಸ್ವಿಯಾಗಿ ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ಕಳುಹಿಸಲಾಗಿದೆ!");
       } catch (e) { alert("ದೋಷ: " + e.message); }
     }
 
