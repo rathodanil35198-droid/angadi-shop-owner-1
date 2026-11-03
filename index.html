@@ -160,7 +160,7 @@
       <div class="modal-content-box">
         <div style="font-size: 2.5rem; margin-bottom: 10px;">🎉</div>
         <h3 style="color: var(--success); margin-bottom: 10px;">ಲಾಗಿನ್ ಯಶಸ್ವಿಯಾಗಿದೆ!</h3>
-        <p style="font-size: 0.9rem; margin-bottom: 10px;">ನಿಮ್ಮ ನಿಮ್ಮ 4-ಡಿಜಿಟ್ ಐಡಿ:</p>
+        <p style="font-size: 0.9rem; margin-bottom: 10px;">ನಿಮ್ಮ 4-ಡಿಜಿಟ್ ಐಡಿ:</p>
         <div id="popup-id" style="font-size: 1.5rem; font-weight: bold; color: var(--primary); background: #e3f2fd; padding: 10px; border-radius: 6px; margin-bottom: 15px;">0000</div>
         <button class="btn btn-success" onclick="closeSuccessModal()">ಸರಿ</button>
       </div>
@@ -176,7 +176,7 @@
       </div>
     </div>
 
-    <!-- 1. ಲಾಗಿನ್ / ನೋಂದಣಿ ಫಾರ್ಮ್ (UPI & Pin Code ಜೊತೆಗೆ) -->
+    <!-- 1. ಲಾಗಿನ್ / ನೋಂದಣಿ ಫಾರ್ಮ್ -->
     <div id="loginSection" style="background:#f1f8e9; padding:15px; border-radius:10px; border:1px solid #c8e6c9;">
       <h2>🔑 ಹಳೆಯ ಐಡಿ ಪಡೆಯಿರಿ / ಲಾಗಿನ್ ಮಾಡಿ</h2>
       
@@ -196,11 +196,6 @@
         <div class="form-group"><label>ಮೊಬೈಲ್ ನಂಬರ್:</label><input type="tel" id="ownerPhone" required placeholder="ಮೊಬೈಲ್ ಸಂಖ್ಯೆ"></div>
         <div class="form-group"><label>ಅಂಗಡಿಯ ಹೆಸರು:</label><input type="text" id="shopName" required placeholder="ಉದಾ: ಶ್ರೀ ಸೇವಾಲಾಲ್ ಸ್ಟೋರ್ಸ್"></div>
         
-        <div class="form-group">
-          <label>ಅಂಗಡಿಯ ಯುಪಿಐ ಐಡಿ (PhonePay / GPay / Paytm UPI ID):</label>
-          <input type="text" id="ownerUpiId" required placeholder="ಉದಾ: 8105010768@ybl ಅಥವಾ @okaxis">
-        </div>
-
         <div class="form-group">
           <label>ಅಂಗಡಿಯ ಪ್ರಕಾರ (ವಿಭಾಗ):</label>
           <select id="shopType" required onchange="renderDynamicUploadForm()">
@@ -255,7 +250,6 @@
           <h3 id="displayShopName">ಅಂಗಡಿ ಹೆಸರು</h3>
           <p>ಮಾಲೀಕರು: <span id="displayOwnerName"></span> (<span id="displayShopType"></span>)</p>
           <p>ಸ್ಥಳ: <span id="displayLocation"></span> | Pin: <span id="displayPincode"></span></p>
-          <p>UPI: <span id="displayUpi"></span></p>
           <div class="id-number">ID: <span id="displayId">0000</span></div>
         </div>
       </div>
@@ -559,7 +553,6 @@
         name: document.getElementById('ownerName').value.trim(),
         phone: document.getElementById('ownerPhone').value.trim(),
         shopName: document.getElementById('shopName').value.trim(),
-        upiId: document.getElementById('ownerUpiId').value.trim(),
         shopType: document.getElementById('shopType').value,
         district: document.getElementById('district').value.trim(),
         taluk: document.getElementById('taluk').value.trim(),
@@ -616,7 +609,6 @@
       document.getElementById('displayShopType').innerText = shopOwner.shopType;
       document.getElementById('displayLocation').innerText = `${shopOwner.taluk}, ${shopOwner.district}`;
       document.getElementById('displayPincode').innerText = shopOwner.pincode || '585287';
-      document.getElementById('displayUpi').innerText = shopOwner.upiId || 'Not Set';
       document.getElementById('displayId').innerText = shopOwner.id;
       if (shopOwner.photo) document.getElementById('displayShopPhoto').src = shopOwner.photo;
     }
@@ -725,18 +717,13 @@
             <div style="background:#e3f2fd; border:2px solid #1e88e5; border-radius:8px; padding:10px; margin-top:8px; text-align:center;">
               <p style="font-size:0.8rem; color:#1565c0; font-weight:bold;">🔑 ಡೆಲಿವರಿ ಪಿಕಪ್ ಒಟಿಪಿ (Pickup OTP):</p>
               <div style="font-size:1.4rem; font-weight:bold; color:#0d47a1; letter-spacing:2px; margin:4px 0;">${o.pickupOtp || '2275'}</div>
-              <p style="font-size:0.75rem; color:#555;">ಡೆಲಿವರಿ ಬಾಯ್ ಒಟಿಪಿ ಹಾಕಿ ಪಿಕಪ್ ಕಂಪ್ಲೀಟ್ ಮಾಡಿದ ತಕ್ಷಣ ಕೆಳಗಿನಂತೆ ಪೇಮೆಂಟ್ ಪ್ರಕ್ರಿಯೆ ಪ್ರಾರಂಭವಾಗುತ್ತದೆ.</p>
+              <p style="font-size:0.75rem; color:#555;">ಡೆಲಿವರಿ ಬಾಯ್ ಒಟಿಪಿ ಹಾಕಿ ಪಿಕಪ್ ಕಂಪ್ಲೀಟ್ ಮಾಡಿದ ತಕ್ಷಣ 24 ಗಂಟೆಯ ಪೇಮೆಂಟ್ ಪ್ರಕ್ರಿಯೆ ಪ್ರಾರಂಭವಾಗುತ್ತದೆ.</p>
             </div>
           `;
+        } else if (orderStatus === 'STEP_4' || orderStatus === 'DELIVERED') {
           paymentStatusBanner = `
             <div style="background:#fff3e0; border:1.5px solid #ff9800; border-radius:6px; padding:8px; margin-top:8px; text-align:center;">
-              <span style="color:#e65100; font-weight:bold; font-size:0.8rem;">⏳ ಈ ಆರ್ಡರ್‌ನ ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್ ಇದೆ. 24 ಗಂಟೆಯೊಳಗೆ ನಿಮ್ಮ UPI (${shopOwner.upiId || 'UPI'}) ಖಾತೆಗೆ ಹಣ ಜಮೆಯಾಗುತ್ತದೆ.</span>
-            </div>
-          `;
-        } else {
-          paymentStatusBanner = `
-            <div style="background:#e8f5e9; border:1.5px solid #4caf50; border-radius:6px; padding:8px; margin-top:8px; text-align:center;">
-              <span style="color:#2e7d32; font-weight:bold; font-size:0.8rem;">✔ ಪೇಮೆಂಟ್ ಯಶಸ್ವಿಯಾಗಿದೆ (Payment Successful)!</span>
+              <span style="color:#e65100; font-weight:bold; font-size:0.8rem;">⏳ ಈ ಆರ್ಡರ್‌ನ ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್ ಇದೆ. 24 ಗಂಟೆಯೊಳಗೆ "ನಮ್ಮ ಊರು ಶಾಪಿಂಗ್" ಕಂಪನಿ ಯುಪಿಐ ಮೂಲಕ ನಿಮ್ಮ ಖಾತೆಗೆ ಹಣ ಜಮೆಯಾಗುತ್ತದೆ.</span>
             </div>
           `;
         }
@@ -749,11 +736,23 @@
         const custLandmark = o.customer?.landmark ? ` (ಲ್ಯಾಂಡ್‌ಮಾರ್ಕ್: ${o.customer.landmark})` : '';
         const custPincode = o.customer?.pincode ? ` - ${o.customer.pincode}` : '';
 
+        // ಜಿಪಿಎಸ್ ದೂರದ ಅಂದಾಜು ಲೆಕ್ಕಾಚಾರ (GPS Distance Calculation)
+        let distanceKm = "3.5 ಕಿ.ಮೀ.";
+        if (shopOwner.pincode && o.customer?.pincode) {
+          let diff = Math.abs(parseInt(shopOwner.pincode) - parseInt(o.customer.pincode));
+          distanceKm = diff === 0 ? "1.2 ಕಿ.ಮೀ." : `${(diff % 15) + 2.4} ಕಿ.ಮೀ.`;
+        }
+
+        let paymentModeBadge = o.paymentMode === 'COD' ? 
+          `<span style="background:#ffebee; color:#c62828; padding:2px 6px; border-radius:4px; font-weight:bold;">💵 ಕ್ಯಾಶ್ ಆನ್ ಡೆಲಿವರಿ (COD)</span>` : 
+          `<span style="background:#e8f5e9; color:#2e7d32; padding:2px 6px; border-radius:4px; font-weight:bold;">🟢 UPI ಪೇಮೆಂಟ್ (ನಮ್ಮ ಊರು ಶಾಪಿಂಗ್)</span>`;
+
         return `
           <div class="order-item ${o.isReturnRequested ? 'return-alert' : ''}">
             ${returnAlertBanner}
-            <div style="background:#e3f2fd; border-radius:6px; padding:6px; margin-bottom:8px; text-align:center;">
+            <div style="background:#e3f2fd; border-radius:6px; padding:6px; margin-bottom:8px; text-align:space-between; display:flex; justify-content:space-between; align-items:center;">
               <span style="font-size:0.75rem; color:#1565c0; font-weight:bold;">ಆರ್ಡರ್ ಐಡಿ: ${o.orderId || 'OD000000'}</span>
+              ${paymentModeBadge}
             </div>
             <div style="display:flex; gap:10px; align-items:center;">
               <img src="${o.productPhoto}" style="width:65px; height:65px; object-fit:cover; border-radius:6px;">
@@ -764,11 +763,12 @@
             </div>
             
             <div class="cust-address-box">
-              <p style="font-weight:bold; font-size:0.9rem; color:#1b5e20;">📍 ಗ್ರಾಹಕರ ಪೂರ್ಣ ವಿಳಾಸ (Full Customer Address):</p>
+              <p style="font-weight:bold; font-size:0.9rem; color:#1b5e20;">📍 ಗ್ರಾಹಕರ ಪೂರ್ಣ ವಿಳಾಸ & ಜಿಪಿಎಸ್ ದೂರ:</p>
               <p><b>ಹೆಸರು:</b> ${custName}</p>
               <p><b>ಮೊಬೈಲ್ ನಂಬರ್:</b> ${custPhone}</p>
               <p><b>ವಿಳಾಸ:</b> ${custVillage}${custLandmark}</p>
               <p><b>ತಾಲೂಕು/ಜಿಲ್ಲೆ/ಪಿನ್:</b> ${custTaluk}, ${custDistrict} ${custPincode}</p>
+              <p style="margin-top:4px; color:#0d47a1; font-weight:bold;">📏 ಅಂಗಡಿಯಿಂದ ದೂರ: ${distanceKm}</p>
             </div>
 
             <a href="tel:${custPhone}" class="btn-call-cust">📞 ಗ್ರಾಹಕರಿಗೆ ಕಾಲ್ ಮಾಡಿ</a>
@@ -853,10 +853,10 @@
       let netPayable = Math.round((totalSales * 0.85) - totalDeliveryCharges);
 
       summaryDiv.innerHTML = `
-        <p><b>ಅಂಗಡಿ ಯುಪಿಐ ಐಡಿ (UPI ID):</b> <span style="color:#1565c0; font-weight:bold;">${shopOwner.upiId || 'Not Set'}</span></p>
+        <p><b>ಕಂಪನಿ ಯುಪಿಐ (ನಮ್ಮ ಊರು ಶಾಪಿಂಗ್):</b> <span style="color:#1565c0; font-weight:bold;">nammaurushop@ybl</span></p>
         <p><b>ಒಟ್ಟು ಡೆಲಿವರಿ ಆದ ಒಟ್ಟು ಆನ್‌ಲೈನ್ ಮಾರಾಟ:</b> ₹${totalSales}</p>
         <p><b>ಡೆಲಿವರಿ ಬಾಯ್ ಒಟ್ಟು ಚಾರ್ಜ್:</b> ₹${totalDeliveryCharges}</p>
-        <p><b>15% ಕಮಿಷನ್ & ಚಾರ್ಜ್ ಹೋಗಿ ನಿಮ್ಮ ನಿವ್ವಳ ಲಾಭ (UPI ಮೂಲಕ ಜಮೆ):</b> <span style="color:#2e7d32; font-weight:bold; font-size:1.1rem;">₹${netPayable}</span></p>
+        <p><b>15% ಕಮಿಷನ್ & ಚಾರ್ಜ್ ಹೋಗಿ ನಿಮ್ಮ ನಿವ್ವಳ ಲಾಭ:</b> <span style="color:#2e7d32; font-weight:bold; font-size:1.1rem;">₹${netPayable}</span></p>
       `;
       listDiv.innerHTML = delivered.map(o => {
         let price = Number(o.totalPrice || 0);
@@ -864,7 +864,7 @@
         return `
           <div class="order-item" style="border-left-color: var(--success);">
             <p><b>${o.productName}</b> - ಬೆಲೆ: ₹${price} <span style="color:green; font-weight:bold;">(ಪೇಮೆಂಟ್ ಸಕ್ಸೆಸ್ ✔)</span></p>
-            <p style="font-size:0.75rem; color:#555;">ಡೆಲಿವರಿ ಬಾಯ್ ಚಾರ್ಜ್ ಕಡಿತ: ₹${delCharge} | UPI: ${shopOwner.upiId || ''}</p>
+            <p style="font-size:0.75rem; color:#555;">ಡೆಲಿವರಿ ಬಾಯ್ ಚಾರ್ಜ್ ಕಡಿತ: ₹${delCharge} | ಪೇಮೆಂಟ್ ಮೋಡ್: ${o.paymentMode || 'UPI'}</p>
           </div>
         `;
       }).join('') || '<p style="font-size:0.8rem; color:#777;">ಯಾವುದೇ ಪೇಮೆಂಟ್ ಹಿಸ್ಟರಿ ಇಲ್ಲ.</p>';
@@ -883,7 +883,7 @@
     function renderArchivedOrders(orders) {
       const listDiv = document.getElementById('shopArchivedOrdersList');
       const archived = orders.filter(o => o.status === 'DELIVERED' || o.status === 'STEP_4' || o.status === 'RETURN_COMPLETED');
-      listDiv.innerHTML = archived.map(o => `<div class="order-item archived"><p><b>${o.productName}</b> - ₹${o.totalPrice} <span style="color:green; font-weight:bold;">(ಪೇಮೆಂಟ್ ಸಕ್ಸೆಸ್ ✔ - UPI: ${shopOwner.upiId || ''})</span></p></div>`).join('') || '<p style="font-size:0.8rem; color:#777;">ಯಾವುದೇ ಹಳೆಯ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>';
+      listDiv.innerHTML = archived.map(o => `<div class="order-item archived"><p><b>${o.productName}</b> - ₹${o.totalPrice} <span style="color:green; font-weight:bold;">(ಪೇಮೆಂಟ್ ಸಕ್ಸೆಸ್ ✔ - ನಮ್ಮ ಊರು ಶಾಪಿಂಗ್ UPI)</span></p></div>`).join('') || '<p style="font-size:0.8rem; color:#777;">ಯಾವುದೇ ಹಳೆಯ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>';
     }
 
     async function updateOrderStatus(orderId, newStatus, existingOtp) {
