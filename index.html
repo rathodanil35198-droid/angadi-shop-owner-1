@@ -127,9 +127,21 @@
 
     .modal { display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); text-align: center; padding: 20px; overflow-y: auto; justify-content: center; align-items: center; }
     .modal-content-box { background: #fff; max-width: 380px; margin: auto; padding: 25px; border-radius: 14px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.4); }
+
+    /* Server Down / Maintenance Overlay */
+    #serverDownOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 99999; display: none; justify-content: center; align-items: center; padding: 20px; text-align: center; color: white; }
   </style>
 </head>
 <body>
+
+  <!-- Server Down / Maintenance Overlay -->
+  <div id="serverDownOverlay">
+    <div style="background:#fff; color:#333; padding:25px; border-radius:12px; max-width:350px; width:100%;">
+      <div style="font-size:3rem; margin-bottom:10px;">⚠️</div>
+      <h3 style="color:#d32f2f; margin-bottom:8px;">ಸರ್ವರ್ ತಾತ್ಕಾಲಿಕವಾಗಿ ಬಂದ್ ಆಗಿದೆ</h3>
+      <p style="font-size:0.85rem; color:#666; line-height:1.4;" id="serverDownMsg">ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್‌ನಿಂದ ಸಿಸ್ಟಮ್ ಆಫ್ ಮಾಡಲಾಗಿದೆ ಅಥವಾ ನಿಮ್ಮ ಅಂಗಡಿ ಖಾತೆಯನ್ನು ತೆಗೆದುಹಾಕಲಾಗಿದೆ. ದಯವಿಟ್ಟು ಮಾಸ್ಟರ್ ಅನ್ನು ಸಂಪರ್ಕಿಸಿ.</p>
+    </div>
+  </div>
 
   <div id="splashScreen">
     <div class="splash-logo-box">
@@ -352,6 +364,7 @@
     let currentTab = 'upload';
 
     window.addEventListener('DOMContentLoaded', () => {
+      checkAppLiveStatus();
       setTimeout(() => {
         const splash = document.getElementById('splashScreen');
         splash.style.opacity = '0';
@@ -371,11 +384,7 @@
       }
 
       if (shopOwner) {
-        renderIDCard();
-        renderDynamicUploadForm();
-        document.getElementById('loginSection').style.display = 'none';
-        document.getElementById('dashboardSection').style.display = 'block';
-        startRealtimeSync();
+        verifyShopExistsInFirebase();
       }
 
       window.history.pushState({ page: 'home' }, '', '');
@@ -395,6 +404,49 @@
         }
       });
     });
+
+    // 1. ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್ ಆನ್/ಆಫ್ ಸ್ಟೇಟಸ್ ಚೆಕ್ ಮಾಡುವುದು
+    function checkAppLiveStatus() {
+      window.onSnapshot(window.doc(window.db, "settings", "instapp_control"), (docSnap) => {
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          if (data.isOnline === false) {
+            document.getElementById('serverDownMsg').innerText = "ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್‌ನಿಂದ ಇನ್‌ಸ್ಟಾಪ್ ಸಿಸ್ಟಮ್ ಅನ್ನು ಬಂದ್ (OFF) ಮಾಡಲಾಗಿದೆ. ದಯವಿಟ್ಟು ನಂತರ ಪ್ರಯತ್ನಿಸಿ.";
+            document.getElementById('serverDownOverlay').style.display = 'flex';
+          } else {
+            document.getElementById('serverDownOverlay').style.display = 'none';
+          }
+        }
+      });
+    }
+
+    // 2. ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್‌ನಲ್ಲಿ ಡಿಲೀಟ್ ಮಾಡಿದ್ದರೆ ಲಾಗಿನ್ ಆಗದಂತೆ ತಡೆಯುವುದು
+    async function verifyShopExistsInFirebase() {
+      if (!shopOwner || !shopOwner.id) return;
+      try {
+        const deletedDoc = await window.getDoc(window.doc(window.db, "deleted_shops", shopOwner.id));
+        if (deletedDoc.exists()) {
+          localStorage.removeItem('my_shop_owner_session');
+          document.getElementById('serverDownMsg').innerText = "ನಿಮ್ಮ ಅಂಗಡಿ ಮಾಲೀಕರ ಐಡಿಯನ್ನು ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್‌ನಿಂದ ಸಂಪೂರ್ಣವಾಗಿ ಡಿಲೀಟ್ ಮಾಡಲಾಗಿದೆ. ಹೊಸದಾಗಿ ನೋಂದಣಿ ಮಾಡಿ.";
+          document.getElementById('serverDownOverlay').style.display = 'flex';
+          return;
+        }
+
+        const q = window.query(window.collection(window.db, "shop_owners"), window.where("id", "==", String(shopOwner.id)));
+        const snap = await window.getDocs(q);
+        if (snap.empty) {
+          localStorage.removeItem('my_shop_owner_session');
+          document.getElementById('serverDownMsg').innerText = "ನಿಮ್ಮ ಅಂಗಡಿ ಖಾತೆಯನ್ನು ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್‌ನಿಂದ ತೆಗೆದುಹಾಕಲಾಗಿದೆ.";
+          document.getElementById('serverDownOverlay').style.display = 'flex';
+        } else {
+          renderIDCard();
+          renderDynamicUploadForm();
+          document.getElementById('loginSection').style.display = 'none';
+          document.getElementById('dashboardSection').style.display = 'block';
+          startRealtimeSync();
+        }
+      } catch(e) { console.log(e); }
+    }
 
     function checkIfAlreadyInstalled() {
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
@@ -562,7 +614,7 @@
       };
 
       try {
-        await window.addDoc(window.collection(window.db, "shop_owners"), shopOwner);
+        await window.setDoc(window.doc(window.db, "shop_owners", fourDigitId), shopOwner);
         localStorage.setItem('my_shop_owner_session', JSON.stringify(shopOwner));
         document.getElementById('popup-id').innerText = fourDigitId;
         document.getElementById('successModal').style.display = 'flex';
@@ -574,6 +626,12 @@
       if (!idVal) { alert("ದಯವಿಟ್ಟು ನಿಮ್ಮ 4-ಡಿಜಿಟ್ ಐಡಿ ನಮೂದಿಸಿ."); return; }
 
       try {
+        const deletedDoc = await window.getDoc(window.doc(window.db, "deleted_shops", idVal));
+        if (deletedDoc.exists()) {
+          alert("❌ ಈ ಐಡಿಯನ್ನು ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್‌ನಿಂದ ಡಿಲೀಟ್ ಮಾಡಲಾಗಿದೆ. ಇದು ಕಾರ್ಯನಿರ್ವಹಿಸುವುದಿಲ್ಲ.");
+          return;
+        }
+
         const q = window.query(window.collection(window.db, "shop_owners"), window.where("id", "==", String(idVal)));
         const snap = await window.getDocs(q);
 
@@ -736,7 +794,6 @@
         const custLandmark = o.customer?.landmark ? ` (ಲ್ಯಾಂಡ್‌ಮಾರ್ಕ್: ${o.customer.landmark})` : '';
         const custPincode = o.customer?.pincode ? ` - ${o.customer.pincode}` : '';
 
-        // ಜಿಪಿಎಸ್ ದೂರದ ಅಂದಾಜು ಲೆಕ್ಕಾಚಾರ (GPS Distance Calculation)
         let distanceKm = "3.5 ಕಿ.ಮೀ.";
         if (shopOwner.pincode && o.customer?.pincode) {
           let diff = Math.abs(parseInt(shopOwner.pincode) - parseInt(o.customer.pincode));
