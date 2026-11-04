@@ -863,7 +863,7 @@
         let delCharge = price <= 1000 ? 100 : 50;
         return `
           <div class="order-item" style="border-left-color: var(--success);">
-            <p><b>${o.productName}</b> - ಬೆಲೆ: ₹${price} <span style="color:green; font-weight:bold;">(ಪೇಮೆಂಟ್ ಸಕ್ಸೆಸ್ ✔)</span></p>
+            <p><b>${o.productName}</b> - ಬೆಲೆ: ₹${price} <span style="color:green; font-weight:bold;">(ಪೇಮೆಂಟ್ ಸಕ್ಸೆಸ್ ✔ - ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್ ದೃಢೀಕರಿಸಲಾಗಿದೆ)</span></p>
             <p style="font-size:0.75rem; color:#555;">ಡೆಲಿವರಿ ಬಾಯ್ ಚಾರ್ಜ್ ಕಡಿತ: ₹${delCharge} | ಪೇಮೆಂಟ್ ಮೋಡ್: ${o.paymentMode || 'UPI'}</p>
           </div>
         `;
