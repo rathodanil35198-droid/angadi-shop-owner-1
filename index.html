@@ -94,6 +94,7 @@
     .btn-danger { background: var(--danger); }
     .btn-warning { background: var(--warning); }
     .btn-call-cust { background: #388e3c; color: #fff; padding: 6px 12px; border-radius: 4px; text-decoration: none; font-size: 0.75rem; font-weight: bold; display: inline-block; margin-top: 4px; }
+    .btn-map-loc { background: #0288d1; color: #fff; padding: 6px 12px; border-radius: 4px; text-decoration: none; font-size: 0.75rem; font-weight: bold; display: inline-block; margin-top: 4px; margin-left: 4px; }
     .btn-pack { background: #ff9f00; color: #fff; border: none; padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; margin-top: 6px; width: 100%; }
     .btn-confirm { background: #2874f0; color: #fff; border: none; padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; margin-top: 6px; width: 100%; }
     .btn-print { background: #00838f; color: #fff; border: none; padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; margin-top: 6px; width: 100%; }
@@ -178,6 +179,16 @@
       </div>
     </div>
 
+    <!-- QR Code Big View Modal -->
+    <div id="qrModal" class="modal" onclick="closeQrModal()">
+      <div class="modal-content-box" onclick="event.stopPropagation()">
+        <h3 style="color: var(--primary); margin-bottom: 10px;">📷 ನಿಮ್ಮ ಯುಪಿಐ ಕ್ಯೂಆರ್ ಕೋಡ್ (Scanner)</h3>
+        <img id="modalQrImage" src="" style="width: 240px; height: 240px; object-fit: contain; border: 2px solid #ddd; border-radius: 8px; margin: 10px 0;">
+        <p style="font-size: 0.85rem; color: #555; margin-bottom: 15px;">ಗ್ರಾಹಕರು ಅಥವಾ ಡೆಲಿವರಿ ಬಾಯ್ ಇದನ್ನು ಸ್ಕ್ಯಾನ್ ಮಾಡಿ ಪಾವತಿ ಮಾಡಬಹುದು.</p>
+        <button class="btn btn-danger" onclick="closeQrModal()">ಮುಚ್ಚಿ</button>
+      </div>
+    </div>
+
     <div id="printModal" class="modal">
       <div class="modal-content-box" style="text-align: left; max-width: 400px;">
         <h3 style="color: var(--primary); text-align: center; margin-bottom: 10px;">🧾 ಆರ್ಡರ್ ಪ್ರಿಂಟ್ ವಿವರಗಳು</h3>
@@ -250,6 +261,12 @@
           <input type="file" accept="image/*" id="shopPhotoFile">
         </div>
 
+        <div class="form-group" style="background:#fff3e0; padding:10px; border-radius:8px; border:1px solid #ffe0b2;">
+          <label style="color:#e65100;">💳 ನಿಮ್ಮ ಯುಪಿಐ ಕ್ಯೂಆರ್ ಕೋಡ್ (UPI QR Code) ಫೋಟೋ ಹಾಕಿ:</label>
+          <input type="file" accept="image/*" id="shopQrFile">
+          <p style="font-size:0.75rem; color:#666; margin-top:4px;">(ಗ್ರಾಹಕರಿಗೆ ಮತ್ತು ಪೇಮೆಂಟ್‌ಗೆ ಇದು ನಿಮ್ಮ ಐಡಿ ಹತ್ತಿರ ಕಾಣಿಸುತ್ತದೆ)</p>
+        </div>
+
         <button type="submit" class="btn btn-success" id="btnLogin">ಹೊಸ ಖಾತೆ ಪಡೆದುಕೊಳ್ಳಿ (Permanent Account)</button>
       </form>
     </div>
@@ -262,7 +279,12 @@
           <h3 id="displayShopName">ಅಂಗಡಿ ಹೆಸರು</h3>
           <p>ಮಾಲೀಕರು: <span id="displayOwnerName"></span> (<span id="displayShopType"></span>)</p>
           <p>ಸ್ಥಳ: <span id="displayLocation"></span> | Pin: <span id="displayPincode"></span></p>
-          <div class="id-number">ID: <span id="displayId">0000</span></div>
+          <div style="display:flex; align-items:center; gap:8px; margin-top:4px;">
+            <div class="id-number">ID: <span id="displayId">0000</span></div>
+            <div id="smallQrContainer" style="cursor:pointer;" onclick="openBigQrModal()" title="ಕ್ಯೂರ್ ಕೋಡ್ ದೊಡ್ಡದಾಗಿ ನೋಡಲು ಕ್ಲಿಕ್ ಮಾಡಿ">
+              <img id="displaySmallQr" src="" style="width:36px; height:36px; object-fit:contain; border-radius:4px; border:1.5px solid #fff; background:#fff; display:none;" alt="QR">
+            </div>
+          </div>
         </div>
       </div>
 
@@ -391,12 +413,16 @@
       window.addEventListener('popstate', (e) => {
         const printModal = document.getElementById('printModal');
         const successModal = document.getElementById('successModal');
+        const qrModal = document.getElementById('qrModal');
 
         if (printModal && printModal.style.display === 'flex') {
           closePrintModal();
           window.history.pushState({ page: 'home' }, '', '');
         } else if (successModal && successModal.style.display === 'flex') {
           closeSuccessModal();
+          window.history.pushState({ page: 'home' }, '', '');
+        } else if (qrModal && qrModal.style.display === 'flex') {
+          closeQrModal();
           window.history.pushState({ page: 'home' }, '', '');
         } else if (currentTab !== 'upload') {
           showTab('upload');
@@ -507,6 +533,20 @@
       window.open(whatsappUrl, '_blank');
     }
 
+    function openBigQrModal() {
+      if (shopOwner && shopOwner.qrPhoto) {
+        document.getElementById('modalQrImage').src = shopOwner.qrPhoto;
+        document.getElementById('qrModal').style.display = 'flex';
+        window.history.pushState({ page: 'qrmodal' }, '', '');
+      } else {
+        alert("ಯಾವುದೇ ಕ್ಯೂಆರ್ ಕೋಡ್ ಅಪ್ಲೋಡ್ ಮಾಡಲಾಗಿಲ್ಲ.");
+      }
+    }
+
+    function closeQrModal() {
+      document.getElementById('qrModal').style.display = 'none';
+    }
+
     function renderDynamicUploadForm() {
       const container = document.getElementById('dynamicUploadFormFields');
       const shopTypeSelect = document.getElementById('shopType');
@@ -597,7 +637,9 @@
     async function registerShopOwner(e) {
       e.preventDefault();
       const photoFile = document.getElementById('shopPhotoFile').files[0];
+      const qrFile = document.getElementById('shopQrFile').files[0];
       const photoBase64 = await convertFileToBase64(photoFile);
+      const qrBase64 = await convertFileToBase64(qrFile);
       const fourDigitId = Math.floor(1000 + Math.random() * 9000).toString();
 
       shopOwner = {
@@ -610,6 +652,7 @@
         taluk: document.getElementById('taluk').value.trim(),
         pincode: document.getElementById('pincode').value.trim(),
         photo: photoBase64 || 'https://via.placeholder.com/100',
+        qrPhoto: qrBase64 || '',
         isPaid: true
       };
 
@@ -669,6 +712,14 @@
       document.getElementById('displayPincode').innerText = shopOwner.pincode || '585287';
       document.getElementById('displayId').innerText = shopOwner.id;
       if (shopOwner.photo) document.getElementById('displayShopPhoto').src = shopOwner.photo;
+      
+      const smallQrImg = document.getElementById('displaySmallQr');
+      if (shopOwner.qrPhoto) {
+        smallQrImg.src = shopOwner.qrPhoto;
+        smallQrImg.style.display = 'block';
+      } else {
+        smallQrImg.style.display = 'none';
+      }
     }
 
     function showTab(tab) {
@@ -800,6 +851,8 @@
           distanceKm = diff === 0 ? "1.2 ಕಿ.ಮೀ." : `${(diff % 15) + 2.4} ಕಿ.ಮೀ.`;
         }
 
+        let mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(custVillage + ' ' + custTaluk + ' ' + custDistrict)}`;
+
         let paymentModeBadge = o.paymentMode === 'COD' ? 
           `<span style="background:#ffebee; color:#c62828; padding:2px 6px; border-radius:4px; font-weight:bold;">💵 ಕ್ಯಾಶ್ ಆನ್ ಡೆಲಿವರಿ (COD)</span>` : 
           `<span style="background:#e8f5e9; color:#2e7d32; padding:2px 6px; border-radius:4px; font-weight:bold;">🟢 UPI ಪೇಮೆಂಟ್ (ನಮ್ಮ ಊರು ಶಾಪಿಂಗ್)</span>`;
@@ -828,7 +881,11 @@
               <p style="margin-top:4px; color:#0d47a1; font-weight:bold;">📏 ಅಂಗಡಿಯಿಂದ ದೂರ: ${distanceKm}</p>
             </div>
 
-            <a href="tel:${custPhone}" class="btn-call-cust">📞 ಗ್ರಾಹಕರಿಗೆ ಕಾಲ್ ಮಾಡಿ</a>
+            <div style="display:flex; gap:6px;">
+              <a href="tel:${custPhone}" class="btn-call-cust">📞 ಕಾಲ್ ಮಾಡಿ</a>
+              <a href="${mapsUrl}" target="_blank" class="btn-map-loc">🗺️ ಗೂಗಲ್ ಲೊಕೇಶನ್</a>
+            </div>
+
             <p style="margin-top:6px; font-size:0.75rem; color:#666;"><b>ಪ್ರಸ್ತುತ ಸ್ಥಿತಿ:</b> ${orderStatus}</p>
             ${actionButtonHTML}
             ${otpDisplayBox}
