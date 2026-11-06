@@ -782,9 +782,9 @@
       document.getElementById('statEarnings').innerText = `₹${netEarnings}`;
       document.getElementById('orderCount').innerText = myOrders.length;
 
-      // ಡೆಲಿವರಿ ಬಾಯ್ ಪಿಕಪ್ ಮಾಡಿದ ನಂತರ (status === 'STEP_3' ಅಥವಾ 'STEP_4' ಅಥವಾ 'DELIVERED') ಸಕ್ರಿಯ ಹೊಸ ಆರ್ಡರ್‌ಗಳ ಪಟ್ಟಿಯಿಂದ ಇದು ಮರೆಯಾಗುತ್ತದೆ
-      const activeOrders = orders.filter(o => (o.status !== 'DELIVERED' && o.status !== 'STEP_3' && o.status !== 'STEP_4' && o.status !== 'RETURN_COMPLETED') && (!o.acceptedBy || o.acceptedBy === shopOwner.id));
-      const archivedOrders = myOrders.filter(o => o.status === 'DELIVERED' || o.status === 'STEP_3' || o.status === 'STEP_4' || o.status === 'RETURN_COMPLETED');
+      // ಡೆಲಿವರಿ ಬಾಯ್ ಒಟಿಪಿ ಹಾಕಿ ಕಂಪ್ಲೀಟ್ (STEP_4 ಅಥವಾ DELIVERED) ಮಾಡುವವರೆಗೆ ಆರ್ಡರ್ ಅಂಗಡಿ ಮಾಲೀಕರ ಹೊಸ ಆರ್ಡರ್‌ಗಳ ಪಟ್ಟಿಯಲ್ಲಿಯೇ ಇರುತ್ತದೆ
+      const activeOrders = orders.filter(o => (o.status !== 'DELIVERED' && o.status !== 'STEP_4' && o.status !== 'RETURN_COMPLETED') && (!o.acceptedBy || o.acceptedBy === shopOwner.id));
+      const archivedOrders = myOrders.filter(o => o.status === 'DELIVERED' || o.status === 'STEP_4' || o.status === 'RETURN_COMPLETED');
 
       renderOrders(activeOrders);
       renderArchivedOrders(archivedOrders);
@@ -803,6 +803,7 @@
         let orderStatus = o.status || 'STEP_1';
         let actionButtonHTML = '';
         let returnAlertBanner = '';
+        let otpDisplayBox = '';
 
         if (o.isReturnRequested) {
           returnAlertBanner = `
@@ -812,13 +813,22 @@
           `;
         }
 
-        if (orderStatus === 'STEP_1') {
+        if (orderStatus === 'STEP_1' || orderStatus === 'PENDING') {
           actionButtonHTML = `<button onclick="updateOrderStatus('${o.docId}', 'CONFIRMED')" class="btn-confirm">✅ ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಮಾಡಿ</button>`;
         } else if (orderStatus === 'CONFIRMED' || orderStatus === 'STEP_2') {
           let generatedOtp = o.pickupOtp || Math.floor(1000 + Math.random() * 9000).toString();
           actionButtonHTML = `
             <button onclick="openPrintModalForOrder('${o.docId}', '${o.orderId}', '${o.productName}', '${o.totalPrice}', '${o.customer?.name}', '${o.customer?.phone}', '${o.customer?.village || o.customer?.address}')" class="btn-print">🖨️ ಪ್ರಿಂಟ್ & ಶೇರ್ ಮಾಡಿ</button>
             <button onclick="updateOrderStatus('${o.docId}', 'STEP_3', '${generatedOtp}')" class="btn-pack" style="margin-top:6px;">📦 ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ಕಳಿಸಿ)</button>
+          `;
+        } else if (orderStatus === 'STEP_3') {
+          // ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ ಒತ್ತಿದ ತಕ್ಷಣ ಒಟಿಪಿ ಇಲ್ಲಿ ಸ್ಪಷ್ಟವಾಗಿ ಕಾಣಿಸುತ್ತದೆ ಮತ್ತು ಡೆಲಿವರಿ ಬಾಯ್ ಒಟಿಪಿ ಹಾಕಿ ಪಿಕಪ್ ಮಾಡುವವರೆಗೆ ಇಲ್ಲೇ ಇರುತ್ತದೆ
+          otpDisplayBox = `
+            <div style="background:#e3f2fd; border:2px solid #1e88e5; border-radius:8px; padding:10px; margin-top:8px; text-align:center;">
+              <p style="font-size:0.8rem; color:#1565c0; font-weight:bold;">🔑 ಡೆಲಿವರಿ ಪಿಕಪ್ ಒಟಿಪಿ (Pickup OTP):</p>
+              <div style="font-size:1.5rem; font-weight:bold; color:#0d47a1; letter-spacing:3px; margin:4px 0;">${o.pickupOtp || '2275'}</div>
+              <p style="font-size:0.75rem; color:#555;">ಡೆಲಿವರಿ ಬಾಯ್ ಒಟಿಪಿ ಹಾಕಿ ಪಿಕಪ್ ಕಂಪ್ಲೀಟ್ ಮಾಡಿದ ನಂತರ ಈ ಆರ್ಡರ್ ಪೇಮೆಂಟ್ ಟ್ಯಾಬ್‌ಗೆ ಹೋಗುತ್ತದೆ.</p>
+            </div>
           `;
         }
 
@@ -873,6 +883,7 @@
 
             <p style="margin-top:6px; font-size:0.75rem; color:#666;"><b>ಪ್ರಸ್ತುತ ಸ್ಥಿತಿ:</b> ${orderStatus}</p>
             ${actionButtonHTML}
+            ${otpDisplayBox}
           </div>
         `;
       }).join('');
@@ -896,7 +907,6 @@
         }
         let prefText = o.returnPreference === 'REFUND' ? '💰 ರಿಟರ್ನ್ ಪೇಮೆಂಟ್ (UPI Refund)' : '🔄 ಎಕ್ಸ್ಚೇಂಜ್ (Exchange with new item)';
 
-        // ರಿಟರ್ನ್ ಆದಾಗ ಅಂಗಡಿ ಮಾಲೀಕರಿಗೆ ಮತ್ತೆ ಕಾಲ್ ಹಾಗೂ ಗೂಗಲ್ ಜಿಪಿಎಸ್ ಬಟನ್ ಕಾಣುವಂತೆ ಮಾಡಲಾಗಿದೆ
         let custPhone = o.customer?.phone || '';
         let custVillage = o.customer?.village || '';
         let custTaluk = o.customer?.taluk || shopOwner.taluk || '';
@@ -945,7 +955,7 @@
     function renderPaymentsLedger(orders) {
       const summaryDiv = document.getElementById('paymentLedgerSummary');
       const listDiv = document.getElementById('shopPaymentsList');
-      const delivered = orders.filter(o => o.status === 'DELIVERED' || o.status === 'STEP_3' || o.status === 'STEP_4' || o.status === 'RETURN_COMPLETED');
+      const delivered = orders.filter(o => o.status === 'DELIVERED' || o.status === 'STEP_4' || o.status === 'RETURN_COMPLETED');
       
       let totalSales = 0;
       let totalDeliveryCharges = 0;
@@ -992,12 +1002,12 @@
 
     function renderArchivedOrders(orders) {
       const listDiv = document.getElementById('shopArchivedOrdersList');
-      const archived = orders.filter(o => o.status === 'DELIVERED' || o.status === 'STEP_3' || o.status === 'STEP_4' || o.status === 'RETURN_COMPLETED');
+      const archived = orders.filter(o => o.status === 'DELIVERED' || o.status === 'STEP_4' || o.status === 'RETURN_COMPLETED');
       
       listDiv.innerHTML = archived.map(o => `
         <div class="order-item archived" style="border-left-color: #ff9800;">
           <p><b>${o.productName}</b> - ₹${o.totalPrice}</p>
-          <p style="font-size:0.75rem; color:#e65100; font-weight:bold; margin-top:2px;">⏳ ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್ (ಡೆಲಿವರಿ ಬಾಯ್ ಪಿಕಪ್ ಮಾಡಲಾಗಿದೆ)</p>
+          <p style="font-size:0.75rem; color:#e65100; font-weight:bold; margin-top:2px;">⏳ ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್ (24 ಗಂಟೆಯೊಳಗೆ ಜಮೆ ಆಗುತ್ತದೆ)</p>
         </div>
       `).join('') || '<p style="font-size:0.8rem; color:#777;">ಯಾವುದೇ ಹಳೆಯ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>';
     }
@@ -1009,7 +1019,7 @@
           updateData.pickupOtp = existingOtp;
         }
         await window.updateDoc(window.doc(window.db, "orders", orderId), updateData);
-        alert("✅ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್‌ಡೇಟ್ ಆಗಿದೆ! ಡೆಲಿವರಿ ಬಾಯ್ ಪಿಕಪ್‌ಗೆ ಕಳುಹಿಸಲಾಗಿದೆ.");
+        alert("✅ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್‌ಡೇಟ್ ಆಗಿದೆ! ಒಟಿಪಿ ಜನರೇಟ್ ಮಾಡಲಾಗಿದೆ.");
       } catch (e) { alert("ದೋಷ: " + e.message); }
     }
 
