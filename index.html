@@ -283,6 +283,7 @@
           <p>ಸ್ಥಳ: <span id="displayLocation"></span> | Pin: <span id="displayPincode"></span></p>
           <div style="display:flex; align-items:center; gap:8px; margin-top:4px;">
             <div class="id-number">ID: <span id="displayId">0000</span></div>
+            <!-- QR Code Small Preview Near ID -->
             <div id="smallQrContainer" style="cursor:pointer;" onclick="openBigQrModal()" title="ಕ್ಯೂರ್ ಕೋಡ್ ದೊಡ್ಡದಾಗಿ ನೋಡಲು ಕ್ಲಿಕ್ ಮಾಡಿ">
               <img id="displaySmallQr" src="" style="width:36px; height:36px; object-fit:contain; border-radius:4px; border:1.5px solid #fff; background:#fff; display:none;" alt="QR">
             </div>
@@ -290,7 +291,7 @@
         </div>
       </div>
 
-      <!-- ಮೆಂಬರ್‌ಶಿಪ್ ಬ್ಯಾಡ್ಜ್ (ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್ ಪೇಮೆಂಟ್ ಮಾಡದಿದ್ದರೆ ಕೆಂಪು ಬಣ್ಣದಲ್ಲಿ ವಸ್ತು ಅಪ್ಲೋಡ್ ತಡೆಯುತ್ತದೆ) -->
+      <!-- Membership & Upload Restriction Banner -->
       <div id="membershipBadgeDiv" class="membership-badge">
         <span id="membershipStatusText">ಲೋಡ್ ಆಗುತ್ತಿದೆ...</span>
       </div>
@@ -305,7 +306,7 @@
           <p id="statReturns" style="color:#b71c1c;">0</p>
         </div>
         <div class="stat-box">
-          <h4>ನಿಮ್ಮ ಶುದ್ಧ ಮೊತ್ತ (15% ಕಡಿತ)</h4>
+          <h4>ನಿಮ್ಮ ಶುದ್ಧ ಮೊತ್ತ (ಸ್ಲಾಬ್ ಲೆಕ್ಕಾಚಾರ)</h4>
           <p id="statEarnings">₹0</p>
         </div>
       </div>
@@ -313,22 +314,22 @@
       <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:4px; margin-bottom:15px;">
         <button class="btn btn-warning" style="font-size:0.75rem; padding:10px 4px;" onclick="showTab('upload')">➕ ಅಪ್ಲೋಡ್</button>
         <button class="btn btn-success" style="font-size:0.75rem; padding:10px 4px;" onclick="showTab('orders')">📦 ಆರ್ಡರ್ (<span id="orderCount">0</span>)</button>
-        <button class="btn btn-danger" style="font-size:0.75rem; padding:10px 4px;" onclick="showTab('returns')">🔄 ರಿಟರ್ನ್ (<span id="returnCountBadge">0</span>)</button>
+        <button class="btn btn-danger" style="font-size:0.75rem; padding:10px 4px;" onclick="showTab('returns')">🔄 ಎಕ್ಸ್ಚೇಂಜ್ (<span id="returnCountBadge">0</span>)</button>
         <button class="btn" style="font-size:0.75rem; padding:10px 4px; background:#8e24aa;" onclick="showTab('payments')">💳 ಪೇಮೆಂಟ್</button>
       </div>
 
       <!-- ಫೋಟೋ ಅಪ್ಲೋಡ್ -->
       <div id="tabUpload" style="background:#fff; padding:15px; border-radius:10px; border:1px solid #cbd5e0;">
-        <h2>➕ ಹೊಸ ವಸ್ತುವಿನ ವಿವರಗಳು & ರಿಟರ್ನ್ ಆಯ್ಕೆ</h2>
+        <h2>➕ ಹೊಸ ವಸ್ತುವಿನ ವಿವರಗಳು & ಎಕ್ಸ್ಚೇಂಜ್ ಆಯ್ಕೆ</h2>
 
         <form id="addProductForm" onsubmit="saveProduct(event)">
           <div id="dynamicUploadFormFields"></div>
           
           <div class="form-group" style="background:#fff3e0; padding:10px; border-radius:8px; border:1px solid #ffe0b2; margin-top:10px;">
-            <label style="color:#d32f2f;">🔄 ಈ ವಸ್ತುವಿಗೆ ರಿಟರ್ನ್ / ಎಕ್ಸ್ಚೇಂಜ್ ಸೌಲಭ್ಯವಿದೆಯೇ?</label>
+            <label style="color:#d32f2f;">🔄 ಈ ವಸ್ತುವಿಗೆ ಎಕ್ಸ್ಚೇಂಜ್ ಸೌಲಭ್ಯವಿದೆಯೇ?</label>
             <select id="prodReturnPolicy" required style="font-weight:bold;">
-              <option value="YES">ಹೌದು, ರಿಟರ್ನ್ / ಎಕ್ಸ್ಚೇಂಜ್ ಇದೆ (Return Available)</option>
-              <option value="NO">ಇಲ್ಲ, ರಿಟರ್ನ್ ಇಲ್ಲ (No Return / Final Sale)</option>
+              <option value="EXCHANGE_ONLY">ಎಕ್ಸ್ಚೇಂಜ್ ಮಾತ್ರ ಇದೆ (Direct Store Exchange Available)</option>
+              <option value="NO">ಇಲ್ಲ, ಎಕ್ಸ್ಚೇಂಜ್ ಇಲ್ಲ (No Exchange / Final Sale)</option>
             </select>
           </div>
 
@@ -364,16 +365,16 @@
         <div id="shopArchivedOrdersList" style="margin-top:10px;"></div>
       </div>
 
-      <!-- ರಿಟರ್ನ್‌ಗಳು -->
+      <!-- ರಿಟರ್ನ್‌ಗಳು / ಎಕ್ಸ್ಚೇಂಜ್ -->
       <div id="tabReturns" style="display:none; background:#fff; padding:15px; border-radius:10px; border:1px solid #cbd5e0;">
-        <h2>🔄 ಗ್ರಾಹಕರು ರಿಟರ್ನ್ / ಎಕ್ಸ್ಚೇಂಜ್ ಮಾಡಿದ ವಸ್ತುಗಳು</h2>
-        <p style="font-size:0.8rem; color:#666; margin-bottom:10px;">ಇಲ್ಲಿ ಗ್ರಾಹಕರು ಕಳುಹಿಸಿದ ಡ್ಯಾಮೇಜ್ ಫೋಟೋಗಳು ಮತ್ತು ರಿಟರ್ನ್ ವಿನಂತಿಗಳು ಕಾಣಿಸುತ್ತವೆ.</p>
+        <h2>🔄 ಗ್ರಾಹಕರು ಎಕ್ಸ್ಚೇಂಜ್ ಮಾಡಲು ಕೋರಿರುವ ವಸ್ತುಗಳು</h2>
+        <p style="font-size:0.8rem; color:#666; margin-bottom:10px;">ಇಲ್ಲಿ ಗ್ರಾಹಕರು ನೇರವಾಗಿ ಅಂಗಡಿಗೆ ಬಂದು ಎಕ್ಸ್ಚೇಂಜ್ ಮಾಡಲು ವಿನಂತಿ ಕಳುಹಿಸಿರುವುದು ಕಾಣಿಸುತ್ತದೆ[span_0](start_span)[span_0](end_span)[span_1](start_span)[span_1](end_span)[span_2](start_span)[span_2](end_span)[span_3](start_span)[span_3](end_span)[span_4](start_span)[span_4](end_span)[span_5](start_span)[span_5](end_span)[span_6](start_span)[span_6](end_span)[span_7](start_span)[span_7](end_span)[span_8](start_span)[span_8](end_span)[span_9](start_span)[span_9](end_span)[span_10](start_span)[span_10](end_span)[span_11](start_span)[span_11](end_span)[span_12](start_span)[span_12](end_span)[span_13](start_span)[span_13](end_span)[span_14](start_span)[span_14](end_span)[span_15](start_span)[span_15](end_span).</p>
         <div id="shopReturnsList" style="margin-top:10px;"></div>
       </div>
 
       <!-- ಪೇಮೆಂಟ್ಸ್ -->
       <div id="tabPayments" style="display:none; background:#fff; padding:15px; border-radius:10px; border:1px solid #cbd5e0;">
-        <h2>💳 ಪೇಮೆಂಟ್ಸ್ ಮತ್ತು ಲೆಕ್ಕಾಚಾರ (15% ಕಮಿಷನ್ ಕಡಿತ & ಡೆಲಿವರಿ ಚಾರ್ಜ್)</h2>
+        <h2>💳 ಪೇಮೆಂಟ್ಸ್ ಮತ್ತು ಲೆಕ್ಕಾಚಾರ (ಸ್ಲಾಬ್ ಆಧಾರಿತ ಕಮಿಷನ್)</h2>
         <div id="paymentLedgerSummary" style="background:#e3f2fd; padding:12px; border-radius:8px; margin-bottom:15px; font-size:0.85rem;"></div>
         <div id="shopPaymentsList" style="margin-top:10px;"></div>
       </div>
@@ -435,12 +436,13 @@
       });
     });
 
+    // 1. ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್ ಸರ್ವರ್ ಡೌನ್ / ಆಫ್ ಕಂಟ್ರೋಲ್
     function checkAppLiveStatus() {
       window.onSnapshot(window.doc(window.db, "settings", "instapp_control"), (docSnap) => {
         if (docSnap.exists()) {
           const data = docSnap.data();
           if (data.isOnline === false) {
-            document.getElementById('serverDownMsg').innerText = "ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್‌ನಿಂದ ಇನ್‌ಸ್ಟಾಪ್ ಸಿಸ್ಟಮ್ ಅನ್ನು ಬಂದ್ (OFF) ಮಾಡಲಾಗಿದೆ. ದಯವಿಟ್ಟು ನಂತರ ಪ್ರಯತ್ನಿಸಿ.";
+            document.getElementById('serverDownMsg').innerText = "ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್‌ನಿಂದ ಇನ್‌ಸ್ಟಾಪ್ ಸಿಸ್ಟಮ್ ಅನ್ನು ಸಂಪೂರ್ಣವಾಗಿ ಬಂದ್ (OFF) ಮಾಡಲಾಗಿದೆ. ದಯವಿಟ್ಟು ನಂತರ ಪ್ರಯತ್ನಿಸಿ.";
             document.getElementById('serverDownOverlay').style.display = 'flex';
           } else {
             document.getElementById('serverDownOverlay').style.display = 'none';
@@ -455,7 +457,7 @@
         const deletedDoc = await window.getDoc(window.doc(window.db, "deleted_shops", shopOwner.id));
         if (deletedDoc.exists()) {
           localStorage.removeItem('my_shop_owner_session');
-          document.getElementById('serverDownMsg').innerText = "ನಿಮ್ಮ ಅಂಗಡಿ ಮಾಲೀಕರ ಐಡಿಯನ್ನು ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್‌ನಿಂದ ಸಂಪೂರ್ಣವಾಗಿ ಡಿಲೀಟ್ ಮಾಡಲಾಗಿದೆ. ಹೊಸದಾಗಿ ನೋಂದಣಿ ಮಾಡಿ.";
+          document.getElementById('serverDownMsg').innerText = "ನಿಮ್ಮ ಅಂಗಡಿ ಮಾಲೀಕರ ಐಡಿಯನ್ನು ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್‌ನಿಂದ ಸಂಪೂರ್ಣವಾಗಿ ಡಿಲೀಟ್ ಮಾಡಲಾಗಿದೆ.";
           document.getElementById('serverDownOverlay').style.display = 'flex';
           return;
         }
@@ -496,7 +498,7 @@
         badgeDiv.style.background = '#ffebee';
         badgeDiv.style.color = '#c62828';
         badgeDiv.style.border = '1px solid #ef9a9a';
-        statusText.innerHTML = "❌ ಮೆಂಬರ್‌ಶಿಪ್ ಪಾವತಿ ಬಾಕಿ ಇದೆ. ಮೊದಲು ಮೆಂಬರ್‌ಶಿಪ್ ಅನ್ನು ಪಡೆಯಿರಿ ಆಮೇಲೆ ವಸ್ತುವನ್ನು ಅಪ್ಲೋಡ್ ಮಾಡಿ.";
+        statusText.innerHTML = "❌ ಮೆಂಬರ್‌ಶಿಪ್ ಅನ್ನು ನೀವು ಇನ್ನು ಆಯ್ಕೆ ಮಾಡಿಲ್ಲ. ಪೇಮೆಂಟ್ ಮಾಡಿ ಮೆಂಬರ್‌ಶಿಪ್ ಅನ್ನು ಪಡೆಯಲು ವಸ್ತು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ ಈಗಲೇ!";
       }
     }
 
@@ -583,11 +585,19 @@
         specificFields = `
           <div class="form-group"><label>ಮೊಬೈಲ್ ಹೆಸರು ಮತ್ತು ಮಾಡೆಲ್:</label><input type="text" id="mobModel" required placeholder="ಉದಾ: Vivo T5x 5G / Redmi Note 13"></div>
           <div style="display:flex; gap:10px;">
-            <div class="form-group" style="flex:1;"><label>RAM:</label>
-              <select id="mobRam" required><option value="4GB">4GB RAM</option><option value="6GB">6GB RAM</option><option value="8GB">8GB RAM</option><option value="12GB">12GB RAM</option></select>
+            <div class="form-group" style="flex:1;"><label>RAM ಆಯ್ಕೆ:</label>
+              <select id="mobRam" required>
+                <option value="4GB RAM">4GB RAM</option>
+                <option value="6GB RAM">6GB RAM</option>
+                <option value="8GB RAM">8GB RAM</option>
+              </select>
             </div>
-            <div class="form-group" style="flex:1;"><label>ನೆಟ್‌ವರ್ಕ್:</label>
-              <select id="mobNetwork" required><option value="4G">4G</option><option value="5G">5G</option></select>
+            <div class="form-group" style="flex:1;"><label>ನೆಟ್‌ವರ್ಕ್ (Network):</label>
+              <select id="mobNetwork" required>
+                <option value="4G">4G</option>
+                <option value="5G">5G</option>
+                <option value="6G">6G</option>
+              </select>
             </div>
           </div>
           <div class="form-group"><label>ವಾರಂಟಿ:</label><input type="text" id="mobWarranty" placeholder="ಉದಾ: 1 Year Brand Warranty"></div>
@@ -596,24 +606,29 @@
         specificFields = `
           <div class="form-group"><label>ವಸ್ತುವಿನ ಹೆಸರು:</label><input type="text" id="clothType" required placeholder="ಉದಾ: Cotton Saree / Formal Pant"></div>
           <div class="form-group"><label>ಬಟ್ಟೆ ವಿಭಾಗ:</label>
-            <select id="clothCategory" required><option value="ಸೀರೆ/ಲುಂಗಿ">ಸೀರೆ / ಲುಂಗಿ</option><option value="ಪ್ಯಾಂಟ್">ಪ್ಯಾಂಟ್</option><option value="ಟಿ-ಶರ್ಟ್">ಟಿ-ಶರ್ಟ್ / ಅಂಗಿ</option></select>
+            <select id="clothCategory" required onchange="updateClothSizeOptions()">
+              <option value="ಸೀರೆ/ಲುಂಗಿ">ಸೀರೆ / ಲುಂಗಿ / ಬ್ಲೌಸ್ (Sizes 28-38)</option>
+              <option value="ಪ್ಯಾಂಟ್">ಪ್ಯಾಂಟ್ (Sizes 28-42)</option>
+              <option value="ಮಕ್ಕಳ ಡ್ರೆಸ್">ಚಿಕ್ಕ ಮಕ್ಕಳ ಡ್ರೆಸ್ (2 ರಿಂದ 18 ವರ್ಷ)</option>
+              <option value="ಟಿ-ಶರ್ಟ್">ಟಿ-ಶರ್ಟ್ / ಜಾಕೆಟ್ (M, L, XL, XXL)</option>
+            </select>
           </div>
-          <div class="form-group"><label>ಸೈಜ್ ವಿವರ:</label><input type="text" id="clothSizeDetail" placeholder="ಉದಾ: 32 Size / XL"></div>
+          <div class="form-group"><label>ಸೈಜ್ ವಿವರಣೆ (Size):</label>
+            <select id="clothSizeDetail" required>
+              <!-- Dynamic sizes based on category -->
+            </select>
+          </div>
         `;
       } else if (currentShopType === 'ಚಪ್ಪಲಿ ಅಂಗಡಿ') {
+        let footwearSizeOptions = '';
+        for(let i=5; i<=14; i++) {
+          footwearSizeOptions += `<option value="${i} No">${i} ನಂಬರ್ (Size ${i})</option>`;
+        }
         specificFields = `
           <div class="form-group"><label>ಚಪ್ಪಲಿ / ಶೂ ಹೆಸರು:</label><input type="text" id="footwearName" required placeholder="ಉದಾ: Men Leather Sandals / Running Shoes"></div>
-          <div class="form-group"><label>ಚಪ್ಪಲಿ/ಶೂ ಸೈಜ್ ಆಯ್ಕೆ (Select Size 6 to 14):</label>
+          <div class="form-group"><label>ಚಪ್ಪಲಿ/ಶೂ ಸೈಜ್ ಆಯ್ಕೆ (5 ರಿಂದ 14 ನಂಬರ್):</label>
             <select id="footwearSize" required>
-              <option value="6 No">6 ನಂಬರ್ (Size 6)</option>
-              <option value="7 No">7 ನಂಬರ್ (Size 7)</option>
-              <option value="8 No">8 ನಂಬರ್ (Size 8)</option>
-              <option value="9 No">9 ನಂಬರ್ (Size 9)</option>
-              <option value="10 No">10 ನಂಬರ್ (Size 10)</option>
-              <option value="11 No">11 ನಂಬರ್ (Size 11)</option>
-              <option value="12 No">12 ನಂಬರ್ (Size 12)</option>
-              <option value="13 No">13 ನಂಬರ್ (Size 13)</option>
-              <option value="14 No">14 ನಂಬರ್ (Size 14)</option>
+              ${footwearSizeOptions}
             </select>
           </div>
         `;
@@ -633,9 +648,40 @@
           <div style="margin-top:6px;"><label style="font-size:0.75rem;">ಫೋಟೋ 1:</label><input type="file" accept="image/*" id="c1_p1" required></div>
           <div style="margin-top:6px;"><label style="font-size:0.75rem;">ಫೋಟೋ 2:</label><input type="file" accept="image/*" id="c1_p2"></div>
           <div style="margin-top:6px;"><label style="font-size:0.75rem;">ಫೋಟೋ 3:</label><input type="file" accept="image/*" id="c1_p3"></div>
-          <div style="margin-top:6px;"><label style="font-size:0.75rem;">ಫೋಟೋ 4:</label><input type="file" accept="image/*" id="c1_p4"></div>
+          <div style="margin-top:6px;"><label style="font-size:0.75rem;">ಫೋಟೋ 4:</label><option><input type="file" accept="image/*" id="c1_p4"></div>
         </div>
       `;
+
+      if (currentShopType === 'ಬಟ್ಟೆ ಅಂಗಡಿ') {
+        updateClothSizeOptions();
+      }
+    }
+
+    function updateClothSizeOptions() {
+      const catSelect = document.getElementById('clothCategory');
+      const sizeSelect = document.getElementById('clothSizeDetail');
+      if (!catSelect || !sizeSelect) return;
+      
+      const val = catSelect.value;
+      let html = '';
+      if (val === 'ಸೀರೆ/ಲುಂಗಿ') {
+        [28, 30, 32, 34, 36, 38].forEach(s => {
+          html += `<option value="${s} Size">${s} Size</option>`;
+        });
+      } else if (val === 'ಪ್ಯಾಂಟ್') {
+        for(let i=28; i<=42; i+=2) {
+          html += `<option value="${i} Size">${i} Size (ಪ್ಯಾಂಟ್)</option>`;
+        }
+      } else if (val === 'ಮಕ್ಕಳ ಡ್ರೆಸ್') {
+        for(let i=2; i<=18; i++) {
+          html += `<option value="${i} Years">${i} ವರ್ಷದ ಮಕ್ಕಳಿಗೆ (${i} Years)</option>`;
+        }
+      } else {
+        ['M Size', 'L Size', 'XL Size', 'XXL Size'].forEach(s => {
+          html += `<option value="${s}">${s}</option>`;
+        });
+      }
+      sizeSelect.innerHTML = html;
     }
 
     function convertFileToBase64(file) {
@@ -679,7 +725,7 @@
         pincode: document.getElementById('pincode').value.trim(),
         photo: photoBase64 || 'https://via.placeholder.com/100',
         qrPhoto: qrBase64 || '',
-        isPaid: false // ಹೊಸ ಖಾತೆಗೆ ಮಾಸ್ಟರ್ ಪೇಮೆಂಟ್ ಮಾಡುವವರೆಗೆ ಸದಸ್ಯತ್ವ ಅಮಾನ್ಯವಿರುತ್ತದೆ
+        isPaid: false
       };
 
       try {
@@ -697,7 +743,7 @@
       try {
         const deletedDoc = await window.getDoc(window.doc(window.db, "deleted_shops", idVal));
         if (deletedDoc.exists()) {
-          alert("❌ ಈ ಐಡಿಯನ್ನು ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್‌ನಿಂದ ಡಿಲೀಟ್ ಮಾಡಲಾಗಿದೆ. ಇದು ಕಾರ್ಯನಿರ್ವಹಿಸುವುದಿಲ್ಲ.");
+          alert("❌ ಈ ಐಡಿಯನ್ನು ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್‌ನಿಂದ ಡಿಲೀಟ್ ಮಾಡಲಾಗಿದೆ.");
           return;
         }
 
@@ -761,7 +807,6 @@
     }
 
     function startRealtimeSync() {
-      // 1. ಅಂಗಡಿ ಮಾಲೀಕರ ಲೈವ್ ಸ್ಟೇಟಸ್ (ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್‌ನಲ್ಲಿ ಪೇಮೆಂಟ್ ಬಟನ್ ಒತ್ತಿದ ಕೂಡಲೇ ಹಸಿರು ಬಣ್ಣಕ್ಕೆ ತಿರುಗಲು)
       window.onSnapshot(window.doc(window.db, "shop_owners", String(shopOwner.id)), (docSnap) => {
         if (docSnap.exists()) {
           shopOwner = docSnap.data();
@@ -771,7 +816,6 @@
         }
       });
 
-      // 2. ಕೇವಲ ಈ ಅಂಗಡಿಗೆ ಸೇರಿದ ಪ್ರಾಡಕ್ಟ್ಸ್ ಸಿಂಕ್
       window.onSnapshot(window.collection(window.db, "products"), (snapshot) => {
         let products = [];
         snapshot.forEach(docSnap => {
@@ -781,7 +825,6 @@
         renderProducts(products);
       });
 
-      // 3. ಕೇವಲ ಈ ಅಂಗಡಿಗೆ (shopId) ಬಂದ ಆರ್ಡರ್‌ಗಳು ಮಾತ್ರ ಕಾಣಿಸುವಂತೆ ಮಾಡಲಾಗಿದೆ
       const ordersRef = window.collection(window.db, "orders");
       window.onSnapshot(ordersRef, (snapshot) => {
         let orders = [];
@@ -806,13 +849,21 @@
       const myOrders = orders;
       
       const deliveredOrders = myOrders.filter(o => o.status === 'DELIVERED' || o.status === 'STEP_4' || o.status === 'RETURN_COMPLETED');
-      const totalDeliveredAmount = deliveredOrders.reduce((acc, curr) => acc + Number(curr.totalPrice || 0), 0);
+      const totalDeliveredAmount = deliveredOrders.reduce((acc, curr) => acc + Number(curr.itemPrice || curr.totalPrice || 0), 0);
       
       const returnedOrders = myOrders.filter(o => o.status === 'RETURNED' || o.isReturned || o.status === 'RETURN_COMPLETED' || o.isReturnRequested);
-      const totalReturnedAmount = returnedOrders.reduce((acc, curr) => acc + Number(curr.totalPrice || 0), 0);
+      const totalReturnedAmount = returnedOrders.reduce((acc, curr) => acc + Number(curr.itemPrice || curr.totalPrice || 0), 0);
 
       const effectiveSales = Math.max(0, totalDeliveredAmount - totalReturnedAmount);
-      const netEarnings = Math.round(effectiveSales * 0.85);
+      
+      // ಲೆಕ್ಕಾಚಾರ ಸ್ಲಾಬ್: ರೂ.1000 ವರೆಗೆ ಫಿಕ್ಸ್ ರೂ.100 ಕಡಿತ; ರೂ.1000 ಮೇಲೆ ಇದ್ದರೆ 10% ಕಮಿಷನ್ ಕಡಿತ
+      let netEarnings = 0;
+      if (effectiveSales <= 1000) {
+        netEarnings = Math.max(0, effectiveSales - 100);
+      } else {
+        let commission = effectiveSales * 0.10;
+        netEarnings = Math.round(effectiveSales - commission);
+      }
 
       document.getElementById('statTotalOrders').innerText = myOrders.length;
       document.getElementById('statReturns').innerText = returnedOrders.length;
@@ -845,7 +896,7 @@
         if (o.isReturnRequested) {
           returnAlertBanner = `
             <div style="background:#ffebee; border:2px solid #d32f2f; border-radius:8px; padding:8px; margin-bottom:8px;">
-              <span style="color:#d32f2f; font-weight:bold; font-size:0.85rem;">⚠️ ಗ್ರಾಹಕರಿಂದ ರಿಟರ್ನ್ / ಎಕ್ಸ್ಚೇಂಜ್ ವಿನಂತಿ ಬಂದಿದೆ! "ರಿಟರ್ನ್" ಟ್ಯಾಬ್‌ನಲ್ಲಿ ಪರಿಶೀಲಿಸಿ.</span>
+              <span style="color:#d32f2f; font-weight:bold; font-size:0.85rem;">⚠️ ಗ್ರಾಹಕರಿಂದ ನೇರ ಎಕ್ಸ್ಚೇಂಜ್ ವಿನಂತಿ ಬಂದಿದೆ! "ಎಕ್ಸ್ಚೇಂಜ್" ಟ್ಯಾಬ್‌ನಲ್ಲಿ ಪರಿಶೀಲಿಸಿ[span_16](start_span)[span_16](end_span)[span_17](start_span)[span_17](end_span)[span_18](start_span)[span_18](end_span)[span_19](start_span)[span_19](end_span)[span_20](start_span)[span_20](end_span)[span_21](start_span)[span_21](end_span)[span_22](start_span)[span_22](end_span)[span_23](start_span)[span_23](end_span)[span_24](start_span)[span_24](end_span)[span_25](start_span)[span_25](end_span)[span_26](start_span)[span_26](end_span)[span_27](start_span)[span_27](end_span)[span_28](start_span)[span_28](end_span)[span_29](start_span)[span_29](end_span)[span_30](start_span)[span_30](end_span)[span_31](start_span)[span_31](end_span).</span>
             </div>
           `;
         }
@@ -855,11 +906,10 @@
         } else if (orderStatus === 'CONFIRMED' || orderStatus === 'STEP_2') {
           let generatedOtp = o.pickupOtp || Math.floor(1000 + Math.random() * 9000).toString();
           actionButtonHTML = `
-            <button onclick="openPrintModalForOrder('${o.docId}', '${o.orderId}', '${o.productName}', '${o.totalPrice}', '${o.customer?.name}', '${o.customer?.phone}', '${o.customer?.village || o.customer?.address}')" class="btn-print">🖨️ ಪ್ರಿಂಟ್ & ಶೇರ್ ಮಾಡಿ</button>
+            <button onclick="openPrintModalForOrder('${o.docId}', '${o.orderId}', '${o.productName}', '${o.customerPrice || o.totalPrice}', '${o.customer?.name}', '${o.customer?.phone}', '${o.customer?.village || o.customer?.address}')" class="btn-print">🖨️ ಪ್ರಿಂಟ್ & ಶೇರ್ ಮಾಡಿ</button>
             <button onclick="updateOrderStatus('${o.docId}', 'STEP_3', '${generatedOtp}')" class="btn-pack" style="margin-top:6px;">📦 ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ಕಳಿಸಿ)</button>
           `;
         } else if (orderStatus === 'STEP_3') {
-          // ಒಟಿಪಿ ಬಂದ ಮೇಲೆ ಡೆಲಿವರಿ ಬಾಯ್ ಬಂದು ಪಿಕಪ್ ಮಾಡುವವರೆಗೆ ಕಾಣಿಸುವ ಸಂದೇಶ
           otpDisplayBox = `
             <div style="background:#e3f2fd; border:2px solid #1e88e5; border-radius:8px; padding:10px; margin-top:8px; text-align:center;">
               <p style="font-size:0.8rem; color:#1565c0; font-weight:bold;">🔑 ಡೆಲಿವರಿ ಪಿಕಪ್ ಒಟಿಪಿ (Pickup OTP):</p>
@@ -877,6 +927,11 @@
         const custLandmark = o.customer?.landmark ? ` (ಲ್ಯಾಂಡ್‌ಮಾರ್ಕ್: ${o.customer.landmark})` : '';
         const custPincode = o.customer?.pincode ? ` - ${o.customer.pincode}` : '';
 
+        // ಗ್ರಾಹಕರಿಗೆ ಕಾಣುವ ಒಟ್ಟು ಮೊತ್ತ (ವಸ್ತುವಿನ ಬೆಲೆ + ಡೆಲಿವರಿ ಚಾರ್ಜ್ ಸೇರಿ)
+        let itemPriceNum = Number(o.itemPrice || o.totalPrice || 0);
+        let deliveryFeeForCust = itemPriceNum <= 1000 ? 100 : 50;
+        let totalCustomerPrice = itemPriceNum + deliveryFeeForCust;
+
         let distanceKm = "3.5 ಕಿ.ಮೀ.";
         if (shopOwner.pincode && o.customer?.pincode) {
           let diff = Math.abs(parseInt(shopOwner.pincode) - parseInt(o.customer.pincode));
@@ -890,12 +945,12 @@
 
         let paymentModeBadge = o.paymentMode === 'COD' ? 
           `<span style="background:#ffebee; color:#c62828; padding:2px 6px; border-radius:4px; font-weight:bold;">💵 ಕ್ಯಾಶ್ ಆನ್ ಡೆಲಿವರಿ (COD)</span>` : 
-          `<span style="background:#e8f5e9; color:#2e7d32; padding:2px 6px; border-radius:4px; font-weight:bold;">🟢 UPI ಪೇಮೆಂಟ್ (ನಮ್ಮ ಊರು ಶಾಪಿಂಗ್)</span>`;
+          `<span style="background:#e8f5e9; color:#2e7d32; padding:2px 6px; border-radius:4px; font-weight:bold;">🟢 UPI ಸ್ಕ್ಯಾನಿಂಗ್ ಪೇಮೆಂಟ್</span>`;
 
         return `
           <div class="order-item ${o.isReturnRequested ? 'return-alert' : ''}">
             ${returnAlertBanner}
-            <div style="background:#e3f2fd; border-radius:6px; padding:6px; margin-bottom:8px; text-align:space-between; display:flex; justify-content:space-between; align-items:center;">
+            <div style="background:#e3f2fd; border-radius:6px; padding:6px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
               <span style="font-size:0.75rem; color:#1565c0; font-weight:bold;">ಆರ್ಡರ್ ಐಡಿ: ${o.orderId || 'OD000000'}</span>
               ${paymentModeBadge}
             </div>
@@ -903,17 +958,17 @@
               <img src="${o.productPhoto}" style="width:65px; height:65px; object-fit:cover; border-radius:6px;">
               <div>
                 <h4 style="font-size:0.95rem;">${o.productName} ${o.selectedSize ? `[Size: ${o.selectedSize}]` : ''}</h4>
-                <p style="font-size:0.85rem; color:#2e7d32; font-weight:bold;">₹${o.totalPrice}</p>
+                <p style="font-size:0.85rem; color:#2e7d32; font-weight:bold;">₹${totalCustomerPrice} <span style="font-size:0.7rem; color:#555;">(ವಸ್ತು: ₹${itemPriceNum} + ಡೆಲಿವರಿ: ₹${deliveryFeeForCust})</span></p>
               </div>
             </div>
             
             <div class="cust-address-box">
-              <p style="font-weight:bold; font-size:0.9rem; color:#1b5e20;">📍 ಗ್ರಾಹಕರ ಪೂರ್ಣ ವಿಳಾಸ & ಜಿಪಿಎಸ್ ದೂರ:</p>
+              <p style="font-weight:bold; font-size:0.9rem; color:#1b5e20;">📍 ಗ್ರಾಹಕರ ಪೂರ್ಣ ವಿಳಾಸ & GPS ದೂರ:</p>
               <p><b>ಹೆಸರು:</b> ${custName}</p>
               <p><b>ಮೊಬೈಲ್ ನಂಬರ್:</b> ${custPhone}</p>
               <p><b>ವಿಳಾಸ:</b> ${custVillage}${custLandmark}</p>
               <p><b>ತಾಲೂಕು/ಜಿಲ್ಲೆ/ಪಿನ್:</b> ${custTaluk}, ${custDistrict} ${custPincode}</p>
-              <p style="margin-top:4px; color:#0d47a1; font-weight:bold;">📏 ಅಂಗಡಿಯಿಂದ ಜಿಪಿಎಸ್ ದೂರ: ${distanceKm}</p>
+              <p style="margin-top:4px; color:#0d47a1; font-weight:bold;">📏 GPS ದೂರ: ${distanceKm}</p>
             </div>
 
             <div style="display:flex; gap:6px;">
@@ -934,7 +989,7 @@
       const returns = orders.filter(o => o.isReturnRequested || o.status === 'RETURNED' || o.isReturned);
 
       if (returns.length === 0) {
-        listDiv.innerHTML = '<p style="font-size:0.85rem; color:#777; text-align:center; padding:20px;">ಯಾವುದೇ ರಿಟರ್ನ್ ಅಥವಾ ಎಕ್ಸ್ಚೇಂಜ್ ವಿನಂತಿಗಳು ಬಂದಿಲ್ಲ.</p>';
+        listDiv.innerHTML = '<p style="font-size:0.85rem; color:#777; text-align:center; padding:20px;">ಯಾವುದೇ ಎಕ್ಸ್ಚೇಂಜ್ ವಿನಂತಿಗಳು ಬಂದಿಲ್ಲ.</p>';
         return;
       }
 
@@ -945,7 +1000,6 @@
             o.returnPhotos.map(img => `<img src="${img}" style="width:70px; height:70px; object-fit:cover; border-radius:6px; border:1px solid #ccc;">`).join('') + 
             `</div>`;
         }
-        let prefText = o.returnPreference === 'REFUND' ? '💰 ರಿಟರ್ನ್ ಪೇಮೆಂಟ್ (UPI Refund)' : '🔄 ಎಕ್ಸ್ಚೇಂಜ್ (Exchange with new item)';
 
         let custPhone = o.customer?.phone || '';
         let custVillage = o.customer?.village || '';
@@ -957,35 +1011,33 @@
           <div class="order-item return-alert" style="border-left-width:8px;">
             <div style="display:flex; justify-content:space-between; align-items:center;">
               <span style="font-size:0.8rem; font-weight:bold; color:#c62828;">ಆರ್ಡರ್ ಐಡಿ: ${o.orderId}</span>
-              <span style="font-size:0.75rem; background:#ffebee; padding:2px 6px; border-radius:4px; color:#d32f2f; font-weight:bold;">${o.status === 'RETURN_COMPLETED' ? '✔ ಮುಕ್ತಾಯಗೊಂಡಿದೆ' : 'ಬಾಕಿ ಇದೆ'}</span>
+              <span style="font-size:0.75rem; background:#ffebee; padding:2px 6px; border-radius:4px; color:#d32f2f; font-weight:bold;">${o.status === 'RETURN_COMPLETED' ? '✔ ಎಕ್ಸ್ಚೇಂಜ್ ಮುಕ್ತಾಯ' : 'ನೇರ ಅಂಗಡಿಗೆ ಬಂದು ಎಕ್ಸ್ಚೇಂಜ್'}</span>
             </div>
             <p style="margin-top:6px;"><b>ಪ್ರಾಡಕ್ಟ್:</b> ${o.productName} (₹${o.totalPrice})</p>
             <p style="margin-top:4px;"><b>ಗ್ರಾಹಕರು:</b> ${o.customer?.name} (${custPhone})</p>
-            <p style="margin-top:4px; color:#d32f2f;"><b>ಕಾರಣ:</b> ${o.returnReason || 'ಸೈಜ್ ಅಥವಾ ಡ್ಯಾಮೇಜ್'}</p>
-            <p style="margin-top:4px;"><b>ಗ್ರಾಹಕರ ಕೋರಿಕೆ:</b> <b>${prefText}</b></p>
-            ${o.returnUpiId ? `<p style="margin-top:4px; font-size:0.8rem;"><b>UPI ID:</b> ${o.returnUpiId}</p>` : ''}
+            <p style="margin-top:4px; color:#d32f2f;"><b>ಕಾರಣ:</b> ${o.returnReason || 'ಸೈಜ್ ವ್ಯತ್ಯಾಸ / ಎಕ್ಸ್ಚೇಂಜ್'}</p>
             
             <div style="display:flex; gap:6px; margin-top:6px;">
               <a href="tel:${custPhone}" class="btn-call-cust">📞 ಗ್ರಾಹಕರಿಗೆ ಕಾಲ್ ಮಾಡಿ</a>
-              <a href="${returnMapsUrl}" target="_blank" class="btn-map-loc">🗺️ ಗೂಗಲ್ ಜಿಪಿಎಸ್ ಲೊಕೇಶನ್</a>
+              <a href="${returnMapsUrl}" target="_blank" class="btn-map-loc">🗺️ ಗೂಗಲ್ GPS ಲೊಕೇಶನ್</a>
             </div>
 
-            <p style="margin-top:6px; font-size:0.8rem; font-weight:bold;">📸 ಡ್ಯಾಮೇಜ್ ಫೋಟೋಗಳು:</p>
+            <p style="margin-top:6px; font-size:0.8rem; font-weight:bold;">📸 ಪ್ರಾಡಕ್ಟ್ ಫೋಟೋಗಳು:</p>
             ${photosHtml}
-            ${o.status !== 'RETURN_COMPLETED' ? `<button onclick="markReturnComplete('${o.docId}')" class="btn btn-success" style="margin-top:10px; font-size:0.85rem;">✔ ರಿಟರ್ನ್ ಒಪ್ಪಿಕೊಳ್ಳಿ & ಪ್ರಕ್ರಿಯೆ ಮುಗಿಸಿ</button>` : ''}
+            ${o.status !== 'RETURN_COMPLETED' ? `<button onclick="markReturnComplete('${o.docId}')" class="btn btn-success" style="margin-top:10px; font-size:0.85rem;">✔ ಎಕ್ಸ್ಚೇಂಜ್ ಪೂರ್ಣಗೊಳಿಸಿ</button>` : ''}
           </div>
         `;
       }).join('');
     }
 
     async function markReturnComplete(docId) {
-      if (confirm("ಈ ರಿಟರ್ನ್ ಪ್ರಕ್ರಿಯೆಯನ್ನು ಪೂರ್ಣಗೊಳಿಸಲಾಗಿದೆ ಎಂದು ಖಚಿತಪಡಿಸುವುದೇ?")) {
+      if (confirm("ಈ ಎಕ್ಸ್ಚೇಂಜ್ ಪ್ರಕ್ರಿಯೆಯನ್ನು ಪೂರ್ಣಗೊಳಿಸಲಾಗಿದೆ ಎಂದು ಖಚಿತಪಡಿಸುವುದೇ?")) {
         try {
           await window.updateDoc(window.doc(window.db, "orders", docId), {
             status: 'RETURN_COMPLETED',
             returnStatus: 'COMPLETED'
           });
-          alert("✅ ರಿಟರ್ನ್ ಪ್ರಕ್ರಿಯೆ ಯಶಸ್ವಿಯಾಗಿ ಮುಕ್ತಾಯಗೊಂಡಿದೆ!");
+          alert("✅ ಎಕ್ಸ್ಚೇಂಜ್ ಪ್ರಕ್ರಿಯೆ ಯಶಸ್ವಿಯಾಗಿ ಮುಕ್ತಾಯಗೊಂಡಿದೆ!");
         } catch (e) {
           alert("ದೋಷ: " + e.message);
         }
@@ -1001,7 +1053,7 @@
       let totalDeliveryCharges = 0;
 
       delivered.forEach(o => {
-        let price = Number(o.totalPrice || 0);
+        let price = Number(o.itemPrice || o.totalPrice || 0);
         totalSales += price;
         if (price <= 1000) {
           totalDeliveryCharges += 100;
@@ -1010,21 +1062,27 @@
         }
       });
 
-      let netPayable = Math.round((totalSales * 0.85) - totalDeliveryCharges);
+      let netPayable = 0;
+      if (totalSales <= 1000) {
+        netPayable = Math.max(0, totalSales - 100);
+      } else {
+        let commission = totalSales * 0.10;
+        netPayable = Math.round(totalSales - commission);
+      }
 
       summaryDiv.innerHTML = `
         <p><b>ಕಂಪನಿ ಯುಪಿಐ (ನಮ್ಮ ಊರು ಶಾಪಿಂಗ್):</b> <span style="color:#1565c0; font-weight:bold;">nammaurushop@ybl</span></p>
-        <p><b>ಒಟ್ಟು ಡೆಲಿವರಿ ಆದ ಒಟ್ಟು ಆನ್‌ಲೈನ್ ಮಾರಾಟ:</b> ₹${totalSales}</p>
-        <p><b>ಡೆಲಿವರಿ ಬಾಯ್ ಒಟ್ಟು ಚಾರ್ಜ್:</b> ₹${totalDeliveryCharges}</p>
-        <p><b>15% ಕಮಿಷನ್ & ಚಾರ್ಜ್ ಹೋಗಿ ನಿಮ್ಮ ನಿವ್ವಳ ಲಾಭ:</b> <span style="color:#2e7d32; font-weight:bold; font-size:1.1rem;">₹${netPayable}</span></p>
+        <p><b>ಒಟ್ಟು ಡೆಲಿವರಿ ಆದ ಮಾರಾಟ:</b> ₹${totalSales}</p>
+        <p><b>ಸ್ಲಾಬ್ ಲೆಕ್ಕಾಚಾರ ಕಡಿತ (₹1000 ವರೆಗೆ ರೂ.100 / ಮೇಲ್ಮಟ್ಟದಲ್ಲಿ 10%):</b> ರೂ. ಕಡಿತಗೊಳಿಸಲಾಗಿದೆ</p>
+        <p><b>ನಿಮಗೆ ಬರಬೇಕಾದ ಶುದ್ಧ ಮೊತ್ತ:</b> <span style="color:#2e7d32; font-weight:bold; font-size:1.1rem;">₹${netPayable}</span></p>
       `;
 
       listDiv.innerHTML = delivered.map(o => {
-        let price = Number(o.totalPrice || 0);
+        let price = Number(o.itemPrice || o.totalPrice || 0);
         return `
           <div class="order-item" style="border-left-color: var(--warning); background:#fffde7;">
             <p><b>${o.productName}</b> - ₹${price}</p>
-            <p style="font-size:0.75rem; color:#e65100; font-weight:bold; margin-top:2px;">⏳ ನಿಮ್ಮ ಪೇಮೆಂಟ್ ಅನ್ನು 24 ಗಂಟೆಯೊಳಗೆ ಮಾಡಲಾಗುತ್ತದೆ</p>
+            <p style="font-size:0.75rem; color:#e65100; font-weight:bold; margin-top:2px;">✔ ಪೇಮೆಂಟ್ ಸಕ್ಸಸ್ ಆಗಿದೆ</p>
           </div>
         `;
       }).join('') || '<p style="font-size:0.8rem; color:#777;">ಯಾವುದೇ ಪೇಮೆಂಟ್ ಹಿಸ್ಟರಿ ಇಲ್ಲ.</p>';
@@ -1046,8 +1104,8 @@
       
       listDiv.innerHTML = archived.map(o => `
         <div class="order-item archived" style="border-left-color: #ff9800;">
-          <p><b>${o.productName}</b> - ₹${o.totalPrice}</p>
-          <p style="font-size:0.75rem; color:#e65100; font-weight:bold; margin-top:2px;">⏳ ನಿಮ್ಮ ಪೇಮೆಂಟ್ ಅನ್ನು 24 ಗಂಟೆಯೊಳಗೆ ಮಾಡಲಾಗುತ್ತದೆ</p>
+          <p><b>${o.productName}</b> - ₹${o.itemPrice || o.totalPrice}</p>
+          <p style="font-size:0.75rem; color:#e65100; font-weight:bold; margin-top:2px;">✔ ಆರ್ಡರ್ ಪೂರ್ಣಗೊಂಡಿದೆ</p>
         </div>
       `).join('') || '<p style="font-size:0.8rem; color:#777;">ಯಾವುದೇ ಹಳೆಯ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>';
     }
@@ -1059,21 +1117,22 @@
           updateData.pickupOtp = existingOtp;
         }
         await window.updateDoc(window.doc(window.db, "orders", orderId), updateData);
-        alert("✅ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್‌ಡೇಟ್ ಆಗಿದೆ! ಒಟಿಪಿ ಜನರೇಟ್ ಮಾಡಲಾಗಿದೆ.");
+        alert("✅ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್‌ಡೇಟ್ ಆಗಿದೆ! ಡೆಲಿವರಿ ಬಾಯ್ ಪಿಕಪ್ ಒಟಿಪಿ ಜನರೇಟ್ ಮಾಡಲಾಗಿದೆ.");
       } catch (e) { alert("ದೋಷ: " + e.message); }
     }
 
     async function saveProduct(e) {
       e.preventDefault();
 
-      // ಮೆಂಬರ್‌ಶಿಪ್ ಪೇಮೆಂಟ್ ಚೆಕ್: ಇಸ್ ಪೇಡ್ (isPaid) ಟ್ರೂ ಇಲ್ಲದಿದ್ದರೆ ವಸ್ತುವನ್ನು ಅಪ್ಲೋಡ್ ಮಾಡಲು ಬಿಡುವುದಿಲ್ಲ
       if (!isUserPaidMembership) {
-        alert("❌ ಮೊದಲು ಮೆಂಬರ್‌ಶಿಪ್ ಅನ್ನು ಪಡೆಯಿರಿ ಆಮೇಲೆ ವಸ್ತುವನ್ನು ಅಪ್ಲೋಡ್ ಮಾಡಿ!");
+        alert("❌ ಮೆಂಬರ್‌ಶಿಪ್ ಅನ್ನು ನೀವು ಇನ್ನು ಆಯ್ಕೆ ಮಾಡಿಲ್ಲ. ಪೇಮೆಂಟ್ ಮಾಡಿ ಮೆಂಬರ್‌ಶಿಪ್ ಅನ್ನು ಪಡೆಯಲು ವಸ್ತು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ ಈಗಲೇ!");
         return;
       }
 
       const returnPolicy = document.getElementById('prodReturnPolicy').value;
       const footwearSize = document.getElementById('footwearSize')?.value || '';
+      const mobRamStorage = document.getElementById('mobRam')?.value || '';
+      const clothSizeDetail = document.getElementById('clothSizeDetail')?.value || '';
       const finalName = document.getElementById('mobModel')?.value || document.getElementById('clothType')?.value || document.getElementById('footwearName')?.value || document.getElementById('generalName')?.value || 'Item';
       const price = document.getElementById('prodPrice').value.trim() || '0';
       const quantity = document.getElementById('prodQuantity').value;
@@ -1092,6 +1151,8 @@
         pincode: shopOwner.pincode,
         name: finalName,
         footwearSize: footwearSize,
+        ramStorage: mobRamStorage,
+        clothSizeDetail: clothSizeDetail,
         price: price,
         quantity: quantity,
         returnPolicy: returnPolicy,
@@ -1112,7 +1173,7 @@
         <div class="card-small">
           <img src="${p.photo}">
           <div class="card-title-small">${p.name}</div>
-          <div style="font-size:0.7rem; color:#2e7d32; font-weight:bold;">₹${p.price} ${p.footwearSize ? `[${p.footwearSize}]` : ''}</div>
+          <div style="font-size:0.7rem; color:#2e7d32; font-weight:bold;">₹${p.price} ${p.footwearSize ? `[${p.footwearSize}]` : ''} ${p.ramStorage ? `[${p.ramStorage}]` : ''} ${p.clothSizeDetail ? `[${p.clothSizeDetail}]` : ''}</div>
         </div>
       `).join('');
     }
