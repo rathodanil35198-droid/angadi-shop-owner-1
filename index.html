@@ -4,7 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-  <title id="pageTitle">ನಮ್ಮ ಶಾಪಿಂಗ್ - ಅಂಗಡಿ ಮಾಲೀಕರ ಪ್ಯಾನಲ್ | Shop Owner Panel</title>
+  <title id="pageTitle">ನಮ್ಮ ಊರು ಶಾಪಿಂಗ್ - ಅಂಗಡಿ ಮಾಲೀಕರ ಆಪ್ | Local Shop App & Namma Ooru Shopping App</title>
+  <meta name="description" content="Local Shop App, ನಮ್ಮ ಊರು ಶಾಪಿಂಗ್ ಅಂಗಡಿ ಮಾಲೀಕರ ಆಪ್, ನಮ್ಮ ಊರು ಆಪ್, Shop Owner Panel in Shahapur Yadgir Karnataka.">
+  
   <link rel="icon" type="image/png" sizes="192x192" href="logo.png">
   <link rel="apple-touch-icon" href="logo.png">
   <link rel="manifest" href="manifest.json">
@@ -106,7 +108,7 @@
     .id-card-details p { font-size: 0.75rem; opacity: 0.9; }
     .id-number { font-size: 1rem; font-weight: bold; background: #fff; color: #1e88e5; padding: 2px 8px; border-radius: 4px; display: inline-block; margin-top: 4px; }
 
-    .membership-badge { font-size: 0.85rem; font-weight: bold; padding: 10px; border-radius: 8px; margin-top: 10px; display: block; text-align: center; line-height: 1.4; background: #e8f5e9; color: #1b5e20; border: 1px solid #81c784; }
+    .membership-badge { font-size: 0.85rem; font-weight: bold; padding: 10px; border-radius: 8px; margin-top: 10px; display: block; text-align: center; line-height: 1.4; }
 
     .stats-container { display: flex; gap: 6px; margin-bottom: 12px; }
     .stat-box { flex: 1; background: #e3f2fd; padding: 8px; border-radius: 8px; text-align: center; border: 1px solid #90caf9; cursor: pointer; }
@@ -148,7 +150,7 @@
     <div class="splash-logo-box">
       <img src="logo.png" alt="Logo" onerror="this.src='https://via.placeholder.com/180/1e88e5/ffffff?text=SHOP+PANEL'">
     </div>
-    <div class="splash-text">🏪 ನಮ್ಮ ಶಾಪಿಂಗ್ ಪ್ಯಾನಲ್</div>
+    <div class="splash-text">🏪 ನಮ್ಮ ಊರು ಶಾಪಿಂಗ್ ಪ್ಯಾನಲ್</div>
   </div>
 
   <div class="support-bar">
@@ -160,7 +162,7 @@
 
   <div class="container">
     <header>
-      <h1>🏪 ನಮ್ಮ ಶಾಪಿಂಗ್</h1>
+      <h1>🏪 ನಮ್ಮ ಊರು ಶಾಪಿಂಗ್</h1>
       <p style="font-size: 0.8rem; opacity: 0.9;">ಅಂಗಡಿ ಮಾಲೀಕರ ಆಪ್ (Shop Owner Panel)</p>
     </header>
 
@@ -288,8 +290,9 @@
         </div>
       </div>
 
-      <div class="membership-badge">
-        🟢 ಸಕ್ರಿಯ ಖಾತೆ (Permanent System Active - No Time Limit)
+      <!-- ಮೆಂಬರ್‌ಶಿಪ್ ಬ್ಯಾಡ್ಜ್ (ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್ ಪೇಮೆಂಟ್ ಮಾಡದಿದ್ದರೆ ಕೆಂಪು ಬಣ್ಣದಲ್ಲಿ ವಸ್ತು ಅಪ್ಲೋಡ್ ತಡೆಯುತ್ತದೆ) -->
+      <div id="membershipBadgeDiv" class="membership-badge">
+        <span id="membershipStatusText">ಲೋಡ್ ಆಗುತ್ತಿದೆ...</span>
       </div>
 
       <div class="stats-container" style="margin-top:10px;">
@@ -354,7 +357,7 @@
 
       <!-- ಆರ್ಡರ್‌ಗಳು -->
       <div id="tabOrders" style="display:none; background:#fff; padding:15px; border-radius:10px; border:1px solid #cbd5e0;">
-        <h2>📦 ಪ್ರಸ್ತುತ ಹೊಸ ಆರ್ಡರ್‌ಗಳು (ಸ್ಥಳೀಯ ತಾಲ್ಲೂಕು/ಜಿಲ್ಲೆ)</h2>
+        <h2>📦 ಪ್ರಸ್ತುತ ಹೊಸ ಆರ್ಡರ್‌ಗಳು (ನಿಮ್ಮ ಅಂಗಡಿಗೆ ಬಂದವುಗಳು ಮಾತ್ರ)</h2>
         <div id="shopOrdersList" style="margin-top:10px;"></div>
 
         <h2 style="margin-top:20px; color:#555;">🔒 ಹಳೆಯ ಪೂರ್ಣಗೊಂಡ ಆರ್ಡರ್‌ಗಳು (History)</h2>
@@ -384,6 +387,7 @@
     let deferredPrompt = null;
     let previousOrdersCount = 0;
     let currentTab = 'upload';
+    let isUserPaidMembership = false;
 
     window.addEventListener('DOMContentLoaded', () => {
       checkAppLiveStatus();
@@ -431,7 +435,6 @@
       });
     });
 
-    // 1. ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್ ಆನ್/ಆಫ್ ಸ್ಟೇಟಸ್ ಚೆಕ್ ಮಾಡುವುದು
     function checkAppLiveStatus() {
       window.onSnapshot(window.doc(window.db, "settings", "instapp_control"), (docSnap) => {
         if (docSnap.exists()) {
@@ -446,7 +449,6 @@
       });
     }
 
-    // 2. ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್‌ನಲ್ಲಿ ಡಿಲೀಟ್ ಮಾಡಿದ್ದರೆ ಲಾಗಿನ್ ಆಗದಂತೆ ತಡೆಯುವುದು
     async function verifyShopExistsInFirebase() {
       if (!shopOwner || !shopOwner.id) return;
       try {
@@ -458,13 +460,20 @@
           return;
         }
 
-        const q = window.query(window.collection(window.db, "shop_owners"), window.where("id", "==", String(shopOwner.id)));
-        const snap = await window.getDocs(q);
-        if (snap.empty) {
+        const docRef = window.doc(window.db, "shop_owners", String(shopOwner.id));
+        const docSnap = await window.getDoc(docRef);
+        
+        if (!docSnap.exists()) {
           localStorage.removeItem('my_shop_owner_session');
           document.getElementById('serverDownMsg').innerText = "ನಿಮ್ಮ ಅಂಗಡಿ ಖಾತೆಯನ್ನು ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್‌ನಿಂದ ತೆಗೆದುಹಾಕಲಾಗಿದೆ.";
           document.getElementById('serverDownOverlay').style.display = 'flex';
         } else {
+          shopOwner = docSnap.data();
+          localStorage.setItem('my_shop_owner_session', JSON.stringify(shopOwner));
+          
+          isUserPaidMembership = shopOwner.isPaid === true;
+          updateMembershipBadgeUI();
+
           renderIDCard();
           renderDynamicUploadForm();
           document.getElementById('loginSection').style.display = 'none';
@@ -472,6 +481,23 @@
           startRealtimeSync();
         }
       } catch(e) { console.log(e); }
+    }
+
+    function updateMembershipBadgeUI() {
+      const badgeDiv = document.getElementById('membershipBadgeDiv');
+      const statusText = document.getElementById('membershipStatusText');
+      
+      if (isUserPaidMembership) {
+        badgeDiv.style.background = '#e8f5e9';
+        badgeDiv.style.color = '#1b5e20';
+        badgeDiv.style.border = '1px solid #81c784';
+        statusText.innerHTML = "🎉 ನಿಮಗೆ ಮೆಂಬರ್‌ಶಿಪ್ ಅನ್ನು ಸಕ್ಸಸ್ ಫುಲ್ ಮಾಡಿದ್ದಾರೆ ಈಗ ನೀವು ವಸ್ತುವನ್ನು ಅಪ್ಲೋಡ್ ಮಾಡಿ!";
+      } else {
+        badgeDiv.style.background = '#ffebee';
+        badgeDiv.style.color = '#c62828';
+        badgeDiv.style.border = '1px solid #ef9a9a';
+        statusText.innerHTML = "❌ ಮೆಂಬರ್‌ಶಿಪ್ ಪಾವತಿ ಬಾಕಿ ಇದೆ. ಮೊದಲು ಮೆಂಬರ್‌ಶಿಪ್ ಅನ್ನು ಪಡೆಯಿರಿ ಆಮೇಲೆ ವಸ್ತುವನ್ನು ಅಪ್ಲೋಡ್ ಮಾಡಿ.";
+      }
     }
 
     function checkIfAlreadyInstalled() {
@@ -525,7 +551,7 @@
 
     function shareAppViaWhatsApp() {
       const appUrl = window.location.href;
-      const shareText = `🏪 *ನಮ್ಮ ಶಾಪಿಂಗ್ - ಅಂಗಡಿ ಮಾಲೀಕರ ಆಪ್* \n\n` +
+      const shareText = `🏪 *ನಮ್ಮ ಊರು ಶಾಪಿಂಗ್ - ಅಂಗಡಿ ಮಾಲೀಕರ ಆಪ್* \n\n` +
         `ನಿಮ್ಮ ಸ್ವಂತ ಅಂಗಡಿ ಅಥವಾ ಬ್ಯುನೆಸ್ ಅನ್ನು ಆನ್‌ಲೈನ್ ಮಾಡಲು ಮತ್ತು ಸ್ಥಳೀಯ ಗ್ರಾಹಕರ ಆರ್ಡರ್‌ಗಳನ್ನು ಪಡೆಯಲು ಈ ಆಪ್ ಬಳಸಿ!\n\n` +
         `👉 ಆಪ್ ಓಪನ್ ಮಾಡಲು ಇಲ್ಲಿ ಕ್ಲಿಕ್ ಮಾಡಿ:\n${appUrl}`;
 
@@ -653,7 +679,7 @@
         pincode: document.getElementById('pincode').value.trim(),
         photo: photoBase64 || 'https://via.placeholder.com/100',
         qrPhoto: qrBase64 || '',
-        isPaid: true
+        isPaid: false // ಹೊಸ ಖಾತೆಗೆ ಮಾಸ್ಟರ್ ಪೇಮೆಂಟ್ ಮಾಡುವವರೆಗೆ ಸದಸ್ಯತ್ವ ಅಮಾನ್ಯವಿರುತ್ತದೆ
       };
 
       try {
@@ -675,20 +701,22 @@
           return;
         }
 
-        const q = window.query(window.collection(window.db, "shop_owners"), window.where("id", "==", String(idVal)));
-        const snap = await window.getDocs(q);
+        const docRef = window.doc(window.db, "shop_owners", String(idVal));
+        const docSnap = await window.getDoc(docRef);
 
-        if (!snap.empty) {
-          snap.forEach(docSnap => {
-            shopOwner = docSnap.data();
-            localStorage.setItem('my_shop_owner_session', JSON.stringify(shopOwner));
-            renderIDCard();
-            renderDynamicUploadForm();
-            document.getElementById('loginSection').style.display = 'none';
-            document.getElementById('dashboardSection').style.display = 'block';
-            startRealtimeSync();
-            alert("🎉 ನಿಮ್ಮ ಐಡಿ ಯಶಸ್ವಿಯಾಗಿ ಲಾಗಿನ್ ಆಗಿದೆ!");
-          });
+        if (docSnap.exists()) {
+          shopOwner = docSnap.data();
+          localStorage.setItem('my_shop_owner_session', JSON.stringify(shopOwner));
+          
+          isUserPaidMembership = shopOwner.isPaid === true;
+          updateMembershipBadgeUI();
+
+          renderIDCard();
+          renderDynamicUploadForm();
+          document.getElementById('loginSection').style.display = 'none';
+          document.getElementById('dashboardSection').style.display = 'block';
+          startRealtimeSync();
+          alert("🎉 ನಿಮ್ಮ ಐಡಿ ಯಶಸ್ವಿಯಾಗಿ ಲಾಗಿನ್ ಆಗಿದೆ!");
         } else {
           alert("ಈ ಐಡಿಗೆ ಸಂಬಂಧಿಸಿದ ಯಾವುದೇ ಅಂಗಡಿ ಕಂಡುಬಂದಿಲ್ಲ.");
         }
@@ -697,6 +725,8 @@
 
     function closeSuccessModal() {
       document.getElementById('successModal').style.display = 'none';
+      isUserPaidMembership = shopOwner.isPaid === true;
+      updateMembershipBadgeUI();
       renderIDCard();
       renderDynamicUploadForm();
       document.getElementById('loginSection').style.display = 'none';
@@ -731,6 +761,17 @@
     }
 
     function startRealtimeSync() {
+      // 1. ಅಂಗಡಿ ಮಾಲೀಕರ ಲೈವ್ ಸ್ಟೇಟಸ್ (ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್‌ನಲ್ಲಿ ಪೇಮೆಂಟ್ ಬಟನ್ ಒತ್ತಿದ ಕೂಡಲೇ ಹಸಿರು ಬಣ್ಣಕ್ಕೆ ತಿರುಗಲು)
+      window.onSnapshot(window.doc(window.db, "shop_owners", String(shopOwner.id)), (docSnap) => {
+        if (docSnap.exists()) {
+          shopOwner = docSnap.data();
+          localStorage.setItem('my_shop_owner_session', JSON.stringify(shopOwner));
+          isUserPaidMembership = shopOwner.isPaid === true;
+          updateMembershipBadgeUI();
+        }
+      });
+
+      // 2. ಕೇವಲ ಈ ಅಂಗಡಿಗೆ ಸೇರಿದ ಪ್ರಾಡಕ್ಟ್ಸ್ ಸಿಂಕ್
       window.onSnapshot(window.collection(window.db, "products"), (snapshot) => {
         let products = [];
         snapshot.forEach(docSnap => {
@@ -740,16 +781,13 @@
         renderProducts(products);
       });
 
+      // 3. ಕೇವಲ ಈ ಅಂಗಡಿಗೆ (shopId) ಬಂದ ಆರ್ಡರ್‌ಗಳು ಮಾತ್ರ ಕಾಣಿಸುವಂತೆ ಮಾಡಲಾಗಿದೆ
       const ordersRef = window.collection(window.db, "orders");
       window.onSnapshot(ordersRef, (snapshot) => {
         let orders = [];
         snapshot.forEach(docSnap => {
           const o = docSnap.data();
-          let custTaluk = (o.customer?.taluk || '').toLowerCase();
-          let shopTaluk = (shopOwner.taluk || '').toLowerCase();
-          let matchTaluk = (custTaluk === '' || shopTaluk === '' || custTaluk.includes(shopTaluk) || shopTaluk.includes(custTaluk));
-
-          if (o.shopId === shopOwner.id || o.acceptedBy === shopOwner.id || (!o.acceptedBy && matchTaluk)) {
+          if (o.shopId === shopOwner.id) {
             orders.push({ docId: docSnap.id, ...o });
           }
         });
@@ -765,7 +803,7 @@
     }
 
     function renderDashboard(orders) {
-      const myOrders = orders.filter(o => o.shopId === shopOwner.id || o.acceptedBy === shopOwner.id);
+      const myOrders = orders;
       
       const deliveredOrders = myOrders.filter(o => o.status === 'DELIVERED' || o.status === 'STEP_4' || o.status === 'RETURN_COMPLETED');
       const totalDeliveredAmount = deliveredOrders.reduce((acc, curr) => acc + Number(curr.totalPrice || 0), 0);
@@ -782,8 +820,7 @@
       document.getElementById('statEarnings').innerText = `₹${netEarnings}`;
       document.getElementById('orderCount').innerText = myOrders.length;
 
-      // ಡೆಲಿವರಿ ಬಾಯ್ ಒಟಿಪಿ ಹಾಕಿ ಕಂಪ್ಲೀಟ್ (STEP_4 ಅಥವಾ DELIVERED) ಮಾಡುವವರೆಗೆ ಆರ್ಡರ್ ಅಂಗಡಿ ಮಾಲೀಕರ ಹೊಸ ಆರ್ಡರ್‌ಗಳ ಪಟ್ಟಿಯಲ್ಲಿಯೇ ಇರುತ್ತದೆ
-      const activeOrders = orders.filter(o => (o.status !== 'DELIVERED' && o.status !== 'STEP_4' && o.status !== 'RETURN_COMPLETED') && (!o.acceptedBy || o.acceptedBy === shopOwner.id));
+      const activeOrders = myOrders.filter(o => o.status !== 'DELIVERED' && o.status !== 'STEP_4' && o.status !== 'RETURN_COMPLETED');
       const archivedOrders = myOrders.filter(o => o.status === 'DELIVERED' || o.status === 'STEP_4' || o.status === 'RETURN_COMPLETED');
 
       renderOrders(activeOrders);
@@ -822,12 +859,12 @@
             <button onclick="updateOrderStatus('${o.docId}', 'STEP_3', '${generatedOtp}')" class="btn-pack" style="margin-top:6px;">📦 ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ಕಳಿಸಿ)</button>
           `;
         } else if (orderStatus === 'STEP_3') {
-          // ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ ಒತ್ತಿದ ತಕ್ಷಣ ಒಟಿಪಿ ಇಲ್ಲಿ ಸ್ಪಷ್ಟವಾಗಿ ಕಾಣಿಸುತ್ತದೆ ಮತ್ತು ಡೆಲಿವರಿ ಬಾಯ್ ಒಟಿಪಿ ಹಾಕಿ ಪಿಕಪ್ ಮಾಡುವವರೆಗೆ ಇಲ್ಲೇ ಇರುತ್ತದೆ
+          // ಒಟಿಪಿ ಬಂದ ಮೇಲೆ ಡೆಲಿವರಿ ಬಾಯ್ ಬಂದು ಪಿಕಪ್ ಮಾಡುವವರೆಗೆ ಕಾಣಿಸುವ ಸಂದೇಶ
           otpDisplayBox = `
             <div style="background:#e3f2fd; border:2px solid #1e88e5; border-radius:8px; padding:10px; margin-top:8px; text-align:center;">
               <p style="font-size:0.8rem; color:#1565c0; font-weight:bold;">🔑 ಡೆಲಿವರಿ ಪಿಕಪ್ ಒಟಿಪಿ (Pickup OTP):</p>
               <div style="font-size:1.5rem; font-weight:bold; color:#0d47a1; letter-spacing:3px; margin:4px 0;">${o.pickupOtp || '2275'}</div>
-              <p style="font-size:0.75rem; color:#555;">ಡೆಲಿವರಿ ಬಾಯ್ ಒಟಿಪಿ ಹಾಕಿ ಪಿಕಪ್ ಕಂಪ್ಲೀಟ್ ಮಾಡಿದ ನಂತರ ಈ ಆರ್ಡರ್ ಪೇಮೆಂಟ್ ಟ್ಯಾಬ್‌ಗೆ ಹೋಗುತ್ತದೆ.</p>
+              <p style="font-size:0.75rem; color:#333; margin-top:4px; font-weight:bold;">ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ನಿಮ್ಮ ಆಪ್ ಆರ್ಡರನ್ನು ಕಳುಹಿಸಲಾಗಿದೆ. ಡೆಲಿವರಿ ಬಾಯ್ ಕಾಲ್ ಮಾಡುತ್ತಾರೆ ನಿಮ್ಮ ಅಂಗಡಿಗೆ ಬಂದು ಪಿಕಪ್ ಮಾಡುತ್ತಾರೆ ಕಾಯಿರಿ.</p>
             </div>
           `;
         }
@@ -844,6 +881,9 @@
         if (shopOwner.pincode && o.customer?.pincode) {
           let diff = Math.abs(parseInt(shopOwner.pincode) - parseInt(o.customer.pincode));
           distanceKm = diff === 0 ? "1.2 ಕಿ.ಮೀ." : `${(diff % 15) + 2.4} ಕಿ.ಮೀ.`;
+        }
+        if (o.distanceKm) {
+          distanceKm = o.distanceKm;
         }
 
         let mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(custVillage + ' ' + custTaluk + ' ' + custDistrict)}`;
@@ -873,7 +913,7 @@
               <p><b>ಮೊಬೈಲ್ ನಂಬರ್:</b> ${custPhone}</p>
               <p><b>ವಿಳಾಸ:</b> ${custVillage}${custLandmark}</p>
               <p><b>ತಾಲೂಕು/ಜಿಲ್ಲೆ/ಪಿನ್:</b> ${custTaluk}, ${custDistrict} ${custPincode}</p>
-              <p style="margin-top:4px; color:#0d47a1; font-weight:bold;">📏 ಅಂಗಡಿಯಿಂದ ದೂರ: ${distanceKm}</p>
+              <p style="margin-top:4px; color:#0d47a1; font-weight:bold;">📏 ಅಂಗಡಿಯಿಂದ ಜಿಪಿಎಸ್ ದೂರ: ${distanceKm}</p>
             </div>
 
             <div style="display:flex; gap:6px;">
@@ -984,7 +1024,7 @@
         return `
           <div class="order-item" style="border-left-color: var(--warning); background:#fffde7;">
             <p><b>${o.productName}</b> - ₹${price}</p>
-            <p style="font-size:0.75rem; color:#e65100; font-weight:bold; margin-top:2px;">⏳ ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್ (24 ಗಂಟೆಯೊಳಗೆ ಜಮೆ ಆಗುತ್ತದೆ)</p>
+            <p style="font-size:0.75rem; color:#e65100; font-weight:bold; margin-top:2px;">⏳ ನಿಮ್ಮ ಪೇಮೆಂಟ್ ಅನ್ನು 24 ಗಂಟೆಯೊಳಗೆ ಮಾಡಲಾಗುತ್ತದೆ</p>
           </div>
         `;
       }).join('') || '<p style="font-size:0.8rem; color:#777;">ಯಾವುದೇ ಪೇಮೆಂಟ್ ಹಿಸ್ಟರಿ ಇಲ್ಲ.</p>';
@@ -1007,7 +1047,7 @@
       listDiv.innerHTML = archived.map(o => `
         <div class="order-item archived" style="border-left-color: #ff9800;">
           <p><b>${o.productName}</b> - ₹${o.totalPrice}</p>
-          <p style="font-size:0.75rem; color:#e65100; font-weight:bold; margin-top:2px;">⏳ ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್ (24 ಗಂಟೆಯೊಳಗೆ ಜಮೆ ಆಗುತ್ತದೆ)</p>
+          <p style="font-size:0.75rem; color:#e65100; font-weight:bold; margin-top:2px;">⏳ ನಿಮ್ಮ ಪೇಮೆಂಟ್ ಅನ್ನು 24 ಗಂಟೆಯೊಳಗೆ ಮಾಡಲಾಗುತ್ತದೆ</p>
         </div>
       `).join('') || '<p style="font-size:0.8rem; color:#777;">ಯಾವುದೇ ಹಳೆಯ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>';
     }
@@ -1025,6 +1065,13 @@
 
     async function saveProduct(e) {
       e.preventDefault();
+
+      // ಮೆಂಬರ್‌ಶಿಪ್ ಪೇಮೆಂಟ್ ಚೆಕ್: ಇಸ್ ಪೇಡ್ (isPaid) ಟ್ರೂ ಇಲ್ಲದಿದ್ದರೆ ವಸ್ತುವನ್ನು ಅಪ್ಲೋಡ್ ಮಾಡಲು ಬಿಡುವುದಿಲ್ಲ
+      if (!isUserPaidMembership) {
+        alert("❌ ಮೊದಲು ಮೆಂಬರ್‌ಶಿಪ್ ಅನ್ನು ಪಡೆಯಿರಿ ಆಮೇಲೆ ವಸ್ತುವನ್ನು ಅಪ್ಲೋಡ್ ಮಾಡಿ!");
+        return;
+      }
+
       const returnPolicy = document.getElementById('prodReturnPolicy').value;
       const footwearSize = document.getElementById('footwearSize')?.value || '';
       const finalName = document.getElementById('mobModel')?.value || document.getElementById('clothType')?.value || document.getElementById('footwearName')?.value || document.getElementById('generalName')?.value || 'Item';
