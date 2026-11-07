@@ -206,10 +206,10 @@
       <h2>🔑 ಹಳೆಯ ಐಡಿ ಪಡೆಯಿರಿ / ಲಾಗಿನ್ ಮಾಡಿ</h2>
       
       <div style="margin-bottom: 15px; background: #e3f2fd; padding: 12px; border-radius: 8px; border: 1px solid #90caf9;">
-        <label style="font-size:0.85rem; color:#1565c0; font-weight:bold; margin-bottom:6px;">ನಿಮ್ಮ 4-ಡಿಜಿಟ್ ನಂಬರ್ ಐಡಿ ಹಾಕಿ:</label>
+        <label style="font-size:0.9rem; color:#1565c0; font-weight:bold; margin-bottom:6px;">ನಿಮ್ಮ 4-ಡಿಜಿಟ್ ನಂಬರ್ ಐಡಿ ಹಾಕಿ:</label>
         <div style="display:flex; gap:8px;">
-          <input type="number" id="existingIdInput" placeholder="ಉದಾ: 7368" style="flex:1; padding:12px; font-size:1.2rem; font-weight:bold; text-align:center; border:2px solid #1e88e5; border-radius:8px;">
-          <button type="button" class="btn btn-warning" style="padding:10px 18px; font-size:0.95rem; font-weight:bold;" onclick="loginWithExistingId()">ಲಾಗಿನ್</button>
+          <input type="number" id="existingIdInput" placeholder="7368" style="flex:1; padding:16px; font-size:1.6rem; font-weight:bold; text-align:center; border:3px solid #1e88e5; border-radius:10px; letter-spacing:4px;" maxlength="4">
+          <button type="button" class="btn btn-warning" style="padding:10px 22px; font-size:1rem; font-weight:bold;" onclick="loginWithExistingId()">ಲಾಗಿನ್</button>
         </div>
       </div>
 
@@ -225,13 +225,13 @@
           <label>ಅಂಗಡಿಯ ಪ್ರಕಾರ (ವಿಭಾಗ):</label>
           <select id="shopType" required onchange="renderDynamicUploadForm()">
             <option value="">-- ಆಯ್ಕೆಮಾಡಿ --</option>
-            <option value="ಮೊಬೈಲ್ ಶಾಪ್">ಮೊಬೈಲ್ ಶಾಪ್ (Mobile Shop)</option>
-            <option value="ಬಟ್ಟೆ ಅಂಗಡಿ">ಬಟ್ಟೆ ಅಂಗಡಿ (Clothes)</option>
-            <option value="ಚಪ್ಪಲಿ ಅಂಗಡಿ">ಚಪ್ಪಲಿ ಅಂಗಡಿ (Footwear)</option>
-            <option value="ಕಿರಾಣಿ ಅಂಗಡಿ">ಕಿರಾಣಿ ಅಂಗಡಿ (Grocery)</option>
-            <option value="ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್">ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್ (Electronics)</option>
-            <option value="ಗಿಫ್ಟ್ ಸೆಂಟರ್">ಗಿಫ್ಟ್ ಸೆಂಟರ್ (Gift Shop)</option>
-            <option value="ಇತರ ಅಂಗಡಿ">ಇತರ ಅಂಗಡಿ (Other)</option>
+            <option value="ಮೊಬೈಲ್ ಶಾಪ್">ಮೊಬೈಲ್ ಶಾಪ್ (Mobile Shop - 5%)</option>
+            <option value="ಬಟ್ಟೆ ಅಂಗಡಿ">ಬಟ್ಟೆ ಅಂಗಡಿ (Clothes - 12%)</option>
+            <option value="ಚಪ್ಪಲಿ ಅಂಗಡಿ">ಚಪ್ಪಲಿ ಅಂಗಡಿ (Footwear - 10%)</option>
+            <option value="ಕಿರಾಣಿ ಅಂಗಡಿ">ಕಿರಾಣಿ ಅಂಗಡಿ (Grocery - 5%)</option>
+            <option value="ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್">ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್ (Electronics - 8%)</option>
+            <option value="ಗಿಫ್ಟ್ ಸೆಂಟರ್">ಗಿಫ್ಟ್ ಸೆಂಟರ್ (Gift Shop - 10%)</option>
+            <option value="ಇತರ ಅಂಗಡಿ">ಇತರ ಅಂಗಡಿ (Other - 12%)</option>
           </select>
         </div>
 
@@ -306,7 +306,7 @@
           <p id="statReturns" style="color:#b71c1c;">0</p>
         </div>
         <div class="stat-box">
-          <h4>ನಿಮ್ಮ ಶುದ್ಧ ಮೊತ್ತ (12% ಕಡಿತ)</h4>
+          <h4 id="statEarningsTitle">ನಿಮ್ಮ ಶುದ್ಧ ಮೊತ್ತ (ಕಮಿಷನ್ ಕಟ್)</h4>
           <p id="statEarnings">₹0</p>
         </div>
       </div>
@@ -374,7 +374,7 @@
 
       <!-- ಪೇಮೆಂಟ್ಸ್ -->
       <div id="tabPayments" style="display:none; background:#fff; padding:15px; border-radius:10px; border:1px solid #cbd5e0;">
-        <h2>💳 ಪೇಮೆಂಟ್ಸ್ ಮತ್ತು ಲೆಕ್ಕಾಚಾರ (12% ಡೆಲಿವರಿ ಚಾರ್ಜಸ್ ಕಟ್)</h2>
+        <h2>💳 ಪೇಮೆಂಟ್ಸ್ ಮತ್ತು ಲೆಕ್ಕಾಚಾರ (ಕಮಿಷನ್ ಕಟ್ ಆಗಿ)</h2>
         <div id="paymentLedgerSummary" style="background:#e3f2fd; padding:12px; border-radius:8px; margin-bottom:15px; font-size:0.85rem;"></div>
         <div id="shopPaymentsList" style="margin-top:10px;"></div>
       </div>
@@ -572,6 +572,13 @@
 
     function closeQrModal() {
       document.getElementById('qrModal').style.display = 'none';
+    }
+
+    function getShopCommissionRate(shopType) {
+      if (shopType === 'ಮೊಬೈಲ್ ಶಾಪ್' || shopType === 'ಕಿರಾಣಿ ಅಂಗಡಿ') return 0.05; // 5%
+      if (shopType === 'ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್') return 0.08; // 8%
+      if (shopType === 'ಚಪ್ಪಲಿ ಅಂಗಡಿ' || shopType === 'ಗಿಫ್ಟ್ ಸೆಂಟರ್') return 0.10; // 10%
+      return 0.12; // ಬಟ್ಟೆ ಅಂಗಡಿ & ಇತರ ಅಂಗಡಿಗಳಿಗೆ 12%
     }
 
     function renderDynamicUploadForm() {
@@ -855,7 +862,11 @@
 
     function renderDashboard(orders) {
       const myOrders = orders;
+      const commRate = getShopCommissionRate(shopOwner.shopType);
+      const commPercentageStr = Math.round(commRate * 100) + '%';
       
+      document.getElementById('statEarningsTitle').innerText = `ನಿಮ್ಮ ಶುದ್ಧ ಮೊತ್ತ (${commPercentageStr} ಕಡಿತ)`;
+
       const deliveredOrders = myOrders.filter(o => o.status === 'DELIVERED' || o.status === 'STEP_4' || o.status === 'RETURN_COMPLETED');
       const totalDeliveredAmount = deliveredOrders.reduce((acc, curr) => acc + Number(curr.itemPrice || curr.totalPrice || 0), 0);
       
@@ -865,8 +876,8 @@
       // ರಿಟರ್ನ್ ಆದ ಹಣವನ್ನು ಮೈನಸ್ ಮಾಡಿ ಶುದ್ಧ ಮಾರಾಟ ಲೆಕ್ಕಾಚಾರ
       const effectiveSales = Math.max(0, totalDeliveredAmount - totalReturnedAmount);
       
-      // ಡೆಲಿವರಿ ಚಾರ್ಜಸ್ 12% ಕಟ್ ಆಗಿ ಉಳಿದ ಅಮೌಂಟ್ ಲೆಕ್ಕಾಚಾರ
-      let netEarnings = Math.round(effectiveSales * (1 - 0.12));
+      // ಅಂಗಡಿಯ ಪ್ರಕಾರದ ಕಮಿಷನ್ ಶೇಕಡಾವಾರು ಕಟ್ ಆಗಿ ಉಳಿದ ಅಮೌಂಟ್ ಲೆಕ್ಕಾಚಾರ
+      let netEarnings = Math.round(effectiveSales * (1 - commRate));
 
       document.getElementById('statTotalOrders').innerText = myOrders.length;
       document.getElementById('statReturns').innerText = returnedOrders.length;
@@ -880,7 +891,7 @@
       renderOrders(activeOrders);
       renderArchivedOrders(archivedOrders);
       renderReturnsList(myOrders);
-      renderPaymentsLedger(myOrders);
+      renderPaymentsLedger(myOrders, commRate, commPercentageStr);
     }
 
     function renderOrders(orders) {
@@ -912,12 +923,17 @@
             <button onclick="openPrintModalForOrder('${o.docId}', '${o.orderId}', '${o.productName}', '${o.itemPrice || o.totalPrice}', '${o.customer?.name}', '${o.customer?.phone}', '${o.customer?.village || o.customer?.address}')" class="btn-print">🖨️ ಪ್ರಿಂಟ್ & ಶೇರ್ ಮಾಡಿ</button>
             <button onclick="updateOrderStatus('${o.docId}', 'STEP_3', '${generatedOtp}')" class="btn-pack" style="margin-top:6px;">📦 ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ಕಳಿಸಿ)</button>
           `;
-        } else if (orderStatus === 'STEP_3') {
+        } else if (orderStatus === 'STEP_3' || orderStatus === 'DELIVERED' || orderStatus === 'STEP_4') {
+          let generatedOtp = o.pickupOtp || '2275';
+          let commRate = getShopCommissionRate(shopOwner.shopType);
+          let itemPriceVal = Number(o.itemPrice || o.totalPrice || 800);
+          let netAmtAfterComm = Math.round(itemPriceVal * (1 - commRate));
+
           otpDisplayBox = `
             <div style="background:#e3f2fd; border:2px solid #1e88e5; border-radius:8px; padding:10px; margin-top:8px; text-align:center;">
               <p style="font-size:0.8rem; color:#1565c0; font-weight:bold;">🔑 ಡೆಲಿವರಿ ಪಿಕಪ್ ಒಟಿಪಿ (Pickup OTP):</p>
-              <div style="font-size:1.5rem; font-weight:bold; color:#0d47a1; letter-spacing:3px; margin:4px 0;">${o.pickupOtp || '2275'}</div>
-              <p style="font-size:0.75rem; color:#333; margin-top:4px; font-weight:bold;">ಡೆಲಿವರಿ ಬಾಯ್ ಪ್ಯಾಕಿಂಗ್ ಪಿಕಪ್ ಮಾಡುವಾಗ ನಂತರ 12% ಚಾರ್ಜಸ್ ಕಟ್ ಆಗಿ ಉಳಿದ ಅಮೌಂಟ್ ಅನ್ನು ಅವರು ತೋರಿಸುತ್ತಾರೆ.</p>
+              <div style="font-size:1.5rem; font-weight:bold; color:#0d47a1; letter-spacing:3px; margin:4px 0;">${generatedOtp}</div>
+              <p style="font-size:0.75rem; color:#333; margin-top:4px; font-weight:bold;">ಡೆಲಿವರಿ ಬಾಯ್ ಪಿಕಪ್ ಮಾಡುವಾಗ ಕಮಿಷನ್ ಕಟ್ ಆಗಿ ಉಳಿಯುವ ಶುದ್ಧ ಮೊತ್ತ: ₹${netAmtAfterComm}</p>
             </div>
           `;
         }
@@ -930,9 +946,8 @@
         const custLandmark = o.customer?.landmark ? ` (ಲ್ಯಾಂಡ್‌ಮಾರ್ಕ್: ${o.customer.landmark})` : '';
         const custPincode = o.customer?.pincode ? ` - ${o.customer.pincode}` : '';
 
-        // ವಸ್ತುವಿನ ಅಸಲಿ ಬೆಲೆ (ಉದಾ: ರೂ.800) ಹಾಗೂ ಡೆಲಿವರಿ ಚಾರ್ಜ್ ಸೇರಿ ಗ್ರಾಹಕರಿಗೆ ಕಾಣುವ ಮೊತ್ತ
         let itemPriceNum = Number(o.itemPrice || o.totalPrice || 800);
-        let deliveryFee = itemPriceNum <= 1000 ? 30 : 30; // ಗ್ರಾಹಕರಿಗೆ ಹೆಚ್ಚುವರಿ ಡೆಲಿವರಿ ಚಾರ್ಜ್ 30 ರೂ ಅಥವಾ ಒಟ್ಟು ರೂ.830
+        let deliveryFee = 30; 
         let totalCustomerPrice = itemPriceNum + deliveryFee;
 
         let distanceKm = "3.5 ಕಿ.ಮೀ.";
@@ -1012,17 +1027,23 @@
         let custDistrict = o.customer?.district || shopOwner.district || '';
         let returnMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(custVillage + ' ' + custTaluk + ' ' + custDistrict)}`;
 
+        let returnOtpCode = o.returnOtp || '8842';
+
         return `
           <div class="order-item return-alert" style="border-left-width:8px;">
             <div style="display:flex; justify-content:space-between; align-items:center;">
               <span style="font-size:0.8rem; font-weight:bold; color:#c62828;">ಆರ್ಡರ್ ಐಡಿ: ${o.orderId}</span>
-              <span style="font-size:0.75rem; background:#ffebee; padding:2px 6px; border-radius:4px; color:#d32f2f; font-weight:bold;">${o.status === 'RETURN_COMPLETED' ? '✔ ಎಕ್ಸ್ಚೇಂಜ್ ಮುಕ್ತಾಯ' : 'ನೇರ ಅಂಗಡಿಗೆ ಬಂದು ಎಕ್ಸ್ಚೇಂಜ್'}</span>
+              <span style="font-size:0.75rem; background:#ffebee; padding:2px 6px; border-radius:4px; color:#d32f2f; font-weight:bold;">${o.status === 'RETURN_COMPLETED' ? '✔ ರಿಟರ್ನ್ ಮುಕ್ತಾಯ' : 'ರಿಟರ್ನ್ ಪಿಕಪ್ ಬಾಕಿ'}</span>
             </div>
             <p style="margin-top:6px;"><b>ಪ್ರಾಡಕ್ಟ್:</b> ${o.productName} (₹${o.itemPrice || o.totalPrice})</p>
             <p style="margin-top:4px;"><b>ಗ್ರಾಹಕರು:</b> ${o.customer?.name} (${custPhone})</p>
             <p style="margin-top:4px; color:#d32f2f;"><b>ಕಾರಣ:</b> ${o.returnReason || 'ಸೈಜ್ ವ್ಯತ್ಯಾಸ / ಎಕ್ಸ್ಚೇಂಜ್'}</p>
-            <p style="font-size:0.8rem; color:#b71c1c; margin-top:4px;"><b>ಸೂಚನೆ:</b> ಹೀಗೂ ಕಟ್ಟಾಗಿರೋ ಹಣಗಳು ಮಾತ್ರ ವಾಪಸ್ ಪಡೆಯಲು ಹೇಳಲಾಗಿದೆ (ಮೈನಸ್ ಆಗಿರೋದು).</p>
             
+            <div style="background:#e3f2fd; border:2px solid #1e88e5; border-radius:8px; padding:8px; margin:8px 0; text-align:center;">
+              <p style="font-size:0.75rem; color:#1565c0; font-weight:bold;">🔄 ಡೆಲಿವರಿ ರಿಟರ್ನ್ ಒಟಿಪಿ (Return OTP):</p>
+              <div style="font-size:1.3rem; font-weight:bold; color:#0d47a1; letter-spacing:2px;">${returnOtpCode}</div>
+            </div>
+
             <div style="display:flex; gap:6px; margin-top:6px;">
               <a href="tel:${custPhone}" class="btn-call-cust">📞 ಗ್ರಾಹಕರಿಗೆ ಕಾಲ್ ಮಾಡಿ</a>
               <a href="${returnMapsUrl}" target="_blank" class="btn-map-loc">🗺️ ಗೂಗಲ್ ಜಿಪಿಎಸ್ ಲೊಕೇಶನ್</a>
@@ -1030,27 +1051,27 @@
 
             <p style="margin-top:6px; font-size:0.8rem; font-weight:bold;">📸 ಪ್ರಾಡಕ್ಟ್ ಫೋಟೋಗಳು:</p>
             ${photosHtml}
-            ${o.status !== 'RETURN_COMPLETED' ? `<button onclick="markReturnComplete('${o.docId}')" class="btn btn-success" style="margin-top:10px; font-size:0.85rem;">✔ ಎಕ್ಸ್ಚೇಂಜ್ ಪೂರ್ಣಗೊಳಿಸಿ</button>` : ''}
+            ${o.status !== 'RETURN_COMPLETED' ? `<button onclick="markReturnComplete('${o.docId}')" class="btn btn-success" style="margin-top:10px; font-size:0.85rem;">✔ ರಿಟರ್ನ್ ಕನ್ಫರ್ಮ್ ಮಾಡಿ (ಪಿಕಪ್ ಒಟಿಪಿ ಪಡೆದು)</button>` : ''}
           </div>
         `;
       }).join('');
     }
 
     async function markReturnComplete(docId) {
-      if (confirm("ಈ ಎಕ್ಸ್ಚೇಂಜ್ ಪ್ರಕ್ರಿಯೆಯನ್ನು ಪೂರ್ಣಗೊಳಿಸಲಾಗಿದೆ ಎಂದು ಖಚಿತಪಡಿಸುವುದೇ?")) {
+      if (confirm("ಈ ರಿಟರ್ನ್ / ಎಕ್ಸ್ಚೇಂಜ್ ಪ್ರಕ್ರಿಯೆಯನ್ನು ಪೂರ್ಣಗೊಳಿಸಲಾಗಿದೆ ಎಂದು ಖಚಿತಪಡಿಸುವುದೇ?")) {
         try {
           await window.updateDoc(window.doc(window.db, "orders", docId), {
             status: 'RETURN_COMPLETED',
             returnStatus: 'COMPLETED'
           });
-          alert("✅ ಎಕ್ಸ್ಚೇಂಜ್ ಪ್ರಕ್ರಿಯೆ ಯಶಸ್ವಿಯಾಗಿ ಮುಕ್ತಾಯಗೊಂಡಿದೆ!");
+          alert("✅ ರಿಟರ್ನ್ ಪ್ರಕ್ರಿಯೆ ಯಶಸ್ವಿಯಾಗಿ ಮುಕ್ತಾಯಗೊಂಡಿದೆ!");
         } catch (e) {
           alert("ದೋಷ: " + e.message);
         }
       }
     }
 
-    function renderPaymentsLedger(orders) {
+    function renderPaymentsLedger(orders, commRate, commPercentageStr) {
       const summaryDiv = document.getElementById('paymentLedgerSummary');
       const listDiv = document.getElementById('shopPaymentsList');
       const delivered = orders.filter(o => o.status === 'DELIVERED' || o.status === 'STEP_4' || o.status === 'RETURN_COMPLETED');
@@ -1067,22 +1088,22 @@
       });
 
       let effectiveSales = Math.max(0, totalSales - totalReturned);
-      // 12% ಡೆಲಿವರಿ ಚಾರ್ಜಸ್ ಕಟ್
-      let netPayable = Math.round(effectiveSales * (1 - 0.12));
+      let netPayable = Math.round(effectiveSales * (1 - commRate));
 
       summaryDiv.innerHTML = `
         <p><b>ಕಂಪನಿ ಯುಪಿಐ (ನಮ್ಮ ಊರು ಶಾಪಿಂಗ್):</b> <span style="color:#1565c0; font-weight:bold;">nammaurushop@ybl</span></p>
+        <p><b>ಅಂಗಡಿ ವಿಭಾಗ:</b> <span style="color:#e65100; font-weight:bold;">${shopOwner.shopType} (${commPercentageStr} ಕಮಿಷನ್)</span></p>
         <p><b>ಒಟ್ಟು ಡೆಲಿವರಿ ಆದ ಮಾರಾಟ:</b> ₹${totalSales}</p>
         <p><b>ರಿಟರ್ನ್ ಮೈನಸ್ ಆಗಿರುವ ಮೊತ್ತ:</b> <span style="color:#d32f2f;">- ₹${totalReturned}</span></p>
-        <p><b>ಡೆಲಿವರಿ ಚಾರ್ಜಸ್ 12% ಕಟ್ ಆಗಿ ಉಳಿದ ಅಮೌಂಟ್:</b> <span style="color:#2e7d32; font-weight:bold; font-size:1.1rem;">₹${netPayable}</span></p>
+        <p><b>ಕಮಿಷನ್ ಕಟ್ ಆಗಿ ಉಳಿದ ಶುದ್ಧ ಮೊತ್ತ:</b> <span style="color:#2e7d32; font-weight:bold; font-size:1.1rem;">₹${netPayable}</span></p>
       `;
 
       listDiv.innerHTML = delivered.map(o => {
         let price = Number(o.itemPrice || o.totalPrice || 0);
-        let discountedPrice = Math.round(price * (1 - 0.12));
+        let discountedPrice = Math.round(price * (1 - commRate));
         return `
           <div class="order-item" style="border-left-color: var(--warning); background:#fffde7;">
-            <p><b>${o.productName}</b> - ಅಸಲಿ ಬೆಲೆ: ₹${price} (12% ಕಟ್ ಆಗಿ: <b>₹${discountedPrice}</b>)</p>
+            <p><b>${o.productName}</b> - ಅಸಲಿ ಬೆಲೆ: ₹${price} (${commPercentageStr} ಕಮಿಷನ್ ಕಟ್ ಆಗಿ: <b>₹${discountedPrice}</b>)</p>
             <p style="font-size:0.75rem; color:#e65100; font-weight:bold; margin-top:2px;">✔ ಪೇಮೆಂಟ್ ಸಕ್ಸಸ್ ಆಗಿದೆ</p>
           </div>
         `;
@@ -1118,7 +1139,7 @@
           updateData.pickupOtp = existingOtp;
         }
         await window.updateDoc(window.doc(window.db, "orders", orderId), updateData);
-        alert("✅ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್‌ಡೇಟ್ ಆಗಿದೆ! ಡೆಲಿವರಿ ಬಾಯ್ ಪಿಕಪ್ ಒಟಿಪಿ ಜನರೇಟ್ ಮಾಡಲಾಗಿದೆ.");
+        alert("✅ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್‌ಡೇಟ್ ಆಗಿದೆ!");
       } catch (e) { alert("ದೋಷ: " + e.message); }
     }
 
