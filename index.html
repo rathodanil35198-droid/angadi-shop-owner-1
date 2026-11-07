@@ -181,13 +181,20 @@
       </div>
     </div>
 
-    <!-- QR Code Big View Modal -->
+    <!-- QR Code Big View & Edit Modal -->
     <div id="qrModal" class="modal" onclick="closeQrModal()">
       <div class="modal-content-box" onclick="event.stopPropagation()">
         <h3 style="color: var(--primary); margin-bottom: 10px;">📷 ನಿಮ್ಮ ಯುಪಿಐ ಕ್ಯೂಆರ್ ಕೋಡ್ (Scanner)</h3>
         <img id="modalQrImage" src="" style="width: 240px; height: 240px; object-fit: contain; border: 2px solid #ddd; border-radius: 8px; margin: 10px 0;">
-        <p style="font-size: 0.85rem; color: #555; margin-bottom: 15px;">ಗ್ರಾಹಕರು ಅಥವಾ ಡೆಲಿವರಿ ಬಾಯ್ ಇದನ್ನು ಸ್ಕ್ಯಾನ್ ಮಾಡಿ ಪಾವತಿ ಮಾಡಬಹುದು.</p>
-        <button class="btn btn-danger" onclick="closeQrModal()">ಮುಚ್ಚಿ</button>
+        <p style="font-size: 0.85rem; color: #555; margin-bottom: 10px;">ಗ್ರಾಹಕರು ಅಥವಾ ಡೆಲಿವರಿ ಬಾಯ್ ಇದನ್ನು ಸ್ಕ್ಯಾನ್ ಮಾಡಿ ಪಾವತಿ ಮಾಡಬಹುದು.</p>
+        
+        <div style="background:#f1f8e9; padding:10px; border-radius:8px; border:1px solid #c8e6c9; margin-bottom:12px; text-align:left;">
+          <label style="font-size:0.75rem; color:#2e7d32; font-weight:bold;">ಕ್ಯೂರ್ ಕೋಡ್ ಬದಲಾಯಿಸಿ (Change QR Code):</label>
+          <input type="file" id="changeQrFileInput" accept="image/*" style="font-size:0.8rem; margin-top:4px; width:100%;">
+          <button class="btn btn-success" style="padding:6px; font-size:0.8rem; margin-top:6px;" onclick="updateShopQrCode()">🔄 ಕ್ಯೂಆರ್ ಕೋಡ್ ಬದಲಾಯಿಸಿ</button>
+        </div>
+
+        <button class="btn btn-danger" onclick="closeQrModal()" style="padding:8px;">ಮುಚ್ಚಿ</button>
       </div>
     </div>
 
@@ -239,6 +246,7 @@
           <div class="form-group" style="flex:1;">
             <label>ಜಿಲ್ಲೆ (Select District):</label>
             <select id="district" required>
+              <option value="">-- ಜಿಲ್ಲೆ ಆಯ್ಕೆ --</option>
               <option value="ಯಾದಗಿರಿ">ಯಾದಗಿರಿ (Yadgir)</option>
               <option value="ಕಲಬುರಗಿ">ಕಲಬುರಗಿ (Kalaburagi)</option>
               <option value="ರಾಯಚೂರು">ರಾಯಚೂರು (Raichur)</option>
@@ -249,13 +257,18 @@
           </div>
           <div class="form-group" style="flex:1;">
             <label>ತಾಲೂಕು (Select Taluk):</label>
-            <input type="text" id="taluk" value="ಶಹಾಪುರ" placeholder="ಉದಾ: ಶಹಾಪುರ" required>
+            <input type="text" id="taluk" placeholder="ಉದಾ: ಶಹಾಪುರ" required>
           </div>
         </div>
 
         <div class="form-group">
           <label>ಪಿನ್ ಕೋಡ್ (Pin Code):</label>
           <input type="number" id="pincode" required placeholder="ಉದಾ: 585287">
+        </div>
+
+        <div class="form-group">
+          <button type="button" class="btn" style="background:#0288d1; padding:8px; font-size:0.8rem; margin-bottom:6px;" onclick="fetchCurrentGpsLocation()">📍 ಜಿಪಿಎಸ್ ಲೊಕೇಶನ್ ಆಟೋಮ್ಯಾಟಿಕ್ ಪಡೆದುಕೊಳ್ಳಿ</button>
+          <input type="text" id="gpsLocationText" placeholder="ಜಿಪಿಎಸ್ ಲೊಕೇಶನ್ ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತದೆ" readonly style="font-size:0.8rem; background:#f0f4f8;">
         </div>
 
         <div class="form-group">
@@ -284,10 +297,11 @@
           <div style="display:flex; align-items:center; gap:8px; margin-top:4px;">
             <div class="id-number">ID: <span id="displayId">0000</span></div>
             <!-- QR Code Small Preview Near ID -->
-            <div id="smallQrContainer" style="cursor:pointer;" onclick="openBigQrModal()" title="ಕ್ಯೂರ್ ಕೋಡ್ ದೊಡ್ಡದಾಗಿ ನೋಡಲು ಕ್ಲಿಕ್ ಮಾಡಿ">
+            <div id="smallQrContainer" style="cursor:pointer;" onclick="openBigQrModal()" title="ಕ್ಯೂರ್ ಕೋಡ್ ದೊಡ್ಡದಾಗಿ ನೋಡಲು ಅಥವಾ ಬದಲಾಯಿಸಲು ಕ್ಲಿಕ್ ಮಾಡಿ">
               <img id="displaySmallQr" src="" style="width:36px; height:36px; object-fit:contain; border-radius:4px; border:1.5px solid #fff; background:#fff; display:none;" alt="QR">
             </div>
           </div>
+          <button onclick="openBigQrModal()" style="background:#fff; color:#1e88e5; border:none; padding:2px 6px; border-radius:4px; font-size:0.7rem; font-weight:bold; margin-top:4px; cursor:pointer;">🔄 QR ಬದಲಾಯಿಸಿ</button>
         </div>
       </div>
 
@@ -320,16 +334,17 @@
 
       <!-- ಫೋಟೋ ಅಪ್ಲೋಡ್ -->
       <div id="tabUpload" style="background:#fff; padding:15px; border-radius:10px; border:1px solid #cbd5e0;">
-        <h2>➕ ಹೊಸ ವಸ್ತುವಿನ ವಿವರಗಳು & ಎಕ್ಸ್ಚೇಂಜ್ ಆಯ್ಕೆ</h2>
+        <h2>➕ ಹೊಸ ವಸ್ತುವಿನ ವಿವರಗಳು & ರಿಟರ್ನ್/ಎಕ್ಸ್ಚೇಂಜ್ ಆಯ್ಕೆ</h2>
 
         <form id="addProductForm" onsubmit="saveProduct(event)">
           <div id="dynamicUploadFormFields"></div>
           
           <div class="form-group" style="background:#fff3e0; padding:10px; border-radius:8px; border:1px solid #ffe0b2; margin-top:10px;">
-            <label style="color:#d32f2f;">🔄 ಈ ವಸ್ತುವಿಗೆ ಎಕ್ಸ್ಚೇಂಜ್ ಸೌಲಭ್ಯವಿದೆಯೇ?</label>
+            <label style="color:#d32f2f;">🔄 ಈ ವಸ್ತುವಿಗೆ ರಿಟರ್ನ್ / ಎಕ್ಸ್ಚೇಂಜ್ ಸೌಲಭ್ಯವಿದೆಯೇ?</label>
             <select id="prodReturnPolicy" required style="font-weight:bold;">
-              <option value="EXCHANGE_ONLY">ಎಕ್ಸ್ಚೇಂಜ್ ಮಾತ್ರ ಇದೆ (Direct Store Exchange Available)</option>
-              <option value="NO">ಇಲ್ಲ, ಎಕ್ಸ್ಚೇಂಜ್ ಇಲ್ಲ (No Exchange / Final Sale)</option>
+              <option value="EXCHANGE_ONLY">ಹೌದು, ಎಕ್ಸ್ಚೇಂಜ್ ಮಾತ್ರ ಇದೆ (Exchange Available)</option>
+              <option value="RETURN_AVAILABLE">ಹೌದು, ರಿಟರ್ನ್ & ಎಕ್ಸ್ಚೇಂಜ್ ಇದೆ (Return & Exchange)</option>
+              <option value="NO">ಇಲ್ಲ, ರಿಟರ್ನ್ ಇಲ್ಲ (No Return / Final Sale)</option>
             </select>
           </div>
 
@@ -367,8 +382,8 @@
 
       <!-- ರಿಟರ್ನ್‌ಗಳು / ಎಕ್ಸ್ಚೇಂಜ್ -->
       <div id="tabReturns" style="display:none; background:#fff; padding:15px; border-radius:10px; border:1px solid #cbd5e0;">
-        <h2>🔄 ಗ್ರಾಹಕರು ಎಕ್ಸ್ಚೇಂಜ್ ಮಾಡಲು ಕೋರಿರುವ ವಸ್ತುಗಳು</h2>
-        <p style="font-size:0.8rem; color:#666; margin-bottom:10px;">ಇಲ್ಲಿ ಗ್ರಾಹಕರು ನೇರವಾಗಿ ಅಂಗಡಿಗೆ ಬಂದು ಎಕ್ಸ್ಚೇಂಜ್ ಮಾಡಲು ವಿನಂತಿ ಕಳುಹಿಸಿರುವುದು ಕಾಣಿಸುತ್ತದೆ.</p>
+        <h2>🔄 ಗ್ರಾಹಕರು ರಿಟರ್ನ್ ಅಥವಾ ಎಕ್ಸ್ಚೇಂಜ್ ಮಾಡಲು ಕೋರಿರುವ ವಸ್ತುಗಳು</h2>
+        <p style="font-size:0.8rem; color:#666; margin-bottom:10px;">ಇಲ್ಲಿ ಗ್ರಾಹಕರು ಕಳುಹಿಸಿರುವ ರಿಟರ್ನ್ ವಿನಂತಿಗಳು ಮತ್ತು ಡೆಲಿವರಿ ಬಾಯ್ ಪಿಕಪ್ ಒಟಿಪಿ ಕಾಣಿಸುತ್ತದೆ.</p>
         <div id="shopReturnsList" style="margin-top:10px;"></div>
       </div>
 
@@ -389,6 +404,7 @@
     let previousOrdersCount = 0;
     let currentTab = 'upload';
     let isUserPaidMembership = false;
+    let tempGpsCoordinates = "";
 
     window.addEventListener('DOMContentLoaded', () => {
       checkAppLiveStatus();
@@ -414,7 +430,9 @@
         verifyShopExistsInFirebase();
       }
 
-      window.history.pushState({ page: 'home' }, '', '');
+      // Initial history push to prevent accidental app exit on first back button press
+      history.pushState({ page: 'main' }, '', '');
+
       window.addEventListener('popstate', (e) => {
         const printModal = document.getElementById('printModal');
         const successModal = document.getElementById('successModal');
@@ -422,19 +440,36 @@
 
         if (printModal && printModal.style.display === 'flex') {
           closePrintModal();
-          window.history.pushState({ page: 'home' }, '', '');
+          history.pushState({ page: 'main' }, '', '');
         } else if (successModal && successModal.style.display === 'flex') {
           closeSuccessModal();
-          window.history.pushState({ page: 'home' }, '', '');
+          history.pushState({ page: 'main' }, '', '');
         } else if (qrModal && qrModal.style.display === 'flex') {
           closeQrModal();
-          window.history.pushState({ page: 'home' }, '', '');
+          history.pushState({ page: 'main' }, '', '');
         } else if (currentTab !== 'upload') {
           showTab('upload');
-          window.history.pushState({ page: 'home' }, '', '');
+          history.pushState({ page: 'main' }, '', '');
+        } else {
+          // Keep a dummy state so pressing back doesn't exit the app immediately
+          history.pushState({ page: 'main' }, '', '');
         }
       });
     });
+
+    function fetchCurrentGpsLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          tempGpsCoordinates = `${position.coords.latitude}, ${position.coords.longitude}`;
+          document.getElementById('gpsLocationText').value = `ಲೊಕೇಶನ್ ಸಿಕ್ಕಿದೆ: ${tempGpsCoordinates}`;
+          alert("📍 ನಿಮ್ಮ ಜಿಪಿಎಸ್ ಲೊಕೇಶನ್ ಯಶಸ್ವಿಯಾಗಿ ಕ್ಯಾಚ್ ಮಾಡಲಾಗಿದೆ!");
+        }, (error) => {
+          alert("ಜಿಪಿಎಸ್ ಲೊಕೇಶನ್ ಪಡೆಯಲು ಸಾಧ್ಯವಾಗಿಲ್ಲ. ದಯವಿಟ್ಟು ಜಿಪಿಎಸ್ ಆನ್ ಮಾಡಿ.");
+        });
+      } else {
+        alert("ನಿಮ್ಮ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಜಿಪಿಎಸ್ ಸೌಲಭ್ಯವಿಲ್ಲ.");
+      }
+    }
 
     function checkAppLiveStatus() {
       window.onSnapshot(window.doc(window.db, "settings", "instapp_control"), (docSnap) => {
@@ -564,7 +599,7 @@
       if (shopOwner && shopOwner.qrPhoto) {
         document.getElementById('modalQrImage').src = shopOwner.qrPhoto;
         document.getElementById('qrModal').style.display = 'flex';
-        window.history.pushState({ page: 'qrmodal' }, '', '');
+        history.pushState({ page: 'modal' }, '', '');
       } else {
         alert("ಯಾವುದೇ ಕ್ಯೂಆರ್ ಕೋಡ್ ಅಪ್ಲೋಡ್ ಮಾಡಲಾಗಿಲ್ಲ.");
       }
@@ -572,6 +607,27 @@
 
     function closeQrModal() {
       document.getElementById('qrModal').style.display = 'none';
+    }
+
+    async function updateShopQrCode() {
+      const fileInput = document.getElementById('changeQrFileInput').files[0];
+      if (!fileInput) {
+        alert("ದಯವಿಟ್ಟು ಹೊಸ ಕ್ಯೂಆರ್ ಕೋಡ್ ಫೋಟೋ ಆಯ್ಕೆಮಾಡಿ.");
+        return;
+      }
+      const newQrBase64 = await convertFileToBase64(fileInput);
+      try {
+        await window.updateDoc(window.doc(window.db, "shop_owners", String(shopOwner.id)), {
+          qrPhoto: newQrBase64
+        });
+        shopOwner.qrPhoto = newQrBase64;
+        localStorage.setItem('my_shop_owner_session', JSON.stringify(shopOwner));
+        document.getElementById('modalQrImage').src = newQrBase64;
+        renderIDCard();
+        alert("✅ ನಿಮ್ಮ ಕ್ಯೂಆರ್ ಕೋಡ್ ಯಶಸ್ವಿಯಾಗಿ ಬದಲಾಯಿಸಲಾಗಿದೆ!");
+      } catch(e) {
+        alert("ದೋಷ: " + e.message);
+      }
     }
 
     function getShopCommissionRate(shopType) {
@@ -735,6 +791,7 @@
         district: document.getElementById('district').value.trim(),
         taluk: document.getElementById('taluk').value.trim(),
         pincode: document.getElementById('pincode').value.trim(),
+        gpsCoordinates: tempGpsCoordinates || '',
         photo: photoBase64 || 'https://via.placeholder.com/100',
         qrPhoto: qrBase64,
         isPaid: false
@@ -745,6 +802,7 @@
         localStorage.setItem('my_shop_owner_session', JSON.stringify(shopOwner));
         document.getElementById('popup-id').innerText = fourDigitId;
         document.getElementById('successModal').style.display = 'flex';
+        history.pushState({ page: 'modal' }, '', '');
       } catch (err) { alert("Error: " + err.message); }
     }
 
@@ -819,6 +877,7 @@
       document.getElementById('tabOrders').style.display = tab === 'orders' ? 'block' : 'none';
       document.getElementById('tabReturns').style.display = tab === 'returns' ? 'block' : 'none';
       document.getElementById('tabPayments').style.display = tab === 'payments' ? 'block' : 'none';
+      history.pushState({ page: 'tab_' + tab }, '', '');
     }
 
     function startRealtimeSync() {
@@ -873,10 +932,7 @@
       const returnedOrders = myOrders.filter(o => o.status === 'RETURNED' || o.isReturned || o.status === 'RETURN_COMPLETED' || o.isReturnRequested);
       const totalReturnedAmount = returnedOrders.reduce((acc, curr) => acc + Number(curr.itemPrice || curr.totalPrice || 0), 0);
 
-      // ರಿಟರ್ನ್ ಆದ ಹಣವನ್ನು ಮೈನಸ್ ಮಾಡಿ ಶುದ್ಧ ಮಾರಾಟ ಲೆಕ್ಕಾಚಾರ
       const effectiveSales = Math.max(0, totalDeliveredAmount - totalReturnedAmount);
-      
-      // ಅಂಗಡಿಯ ಪ್ರಕಾರದ ಕಮಿಷನ್ ಶೇಕಡಾವಾರು ಕಟ್ ಆಗಿ ಉಳಿದ ಅಮೌಂಟ್ ಲೆಕ್ಕಾಚಾರ
       let netEarnings = Math.round(effectiveSales * (1 - commRate));
 
       document.getElementById('statTotalOrders').innerText = myOrders.length;
@@ -910,7 +966,7 @@
         if (o.isReturnRequested) {
           returnAlertBanner = `
             <div style="background:#ffebee; border:2px solid #d32f2f; border-radius:8px; padding:8px; margin-bottom:8px;">
-              <span style="color:#d32f2f; font-weight:bold; font-size:0.85rem;">⚠️ ಗ್ರಾಹಕರಿಂದ ನೇರ ಎಕ್ಸ್ಚೇಂಜ್ ವಿನಂತಿ ಬಂದಿದೆ! "ಎಕ್ಸ್ಚೇಂಜ್" ಟ್ಯಾಬ್‌ನಲ್ಲಿ ಪರಿಶೀಲಿಸಿ.</span>
+              <span style="color:#d32f2f; font-weight:bold; font-size:0.85rem;">⚠️ ಗ್ರಾಹಕರಿಂದ ರಿಟರ್ನ್ / ಎಕ್ಸ್ಚೇಂಜ್ ವಿನಂತಿ ಬಂದಿದೆ! "ಎಕ್ಸ್ಚೇಂಜ್" ಟ್ಯಾಬ್‌ನಲ್ಲಿ ಪರಿಶೀಲಿಸಿ.</span>
             </div>
           `;
         }
@@ -963,7 +1019,7 @@
 
         let paymentModeBadge = o.paymentMode === 'COD' ? 
           `<span style="background:#ffebee; color:#c62828; padding:2px 6px; border-radius:4px; font-weight:bold;">💵 ಕ್ಯಾಶ್ ಆನ್ ಡೆಲಿವರಿ (COD)</span>` : 
-          `<span style="background:#e8f5e9; color:#2e7d32; padding:2px 6px; border-radius:4px; font-weight:bold;">🟢 UPI ಸ್ಕ್ಯಾನಿಂಗ್ ಪೇಮೆಂಟ್</span>`;
+          `<span style="background:#e8f5e9; color:#2e7d32; padding:2px 6px; border-radius:4px; font-weight:bold;">🟢 UPI ಸ್ಕ್ಯಾನಿಂಗ್ ಪೇಮೆಂಟ್ (₹${totalCustomerPrice})</span>`;
 
         return `
           <div class="order-item ${o.isReturnRequested ? 'return-alert' : ''}">
@@ -976,7 +1032,8 @@
               <img src="${o.productPhoto}" style="width:65px; height:65px; object-fit:cover; border-radius:6px;">
               <div>
                 <h4 style="font-size:0.95rem;">${o.productName} ${o.selectedSize ? `[Size: ${o.selectedSize}]` : ''}</h4>
-                <p style="font-size:0.85rem; color:#2e7d32; font-weight:bold;">₹${itemPriceNum} <span style="font-size:0.7rem; color:#555;">(ವಸ್ತುವಿನ ಅಸಲಿ ಬೆಲೆ)</span></p>
+                <p style="font-size:0.85rem; color:#2e7d32; font-weight:bold;">₹${itemPriceNum} <span style="font-size:0.7rem; color:#555;">(ಅಂಗಡಿಗೆ ಬರುವ ವಸ್ತುವಿನ ಬೆಲೆ)</span></p>
+                <p style="font-size:0.75rem; color:#0288d1; font-weight:bold;">ಗ್ರಾಹಕರಿಗೆ ಕಾಣುವ ಒಟ್ಟು ಮೊತ್ತ (+30 ರೂ ಡೆಲಿವರಿ ಚಾರ್ಜ್): ₹${totalCustomerPrice}</p>
               </div>
             </div>
             
@@ -1009,7 +1066,7 @@
       const returns = orders.filter(o => o.isReturnRequested || o.status === 'RETURNED' || o.isReturned);
 
       if (returns.length === 0) {
-        listDiv.innerHTML = '<p style="font-size:0.85rem; color:#777; text-align:center; padding:20px;">ಯಾವುದೇ ಎಕ್ಸ್ಚೇಂಜ್ ವಿನಂತಿಗಳು ಬಂದಿಲ್ಲ.</p>';
+        listDiv.innerHTML = '<p style="font-size:0.85rem; color:#777; text-align:center; padding:20px;">ಯಾವುದೇ ರಿಟರ್ನ್ ಅಥವಾ ಎಕ್ಸ್ಚೇಂಜ್ ವಿನಂತಿಗಳು ಬಂದಿಲ್ಲ.</p>';
         return;
       }
 
@@ -1037,7 +1094,7 @@
             </div>
             <p style="margin-top:6px;"><b>ಪ್ರಾಡಕ್ಟ್:</b> ${o.productName} (₹${o.itemPrice || o.totalPrice})</p>
             <p style="margin-top:4px;"><b>ಗ್ರಾಹಕರು:</b> ${o.customer?.name} (${custPhone})</p>
-            <p style="margin-top:4px; color:#d32f2f;"><b>ಕಾರಣ:</b> ${o.returnReason || 'ಸೈಜ್ ವ್ಯತ್ಯಾಸ / ಎಕ್ಸ್ಚೇಂಜ್'}</p>
+            <p style="margin-top:4px; color:#d32f2f;"><b>ಕಾರಣ:</b> ${o.returnReason || 'ರಿಟರ್ನ್ / ಎಕ್ಸ್ಚೇಂಜ್'}</p>
             
             <div style="background:#e3f2fd; border:2px solid #1e88e5; border-radius:8px; padding:8px; margin:8px 0; text-align:center;">
               <p style="font-size:0.75rem; color:#1565c0; font-weight:bold;">🔄 ಡೆಲಿವರಿ ರಿಟರ್ನ್ ಒಟಿಪಿ (Return OTP):</p>
@@ -1091,7 +1148,7 @@
       let netPayable = Math.round(effectiveSales * (1 - commRate));
 
       summaryDiv.innerHTML = `
-        <p><b>ಕಂಪನಿ ಯುಪಿಐ (ನಮ್ಮ ಊರು ಶಾಪಿಂಗ್):</b> <span style="color:#1565c0; font-weight:bold;">nammaurushop@ybl</span></p>
+        <p><b>ಅಂಗಡಿ ಯುಪಿಐ (ನಿಮ್ಮ ಕ್ಯೂಆರ್ ಕೋಡ್):</b> <span style="color:#1565c0; font-weight:bold;">ಆಟೋ ಸ್ಕ್ಯಾನ್ ಪೇಮೆಂಟ್ ಸಕ್ರಿಯವಾಗಿದೆ</span></p>
         <p><b>ಅಂಗಡಿ ವಿಭಾಗ:</b> <span style="color:#e65100; font-weight:bold;">${shopOwner.shopType} (${commPercentageStr} ಕಮಿಷನ್)</span></p>
         <p><b>ಒಟ್ಟು ಡೆಲಿವರಿ ಆದ ಮಾರಾಟ:</b> ₹${totalSales}</p>
         <p><b>ರಿಟರ್ನ್ ಮೈನಸ್ ಆಗಿರುವ ಮೊತ್ತ:</b> <span style="color:#d32f2f;">- ₹${totalReturned}</span></p>
@@ -1114,7 +1171,7 @@
       currentShareText = `🧾 ಆರ್ಡರ್ ಐಡಿ: ${orderId}\n📦 ವಸ್ತು: ${productName}\n💰 ಬೆಲೆ: ₹${totalPrice}\n👤 ಗ್ರಾಹಕರು: ${custName} (${custPhone})\n📍 ವಿಳಾಸ: ${custAddress}`;
       document.getElementById('printModalBody').innerHTML = `<p><b>ಆರ್ಡರ್ ಐಡಿ:</b> ${orderId}</p><p><b>ಪ್ರಾಡಕ್ಟ್:</b> ${productName}</p><p><b>ಬೆಲೆ:</b> ₹${totalPrice}</p><p><b>ಗ್ರಾಹಕರು & ವಿಳಾಸ:</b> ${custName}, ${custAddress}</p>`;
       document.getElementById('printModal').style.display = 'flex';
-      window.history.pushState({ page: 'modal' }, '', '');
+      history.pushState({ page: 'modal' }, '', '');
     }
 
     function closePrintModal() { document.getElementById('printModal').style.display = 'none'; }
