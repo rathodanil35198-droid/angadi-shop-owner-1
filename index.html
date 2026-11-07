@@ -306,7 +306,7 @@
           <p id="statReturns" style="color:#b71c1c;">0</p>
         </div>
         <div class="stat-box">
-          <h4>ನಿಮ್ಮ ಶುದ್ಧ ಮೊತ್ತ (ಸ್ಲಾಬ್ ಲೆಕ್ಕಾಚಾರ)</h4>
+          <h4>ನಿಮ್ಮ ಶುದ್ಧ ಮೊತ್ತ (12% ಕಡಿತ)</h4>
           <p id="statEarnings">₹0</p>
         </div>
       </div>
@@ -368,13 +368,13 @@
       <!-- ರಿಟರ್ನ್‌ಗಳು / ಎಕ್ಸ್ಚೇಂಜ್ -->
       <div id="tabReturns" style="display:none; background:#fff; padding:15px; border-radius:10px; border:1px solid #cbd5e0;">
         <h2>🔄 ಗ್ರಾಹಕರು ಎಕ್ಸ್ಚೇಂಜ್ ಮಾಡಲು ಕೋರಿರುವ ವಸ್ತುಗಳು</h2>
-        <p style="font-size:0.8rem; color:#666; margin-bottom:10px;">ಇಲ್ಲಿ ಗ್ರಾಹಕರು ನೇರವಾಗಿ ಅಂಗಡಿಗೆ ಬಂದು ಎಕ್ಸ್ಚೇಂಜ್ ಮಾಡಲು ವಿನಂತಿ ಕಳುಹಿಸಿರುವುದು ಕಾಣಿಸುತ್ತದೆ[span_0](start_span)[span_0](end_span)[span_1](start_span)[span_1](end_span)[span_2](start_span)[span_2](end_span)[span_3](start_span)[span_3](end_span)[span_4](start_span)[span_4](end_span)[span_5](start_span)[span_5](end_span)[span_6](start_span)[span_6](end_span)[span_7](start_span)[span_7](end_span)[span_8](start_span)[span_8](end_span)[span_9](start_span)[span_9](end_span)[span_10](start_span)[span_10](end_span)[span_11](start_span)[span_11](end_span)[span_12](start_span)[span_12](end_span)[span_13](start_span)[span_13](end_span)[span_14](start_span)[span_14](end_span)[span_15](start_span)[span_15](end_span).</p>
+        <p style="font-size:0.8rem; color:#666; margin-bottom:10px;">ಇಲ್ಲಿ ಗ್ರಾಹಕರು ನೇರವಾಗಿ ಅಂಗಡಿಗೆ ಬಂದು ಎಕ್ಸ್ಚೇಂಜ್ ಮಾಡಲು ವಿನಂತಿ ಕಳುಹಿಸಿರುವುದು ಕಾಣಿಸುತ್ತದೆ.</p>
         <div id="shopReturnsList" style="margin-top:10px;"></div>
       </div>
 
       <!-- ಪೇಮೆಂಟ್ಸ್ -->
       <div id="tabPayments" style="display:none; background:#fff; padding:15px; border-radius:10px; border:1px solid #cbd5e0;">
-        <h2>💳 ಪೇಮೆಂಟ್ಸ್ ಮತ್ತು ಲೆಕ್ಕಾಚಾರ (ಸ್ಲಾಬ್ ಆಧಾರಿತ ಕಮಿಷನ್)</h2>
+        <h2>💳 ಪೇಮೆಂಟ್ಸ್ ಮತ್ತು ಲೆಕ್ಕಾಚಾರ (12% ಡೆಲಿವರಿ ಚಾರ್ಜಸ್ ಕಟ್)</h2>
         <div id="paymentLedgerSummary" style="background:#e3f2fd; padding:12px; border-radius:8px; margin-bottom:15px; font-size:0.85rem;"></div>
         <div id="shopPaymentsList" style="margin-top:10px;"></div>
       </div>
@@ -436,7 +436,6 @@
       });
     });
 
-    // 1. ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್ ಸರ್ವರ್ ಡೌನ್ / ಆಫ್ ಕಂಟ್ರೋಲ್
     function checkAppLiveStatus() {
       window.onSnapshot(window.doc(window.db, "settings", "instapp_control"), (docSnap) => {
         if (docSnap.exists()) {
@@ -640,7 +639,7 @@
         ${specificFields}
         <div style="display:flex; gap:10px;">
           <div class="form-group" style="flex:1;"><label>ಹಳೆಯ ರೇಟು (₹):</label><input type="number" id="prodOldPrice" placeholder="999"></div>
-          <div class="form-group" style="flex:1;"><label>ಈಗಿನ ರೇಟು (₹):</label><input type="number" id="prodPrice" required placeholder="799"></div>
+          <div class="form-group" style="flex:1;"><label>ಈಗಿನ ರೇಟು (₹ - ಕೇವಲ ವಸ್ತುವಿನ ಬೆಲೆ):</label><input type="number" id="prodPrice" required placeholder="800"></div>
         </div>
 
         <div style="background:#f8f9fa; padding:10px; border-radius:8px; border:1px solid #e2e8f0; margin-bottom:10px;">
@@ -648,7 +647,7 @@
           <div style="margin-top:6px;"><label style="font-size:0.75rem;">ಫೋಟೋ 1:</label><input type="file" accept="image/*" id="c1_p1" required></div>
           <div style="margin-top:6px;"><label style="font-size:0.75rem;">ಫೋಟೋ 2:</label><input type="file" accept="image/*" id="c1_p2"></div>
           <div style="margin-top:6px;"><label style="font-size:0.75rem;">ಫೋಟೋ 3:</label><input type="file" accept="image/*" id="c1_p3"></div>
-          <div style="margin-top:6px;"><label style="font-size:0.75rem;">ಫೋಟೋ 4:</label><option><input type="file" accept="image/*" id="c1_p4"></div>
+          <div style="margin-top:6px;"><label style="font-size:0.75rem;">ಫೋಟೋ 4:</label><input type="file" accept="image/*" id="c1_p4"></div>
         </div>
       `;
 
@@ -854,16 +853,11 @@
       const returnedOrders = myOrders.filter(o => o.status === 'RETURNED' || o.isReturned || o.status === 'RETURN_COMPLETED' || o.isReturnRequested);
       const totalReturnedAmount = returnedOrders.reduce((acc, curr) => acc + Number(curr.itemPrice || curr.totalPrice || 0), 0);
 
+      // ರಿಟರ್ನ್ ಆದ ಹಣವನ್ನು ಮೈನಸ್ ಮಾಡಿ ಶುದ್ಧ ಮಾರಾಟ ಲೆಕ್ಕಾಚಾರ
       const effectiveSales = Math.max(0, totalDeliveredAmount - totalReturnedAmount);
       
-      // ಲೆಕ್ಕಾಚಾರ ಸ್ಲಾಬ್: ರೂ.1000 ವರೆಗೆ ಫಿಕ್ಸ್ ರೂ.100 ಕಡಿತ; ರೂ.1000 ಮೇಲೆ ಇದ್ದರೆ 10% ಕಮಿಷನ್ ಕಡಿತ
-      let netEarnings = 0;
-      if (effectiveSales <= 1000) {
-        netEarnings = Math.max(0, effectiveSales - 100);
-      } else {
-        let commission = effectiveSales * 0.10;
-        netEarnings = Math.round(effectiveSales - commission);
-      }
+      // ಡೆಲಿವರಿ ಚಾರ್ಜಸ್ 12% ಕಟ್ ಆಗಿ ಉಳಿದ ಅಮೌಂಟ್ ಲೆಕ್ಕಾಚಾರ
+      let netEarnings = Math.round(effectiveSales * (1 - 0.12));
 
       document.getElementById('statTotalOrders').innerText = myOrders.length;
       document.getElementById('statReturns').innerText = returnedOrders.length;
@@ -896,7 +890,7 @@
         if (o.isReturnRequested) {
           returnAlertBanner = `
             <div style="background:#ffebee; border:2px solid #d32f2f; border-radius:8px; padding:8px; margin-bottom:8px;">
-              <span style="color:#d32f2f; font-weight:bold; font-size:0.85rem;">⚠️ ಗ್ರಾಹಕರಿಂದ ನೇರ ಎಕ್ಸ್ಚೇಂಜ್ ವಿನಂತಿ ಬಂದಿದೆ! "ಎಕ್ಸ್ಚೇಂಜ್" ಟ್ಯಾಬ್‌ನಲ್ಲಿ ಪರಿಶೀಲಿಸಿ[span_16](start_span)[span_16](end_span)[span_17](start_span)[span_17](end_span)[span_18](start_span)[span_18](end_span)[span_19](start_span)[span_19](end_span)[span_20](start_span)[span_20](end_span)[span_21](start_span)[span_21](end_span)[span_22](start_span)[span_22](end_span)[span_23](start_span)[span_23](end_span)[span_24](start_span)[span_24](end_span)[span_25](start_span)[span_25](end_span)[span_26](start_span)[span_26](end_span)[span_27](start_span)[span_27](end_span)[span_28](start_span)[span_28](end_span)[span_29](start_span)[span_29](end_span)[span_30](start_span)[span_30](end_span)[span_31](start_span)[span_31](end_span).</span>
+              <span style="color:#d32f2f; font-weight:bold; font-size:0.85rem;">⚠️ ಗ್ರಾಹಕರಿಂದ ನೇರ ಎಕ್ಸ್ಚೇಂಜ್ ವಿನಂತಿ ಬಂದಿದೆ! "ಎಕ್ಸ್ಚೇಂಜ್" ಟ್ಯಾಬ್‌ನಲ್ಲಿ ಪರಿಶೀಲಿಸಿ.</span>
             </div>
           `;
         }
@@ -906,7 +900,7 @@
         } else if (orderStatus === 'CONFIRMED' || orderStatus === 'STEP_2') {
           let generatedOtp = o.pickupOtp || Math.floor(1000 + Math.random() * 9000).toString();
           actionButtonHTML = `
-            <button onclick="openPrintModalForOrder('${o.docId}', '${o.orderId}', '${o.productName}', '${o.customerPrice || o.totalPrice}', '${o.customer?.name}', '${o.customer?.phone}', '${o.customer?.village || o.customer?.address}')" class="btn-print">🖨️ ಪ್ರಿಂಟ್ & ಶೇರ್ ಮಾಡಿ</button>
+            <button onclick="openPrintModalForOrder('${o.docId}', '${o.orderId}', '${o.productName}', '${o.itemPrice || o.totalPrice}', '${o.customer?.name}', '${o.customer?.phone}', '${o.customer?.village || o.customer?.address}')" class="btn-print">🖨️ ಪ್ರಿಂಟ್ & ಶೇರ್ ಮಾಡಿ</button>
             <button onclick="updateOrderStatus('${o.docId}', 'STEP_3', '${generatedOtp}')" class="btn-pack" style="margin-top:6px;">📦 ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ಕಳಿಸಿ)</button>
           `;
         } else if (orderStatus === 'STEP_3') {
@@ -914,7 +908,7 @@
             <div style="background:#e3f2fd; border:2px solid #1e88e5; border-radius:8px; padding:10px; margin-top:8px; text-align:center;">
               <p style="font-size:0.8rem; color:#1565c0; font-weight:bold;">🔑 ಡೆಲಿವರಿ ಪಿಕಪ್ ಒಟಿಪಿ (Pickup OTP):</p>
               <div style="font-size:1.5rem; font-weight:bold; color:#0d47a1; letter-spacing:3px; margin:4px 0;">${o.pickupOtp || '2275'}</div>
-              <p style="font-size:0.75rem; color:#333; margin-top:4px; font-weight:bold;">ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ನಿಮ್ಮ ಆಪ್ ಆರ್ಡರನ್ನು ಕಳುಹಿಸಲಾಗಿದೆ. ಡೆಲಿವರಿ ಬಾಯ್ ಕಾಲ್ ಮಾಡುತ್ತಾರೆ ನಿಮ್ಮ ಅಂಗಡಿಗೆ ಬಂದು ಪಿಕಪ್ ಮಾಡುತ್ತಾರೆ ಕಾಯಿರಿ.</p>
+              <p style="font-size:0.75rem; color:#333; margin-top:4px; font-weight:bold;">ಡೆಲಿವರಿ ಬಾಯ್ ಪ್ಯಾಕಿಂಗ್ ಪಿಕಪ್ ಮಾಡುವಾಗ ನಂತರ ಚಾರ್ಜಸ್ ಕಟ್ಟಾಗಿ ಓಕೆ ಅಮೌಂಟ್ ಅನ್ನು ಅವರು ತೋರಿಸುತ್ತಾರೆ.</p>
             </div>
           `;
         }
@@ -927,10 +921,8 @@
         const custLandmark = o.customer?.landmark ? ` (ಲ್ಯಾಂಡ್‌ಮಾರ್ಕ್: ${o.customer.landmark})` : '';
         const custPincode = o.customer?.pincode ? ` - ${o.customer.pincode}` : '';
 
-        // ಗ್ರಾಹಕರಿಗೆ ಕಾಣುವ ಒಟ್ಟು ಮೊತ್ತ (ವಸ್ತುವಿನ ಬೆಲೆ + ಡೆಲಿವರಿ ಚಾರ್ಜ್ ಸೇರಿ)
-        let itemPriceNum = Number(o.itemPrice || o.totalPrice || 0);
-        let deliveryFeeForCust = itemPriceNum <= 1000 ? 100 : 50;
-        let totalCustomerPrice = itemPriceNum + deliveryFeeForCust;
+        // ಅಂಗಡಿ ಮಾಲೀಕರಿಗೆ ಕೇವಲ ವಸ್ತುವಿನ ಅಸಲಿ ಬೆಲೆ (ಉದಾ: ರೂ.800) ಮಾತ್ರ ಕಾಣಿಸುತ್ತದೆ
+        let itemPriceNum = Number(o.itemPrice || o.totalPrice || 800);
 
         let distanceKm = "3.5 ಕಿ.ಮೀ.";
         if (shopOwner.pincode && o.customer?.pincode) {
@@ -958,22 +950,22 @@
               <img src="${o.productPhoto}" style="width:65px; height:65px; object-fit:cover; border-radius:6px;">
               <div>
                 <h4 style="font-size:0.95rem;">${o.productName} ${o.selectedSize ? `[Size: ${o.selectedSize}]` : ''}</h4>
-                <p style="font-size:0.85rem; color:#2e7d32; font-weight:bold;">₹${totalCustomerPrice} <span style="font-size:0.7rem; color:#555;">(ವಸ್ತು: ₹${itemPriceNum} + ಡೆಲಿವರಿ: ₹${deliveryFeeForCust})</span></p>
+                <p style="font-size:0.85rem; color:#2e7d32; font-weight:bold;">₹${itemPriceNum} <span style="font-size:0.7rem; color:#555;">(ವಸ್ತುವಿನ ಅಸಲಿ ಬೆಲೆ)</span></p>
               </div>
             </div>
             
             <div class="cust-address-box">
-              <p style="font-weight:bold; font-size:0.9rem; color:#1b5e20;">📍 ಗ್ರಾಹಕರ ಪೂರ್ಣ ವಿಳಾಸ & GPS ದೂರ:</p>
+              <p style="font-weight:bold; font-size:0.9rem; color:#1b5e20;">📍 ಗ್ರಾಹಕರ ಸಂಪೂರ್ಣ ವಿವರಗಳು & ಜಿಪಿಎಸ್:</p>
               <p><b>ಹೆಸರು:</b> ${custName}</p>
               <p><b>ಮೊಬೈಲ್ ನಂಬರ್:</b> ${custPhone}</p>
               <p><b>ವಿಳಾಸ:</b> ${custVillage}${custLandmark}</p>
-              <p><b>ತಾಲೂಕು/ಜಿಲ್ಲೆ/ಪಿನ್:</b> ${custTaluk}, ${custDistrict} ${custPincode}</p>
+              <p><b>ಜಿಲ್ಲೆ, ಊರು, ತಾಲೂಕು, ಪಿನ್ ಕೋಡ್:</b> ${custDistrict}, ${custVillage}, ${custTaluk}${custPincode}</p>
               <p style="margin-top:4px; color:#0d47a1; font-weight:bold;">📏 GPS ದೂರ: ${distanceKm}</p>
             </div>
 
             <div style="display:flex; gap:6px;">
               <a href="tel:${custPhone}" class="btn-call-cust">📞 ಕಾಲ್ ಮಾಡಿ</a>
-              <a href="${mapsUrl}" target="_blank" class="btn-map-loc">🗺️ ಗೂಗಲ್ ಲೊಕೇಶನ್</a>
+              <a href="${mapsUrl}" target="_blank" class="btn-map-loc">🗺️ ಗೂಗಲ್ ಜಿಪಿಎಸ್ ಲೊಕೇಶನ್</a>
             </div>
 
             <p style="margin-top:6px; font-size:0.75rem; color:#666;"><b>ಪ್ರಸ್ತುತ ಸ್ಥಿತಿ:</b> ${orderStatus}</p>
@@ -1013,13 +1005,14 @@
               <span style="font-size:0.8rem; font-weight:bold; color:#c62828;">ಆರ್ಡರ್ ಐಡಿ: ${o.orderId}</span>
               <span style="font-size:0.75rem; background:#ffebee; padding:2px 6px; border-radius:4px; color:#d32f2f; font-weight:bold;">${o.status === 'RETURN_COMPLETED' ? '✔ ಎಕ್ಸ್ಚೇಂಜ್ ಮುಕ್ತಾಯ' : 'ನೇರ ಅಂಗಡಿಗೆ ಬಂದು ಎಕ್ಸ್ಚೇಂಜ್'}</span>
             </div>
-            <p style="margin-top:6px;"><b>ಪ್ರಾಡಕ್ಟ್:</b> ${o.productName} (₹${o.totalPrice})</p>
+            <p style="margin-top:6px;"><b>ಪ್ರಾಡಕ್ಟ್:</b> ${o.productName} (₹${o.itemPrice || o.totalPrice})</p>
             <p style="margin-top:4px;"><b>ಗ್ರಾಹಕರು:</b> ${o.customer?.name} (${custPhone})</p>
             <p style="margin-top:4px; color:#d32f2f;"><b>ಕಾರಣ:</b> ${o.returnReason || 'ಸೈಜ್ ವ್ಯತ್ಯಾಸ / ಎಕ್ಸ್ಚೇಂಜ್'}</p>
+            <p style="font-size:0.8rem; color:#b71c1c; margin-top:4px;"><b>ಸೂಚನೆ:</b> ಹೀಗೂ ಕಟ್ಟಾಗಿರೋ ಹಣಗಳು ಮಾತ್ರ ವಾಪಸ್ ಪಡೆಯಲು ಹೇಳಲಾಗಿದೆ (ಮೈನಸ್ ಆಗಿರೋದು).</p>
             
             <div style="display:flex; gap:6px; margin-top:6px;">
               <a href="tel:${custPhone}" class="btn-call-cust">📞 ಗ್ರಾಹಕರಿಗೆ ಕಾಲ್ ಮಾಡಿ</a>
-              <a href="${returnMapsUrl}" target="_blank" class="btn-map-loc">🗺️ ಗೂಗಲ್ GPS ಲೊಕೇಶನ್</a>
+              <a href="${returnMapsUrl}" target="_blank" class="btn-map-loc">🗺️ ಗೂಗಲ್ ಜಿಪಿಎಸ್ ಲೊಕೇಶನ್</a>
             </div>
 
             <p style="margin-top:6px; font-size:0.8rem; font-weight:bold;">📸 ಪ್ರಾಡಕ್ಟ್ ಫೋಟೋಗಳು:</p>
@@ -1048,40 +1041,35 @@
       const summaryDiv = document.getElementById('paymentLedgerSummary');
       const listDiv = document.getElementById('shopPaymentsList');
       const delivered = orders.filter(o => o.status === 'DELIVERED' || o.status === 'STEP_4' || o.status === 'RETURN_COMPLETED');
+      const returned = orders.filter(o => o.status === 'RETURNED' || o.isReturned || o.status === 'RETURN_COMPLETED' || o.isReturnRequested);
       
       let totalSales = 0;
-      let totalDeliveryCharges = 0;
-
       delivered.forEach(o => {
-        let price = Number(o.itemPrice || o.totalPrice || 0);
-        totalSales += price;
-        if (price <= 1000) {
-          totalDeliveryCharges += 100;
-        } else {
-          totalDeliveryCharges += 50;
-        }
+        totalSales += Number(o.itemPrice || o.totalPrice || 0);
       });
 
-      let netPayable = 0;
-      if (totalSales <= 1000) {
-        netPayable = Math.max(0, totalSales - 100);
-      } else {
-        let commission = totalSales * 0.10;
-        netPayable = Math.round(totalSales - commission);
-      }
+      let totalReturned = 0;
+      returned.forEach(o => {
+        totalReturned += Number(o.itemPrice || o.totalPrice || 0);
+      });
+
+      let effectiveSales = Math.max(0, totalSales - totalReturned);
+      // 12% ಡೆಲಿವರಿ ಚಾರ್ಜಸ್ ಕಟ್
+      let netPayable = Math.round(effectiveSales * (1 - 0.12));
 
       summaryDiv.innerHTML = `
         <p><b>ಕಂಪನಿ ಯುಪಿಐ (ನಮ್ಮ ಊರು ಶಾಪಿಂಗ್):</b> <span style="color:#1565c0; font-weight:bold;">nammaurushop@ybl</span></p>
         <p><b>ಒಟ್ಟು ಡೆಲಿವರಿ ಆದ ಮಾರಾಟ:</b> ₹${totalSales}</p>
-        <p><b>ಸ್ಲಾಬ್ ಲೆಕ್ಕಾಚಾರ ಕಡಿತ (₹1000 ವರೆಗೆ ರೂ.100 / ಮೇಲ್ಮಟ್ಟದಲ್ಲಿ 10%):</b> ರೂ. ಕಡಿತಗೊಳಿಸಲಾಗಿದೆ</p>
-        <p><b>ನಿಮಗೆ ಬರಬೇಕಾದ ಶುದ್ಧ ಮೊತ್ತ:</b> <span style="color:#2e7d32; font-weight:bold; font-size:1.1rem;">₹${netPayable}</span></p>
+        <p><b>ರಿಟರ್ನ್ ಮೈನಸ್ ಆಗಿರುವ ಮೊತ್ತ:</b> <span style="color:#d32f2f;">- ₹${totalReturned}</span></p>
+        <p><b>ಡೆಲಿವರಿ ಚಾರ್ಜಸ್ 12% ಕಟ್ ಆಗಿ ಉಳಿದ ಅಮೌಂಟ್:</b> <span style="color:#2e7d32; font-weight:bold; font-size:1.1rem;">₹${netPayable}</span></p>
       `;
 
       listDiv.innerHTML = delivered.map(o => {
         let price = Number(o.itemPrice || o.totalPrice || 0);
+        let discountedPrice = Math.round(price * (1 - 0.12));
         return `
           <div class="order-item" style="border-left-color: var(--warning); background:#fffde7;">
-            <p><b>${o.productName}</b> - ₹${price}</p>
+            <p><b>${o.productName}</b> - ಅಸಲಿ ಬೆಲೆ: ₹${price} (12% ಕಟ್ ಆಗಿ: <b>₹${discountedPrice}</b>)</p>
             <p style="font-size:0.75rem; color:#e65100; font-weight:bold; margin-top:2px;">✔ ಪೇಮೆಂಟ್ ಸಕ್ಸಸ್ ಆಗಿದೆ</p>
           </div>
         `;
@@ -1134,7 +1122,7 @@
       const mobRamStorage = document.getElementById('mobRam')?.value || '';
       const clothSizeDetail = document.getElementById('clothSizeDetail')?.value || '';
       const finalName = document.getElementById('mobModel')?.value || document.getElementById('clothType')?.value || document.getElementById('footwearName')?.value || document.getElementById('generalName')?.value || 'Item';
-      const price = document.getElementById('prodPrice').value.trim() || '0';
+      const price = document.getElementById('prodPrice').value.trim() || '800';
       const quantity = document.getElementById('prodQuantity').value;
 
       const c1_b1 = await convertFileToBase64(document.getElementById('c1_p1').files[0]);
