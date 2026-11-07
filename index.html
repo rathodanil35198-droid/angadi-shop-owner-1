@@ -264,9 +264,9 @@
         </div>
 
         <div class="form-group" style="background:#fff3e0; padding:10px; border-radius:8px; border:1px solid #ffe0b2;">
-          <label style="color:#e65100;">💳 ನಿಮ್ಮ ಯುಪಿಐ ಕ್ಯೂಆರ್ ಕೋಡ್ (UPI QR Code) ಫೋಟೋ ಹಾಕಿ:</label>
-          <input type="file" accept="image/*" id="shopQrFile">
-          <p style="font-size:0.75rem; color:#666; margin-top:4px;">(ಗ್ರಾಹಕರಿಗೆ ಮತ್ತು ಪೇಮೆಂಟ್‌ಗೆ ಇದು ನಿಮ್ಮ ಐಡಿ ಹತ್ತಿರ ಕಾಣಿಸುತ್ತದೆ)</p>
+          <label style="color:#e65100;">💳 ನಿಮ್ಮ ಯುಪಿಐ ಕ್ಯೂಆರ್ ಕೋಡ್ (UPI QR Code) ಫೋಟೋ ಹಾಕಿ (ಕಡ್ಡಾಯ):</label>
+          <input type="file" accept="image/*" id="shopQrFile" required>
+          <p style="font-size:0.75rem; color:#666; margin-top:4px;">(ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್‌ನಲ್ಲಿ ಹಾಗೂ ನಿಮ್ಮ ಐಡಿ ಹತ್ತಿರ ಇದು ಕಾಣಿಸುತ್ತದೆ)</p>
         </div>
 
         <button type="submit" class="btn btn-success" id="btnLogin">ಹೊಸ ಖಾತೆ ಪಡೆದುಕೊಳ್ಳಿ (Permanent Account)</button>
@@ -709,6 +709,12 @@
       e.preventDefault();
       const photoFile = document.getElementById('shopPhotoFile').files[0];
       const qrFile = document.getElementById('shopQrFile').files[0];
+      
+      if (!qrFile) {
+        alert("❌ ದಯವಿಟ್ಟು ನಿಮ್ಮ ಯುಪಿಐ ಕ್ಯೂಆರ್ ಕೋಡ್ ಫೋಟೋ ಕಡ್ಡಾಯವಾಗಿ ಹಾಕಿ!");
+        return;
+      }
+
       const photoBase64 = await convertFileToBase64(photoFile);
       const qrBase64 = await convertFileToBase64(qrFile);
       const fourDigitId = Math.floor(1000 + Math.random() * 9000).toString();
@@ -723,7 +729,7 @@
         taluk: document.getElementById('taluk').value.trim(),
         pincode: document.getElementById('pincode').value.trim(),
         photo: photoBase64 || 'https://via.placeholder.com/100',
-        qrPhoto: qrBase64 || '',
+        qrPhoto: qrBase64,
         isPaid: false
       };
 
@@ -789,11 +795,14 @@
       if (shopOwner.photo) document.getElementById('displayShopPhoto').src = shopOwner.photo;
       
       const smallQrImg = document.getElementById('displaySmallQr');
+      const smallQrContainer = document.getElementById('smallQrContainer');
       if (shopOwner.qrPhoto) {
         smallQrImg.src = shopOwner.qrPhoto;
         smallQrImg.style.display = 'block';
+        smallQrContainer.style.display = 'block';
       } else {
         smallQrImg.style.display = 'none';
+        smallQrContainer.innerHTML = '<span style="font-size:0.7rem; color:#ffebee; background:#c62828; padding:2px 4px; border-radius:4px;">ಕ್ಯೂರ್ ಕೋಡ್ ಹಾಕಿಲ್ಲ</span>';
       }
     }
 
@@ -908,7 +917,7 @@
             <div style="background:#e3f2fd; border:2px solid #1e88e5; border-radius:8px; padding:10px; margin-top:8px; text-align:center;">
               <p style="font-size:0.8rem; color:#1565c0; font-weight:bold;">🔑 ಡೆಲಿವರಿ ಪಿಕಪ್ ಒಟಿಪಿ (Pickup OTP):</p>
               <div style="font-size:1.5rem; font-weight:bold; color:#0d47a1; letter-spacing:3px; margin:4px 0;">${o.pickupOtp || '2275'}</div>
-              <p style="font-size:0.75rem; color:#333; margin-top:4px; font-weight:bold;">ಡೆಲಿವರಿ ಬಾಯ್ ಪ್ಯಾಕಿಂಗ್ ಪಿಕಪ್ ಮಾಡುವಾಗ ನಂತರ ಚಾರ್ಜಸ್ ಕಟ್ಟಾಗಿ ಓಕೆ ಅಮೌಂಟ್ ಅನ್ನು ಅವರು ತೋರಿಸುತ್ತಾರೆ.</p>
+              <p style="font-size:0.75rem; color:#333; margin-top:4px; font-weight:bold;">ಡೆಲಿವರಿ ಬಾಯ್ ಪ್ಯಾಕಿಂಗ್ ಪಿಕಪ್ ಮಾಡುವಾಗ ನಂತರ 12% ಚಾರ್ಜಸ್ ಕಟ್ ಆಗಿ ಉಳಿದ ಅಮೌಂಟ್ ಅನ್ನು ಅವರು ತೋರಿಸುತ್ತಾರೆ.</p>
             </div>
           `;
         }
@@ -921,8 +930,10 @@
         const custLandmark = o.customer?.landmark ? ` (ಲ್ಯಾಂಡ್‌ಮಾರ್ಕ್: ${o.customer.landmark})` : '';
         const custPincode = o.customer?.pincode ? ` - ${o.customer.pincode}` : '';
 
-        // ಅಂಗಡಿ ಮಾಲೀಕರಿಗೆ ಕೇವಲ ವಸ್ತುವಿನ ಅಸಲಿ ಬೆಲೆ (ಉದಾ: ರೂ.800) ಮಾತ್ರ ಕಾಣಿಸುತ್ತದೆ
+        // ವಸ್ತುವಿನ ಅಸಲಿ ಬೆಲೆ (ಉದಾ: ರೂ.800) ಹಾಗೂ ಡೆಲಿವರಿ ಚಾರ್ಜ್ ಸೇರಿ ಗ್ರಾಹಕರಿಗೆ ಕಾಣುವ ಮೊತ್ತ
         let itemPriceNum = Number(o.itemPrice || o.totalPrice || 800);
+        let deliveryFee = itemPriceNum <= 1000 ? 30 : 30; // ಗ್ರಾಹಕರಿಗೆ ಹೆಚ್ಚುವರಿ ಡೆಲಿವರಿ ಚಾರ್ಜ್ 30 ರೂ ಅಥವಾ ಒಟ್ಟು ರೂ.830
+        let totalCustomerPrice = itemPriceNum + deliveryFee;
 
         let distanceKm = "3.5 ಕಿ.ಮೀ.";
         if (shopOwner.pincode && o.customer?.pincode) {
@@ -956,10 +967,12 @@
             
             <div class="cust-address-box">
               <p style="font-weight:bold; font-size:0.9rem; color:#1b5e20;">📍 ಗ್ರಾಹಕರ ಸಂಪೂರ್ಣ ವಿವರಗಳು & ಜಿಪಿಎಸ್:</p>
-              <p><b>ಹೆಸರು:</b> ${custName}</p>
+              <p><b>ಗ್ರಾಹಕರ ಹೆಸರು:</b> ${custName}</p>
               <p><b>ಮೊಬೈಲ್ ನಂಬರ್:</b> ${custPhone}</p>
-              <p><b>ವಿಳಾಸ:</b> ${custVillage}${custLandmark}</p>
-              <p><b>ಜಿಲ್ಲೆ, ಊರು, ತಾಲೂಕು, ಪಿನ್ ಕೋಡ್:</b> ${custDistrict}, ${custVillage}, ${custTaluk}${custPincode}</p>
+              <p><b>ಜಿಲ್ಲೆಯ ಹೆಸರು:</b> ${custDistrict}</p>
+              <p><b>ತಾಲೂಕು ಹೆಸರು:</b> ${custTaluk}</p>
+              <p><b>ಊರ ಹೆಸರು:</b> ${custVillage}${custLandmark}</p>
+              <p><b>ಪಿನ್ ಕೋಡ್:</b> ${custPincode}</p>
               <p style="margin-top:4px; color:#0d47a1; font-weight:bold;">📏 GPS ದೂರ: ${distanceKm}</p>
             </div>
 
