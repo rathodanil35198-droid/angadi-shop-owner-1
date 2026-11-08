@@ -436,7 +436,6 @@
         navigator.serviceWorker.register('./sw.js').catch(err => console.log("SW fail", err));
       }
 
-      // Initial history push to prevent accidental app exit on first back button press
       history.pushState({ page: 'main' }, '', '');
 
       window.addEventListener('popstate', (e) => {
@@ -462,7 +461,6 @@
       });
     });
 
-    // 🌟 ಪಿನ್ ಕೋಡ್ ಹಾಕಿದ ತಕ್ಷಣ ಊರು, ತಾಲೂಕು, ಜಿಲ್ಲೆ ಆಟೋಮ್ಯಾಟಿಕ್ ಆಗಿ ಕ್ಯಾಪ್ಚರ್ ಆಗುವ ಲಾಜಿಕ್
     async function fetchPincodeAutoDetails(pincode) {
       if (pincode.length !== 6) return;
       try {
@@ -913,7 +911,7 @@
           localStorage.setItem('my_shop_owner_session', JSON.stringify(shopOwner));
           isUserPaidMembership = shopOwner.isPaid === true;
           updateMembershipBadgeUI();
-          renderIDCard(); // ಕ್ಯೂಆರ್ ಕೋಡ್ ಮತ್ತು ಐಡಿ ಎಂದಿಗೂ ಮಾಯವಾಗದಂತೆ ರಿಫ್ರೆಶ್ ಮಾಡುವುದು
+          renderIDCard();
         }
       });
 
@@ -998,7 +996,6 @@
           `;
         }
 
-        // 🌟 ಪ್ಯಾಕಿಂಗ್ ಬಟನ್ ಒತ್ತಿದಾಗ ಒಟಿಪಿ ಎಂದಿಗೂ ಮಾಯವಾಗದಂತೆ ಶಾಶ್ವತವಾಗಿ ಸೇವ್ ಆಗಿ ಪ್ರದರ್ಶಿಸುವುದು
         if (orderStatus === 'STEP_1' || orderStatus === 'PENDING') {
           actionButtonHTML = `<button onclick="updateOrderStatus('${o.docId}', 'CONFIRMED')" class="btn-confirm">✅ ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಮಾಡಿ</button>`;
         } else if (orderStatus === 'CONFIRMED' || orderStatus === 'STEP_2') {
@@ -1221,13 +1218,14 @@
       try {
         let updateData = { status: newStatus };
         if (newStatus === 'STEP_3' && existingOtp) {
-          updateData.pickupOtp = existingOtp; // ಒಟಿಪಿಯನ್ನು ಫೈರ್‌ಬೇಸ್‌ನಲ್ಲಿ ಶಾಶ್ವತವಾಗಿ ಸೇವ್ ಮಾಡುವುದು
+          updateData.pickupOtp = existingOtp;
         }
         await window.updateDoc(window.doc(window.db, "orders", orderId), updateData);
         alert("✅ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್‌ಡೇಟ್ ಆಗಿದೆ!");
       } catch (e) { alert("ದೋಷ: " + e.message); }
     }
 
+    // 🌟 ವಸ್ತುಗಳನ್ನು ಗ್ರಾಹಕರ ಆಪ್‌ಗೆ ಕಾಣುವಂತೆ ಸರಿಯಾದ taluk ಮತ್ತು category ಫೀಲ್ಡ್‌ಗಳೊಂದಿಗೆ ಸೇವ್ ಮಾಡುವ ಕೋಡ್
     async function saveProduct(e) {
       e.preventDefault();
 
@@ -1240,8 +1238,19 @@
       const footwearSize = document.getElementById('footwearSize')?.value || '';
       const mobRamStorage = document.getElementById('mobRam')?.value || '';
       const clothSizeDetail = document.getElementById('clothSizeDetail')?.value || '';
+      
+      const shopTypeVal = shopOwner.shopType || 'ಇತರ ಅಂಗಡಿ';
+      let autoCategory = 'ಇತರ';
+      if (shopTypeVal.includes('ಬಟ್ಟೆ')) autoCategory = 'ಬಟ್ಟೆ';
+      else if (shopTypeVal.includes('ಚಪ್ಪಲಿ')) autoCategory = 'ಚಪ್ಪಲಿ';
+      else if (shopTypeVal.includes('ಮೊಬೈಲ್')) autoCategory = 'ಮೊಬೈಲ್';
+      else if (shopTypeVal.includes('ಕಿರಾಣಿ')) autoCategory = 'ಕಿರಾಣಿ';
+      else if (shopTypeVal.includes('ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್')) autoCategory = 'ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್';
+      else if (shopTypeVal.includes('ಗಿಫ್ಟ್')) autoCategory = 'ಗಿಫ್ಟ್';
+
       const finalName = document.getElementById('mobModel')?.value || document.getElementById('clothType')?.value || document.getElementById('footwearName')?.value || document.getElementById('generalName')?.value || 'Item';
       const price = document.getElementById('prodPrice').value.trim() || '800';
+      const oldPrice = document.getElementById('prodOldPrice')?.value.trim() || '';
       const quantity = document.getElementById('prodQuantity').value;
 
       const c1_b1 = await convertFileToBase64(document.getElementById('c1_p1').files[0]);
@@ -1250,28 +1259,33 @@
       const c1_b4 = await convertFileToBase64(document.getElementById('c1_p4').files[0]);
 
       const prodData = {
-        shopId: shopOwner.id,
+        shopId: String(shopOwner.id),
         shopName: shopOwner.shopName,
         shopType: shopOwner.shopType,
-        taluk: shopOwner.taluk,
-        district: shopOwner.district,
-        pincode: shopOwner.pincode,
+        taluk: shopOwner.taluk || 'ಶಹಾಪುರ',
+        district: shopOwner.district || 'ಯಾದಗಿರಿ',
+        pincode: shopOwner.pincode || '585287',
+        category: autoCategory,
         name: finalName,
-        footwearSize: footwearSize,
-        ramStorage: mobRamStorage,
-        clothSizeDetail: clothSizeDetail,
-        price: price,
+        variants: [footwearSize, clothSizeDetail].filter(Boolean),
+        ram: mobRamStorage,
+        price: Number(price),
+        oldPrice: oldPrice ? Number(oldPrice) : null,
         quantity: quantity,
         returnPolicy: returnPolicy,
-        colors: [{ name: 'Default', photos: [c1_b1, c1_b2, c1_b3, c1_b4].filter(Boolean) }],
+        colors: [{ colorName: 'Default', photos: [c1_b1, c1_b2, c1_b3, c1_b4].filter(Boolean) }],
         photo: c1_b1 || 'https://via.placeholder.com/100',
         timestamp: window.serverTimestamp()
       };
 
-      await window.addDoc(window.collection(window.db, "products"), prodData);
-      alert("🎉 ವಸ್ತು ಮತ್ತು ವಿವರಗಳು ಯಶಸ್ವಿಯಾಗಿ ಅಪ್ಲೋಡ್ ಆಗಿದೆ!");
-      document.getElementById('addProductForm').reset();
-      renderDynamicUploadForm();
+      try {
+        await window.addDoc(window.collection(window.db, "products"), prodData);
+        alert("🎉 ವಸ್ತು ಮತ್ತು ವಿವರಗಳು ಯಶಸ್ವಿಯಾಗಿ ಗ್ರಾಹಕರ ಆಪ್‌ಗೆ ಅಪ್ಲೋಡ್ ಆಗಿದೆ!");
+        document.getElementById('addProductForm').reset();
+        renderDynamicUploadForm();
+      } catch (err) {
+        alert("ಅಪ್ಲೋಡ್ ದೋಷ: " + err.message);
+      }
     }
 
     function renderProducts(products) {
