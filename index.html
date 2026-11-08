@@ -46,6 +46,8 @@
     window.orderBy = orderBy;
     window.limit = limit;
     window.serverTimestamp = serverTimestamp;
+
+    window.initFirebaseShopApp();
   </script>
 
   <style>
@@ -242,28 +244,27 @@
           </select>
         </div>
 
+        <!-- ಪಿನ್ ಕೋಡ್ ಹಾಕಿದ ತಕ್ಷಣ ಊರು ಮತ್ತು ತಾಲೂಕು ಆಟೋ-ಕ್ಯಾಪ್ಚರ್ ಆಗುವ ಫೀಲ್ಡ್ -->
+        <div class="form-group">
+          <label>ಪಿನ್ ಕೋಡ್ (Pin Code):</label>
+          <input type="number" id="pincode" required placeholder="ಉದಾ: 585287" maxlength="6" oninput="fetchPincodeAutoDetails(this.value)">
+          <p style="font-size:0.7rem; color:#2e7d32; margin-top:2px;">💡 ಪಿನ್ ಕೋಡ್ ನಮೂದಿಸಿದ ತಕ್ಷಣ ಜಿಲ್ಲೆ, ತಾಲೂಕು ಮತ್ತು ಊರು ಆಟೋಮ್ಯಾಟಿಕ್ ಆಗಿ ತುಂಬಿಕೊಳ್ಳುತ್ತದೆ.</p>
+        </div>
+
         <div style="display:flex; gap:10px;">
           <div class="form-group" style="flex:1;">
-            <label>ಜಿಲ್ಲೆ (Select District):</label>
-            <select id="district" required>
-              <option value="">-- ಜಿಲ್ಲೆ ಆಯ್ಕೆ --</option>
-              <option value="ಯಾದಗಿರಿ">ಯಾದಗಿರಿ (Yadgir)</option>
-              <option value="ಕಲಬುರಗಿ">ಕಲಬುರಗಿ (Kalaburagi)</option>
-              <option value="ರಾಯಚೂರು">ರಾಯಚೂರು (Raichur)</option>
-              <option value="ವಿಜಯಪುರ">ವಿಜಯಪುರ (Vijayapura)</option>
-              <option value="ಬೀದರ್">ಬೀದರ್ (Bidar)</option>
-              <option value="ಬಳ್ಳಾರಿ">ಬಳ್ಳಾರಿ (Ballari)</option>
-            </select>
+            <label>ಜಿಲ್ಲೆ (District):</label>
+            <input type="text" id="district" placeholder="ಆಟೋ-ಫೆಚ್ ಜಿಲ್ಲೆ" required readonly style="background:#e8f0fe; font-weight:bold;">
           </div>
           <div class="form-group" style="flex:1;">
-            <label>ತಾಲೂಕು (Select Taluk):</label>
-            <input type="text" id="taluk" placeholder="ಉದಾ: ಶಹಾಪುರ" required>
+            <label>ತಾಲೂಕು (Taluk):</label>
+            <input type="text" id="taluk" placeholder="ಆಟೋ-ಫೆಚ್ ತಾಲೂಕು" required readonly style="background:#e8f0fe; font-weight:bold;">
           </div>
         </div>
 
         <div class="form-group">
-          <label>ಪಿನ್ ಕೋಡ್ (Pin Code):</label>
-          <input type="number" id="pincode" required placeholder="ಉದಾ: 585287">
+          <label>ಊರು / ಪೋಸ್ಟ್ ಆಫೀಸ್ (Village/Area):</label>
+          <input type="text" id="villageArea" placeholder="ಆಟೋ-ಫೆಚ್ ಊರು" readonly style="background:#e8f0fe; font-weight:bold;">
         </div>
 
         <div class="form-group">
@@ -279,7 +280,7 @@
         <div class="form-group" style="background:#fff3e0; padding:10px; border-radius:8px; border:1px solid #ffe0b2;">
           <label style="color:#e65100;">💳 ನಿಮ್ಮ ಯುಪಿಐ ಕ್ಯೂಆರ್ ಕೋಡ್ (UPI QR Code) ಫೋಟೋ ಹಾಕಿ (ಕಡ್ಡಾಯ):</label>
           <input type="file" accept="image/*" id="shopQrFile" required>
-          <p style="font-size:0.75rem; color:#666; margin-top:4px;">(ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್‌ನಲ್ಲಿ ಹಾಗೂ ನಿಮ್ಮ ಐಡಿ ಹತ್ತಿರ ಇದು ಕಾಣಿಸುತ್ತದೆ)</p>
+          <p style="font-size:0.75rem; color:#666; margin-top:4px;">(ಈ ಕ್ಯೂಆರ್ ಕೋಡ್ ಎಂದಿಗೂ ಮಾಯವಾಗುವುದಿಲ್ಲ, ಶಾಶ್ವತವಾಗಿ ಸೇವ್ ಆಗಿರುತ್ತದೆ)</p>
         </div>
 
         <button type="submit" class="btn btn-success" id="btnLogin">ಹೊಸ ಖಾತೆ ಪಡೆದುಕೊಳ್ಳಿ (Permanent Account)</button>
@@ -406,28 +407,33 @@
     let isUserPaidMembership = false;
     let tempGpsCoordinates = "";
 
-    window.addEventListener('DOMContentLoaded', () => {
+    window.initFirebaseShopApp = function() {
       checkAppLiveStatus();
       setTimeout(() => {
         const splash = document.getElementById('splashScreen');
-        splash.style.opacity = '0';
-        setTimeout(() => { splash.style.display = 'none'; }, 600);
+        if(splash) {
+          splash.style.opacity = '0';
+          setTimeout(() => { splash.style.display = 'none'; }, 600);
+        }
       }, 2000);
 
       checkIfAlreadyInstalled();
 
+      if (shopOwner) {
+        verifyShopExistsInFirebase();
+      }
+    };
+
+    window.addEventListener('DOMContentLoaded', () => {
       window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
-        document.getElementById('installBanner').style.display = 'flex';
+        const banner = document.getElementById('installBanner');
+        if(banner) banner.style.display = 'flex';
       });
 
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./sw.js').catch(err => console.log("SW fail", err));
-      }
-
-      if (shopOwner) {
-        verifyShopExistsInFirebase();
       }
 
       // Initial history push to prevent accidental app exit on first back button press
@@ -451,11 +457,29 @@
           showTab('upload');
           history.pushState({ page: 'main' }, '', '');
         } else {
-          // Keep a dummy state so pressing back doesn't exit the app immediately
           history.pushState({ page: 'main' }, '', '');
         }
       });
     });
+
+    // 🌟 ಪಿನ್ ಕೋಡ್ ಹಾಕಿದ ತಕ್ಷಣ ಊರು, ತಾಲೂಕು, ಜಿಲ್ಲೆ ಆಟೋಮ್ಯಾಟಿಕ್ ಆಗಿ ಕ್ಯಾಪ್ಚರ್ ಆಗುವ ಲಾಜಿಕ್
+    async function fetchPincodeAutoDetails(pincode) {
+      if (pincode.length !== 6) return;
+      try {
+        let response = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
+        let data = await response.json();
+        if (data[0].Status === "Success") {
+          let details = data[0].PostOffice[0];
+          document.getElementById('villageArea').value = details.Name || '';
+          document.getElementById('taluk').value = details.Taluk || details.District || '';
+          document.getElementById('district').value = details.District || '';
+        } else {
+          alert("ದಯವಿಟ್ಟು ಸರಿಯಾದ 6 ಅಂಕಿಯ ಪಿನ್ ಕೋಡ್ ನಮೂದಿಸಿ.");
+        }
+      } catch (e) {
+        console.log("Pincode fetch error:", e);
+      }
+    }
 
     function fetchCurrentGpsLocation() {
       if (navigator.geolocation) {
@@ -539,7 +563,8 @@
     function checkIfAlreadyInstalled() {
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
       if (isStandalone) {
-        document.getElementById('installBanner').style.display = 'none';
+        const banner = document.getElementById('installBanner');
+        if(banner) banner.style.display = 'none';
       }
     }
 
@@ -790,6 +815,7 @@
         shopType: document.getElementById('shopType').value,
         district: document.getElementById('district').value.trim(),
         taluk: document.getElementById('taluk').value.trim(),
+        villageArea: document.getElementById('villageArea').value.trim(),
         pincode: document.getElementById('pincode').value.trim(),
         gpsCoordinates: tempGpsCoordinates || '',
         photo: photoBase64 || 'https://via.placeholder.com/100',
@@ -887,6 +913,7 @@
           localStorage.setItem('my_shop_owner_session', JSON.stringify(shopOwner));
           isUserPaidMembership = shopOwner.isPaid === true;
           updateMembershipBadgeUI();
+          renderIDCard(); // ಕ್ಯೂಆರ್ ಕೋಡ್ ಮತ್ತು ಐಡಿ ಎಂದಿಗೂ ಮಾಯವಾಗದಂತೆ ರಿಫ್ರೆಶ್ ಮಾಡುವುದು
         }
       });
 
@@ -971,6 +998,7 @@
           `;
         }
 
+        // 🌟 ಪ್ಯಾಕಿಂಗ್ ಬಟನ್ ಒತ್ತಿದಾಗ ಒಟಿಪಿ ಎಂದಿಗೂ ಮಾಯವಾಗದಂತೆ ಶಾಶ್ವತವಾಗಿ ಸೇವ್ ಆಗಿ ಪ್ರದರ್ಶಿಸುವುದು
         if (orderStatus === 'STEP_1' || orderStatus === 'PENDING') {
           actionButtonHTML = `<button onclick="updateOrderStatus('${o.docId}', 'CONFIRMED')" class="btn-confirm">✅ ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಮಾಡಿ</button>`;
         } else if (orderStatus === 'CONFIRMED' || orderStatus === 'STEP_2') {
@@ -987,7 +1015,7 @@
 
           otpDisplayBox = `
             <div style="background:#e3f2fd; border:2px solid #1e88e5; border-radius:8px; padding:10px; margin-top:8px; text-align:center;">
-              <p style="font-size:0.8rem; color:#1565c0; font-weight:bold;">🔑 ಡೆಲಿವರಿ ಪಿಕಪ್ ಒಟಿಪಿ (Pickup OTP):</p>
+              <p style="font-size:0.8rem; color:#1565c0; font-weight:bold;">🔑 ಡೆಲಿವರಿ ಪಿಕಪ್ ಒಟಿಪಿ (Pickup OTP - ಶಾಶ್ವತವಾಗಿ ಲಭ್ಯ):</p>
               <div style="font-size:1.5rem; font-weight:bold; color:#0d47a1; letter-spacing:3px; margin:4px 0;">${generatedOtp}</div>
               <p style="font-size:0.75rem; color:#333; margin-top:4px; font-weight:bold;">ಡೆಲಿವರಿ ಬಾಯ್ ಪಿಕಪ್ ಮಾಡುವಾಗ ಕಮಿಷನ್ ಕಟ್ ಆಗಿ ಉಳಿಯುವ ಶುದ್ಧ ಮೊತ್ತ: ₹${netAmtAfterComm}</p>
             </div>
@@ -1148,7 +1176,7 @@
       let netPayable = Math.round(effectiveSales * (1 - commRate));
 
       summaryDiv.innerHTML = `
-        <p><b>ಅಂಗಡಿ ಯುಪಿಐ (ನಿಮ್ಮ ಕ್ಯೂಆರ್ ಕೋಡ್):</b> <span style="color:#1565c0; font-weight:bold;">ಆಟೋ ಸ್ಕ್ಯಾನ್ ಪೇಮೆಂಟ್ ಸಕ್ರಿಯವಾಗಿದೆ</span></p>
+        <p><b>ಅಂಗಡಿ ಯುಪಿಐ (ನಿಮ್ಮ ಕ್ಯೂಆರ್ ಕೋಡ್):</b> <span style="color:#1565c0; font-weight:bold;">ಆಟೋ ಸ್ಕ್ಯಾನ್ ಪೇಮೆಂಟ್ ಸಕ್ರಿಯವಾಗಿದೆ (ಶಾಶ್ವತ)</span></p>
         <p><b>ಅಂಗಡಿ ವಿಭಾಗ:</b> <span style="color:#e65100; font-weight:bold;">${shopOwner.shopType} (${commPercentageStr} ಕಮಿಷನ್)</span></p>
         <p><b>ಒಟ್ಟು ಡೆಲಿವರಿ ಆದ ಮಾರಾಟ:</b> ₹${totalSales}</p>
         <p><b>ರಿಟರ್ನ್ ಮೈನಸ್ ಆಗಿರುವ ಮೊತ್ತ:</b> <span style="color:#d32f2f;">- ₹${totalReturned}</span></p>
@@ -1192,8 +1220,8 @@
     async function updateOrderStatus(orderId, newStatus, existingOtp) {
       try {
         let updateData = { status: newStatus };
-        if (newStatus === 'STEP_3') {
-          updateData.pickupOtp = existingOtp;
+        if (newStatus === 'STEP_3' && existingOtp) {
+          updateData.pickupOtp = existingOtp; // ಒಟಿಪಿಯನ್ನು ಫೈರ್‌ಬೇಸ್‌ನಲ್ಲಿ ಶಾಶ್ವತವಾಗಿ ಸೇವ್ ಮಾಡುವುದು
         }
         await window.updateDoc(window.doc(window.db, "orders", orderId), updateData);
         alert("✅ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್‌ಡೇಟ್ ಆಗಿದೆ!");
