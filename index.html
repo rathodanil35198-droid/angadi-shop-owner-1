@@ -461,7 +461,6 @@
       });
     });
 
-    // 🌟 ಕನ್ನಡ ಮತ್ತು ಇಂಗ್ಲಿಷ್ ಎರಡರಲ್ಲೂ ಊರು, ತಾಲೂಕು ಮತ್ತು ಜಿಲ್ಲೆ ತೋರಿಸುವ ಅನುವಾದ ಮ್ಯಾಪ್
     const placeTranslations = {
       "yadgir": { kn: "ಯಾದಗಿರಿ", talukKn: "ಯಾದಗಿರಿ" },
       "shahapur": { kn: "ಶಹಾಪುರ", talukKn: "ಶಹಾಪುರ" },
@@ -481,10 +480,9 @@
       if (placeTranslations[key]) {
         return type === 'taluk' ? `${placeTranslations[key].talukKn} (${name})` : `${placeTranslations[key].kn} (${name})`;
       }
-      return name; // ಒಂದು ವೇಳೆ ಲಿಸ್ಟ್‌ನಲ್ಲಿ ಇಲ್ಲದಿದ್ದರೆ ಇಂಗ್ಲಿಷ್ ಹೆಸರು ಹಾಗೆಯೇ ಇರುತ್ತದೆ
+      return name;
     }
 
-    // 🌟 ಪಿನ್ ಕೋಡ್ ಹಾಕಿದ ತಕ್ಷಣ ಊರು, ತಾಲೂಕು, ಜಿಲ್ಲೆ ಕನ್ನಡ ಮತ್ತು ಇಂಗ್ಲಿಷ್‌ನಲ್ಲಿ ಆಟೋ-ಕ್ಯಾಪ್ಚರ್ ಆಗುವ ಲಾಜಿಕ್
     async function fetchPincodeAutoDetails(pincode) {
       if (pincode.length !== 6) return;
       try {
@@ -497,12 +495,10 @@
           let talukEng = details.Taluk || details.District || '';
           let distEng = details.District || '';
 
-          // ಶಹಾಪುರ ತಾಲೂಕು ವ್ಯಾಪ್ತಿಯ ಪಿನ್ ಕೋಡ್‌ಗಳ ನಿರ್ವಹಣೆ
           if (pincode === '585287' || pincode === '585223' || talukEng.toLowerCase() === 'yadgir') {
             talukEng = 'Shahapur';
           }
 
-          // ಕನ್ನಡ ಮತ್ತು ಇಂಗ್ಲಿಷ್ ಎರಡರಲ್ಲೂ ಡಿಸ್ಪ್ಲೇ ಸೆಟ್ ಮಾಡುವುದು
           document.getElementById('villageArea').value = translateToKannada(villageEng, 'village');
           document.getElementById('taluk').value = translateToKannada(talukEng, 'taluk');
           document.getElementById('district').value = translateToKannada(distEng, 'district');
