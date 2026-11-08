@@ -244,11 +244,11 @@
           </select>
         </div>
 
-        <!-- ಪಿನ್ ಕೋಡ್ ಹಾಕಿದ ತಕ್ಷಣ ಊರು ಮತ್ತು ತಾಲೂಕು ಆಟೋ-ಕ್ಯಾಪ್ಚರ್ ಆಗುವ ಫೀಲ್ಡ್ -->
+        <!-- ಪಿನ್ ಕೋಡ್ ಹಾಕಿದ ತಕ್ಷಣ ಊರು ಮತ್ತು ತಾಲೂಕು ಆಟೋ-ಕ್ಯಾಪ್ಚರ್ ಆಗುವ ಫೀಲ್ಡ್ (ಕನ್ನಡ ಮತ್ತು ಇಂಗ್ಲಿಷ್ ಎರಡರಲ್ಲೂ ತೋರಿಸುವುದು) -->
         <div class="form-group">
           <label>ಪಿನ್ ಕೋಡ್ (Pin Code):</label>
           <input type="number" id="pincode" required placeholder="ಉದಾ: 585287" maxlength="6" oninput="fetchPincodeAutoDetails(this.value)">
-          <p style="font-size:0.7rem; color:#2e7d32; margin-top:2px;">💡 ಪಿನ್ ಕೋಡ್ ನಮೂದಿಸಿದ ತಕ್ಷಣ ಜಿಲ್ಲೆ, ತಾಲೂಕು ಮತ್ತು ಊರು ಆಟೋಮ್ಯಾಟಿಕ್ ಆಗಿ ತುಂಬಿಕೊಳ್ಳುತ್ತದೆ.</p>
+          <p style="font-size:0.7rem; color:#2e7d32; margin-top:2px;">💡 ಪಿನ್ ಕೋಡ್ ನಮೂದಿಸಿದ ತಕ್ಷಣ ಜಿಲ್ಲೆ, ತಾಲೂಕು ಮತ್ತು ಊರು ಕನ್ನಡ ಹಾಗೂ ಇಂಗ್ಲಿಷ್‌ನಲ್ಲಿ ಆಟೋಮ್ಯಾಟಿಕ್ ಆಗಿ ತುಂಬಿಕೊಳ್ಳುತ್ತದೆ.</p>
         </div>
 
         <div style="display:flex; gap:10px;">
@@ -461,6 +461,30 @@
       });
     });
 
+    // 🌟 ಕನ್ನಡ ಮತ್ತು ಇಂಗ್ಲಿಷ್ ಎರಡರಲ್ಲೂ ಊರು, ತಾಲೂಕು ಮತ್ತು ಜಿಲ್ಲೆ ತೋರಿಸುವ ಅನುವಾದ ಮ್ಯಾಪ್
+    const placeTranslations = {
+      "yadgir": { kn: "ಯಾದಗಿರಿ", talukKn: "ಯಾದಗಿರಿ" },
+      "shahapur": { kn: "ಶಹಾಪುರ", talukKn: "ಶಹಾಪುರ" },
+      "surpur": { kn: "ಸುರಪುರ", talukKn: "ಸುರಪುರ" },
+      "shorapur": { kn: "ಸುರಪುರ", talukKn: "ಸುರಪುರ" },
+      "bheemarayanagudi": { kn: "ಭೀಮರಾಯನಗುಡಿ", talukKn: "ಶಹಾಪುರ" },
+      "adilapur": { kn: "ಆದಿಲಾಪೂರ", talukKn: "ಶಹಾಪುರ" },
+      "hathigudur": { kn: "ಹತ್ತಿಗುಡೂರ್", talukKn: "ಶಹಾಪುರ" },
+      "doranahalli": { kn: "ದೋರಣಹಳ್ಳಿ", talukKn: "ಶಹಾಪುರ" },
+      "aikur": { kn: "ಐಕುರ್", talukKn: "ಶಹಾಪುರ" },
+      "anabi": { kn: "ಅನಾಬಿ", talukKn: "ಶಹಾಪುರ" }
+    };
+
+    function translateToKannada(name, type) {
+      if (!name) return "";
+      let key = name.toLowerCase().trim();
+      if (placeTranslations[key]) {
+        return type === 'taluk' ? `${placeTranslations[key].talukKn} (${name})` : `${placeTranslations[key].kn} (${name})`;
+      }
+      return name; // ಒಂದು ವೇಳೆ ಲಿಸ್ಟ್‌ನಲ್ಲಿ ಇಲ್ಲದಿದ್ದರೆ ಇಂಗ್ಲಿಷ್ ಹೆಸರು ಹಾಗೆಯೇ ಇರುತ್ತದೆ
+    }
+
+    // 🌟 ಪಿನ್ ಕೋಡ್ ಹಾಕಿದ ತಕ್ಷಣ ಊರು, ತಾಲೂಕು, ಜಿಲ್ಲೆ ಕನ್ನಡ ಮತ್ತು ಇಂಗ್ಲಿಷ್‌ನಲ್ಲಿ ಆಟೋ-ಕ್ಯಾಪ್ಚರ್ ಆಗುವ ಲಾಜಿಕ್
     async function fetchPincodeAutoDetails(pincode) {
       if (pincode.length !== 6) return;
       try {
@@ -468,9 +492,20 @@
         let data = await response.json();
         if (data[0].Status === "Success") {
           let details = data[0].PostOffice[0];
-          document.getElementById('villageArea').value = details.Name || '';
-          document.getElementById('taluk').value = details.Taluk || details.District || '';
-          document.getElementById('district').value = details.District || '';
+          
+          let villageEng = details.Name || '';
+          let talukEng = details.Taluk || details.District || '';
+          let distEng = details.District || '';
+
+          // ಶಹಾಪುರ ತಾಲೂಕು ವ್ಯಾಪ್ತಿಯ ಪಿನ್ ಕೋಡ್‌ಗಳ ನಿರ್ವಹಣೆ
+          if (pincode === '585287' || pincode === '585223' || talukEng.toLowerCase() === 'yadgir') {
+            talukEng = 'Shahapur';
+          }
+
+          // ಕನ್ನಡ ಮತ್ತು ಇಂಗ್ಲಿಷ್ ಎರಡರಲ್ಲೂ ಡಿಸ್ಪ್ಲೇ ಸೆಟ್ ಮಾಡುವುದು
+          document.getElementById('villageArea').value = translateToKannada(villageEng, 'village');
+          document.getElementById('taluk').value = translateToKannada(talukEng, 'taluk');
+          document.getElementById('district').value = translateToKannada(distEng, 'district');
         } else {
           alert("ದಯವಿಟ್ಟು ಸರಿಯಾದ 6 ಅಂಕಿಯ ಪಿನ್ ಕೋಡ್ ನಮೂದಿಸಿ.");
         }
@@ -1225,7 +1260,6 @@
       } catch (e) { alert("ದೋಷ: " + e.message); }
     }
 
-    // 🌟 ವಸ್ತುಗಳನ್ನು ಗ್ರಾಹಕರ ಆಪ್‌ಗೆ ಕಾಣುವಂತೆ ಸರಿಯಾದ taluk ಮತ್ತು category ಫೀಲ್ಡ್‌ಗಳೊಂದಿಗೆ ಸೇವ್ ಮಾಡುವ ಕೋಡ್
     async function saveProduct(e) {
       e.preventDefault();
 
@@ -1262,8 +1296,8 @@
         shopId: String(shopOwner.id),
         shopName: shopOwner.shopName,
         shopType: shopOwner.shopType,
-        taluk: shopOwner.taluk || 'ಶಹಾಪುರ',
-        district: shopOwner.district || 'ಯಾದಗಿರಿ',
+        taluk: shopOwner.taluk || 'ಶಹಾಪುರ (Shahapur)',
+        district: shopOwner.district || 'ಯಾದಗಿರಿ (Yadgir)',
         pincode: shopOwner.pincode || '585287',
         category: autoCategory,
         name: finalName,
