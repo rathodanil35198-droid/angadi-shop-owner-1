@@ -108,7 +108,7 @@
 
     .id-card { background: linear-gradient(135deg, #1e88e5, #1565c0); color: white; border-radius: 10px; padding: 15px; margin-bottom: 15px; display: flex; gap: 15px; align-items: center; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
     .id-card img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid #fff; }
-    .id-card-details h3 { font-size: 1rem; margin-bottom: 3px; }
+    .id-card-details h3 { font-size: 1rem; margin-bottom: 3px; display: flex; align-items: center; justify-content: space-between; }
     .id-card-details p { font-size: 0.75rem; opacity: 0.9; }
     .id-number { font-size: 1rem; font-weight: bold; background: #fff; color: #1e88e5; padding: 2px 8px; border-radius: 4px; display: inline-block; margin-top: 4px; }
 
@@ -135,13 +135,11 @@
     .modal { display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); text-align: center; padding: 20px; overflow-y: auto; justify-content: center; align-items: center; }
     .modal-content-box { background: #fff; max-width: 380px; margin: auto; padding: 25px; border-radius: 14px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.4); }
 
-    /* Server Down / Maintenance Overlay */
     #serverDownOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 99999; display: none; justify-content: center; align-items: center; padding: 20px; text-align: center; color: white; }
   </style>
 </head>
 <body>
 
-  <!-- Server Down / Maintenance Overlay -->
   <div id="serverDownOverlay">
     <div style="background:#fff; color:#333; padding:25px; border-radius:12px; max-width:350px; width:100%;">
       <div style="font-size:3rem; margin-bottom:10px;">⚠️</div>
@@ -185,7 +183,7 @@
       </div>
     </div>
 
-    <!-- QR Code Big View & Edit Modal -->
+    <!-- QR Code Big View Modal -->
     <div id="qrModal" class="modal" onclick="closeQrModal()">
       <div class="modal-content-box" onclick="event.stopPropagation()">
         <h3 style="color: var(--primary); margin-bottom: 10px;">📷 ನಿಮ್ಮ ಯುಪಿಐ ಕ್ಯೂಆರ್ ಕೋಡ್ (Scanner)</h3>
@@ -293,7 +291,10 @@
       <div class="id-card">
         <img id="displayShopPhoto" src="https://via.placeholder.com/100" alt="Shop">
         <div class="id-card-details">
-          <h3 id="displayShopName">ಅಂಗಡಿ ಹೆಸರು</h3>
+          <h3>
+            <span id="displayShopName">ಅಂಗಡಿ ಹೆಸರು</span>
+            <a id="displayOwnerCallBtn" href="#" class="sup-btn call" style="font-size:0.7rem; padding:3px 8px; margin-left:6px;">📞 ಕಾಲ್</a>
+          </h3>
           <p>ಮಾಲೀಕರು: <span id="displayOwnerName"></span> (<span id="displayShopType"></span>)</p>
           <p>ಸ್ಥಳ: <span id="displayLocation"></span> | Pin: <span id="displayPincode"></span></p>
           <div style="display:flex; align-items:center; gap:8px; margin-top:4px;">
@@ -559,7 +560,7 @@
           shopOwner = docSnap.data();
           localStorage.setItem('my_shop_owner_session', JSON.stringify(shopOwner));
           
-          isUserPaidMembership = shopOwner.isPaid === true;
+          isUserPaidMembership = shopOwner.isPaid === true || shopOwner.membershipPaid === true;
           updateMembershipBadgeUI();
 
           renderIDCard();
@@ -852,6 +853,7 @@
         photo: photoBase64 || 'https://via.placeholder.com/100',
         qrPhoto: qrBase64,
         isPaid: false,
+        membershipPaid: false,
         commissionPercent: shopOwner?.commissionPercent || 5
       };
 
@@ -882,7 +884,7 @@
           shopOwner = docSnap.data();
           localStorage.setItem('my_shop_owner_session', JSON.stringify(shopOwner));
           
-          isUserPaidMembership = shopOwner.isPaid === true;
+          isUserPaidMembership = shopOwner.isPaid === true || shopOwner.membershipPaid === true;
           updateMembershipBadgeUI();
 
           renderIDCard();
@@ -899,7 +901,7 @@
 
     function closeSuccessModal() {
       document.getElementById('successModal').style.display = 'none';
-      isUserPaidMembership = shopOwner.isPaid === true;
+      isUserPaidMembership = shopOwner.isPaid === true || shopOwner.membershipPaid === true;
       updateMembershipBadgeUI();
       renderIDCard();
       renderDynamicUploadForm();
@@ -917,6 +919,14 @@
       document.getElementById('displayId').innerText = shopOwner.id;
       if (shopOwner.photo) document.getElementById('displayShopPhoto').src = shopOwner.photo;
       
+      const callBtn = document.getElementById('displayOwnerCallBtn');
+      if (shopOwner.phone) {
+        callBtn.href = `tel:${shopOwner.phone}`;
+        callBtn.style.display = 'inline-block';
+      } else {
+        callBtn.style.display = 'none';
+      }
+
       const smallQrImg = document.getElementById('displaySmallQr');
       const smallQrContainer = document.getElementById('smallQrContainer');
       if (shopOwner.qrPhoto) {
@@ -943,7 +953,7 @@
         if (docSnap.exists()) {
           shopOwner = docSnap.data();
           localStorage.setItem('my_shop_owner_session', JSON.stringify(shopOwner));
-          isUserPaidMembership = shopOwner.isPaid === true;
+          isUserPaidMembership = shopOwner.isPaid === true || shopOwner.membershipPaid === true;
           updateMembershipBadgeUI();
           renderIDCard();
         }
@@ -1030,7 +1040,6 @@
           `;
         }
 
-        // ಇಲ್ಲಿ ಆರ್ಡರ್ ಬಂದ ತಕ್ಷಣ 'ಕನ್ಫರ್ಮ್' ಬಟನ್ ಬರುವಂತೆ ಸರಿಪಡಿಸಲಾಗಿದೆ
         if (orderStatus === 'PENDING' || orderStatus === 'STEP_1' || !o.status || orderStatus === '' || orderStatus === 'NEW') {
           actionButtonHTML = `<button onclick="updateOrderStatus('${o.docId}', 'CONFIRMED')" class="btn-confirm">✅ ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಮಾಡಿ</button>`;
         } else if (orderStatus === 'CONFIRMED' || orderStatus === 'STEP_2') {
@@ -1047,9 +1056,9 @@
 
           otpDisplayBox = `
             <div style="background:#e3f2fd; border:2px solid #1e88e5; border-radius:8px; padding:10px; margin-top:8px; text-align:center;">
-              <p style="font-size:0.8rem; color:#1565c0; font-weight:bold;">🔑 ಡೆಲಿವರಿ ಪಿಕಪ್ ಒಟಿಪಿ (Pickup OTP - ಶಾಶ್ವತವಾಗಿ ಲಭ್ಯ):</p>
+              <p style="font-size:0.8rem; color:#1565c0; font-weight:bold;">🔑 ಡೆಲಿವರಿ ಪಿಕಪ್ ಒಟಿಪಿ (Pickup OTP):</p>
               <div style="font-size:1.5rem; font-weight:bold; color:#0d47a1; letter-spacing:3px; margin:4px 0;">${generatedOtp}</div>
-              <p style="font-size:0.75rem; color:#333; margin-top:4px; font-weight:bold;">ಡೆಲಿವರಿ ಬಾಯ್ ಪಿಕಪ್ ಮಾಡುವಾಗ ಕಮಿಷನ್ ಕಟ್ ಆಗಿ ಉಳಿಯುವ ಶುದ್ಧ ಮೊತ್ತ: ₹${netAmtAfterComm}</p>
+              <p style="font-size:0.75rem; color:#333; margin-top:4px; font-weight:bold;">ಉಳಿಯುವ ಶುದ್ಧ ಮೊತ್ತ: ₹${netAmtAfterComm}</p>
             </div>
           `;
         }
@@ -1059,58 +1068,35 @@
         const custVillage = o.customer?.village || o.customer?.address || 'ವಿಳಾಸ ಲಭ್ಯವಿಲ್ಲ';
         const custTaluk = o.customer?.taluk || shopOwner.taluk || '';
         const custDistrict = o.customer?.district || shopOwner.district || '';
-        const custLandmark = o.customer?.landmark ? ` (ಲ್ಯಾಂಡ್‌ಮಾರ್ಕ್: ${o.customer.landmark})` : '';
-        const custPincode = o.customer?.pincode ? ` - ${o.customer.pincode}` : '';
-
-        let itemPriceNum = Number(o.itemPrice || o.totalPrice || 800);
+        const itemPriceNum = Number(o.itemPrice || o.totalPrice || 800);
         let deliveryFee = 30; 
         let totalCustomerPrice = itemPriceNum + deliveryFee;
 
-        let distanceKm = "3.5 ಕಿ.ಮೀ.";
-        if (shopOwner.pincode && o.customer?.pincode) {
-          let diff = Math.abs(parseInt(shopOwner.pincode) - parseInt(o.customer.pincode));
-          distanceKm = diff === 0 ? "1.2 ಕಿ.ಮೀ." : `${(diff % 15) + 2.4} ಕಿ.ಮೀ.`;
-        }
-        if (o.distanceKm) {
-          distanceKm = o.distanceKm;
-        }
-
         let mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(custVillage + ' ' + custTaluk + ' ' + custDistrict)}`;
-
-        let paymentModeBadge = o.paymentMode === 'COD' ? 
-          `<span style="background:#ffebee; color:#c62828; padding:2px 6px; border-radius:4px; font-weight:bold;">💵 ಕ್ಯಾಶ್ ಆನ್ ಡೆಲಿವರಿ (COD)</span>` : 
-          `<span style="background:#e8f5e9; color:#2e7d32; padding:2px 6px; border-radius:4px; font-weight:bold;">🟢 UPI ಸ್ಕ್ಯಾನಿಂಗ್ ಪೇಮೆಂಟ್ (₹${totalCustomerPrice})</span>`;
 
         return `
           <div class="order-item ${o.isReturnRequested ? 'return-alert' : ''}">
             ${returnAlertBanner}
             <div style="background:#e3f2fd; border-radius:6px; padding:6px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
               <span style="font-size:0.75rem; color:#1565c0; font-weight:bold;">ಆರ್ಡರ್ ಐಡಿ: ${o.orderId || 'OD000000'}</span>
-              ${paymentModeBadge}
             </div>
             <div style="display:flex; gap:10px; align-items:center;">
               <img src="${o.productPhoto}" style="width:65px; height:65px; object-fit:cover; border-radius:6px;">
               <div>
-                <h4 style="font-size:0.95rem;">${o.productName} ${o.selectedSize ? `[Size: ${o.selectedSize}]` : ''}</h4>
-                <p style="font-size:0.85rem; color:#2e7d32; font-weight:bold;">₹${itemPriceNum} <span style="font-size:0.7rem; color:#555;">(ಅಂಗಡಿಗೆ ಬರುವ ವಸ್ತುವಿನ ಬೆಲೆ)</span></p>
-                <p style="font-size:0.75rem; color:#0288d1; font-weight:bold;">ಗ್ರಾಹಕರಿಗೆ ಕಾಣುವ ಒಟ್ಟು ಮೊತ್ತ (+30 ರೂ ಡೆಲಿವರಿ ಚಾರ್ಜ್): ₹${totalCustomerPrice}</p>
+                <h4 style="font-size:0.95rem;">${o.productName}</h4>
+                <p style="font-size:0.85rem; color:#2e7d32; font-weight:bold;">₹${itemPriceNum}</p>
               </div>
             </div>
             
             <div class="cust-address-box">
-              <p style="font-weight:bold; font-size:0.9rem; color:#1b5e20;">📍 ಗ್ರಾಹಕರ ಸಂಪೂರ್ಣ ವಿವರಗಳು & ಜಿಪಿಎಸ್:</p>
               <p><b>ಗ್ರಾಹಕರ ಹೆಸರು:</b> ${custName}</p>
               <p><b>ಮೊಬೈಲ್ ನಂಬರ್:</b> ${custPhone}</p>
-              <p><b>ಜಿಲ್ಲೆಯ ಹೆಸರು:</b> ${custDistrict}</p>
-              <p><b>ತಾಲೂಕು ಹೆಸರು:</b> ${custTaluk}</p>
-              <p><b>ಊರ ಹೆಸರು:</b> ${custVillage}${custLandmark}</p>
-              <p><b>ಪಿನ್ ಕೋಡ್:</b> ${custPincode}</p>
-              <p style="margin-top:4px; color:#0d47a1; font-weight:bold;">📏 GPS ದೂರ: ${distanceKm}</p>
+              <p><b>ಊರು:</b> ${custVillage}, ${custTaluk}</p>
             </div>
 
             <div style="display:flex; gap:6px;">
               <a href="tel:${custPhone}" class="btn-call-cust">📞 ಕಾಲ್ ಮಾಡಿ</a>
-              <a href="${mapsUrl}" target="_blank" class="btn-map-loc">🗺️ ಗೂಗಲ್ ಜಿಪಿಎಸ್ ಲೊಕೇಶನ್</a>
+              <a href="${mapsUrl}" target="_blank" class="btn-map-loc">🗺️ ಜಿಪಿಎಸ್ ಲೊಕೇಶನ್</a>
             </div>
 
             <p style="margin-top:6px; font-size:0.75rem; color:#666;"><b>ಪ್ರಸ್ತುತ ಸ್ಥಿತಿ:</b> ${orderStatus}</p>
@@ -1130,108 +1116,41 @@
         return;
       }
 
-      listDiv.innerHTML = returns.map(o => {
-        let photosHtml = '';
-        if (o.returnPhotos && o.returnPhotos.length > 0) {
-          photosHtml = `<div style="display:flex; gap:6px; margin-top:8px;">` + 
-            o.returnPhotos.map(img => `<img src="${img}" style="width:70px; height:70px; object-fit:cover; border-radius:6px; border:1px solid #ccc;">`).join('') + 
-            `</div>`;
-        }
-
-        let custPhone = o.customer?.phone || '';
-        let custVillage = o.customer?.village || '';
-        let custTaluk = o.customer?.taluk || shopOwner.taluk || '';
-        let custDistrict = o.customer?.district || shopOwner.district || '';
-        let returnMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(custVillage + ' ' + custTaluk + ' ' + custDistrict)}`;
-
-        let returnOtpCode = o.returnOtp || '8842';
-
-        return `
-          <div class="order-item return-alert" style="border-left-width:8px;">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <span style="font-size:0.8rem; font-weight:bold; color:#c62828;">ಆರ್ಡರ್ ಐಡಿ: ${o.orderId}</span>
-              <span style="font-size:0.75rem; background:#ffebee; padding:2px 6px; border-radius:4px; color:#d32f2f; font-weight:bold;">${o.status === 'RETURN_COMPLETED' ? '✔ ರಿಟರ್ನ್ ಮುಕ್ತಾಯ' : 'ರಿಟರ್ನ್ ಪಿಕಪ್ ಬಾಕಿ'}</span>
-            </div>
-            <p style="margin-top:6px;"><b>ಪ್ರಾಡಕ್ಟ್:</b> ${o.productName} (₹${o.itemPrice || o.totalPrice})</p>
-            <p style="margin-top:4px;"><b>ಗ್ರಾಹಕರು:</b> ${o.customer?.name} (${custPhone})</p>
-            <p style="margin-top:4px; color:#d32f2f;"><b>ಕಾರಣ:</b> ${o.returnReason || 'ರಿಟರ್ನ್ / ಎಕ್ಸ್ಚೇಂಜ್'}</p>
-            
-            <div style="background:#e3f2fd; border:2px solid #1e88e5; border-radius:8px; padding:8px; margin:8px 0; text-align:center;">
-              <p style="font-size:0.75rem; color:#1565c0; font-weight:bold;">🔄 ಡೆಲಿವರಿ ರಿಟರ್ನ್ ಒಟಿಪಿ (Return OTP):</p>
-              <div style="font-size:1.3rem; font-weight:bold; color:#0d47a1; letter-spacing:2px;">${returnOtpCode}</div>
-            </div>
-
-            <div style="display:flex; gap:6px; margin-top:6px;">
-              <a href="tel:${custPhone}" class="btn-call-cust">📞 ಗ್ರಾಹಕರಿಗೆ ಕಾಲ್ ಮಾಡಿ</a>
-              <a href="${returnMapsUrl}" target="_blank" class="btn-map-loc">🗺️ ಗೂಗಲ್ ಜಿಪಿಎಸ್ ಲೊಕೇಶನ್</a>
-            </div>
-
-            <p style="margin-top:6px; font-size:0.8rem; font-weight:bold;">📸 ಪ್ರಾಡಕ್ಟ್ ಫೋಟೋಗಳು:</p>
-            ${photosHtml}
-            ${o.status !== 'RETURN_COMPLETED' ? `<button onclick="markReturnComplete('${o.docId}')" class="btn btn-success" style="margin-top:10px; font-size:0.85rem;">✔ ರಿಟರ್ನ್ ಕನ್ಫರ್ಮ್ ಮಾಡಿ (ಪಿಕಪ್ ಒಟಿಪಿ ಪಡೆದು)</button>` : ''}
-          </div>
-        `;
-      }).join('');
-    }
-
-    async function markReturnComplete(docId) {
-      if (confirm("ಈ ರಿಟರ್ನ್ / ಎಕ್ಸ್ಚೇಂಜ್ ಪ್ರಕ್ರಿಯೆಯನ್ನು ಪೂರ್ಣಗೊಳಿಸಲಾಗಿದೆ ಎಂದು ಖಚಿತಪಡಿಸುವುದೇ?")) {
-        try {
-          await window.updateDoc(window.doc(window.db, "orders", docId), {
-            status: 'RETURN_COMPLETED',
-            returnStatus: 'COMPLETED'
-          });
-          alert("✅ ರಿಟರ್ನ್ ಪ್ರಕ್ರಿಯೆ ಯಶಸ್ವಿಯಾಗಿ ಮುಕ್ತಾಯಗೊಂಡಿದೆ!");
-        } catch (e) {
-          alert("ದೋಷ: " + e.message);
-        }
-      }
+      listDiv.innerHTML = returns.map(o => `
+        <div class="order-item return-alert" style="border-left-width:8px;">
+          <p><b>ಪ್ರಾಡಕ್ಟ್:</b> ${o.productName} (₹${o.itemPrice || o.totalPrice})</p>
+          <p><b>ಗ್ರಾಹಕರು:</b> ${o.customer?.name} (${o.customer?.phone})</p>
+          <p style="color:#d32f2f;"><b>ಕಾರಣ:</b> ${o.returnReason || 'ರಿಟರ್ನ್ / ಎಕ್ಸ್ಚೇಂಜ್'}</p>
+        </div>
+      `).join('');
     }
 
     function renderPaymentsLedger(orders, commRate, commPercentageStr) {
       const summaryDiv = document.getElementById('paymentLedgerSummary');
       const listDiv = document.getElementById('shopPaymentsList');
       const delivered = orders.filter(o => o.status === 'DELIVERED' || o.status === 'STEP_4' || o.status === 'RETURN_COMPLETED');
-      const returned = orders.filter(o => o.status === 'RETURNED' || o.isReturned || o.status === 'RETURN_COMPLETED' || o.isReturnRequested);
       
       let totalSales = 0;
-      delivered.forEach(o => {
-        totalSales += Number(o.itemPrice || o.totalPrice || 0);
-      });
-
-      let totalReturned = 0;
-      returned.forEach(o => {
-        totalReturned += Number(o.itemPrice || o.totalPrice || 0);
-      });
-
-      let effectiveSales = Math.max(0, totalSales - totalReturned);
-      let netPayable = Math.round(effectiveSales * (1 - commRate));
+      delivered.forEach(o => { totalSales += Number(o.itemPrice || o.totalPrice || 0); });
+      let netPayable = Math.round(totalSales * (1 - commRate));
 
       summaryDiv.innerHTML = `
-        <p><b>ಅಂಗಡಿ ಯುಪಿಐ (ನಿಮ್ಮ ಕ್ಯೂಆರ್ ಕೋಡ್):</b> <span style="color:#1565c0; font-weight:bold;">ಆಟೋ ಸ್ಕ್ಯಾನ್ ಪೇಮೆಂಟ್ ಸಕ್ರಿಯವಾಗಿದೆ (ಶಾಶ್ವತ)</span></p>
-        <p><b>ಅಂಗಡಿ ವಿಭಾಗ:</b> <span style="color:#e65100; font-weight:bold;">${shopOwner.shopType} (${commPercentageStr} ಕಮಿಷನ್ ಕಡಿತ)</span></p>
-        <p><b>ಒಟ್ಟು ಡೆಲಿವರಿ ಆದ ಮಾರಾಟ:</b> ₹${totalSales}</p>
-        <p><b>ರಿಟರ್ನ್ ಮೈನಸ್ ಆಗಿರುವ ಮೊತ್ತ:</b> <span style="color:#d32f2f;">- ₹${totalReturned}</span></p>
-        <p><b>ಕಮಿಷನ್ ಕಟ್ ಆಗಿ ಉಳಿದ ಶುದ್ಧ ಮೊತ್ತ:</b> <span style="color:#2e7d32; font-weight:bold; font-size:1.1rem;">₹${netPayable}</span></p>
+        <p><b>ಅಂಗಡಿ ಯುಪಿಐ (ನಿಮ್ಮ ಕ್ಯೂಆರ್ ಕೋಡ್):</b> <span style="color:#1565c0; font-weight:bold;">ಸಕ್ರಿಯವಾಗಿದೆ</span></p>
+        <p><b>ಕಮಿಷನ್ ಕಟ್ (${commPercentageStr}):</b> ₹${Math.round(totalSales * commRate)}</p>
+        <p><b>ಉಳಿದ ಶುದ್ಧ ಮೊತ್ತ:</b> <span style="color:#2e7d32; font-weight:bold; font-size:1.1rem;">₹${netPayable}</span></p>
       `;
 
-      listDiv.innerHTML = delivered.map(o => {
-        let price = Number(o.itemPrice || o.totalPrice || 0);
-        let discountedPrice = Math.round(price * (1 - commRate));
-        return `
-          <div class="order-item" style="border-left-color: var(--warning); background:#fffde7;">
-            <p><b>${o.productName}</b> - ಅಸಲಿ ಬೆಲೆ: ₹${price} (${commPercentageStr} ಕಮಿಷನ್ ಕಟ್ ಆಗಿ: <b>₹${discountedPrice}</b>)</p>
-            <p style="font-size:0.75rem; color:#e65100; font-weight:bold; margin-top:2px;">✔ ಪೇಮೆಂಟ್ ಸಕ್ಸಸ್ ಆಗಿದೆ</p>
-          </div>
-        `;
-      }).join('') || '<p style="font-size:0.8rem; color:#777;">ಯಾವುದೇ ಪೇಮೆಂಟ್ ಹಿಸ್ಟರಿ ಇಲ್ಲ.</p>';
+      listDiv.innerHTML = delivered.map(o => `
+        <div class="order-item" style="border-left-color: var(--warning); background:#fffde7;">
+          <p><b>${o.productName}</b> - ಬೆಲೆ: ₹${o.itemPrice || o.totalPrice}</p>
+        </div>
+      `).join('') || '<p style="font-size:0.8rem; color:#777;">ಯಾವುದೇ ಪೇಮೆಂಟ್ ಹಿಸ್ಟರಿ ಇಲ್ಲ.</p>';
     }
 
     function openPrintModalForOrder(docId, orderId, productName, totalPrice, custName, custPhone, custAddress) {
       currentShareText = `🧾 ಆರ್ಡರ್ ಐಡಿ: ${orderId}\n📦 ವಸ್ತು: ${productName}\n💰 ಬೆಲೆ: ₹${totalPrice}\n👤 ಗ್ರಾಹಕರು: ${custName} (${custPhone})\n📍 ವಿಳಾಸ: ${custAddress}`;
-      document.getElementById('printModalBody').innerHTML = `<p><b>ಆರ್ಡರ್ ಐಡಿ:</b> ${orderId}</p><p><b>ಪ್ರಾಡಕ್ಟ್:</b> ${productName}</p><p><b>ಬೆಲೆ:</b> ₹${totalPrice}</p><p><b>ಗ್ರಾಹಕರು & ವಿಳಾಸ:</b> ${custName}, ${custAddress}</p>`;
+      document.getElementById('printModalBody').innerHTML = `<p><b>ಆರ್ಡರ್ ಐಡಿ:</b> ${orderId}</p><p><b>ಪ್ರಾಡಕ್ಟ್:</b> ${productName}</p><p><b>ಬೆಲೆ:</b> ₹${totalPrice}</p>`;
       document.getElementById('printModal').style.display = 'flex';
-      history.pushState({ page: 'modal' }, '', '');
     }
 
     function closePrintModal() { document.getElementById('printModal').style.display = 'none'; }
@@ -1240,11 +1159,9 @@
     function renderArchivedOrders(orders) {
       const listDiv = document.getElementById('shopArchivedOrdersList');
       const archived = orders.filter(o => o.status === 'DELIVERED' || o.status === 'STEP_4' || o.status === 'RETURN_COMPLETED');
-      
       listDiv.innerHTML = archived.map(o => `
-        <div class="order-item archived" style="border-left-color: #ff9800;">
+        <div class="order-item archived">
           <p><b>${o.productName}</b> - ₹${o.itemPrice || o.totalPrice}</p>
-          <p style="font-size:0.75rem; color:#e65100; font-weight:bold; margin-top:2px;">✔ ಆರ್ಡರ್ ಪೂರ್ಣಗೊಂಡಿದೆ</p>
         </div>
       `).join('') || '<p style="font-size:0.8rem; color:#777;">ಯಾವುದೇ ಹಳೆಯ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>';
     }
@@ -1254,7 +1171,6 @@
         let updateData = { status: newStatus };
         if (newStatus === 'STEP_3') {
           updateData.pickupOtp = existingOtp || Math.floor(1000 + Math.random() * 9000).toString();
-          updateData.deliveryStatus = 'PACKED_READY';
         }
         await window.updateDoc(window.doc(window.db, "orders", orderId), updateData);
         alert("✅ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್‌ಡೇಟ್ ಮಾಡಲಾಗಿದೆ!");
@@ -1263,64 +1179,30 @@
 
     async function saveProduct(e) {
       e.preventDefault();
-
       if (!isUserPaidMembership) {
-        alert("❌ ಮೆಂಬರ್‌ಶಿಪ್ ಅನ್ನು ನೀವು ಇನ್ನು ಆಯ್ಕೆ ಮಾಡಿಲ್ಲ. ಪೇಮೆಂಟ್ ಮಾಡಿ ಮೆಂಬರ್‌ಶಿಪ್ ಅನ್ನು ಪಡೆಯಲು ವಸ್ತು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ ಈಗಲೇ!");
+        alert("❌ ಮೆಂಬರ್‌ಶಿಪ್ ಪೇಮೆಂಟ್ ಬಾಕಿ ಇದೆ. ವಸ್ತು ಅಪ್‌ಲೋಡ್ ಮಾಡಲು ಆಗುವುದಿಲ್ಲ!");
         return;
       }
 
-      const returnPolicy = document.getElementById('prodReturnPolicy').value;
-      const footwearSize = document.getElementById('footwearSize')?.value || '';
-      const mobRamStorage = document.getElementById('mobRam')?.value || '';
-      const clothSizeDetail = document.getElementById('clothSizeDetail')?.value || '';
-      
-      const shopTypeVal = shopOwner.shopType || 'ಇತರ ಅಂಗಡಿ';
-      let autoCategory = 'ಇತರ';
-      if (shopTypeVal.includes('ಬಟ್ಟೆ')) autoCategory = 'ಬಟ್ಟೆ';
-      else if (shopTypeVal.includes('ಚಪ್ಪಲಿ')) autoCategory = 'ಚಪ್ಪಲಿ';
-      else if (shopTypeVal.includes('ಮೊಬೈಲ್')) autoCategory = 'ಮೊಬೈಲ್';
-      else if (shopTypeVal.includes('ಕಿರಾಣಿ')) autoCategory = 'ಕಿರಾಣಿ';
-      else if (shopTypeVal.includes('ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್')) autoCategory = 'ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್';
-      else if (shopTypeVal.includes('ಗಿಫ್ಟ್')) autoCategory = 'ಗಿಫ್ಟ್';
-
-      const finalName = document.getElementById('mobModel')?.value || document.getElementById('clothType')?.value || document.getElementById('footwearName')?.value || document.getElementById('generalName')?.value || 'Item';
+      const finalName = document.getElementById('generalName')?.value.trim() || 'Item';
       const price = document.getElementById('prodPrice').value.trim() || '800';
-      const oldPrice = document.getElementById('prodOldPrice')?.value.trim() || '';
-      const quantity = document.getElementById('prodQuantity').value;
-
       const c1_b1 = await convertFileToBase64(document.getElementById('c1_p1').files[0]);
-      const c1_b2 = await convertFileToBase64(document.getElementById('c1_p2').files[0]);
-      const c1_b3 = await convertFileToBase64(document.getElementById('c1_p3').files[0]);
-      const c1_b4 = await convertFileToBase64(document.getElementById('c1_p4').files[0]);
 
       const prodData = {
         shopId: String(shopOwner.id),
         shopName: shopOwner.shopName,
         shopType: shopOwner.shopType,
-        taluk: shopOwner.taluk || 'ಶಹಾಪುರ (Shahapur)',
-        district: shopOwner.district || 'ಯಾದಗಿರಿ (Yadgir)',
-        pincode: shopOwner.pincode || '585287',
-        category: autoCategory,
         name: finalName,
-        variants: [footwearSize, clothSizeDetail].filter(Boolean),
-        ram: mobRamStorage,
         price: Number(price),
-        oldPrice: oldPrice ? Number(oldPrice) : null,
-        quantity: quantity,
-        returnPolicy: returnPolicy,
-        colors: [{ colorName: 'Default', photos: [c1_b1, c1_b2, c1_b3, c1_b4].filter(Boolean) }],
         photo: c1_b1 || 'https://via.placeholder.com/100',
         timestamp: window.serverTimestamp()
       };
 
       try {
         await window.addDoc(window.collection(window.db, "products"), prodData);
-        alert("🎉 ವಸ್ತು ಮತ್ತು ವಿವರಗಳು ಯಶಸ್ವಿಯಾಗಿ ಗ್ರಾಹಕರ ಆಪ್‌ಗೆ ಅಪ್ಲೋಡ್ ಆಗಿದೆ!");
+        alert("🎉 ವಸ್ತು ಯಶಸ್ವಿಯಾಗಿ ಅಪ್ಲೋಡ್ ಆಗಿದೆ!");
         document.getElementById('addProductForm').reset();
-        renderDynamicUploadForm();
-      } catch (err) {
-        alert("ಅಪ್ಲೋಡ್ ದೋಷ: " + err.message);
-      }
+      } catch (err) { alert("ದೋಷ: " + err.message); }
     }
 
     function renderProducts(products) {
@@ -1329,7 +1211,7 @@
         <div class="card-small">
           <img src="${p.photo}">
           <div class="card-title-small">${p.name}</div>
-          <div style="font-size:0.7rem; color:#2e7d32; font-weight:bold;">₹${p.price} ${p.footwearSize ? `[${p.footwearSize}]` : ''} ${p.ramStorage ? `[${p.ramStorage}]` : ''} ${p.clothSizeDetail ? `[${p.clothSizeDetail}]` : ''}</div>
+          <div style="font-size:0.7rem; color:#2e7d32; font-weight:bold;">₹${p.price}</div>
         </div>
       `).join('');
     }
