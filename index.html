@@ -4,12 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   
-  <!-- Google Site Verification Code Added -->
   <meta name="google-site-verification" content="ZgEiG1KeQR2v__zpU2O3CpOBqjORyCDkBn5yInF902c" />
 
-  <title id="pageTitle">ನಮ್ಮ ಊರು ಪಾರ್ಟ್ನರ್ ಆ್ಯಪ್ | ನಮ್ಮ ಊರು ಮಾಲೀಕರ ಆಪ್ | ನಮ್ಮ ಊರು ವೆಂಡರ್ ಆಪ್ | ಅಂಗಡಿ ಮಾಲೀಕರ ಆಪ್ - Namma Ooru Partner App & Shop Owner Panel</title>
-  <meta name="description" content="ನಮ್ಮ ಊರು ಪಾರ್ಟ್ನರ್ ಆ್ಯಪ್, ನಮ್ಮ ಊರು ಮಾಲೀಕರ ಆಪ್, ನಮ್ಮ ಊರು ವೆಂಡರ್ ಆಪ್, ನಮ್ಮ ಊರು ಓನರ್ ಆಪ್, ಅಂಗಡಿ ಮಾಲೀಕರ ಆಪ್, Namma Ooru Partner App, Shop Owner Panel, Vendor App for Karnataka Taluks and Districts.">
-  <meta name="keywords" content="ನಮ್ಮ ಊರು ಪಾರ್ಟ್ನರ್ ಆ್ಯಪ್, ನಮ್ಮ ಊರು ಮಾಲೀಕರ ಆಪ್, ನಮ್ಮ ಊರು ವೆಂಡರ್ ಆಪ್, ನಮ್ಮ ಊರು ಓನರ್ ಆಪ್, ಅಂಗಡಿ ಮಾಲೀಕರ ಆಪ್, Namma Ooru Partner App, Namma Ooru Vendor App, Shop Owner Panel, Local Shop App Karnataka">
+  <title id="pageTitle">ನಮ್ಮ ಊರು ಪಾರ್ಟ್ನರ್ ಆ್ಯಪ್ | ಅಂಗಡಿ ಮಾಲೀಕರ ಆಪ್ - Namma Ooru Partner App & Shop Owner Panel</title>
+  <meta name="description" content="ನಮ್ಮ ಊರು ಪಾರ್ಟ್ನರ್ ಆ್ಯಪ್, ಅಂಗಡಿ ಮಾಲೀಕರ ಆಪ್, Shop Owner Panel, Vendor App for Karnataka Taluks and Districts.">
   
   <link rel="icon" type="image/png" sizes="192x192" href="logo.png">
   <link rel="apple-touch-icon" href="logo.png">
@@ -248,7 +246,6 @@
           </select>
         </div>
 
-        <!-- ಪಿನ್ ಕೋಡ್ ಹಾಕಿದ ತಕ್ಷಣ ಊರು ಮತ್ತು ತಾಲೂಕು ಆಟೋ-ಕ್ಯಾಪ್ಚರ್ ಆಗುವ ಫೀಲ್ಡ್ -->
         <div class="form-group">
           <label>ಪಿನ್ ಕೋಡ್ (Pin Code):</label>
           <input type="number" id="pincode" required placeholder="ಉದಾ: 585287" maxlength="6" oninput="fetchPincodeAutoDetails(this.value)">
@@ -301,7 +298,6 @@
           <p>ಸ್ಥಳ: <span id="displayLocation"></span> | Pin: <span id="displayPincode"></span></p>
           <div style="display:flex; align-items:center; gap:8px; margin-top:4px;">
             <div class="id-number">ID: <span id="displayId">0000</span></div>
-            <!-- QR Code Small Preview Near ID -->
             <div id="smallQrContainer" style="cursor:pointer;" onclick="openBigQrModal()" title="ಕ್ಯೂರ್ ಕೋಡ್ ದೊಡ್ಡದಾಗಿ ನೋಡಲು ಅಥವಾ ಬದಲಾಯಿಸಲು ಕ್ಲಿಕ್ ಮಾಡಿ">
               <img id="displaySmallQr" src="" style="width:36px; height:36px; object-fit:contain; border-radius:4px; border:1.5px solid #fff; background:#fff; display:none;" alt="QR">
             </div>
@@ -310,7 +306,6 @@
         </div>
       </div>
 
-      <!-- Membership & Upload Restriction Banner -->
       <div id="membershipBadgeDiv" class="membership-badge">
         <span id="membershipStatusText">ಲೋಡ್ ಆಗುತ್ತಿದೆ...</span>
       </div>
@@ -689,10 +684,13 @@
     }
 
     function getShopCommissionRate(shopType) {
+      if (shopOwner.commissionPercent !== undefined && shopOwner.commissionPercent !== null) {
+        return Number(shopOwner.commissionPercent) / 100;
+      }
       if (shopType === 'ಮೊಬೈಲ್ ಶಾಪ್' || shopType === 'ಕಿರಾಣಿ ಅಂಗಡಿ') return 0.05; // 5%
       if (shopType === 'ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್') return 0.08; // 8%
       if (shopType === 'ಚಪ್ಪಲಿ ಅಂಗಡಿ' || shopType === 'ಗಿಫ್ಟ್ ಸೆಂಟರ್') return 0.10; // 10%
-      return 0.12; // ಬಟ್ಟೆ ಅಂಗಡಿ & ಇತರ ಅಂಗಡಿಗಳಿಗೆ 12%
+      return 0.12; // 12%
     }
 
     function renderDynamicUploadForm() {
@@ -853,7 +851,8 @@
         gpsCoordinates: tempGpsCoordinates || '',
         photo: photoBase64 || 'https://via.placeholder.com/100',
         qrPhoto: qrBase64,
-        isPaid: false
+        isPaid: false,
+        commissionPercent: shopOwner?.commissionPercent || 5
       };
 
       try {
@@ -1031,8 +1030,8 @@
           `;
         }
 
-        // ಇಲ್ಲಿ ಆರ್ಡರ್ ಬಂದ ತಕ್ಷಣ 'ಕನ್ಫರ್ಮ್' ಬಟನ್ ಬರುವಂತೆ ಮತ್ತು ಪ್ಯಾಕಿಂಗ್ ಬಟನ್ ಒತ್ತಿದಾಗ ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ತಕ್ಷಣ ಕಾಣುವಂತೆ ಸರಿಪಡಿಸಲಾಗಿದೆ
-        if (orderStatus === 'PENDING' || orderStatus === 'STEP_1' || !o.status || orderStatus === '') {
+        // ಇಲ್ಲಿ ಆರ್ಡರ್ ಬಂದ ತಕ್ಷಣ 'ಕನ್ಫರ್ಮ್' ಬಟನ್ ಬರುವಂತೆ ಸರಿಪಡಿಸಲಾಗಿದೆ
+        if (orderStatus === 'PENDING' || orderStatus === 'STEP_1' || !o.status || orderStatus === '' || orderStatus === 'NEW') {
           actionButtonHTML = `<button onclick="updateOrderStatus('${o.docId}', 'CONFIRMED')" class="btn-confirm">✅ ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಮಾಡಿ</button>`;
         } else if (orderStatus === 'CONFIRMED' || orderStatus === 'STEP_2') {
           let generatedOtp = o.pickupOtp || Math.floor(1000 + Math.random() * 9000).toString();
@@ -1210,7 +1209,7 @@
 
       summaryDiv.innerHTML = `
         <p><b>ಅಂಗಡಿ ಯುಪಿಐ (ನಿಮ್ಮ ಕ್ಯೂಆರ್ ಕೋಡ್):</b> <span style="color:#1565c0; font-weight:bold;">ಆಟೋ ಸ್ಕ್ಯಾನ್ ಪೇಮೆಂಟ್ ಸಕ್ರಿಯವಾಗಿದೆ (ಶಾಶ್ವತ)</span></p>
-        <p><b>ಅಂಗಡಿ ವಿಭಾಗ:</b> <span style="color:#e65100; font-weight:bold;">${shopOwner.shopType} (${commPercentageStr} ಕಮಿಷನ್)</span></p>
+        <p><b>ಅಂಗಡಿ ವಿಭಾಗ:</b> <span style="color:#e65100; font-weight:bold;">${shopOwner.shopType} (${commPercentageStr} ಕಮಿಷನ್ ಕಡಿತ)</span></p>
         <p><b>ಒಟ್ಟು ಡೆಲಿವರಿ ಆದ ಮಾರಾಟ:</b> ₹${totalSales}</p>
         <p><b>ರಿಟರ್ನ್ ಮೈನಸ್ ಆಗಿರುವ ಮೊತ್ತ:</b> <span style="color:#d32f2f;">- ₹${totalReturned}</span></p>
         <p><b>ಕಮಿಷನ್ ಕಟ್ ಆಗಿ ಉಳಿದ ಶುದ್ಧ ಮೊತ್ತ:</b> <span style="color:#2e7d32; font-weight:bold; font-size:1.1rem;">₹${netPayable}</span></p>
@@ -1258,7 +1257,7 @@
           updateData.deliveryStatus = 'PACKED_READY';
         }
         await window.updateDoc(window.doc(window.db, "orders", orderId), updateData);
-        alert("✅ ಯಶಸ್ವಿಯಾಗಿ ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ಕಳುಹಿಸಲಾಗಿದೆ!");
+        alert("✅ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್‌ಡೇಟ್ ಮಾಡಲಾಗಿದೆ!");
       } catch (e) { alert("ದೋಷ: " + e.message); }
     }
 
