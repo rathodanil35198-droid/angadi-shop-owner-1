@@ -960,6 +960,7 @@
         let actionButtonHTML = '';
         let returnAlertBanner = '';
         let callAndMapButtons = '';
+        let topOtpDisplay = '';
 
         if (o.isReturnRequested) {
           returnAlertBanner = `<div style="background:#ffebee; border:2px solid #d32f2f; border-radius:8px; padding:8px; margin-bottom:8px;"><span style="color:#d32f2f; font-weight:bold; font-size:0.85rem;">⚠️ ಗ್ರಾಹಕರಿಂದ ರಿಟರ್ನ್ ವಿನಂತಿ ಬಂದಿದೆ!</span></div>`;
@@ -983,8 +984,8 @@
         let distanceKm = o.distanceKm || "1.2 ಕಿ.ಮೀ.";
         let mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(custVillage + ' ' + custTaluk + ' ' + custDistrict)}`;
 
+        // ಆರ್ಡರ್ ಬಂದ ತಕ್ಷಣ ಕನ್ಫರ್ಮ್, ಕ್ಯಾನ್ಸಲ್, ಕಾಲ್ ಮತ್ತು ಜಿಪಿಎಸ್ ಬಟನ್‌ಗಳು ಇರುತ್ತವೆ
         if (orderStatus === 'STEP_1' || orderStatus === 'PENDING') {
-          // ಆರ್ಡರ್ ಬಂದ ತಕ್ಷಣ ಕನ್ಫರ್ಮ್ ಮತ್ತು ಕ್ಯಾನ್ಸಲ್ ಬಟನ್ ಕಡ್ಡಾಯವಾಗಿ ಇರುತ್ತದೆ
           callAndMapButtons = `
             <div style="display:flex; gap:6px; margin-top:8px;">
               <a href="tel:${custPhone}" class="btn-call-cust">📞 ಕಾಲ್ ಮಾಡಿ</a>
@@ -998,10 +999,24 @@
             </div>
           `;
         } else if (orderStatus === 'CONFIRMED' || orderStatus === 'STEP_2') {
-          // ಕನ್ಫರ್ಮ್ ಆದ ಮೇಲೆ ಕಾಲ್/ಜಿಪಿಎಸ್ ಮರೆಯಾಗಿ ಪ್ಯಾಕಿಂಗ್ ಬಟನ್ ಬರುತ್ತದೆ
+          // ಕನ್ಫರ್ಮ್ ಆದ ಮೇಲೆ ಕಾಲ್/ಜಿಪಿಎಸ್ ಹಾಗೆಯೇ ಇರುತ್ತದೆ, ಕ್ಯಾನ್ಸಲ್ ಮಾಯವಾಗಿ ಪ್ಯಾಕಿಂಗ್ ಬಟನ್ ಬರುತ್ತದೆ
+          callAndMapButtons = `
+            <div style="display:flex; gap:6px; margin-top:8px;">
+              <a href="tel:${custPhone}" class="btn-call-cust">📞 ಕಾಲ್ ಮಾಡಿ</a>
+              <a href="${mapsUrl}" target="_blank" class="btn-map-loc">🗺️ ಗೂಗಲ್ ಜಿಪಿಎಸ್ ಲೊಕೇಶನ್</a>
+            </div>
+          `;
           actionButtonHTML = `
             <button onclick="openPrintModalForOrder('${o.docId}', '${o.orderId}', '${o.productName}', '${o.itemPrice || o.totalPrice}', '${o.customer?.name}', '${o.customer?.phone}', '${o.customer?.village || o.customer?.address}', '${o.customer?.taluk || ''}', '${o.customer?.district || ''}', '${o.customer?.pincode || ''}')" class="btn-print">🖨️ ಪ್ರಿಂಟ್ & ಶೇರ್ ಮಾಡಿ</button>
             <button onclick="updateOrderStatus('${o.docId}', 'STEP_3', '${generatedOtp}')" class="btn-pack" style="margin-top:6px;">📦 ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (ಲೋಕಲ್ ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ಕಳಿಸಿ)</button>
+          `;
+        } else if (orderStatus === 'STEP_3') {
+          // ಪ್ಯಾಕಿಂಗ್ ಆದ ಮೇಲೆ ಒಟಿಪಿ ಮೇಲೆ ಕಾಣಿಸುತ್ತದೆ, ಕಾಲ್/ಜಿಪಿಎಸ್ ಬಟನ್ ಮಾಯವಾಗುತ್ತದೆ
+          topOtpDisplay = `
+            <div style="background:#e8f5e9; border:1px solid #81c784; padding:6px 10px; border-radius:6px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:0.75rem; color:#2e7d32; font-weight:bold;">🔑 ಡೆಲಿವರಿ ಒಟಿಪಿ:</span>
+              <span style="font-size:1.1rem; font-weight:bold; color:#1b5e20; letter-spacing:2px;">${generatedOtp}</span>
+            </div>
           `;
         }
 
@@ -1009,6 +1024,7 @@
 
         return `
           <div class="order-item ${o.isReturnRequested ? 'return-alert' : ''}">
+            ${topOtpDisplay}
             ${returnAlertBanner}
             <div style="background:#e3f2fd; border-radius:6px; padding:6px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
               <span style="font-size:0.75rem; color:#1565c0; font-weight:bold;">ಆರ್ಡರ್ ಐಡಿ: ${o.orderId || 'OD000000'}</span>
@@ -1046,7 +1062,7 @@
     }
 
     async function cancelOrderForShop(orderId) {
-      if (confirm("ಈ ಆರ್ಡರ್ ಅನ್ನು ನಿಮ್ಮ ಅಂಗಡಿಯಿಂದ ಕ್ಯಾನ್ಸಲ್ ಮಾಡಲು ಬಯಸುವಿರಾ? (ಇದು ಬೇರೆ ಅಂಗಡಿಗಳಿಗೆ ಮಾತ್ರ ಗೋಚರಿಸುತ್ತದೆ)")) {
+      if (confirm("ಈ ಆರ್ಡರ್ ಅನ್ನು ನಿಮ್ಮ ಅಂಗಡಿಯಿಂದ ಕ್ಯಾನ್ಸಲ್ ಮಾಡಲು ಬಯಸುವಿರಾ?")) {
         try {
           const docRef = window.doc(window.db, "orders", orderId);
           const docSnap = await window.getDoc(docRef);
@@ -1129,7 +1145,7 @@
     }
 
     function openPrintModalForOrder(docId, orderId, productName, totalPrice, custName, custPhone, custAddress, custTaluk, custDistrict, custPincode) {
-      // ಪ್ರಿಂಟ್ ಬಾಕ್ಸ್‌ನಲ್ಲಿ ಮೊದಲು ಗ್ರಾಹಕರ ವಿವರಗಳು ಚೌಕಾಕಾರದ ಬಾಕ್ಸ್‌ನಲ್ಲಿ ಮತ್ತು ಕೆಳಗೆ ಅಂಗಡಿಯ ವಿವರಗಳು ಬರುವಂತೆ ಸರಿಪಡಿಸಲಾಗಿದೆ ಹಾಗೂ ಕ್ಯಾಶ್ ಆನ್ ಡೆಲಿವರಿ ಸೇರಿಸಲಾಗಿದೆ
+      // ಪ್ರಿಂಟ್ ಬಾಕ್ಸ್‌ನಲ್ಲಿ ಮೊದಲು ಕ್ಯಾಶ್ ಆನ್ ಡೆಲಿವರಿ, ನಂತರ ಗ್ರಾಹಕರ ವಿವರಗಳು, ಪ್ರಾಡಕ್ಟ್ ವಿವರಗಳು ಮತ್ತು ಕೆಳಭಾಗದಲ್ಲಿ ಅಂಗಡಿಯ ವಿವರಗಳು ಬರುವಂತೆ ಸರಿಪಡಿಸಲಾಗಿದೆ
       currentShareText = `🧾 *ಆರ್ಡರ್ ವಿವರಗಳು (ಕ್ಯಾಶ್ ಆನ್ ಡೆಲಿವರಿ)*\n\n` +
         `👤 *ಗ್ರಾಹಕರ ವಿವರಗಳು:*\n` +
         `• ಹೆಸರು: ${custName} (${custPhone})\n` +
@@ -1147,7 +1163,7 @@
 
       document.getElementById('printModalBody').innerHTML = `
         <div style="background:#e8f5e9; border:1px dashed #2e7d32; border-radius:8px; padding:10px; margin-bottom:10px; text-align:left;">
-          <p style="color:#1b5e20; font-weight:bold; margin-bottom:4px;">💵 ಪಾವತಿ: ಕ್ಯಾಶ್ ಆನ್ ಡೆಲಿವರಿ (Cash on Delivery)</p>
+          <p style="color:#1b5e20; font-weight:bold; margin-bottom:2px;">💵 ಪಾವತಿ: ಕ್ಯಾಶ್ ಆನ್ ಡೆಲಿವರಿ (Cash on Delivery)</p>
         </div>
         <div style="border:2px solid #1e88e5; border-radius:10px; padding:12px; background:#f9f9f9; text-align:left; line-height:1.5;">
           <p style="color:#1565c0; font-weight:bold; border-bottom:1px solid #ddd; padding-bottom:4px; margin-bottom:6px;">📍 ಗ್ರಾಹಕರ ವಿವರಗಳು:</p>
