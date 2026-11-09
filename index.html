@@ -939,8 +939,9 @@
       document.getElementById('statEarnings').innerText = `₹${netEarnings}`;
       document.getElementById('orderCount').innerText = myOrders.length;
 
-      const activeOrders = myOrders.filter(o => o.status !== 'DELIVERED' && o.status !== 'STEP_4' && o.status !== 'RETURN_COMPLETED');
-      const archivedOrders = myOrders.filter(o => o.status === 'DELIVERED' || o.status === 'STEP_4' || o.status === 'RETURN_COMPLETED');
+      // Active orders shown here are those not yet packed/dispatched to delivery boy
+      const activeOrders = myOrders.filter(o => o.status !== 'DELIVERED' && o.status !== 'STEP_4' && o.status !== 'RETURN_COMPLETED' && o.status !== 'STEP_3' && o.status !== 'DISPATCHED');
+      const archivedOrders = myOrders.filter(o => o.status === 'DELIVERED' || o.status === 'STEP_4' || o.status === 'RETURN_COMPLETED' || o.status === 'STEP_3' || o.status === 'DISPATCHED');
 
       renderOrders(activeOrders);
       renderArchivedOrders(archivedOrders);
@@ -959,40 +960,13 @@
         let orderStatus = o.status || 'STEP_1';
         let actionButtonHTML = '';
         let returnAlertBanner = '';
-        let topMiniOtpBox = '';
+        let callAndMapButtons = '';
 
         if (o.isReturnRequested) {
           returnAlertBanner = `<div style="background:#ffebee; border:2px solid #d32f2f; border-radius:8px; padding:8px; margin-bottom:8px;"><span style="color:#d32f2f; font-weight:bold; font-size:0.85rem;">⚠️ ಗ್ರಾಹಕರಿಂದ ರಿಟರ್ನ್ ವಿನಂತಿ ಬಂದಿದೆ!</span></div>`;
         }
 
         let generatedOtp = o.pickupOtp || Math.floor(1000 + Math.random() * 9000).toString();
-
-        // ಇಲ್ಲಿ ಆರ್ಡರ್ ಬಂದ ತಕ್ಷಣ ಕನ್ಫರ್ಮ್ ಮತ್ತು ಕ್ಯಾನ್ಸಲ್ ಬಟನ್ ನೀಡಲಾಗಿದೆ
-        if (orderStatus === 'STEP_1' || orderStatus === 'PENDING') {
-          actionButtonHTML = `
-            <div style="display:flex; gap:8px; margin-top:8px;">
-              <button onclick="confirmOrder('${o.docId}')" class="btn-confirm" style="flex:1;">✔ ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಮಾಡಿ</button>
-              <button onclick="cancelOrderForShop('${o.docId}')" class="btn-danger" style="flex:1; padding:8px; border-radius:6px; font-weight:bold; font-size:0.8rem; border:none; cursor:pointer; color:#fff;">❌ ಕ್ಯಾನ್ಸಲ್ ಮಾಡಿ</button>
-            </div>
-          `;
-        } else if (orderStatus === 'CONFIRMED' || orderStatus === 'STEP_2') {
-          actionButtonHTML = `
-            <button onclick="openPrintModalForOrder('${o.docId}', '${o.orderId}', '${o.productName}', '${o.itemPrice || o.totalPrice}', '${o.customer?.name}', '${o.customer?.phone}', '${o.customer?.village || o.customer?.address}')" class="btn-print">🖨️ ಪ್ರಿಂಟ್ & ಶೇರ್ ಮಾಡಿ</button>
-            <button onclick="updateOrderStatus('${o.docId}', 'STEP_3', '${generatedOtp}')" class="btn-pack" style="margin-top:6px;">📦 ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (ಲೋಕಲ್ ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ಕಳಿಸಿ)</button>
-            <button onclick="cancelOrderForShop('${o.docId}')" class="btn-danger" style="margin-top:6px; padding:8px; border-radius:6px; font-weight:bold; font-size:0.8rem; border:none; cursor:pointer; color:#fff; width:100%;">❌ ಕ್ಯಾನ್ಸಲ್ ಮಾಡಿ</button>
-          `;
-        } else if (orderStatus === 'STEP_3' || orderStatus === 'DELIVERED' || orderStatus === 'STEP_4') {
-          let commRate = currentShopCommissionRate;
-          let itemPriceVal = Number(o.itemPrice || o.totalPrice || 800);
-          let netAmtAfterComm = Math.round(itemPriceVal * (1 - commRate));
-
-          topMiniOtpBox = `
-            <div style="display:flex; justify-content:space-between; align-items:center; background:#e8f5e9; border:1px solid #81c784; padding:6px 10px; border-radius:6px; margin-bottom:8px;">
-              <span style="font-size:0.75rem; color:#2e7d32; font-weight:bold;">🔑 ಡೆಲಿವರಿ ಪಿಕಪ್ ಒಟಿಪಿ:</span>
-              <span style="font-size:1.1rem; font-weight:bold; color:#1b5e20; letter-spacing:2px;">${generatedOtp}</span>
-            </div>
-          `;
-        }
 
         const custName = o.customer?.name || 'ಗ್ರಾಹಕರು';
         const custPhone = o.customer?.phone || 'ಸಂಖ್ಯೆ ಇಲ್ಲ';
@@ -1010,13 +984,36 @@
         let distanceKm = o.distanceKm || "1.2 ಕಿ.ಮೀ.";
         let mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(custVillage + ' ' + custTaluk + ' ' + custDistrict)}`;
 
-        let paymentModeBadge = o.paymentStatus === 'SUCCESS' ? 
-          `<span style="background:#e8f5e9; color:#2e7d32; padding:2px 6px; border-radius:4px; font-weight:bold;">✔ ಪೇಮೆಂಟ್ ಸಕ್ಸಸ್ (₹${totalCustomerPrice})</span>` : 
-          `<span style="background:#fff3e0; color:#e65100; padding:2px 6px; border-radius:4px; font-weight:bold;">⏳ ಪೇಮೆಂಟ್ ಪೆಂಡಿಂಗ್ (COD)</span>`;
+        // Call and GPS buttons visible only before packing/dispatching
+        if (orderStatus === 'STEP_1' || orderStatus === 'PENDING' || orderStatus === 'CONFIRMED' || orderStatus === 'STEP_2') {
+          callAndMapButtons = `
+            <div style="display:flex; gap:6px; margin-top:8px;">
+              <a href="tel:${custPhone}" class="btn-call-cust">📞 ಕಾಲ್ ಮಾಡಿ</a>
+              <a href="${mapsUrl}" target="_blank" class="btn-map-loc">🗺️ ಗೂಗಲ್ ಜಿಪಿಎಸ್ ಲೊಕೇಶನ್</a>
+            </div>
+          `;
+        }
+
+        if (orderStatus === 'STEP_1' || orderStatus === 'PENDING') {
+          // ಆರ್ಡರ್ ಬಂದ ತಕ್ಷಣ ಕನ್ಫರ್ಮ್ ಮತ್ತು ಕ್ಯಾನ್ಸಲ್ ಬಟನ್ ಮಾತ್ರ
+          actionButtonHTML = `
+            <div style="display:flex; gap:8px; margin-top:8px;">
+              <button onclick="confirmOrder('${o.docId}')" class="btn-confirm" style="flex:1;">✔ ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಮಾಡಿ</button>
+              <button onclick="cancelOrderForShop('${o.docId}')" class="btn-danger" style="flex:1; padding:8px; border-radius:6px; font-weight:bold; font-size:0.8rem; border:none; cursor:pointer; color:#fff;">❌ ಕ್ಯಾನ್ಸಲ್ ಮಾಡಿ</button>
+            </div>
+          `;
+        } else if (orderStatus === 'CONFIRMED' || orderStatus === 'STEP_2') {
+          // ಕನ್ಫರ್ಮ್ ಆದ ಮೇಲೆ ಕ್ಯಾನ್ಸಲ್ ಮಾಯವಾಗಿ ಪ್ಯಾಕಿಂಗ್ ಬಟನ್ ಬರುತ್ತದೆ
+          actionButtonHTML = `
+            <button onclick="openPrintModalForOrder('${o.docId}', '${o.orderId}', '${o.productName}', '${o.itemPrice || o.totalPrice}', '${o.customer?.name}', '${o.customer?.phone}', '${o.customer?.village || o.customer?.address}')" class="btn-print">🖨️ ಪ್ರಿಂಟ್ & ಶೇರ್ ಮಾಡಿ</button>
+            <button onclick="updateOrderStatus('${o.docId}', 'STEP_3', '${generatedOtp}')" class="btn-pack" style="margin-top:6px;">📦 ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (ಲೋಕಲ್ ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ಕಳಿಸಿ)</button>
+          `;
+        }
+
+        let paymentModeBadge = `<span style="background:#fff3e0; color:#e65100; padding:2px 6px; border-radius:4px; font-weight:bold;">💵 ಕ್ಯಾಶ್ ಆನ್ ಡೆಲಿವರಿ</span>`;
 
         return `
           <div class="order-item ${o.isReturnRequested ? 'return-alert' : ''}">
-            ${topMiniOtpBox}
             ${returnAlertBanner}
             <div style="background:#e3f2fd; border-radius:6px; padding:6px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
               <span style="font-size:0.75rem; color:#1565c0; font-weight:bold;">ಆರ್ಡರ್ ಐಡಿ: ${o.orderId || 'OD000000'}</span>
@@ -1039,11 +1036,7 @@
               <p style="margin-top:4px; color:#0d47a1; font-weight:bold;">📏 GPS ದೂರ: ${distanceKm}</p>
             </div>
 
-            <div style="display:flex; gap:6px;">
-              <a href="tel:${custPhone}" class="btn-call-cust">📞 ಕಾಲ್ ಮಾಡಿ</a>
-              <a href="${mapsUrl}" target="_blank" class="btn-map-loc">🗺️ ಗೂಗಲ್ ಜಿಪಿಎಸ್ ಲೊಕೇಶನ್</a>
-            </div>
-
+            ${callAndMapButtons}
             ${actionButtonHTML}
           </div>
         `;
@@ -1141,8 +1134,39 @@
     }
 
     function openPrintModalForOrder(docId, orderId, productName, totalPrice, custName, custPhone, custAddress) {
-      currentShareText = `🧾 ಆರ್ಡರ್ ಐಡಿ: ${orderId}\n📦 ವಸ್ತು: ${productName}\n💰 ಬೆಲೆ: ₹${totalPrice}\n👤 ಗ್ರಾಹಕರು: ${custName} (${custPhone})\n📍 ವಿಳಾಸ: ${custAddress}`;
-      document.getElementById('printModalBody').innerHTML = `<p><b>ಆರ್ಡರ್ ಐಡಿ:</b> ${orderId}</p><p><b>ಪ್ರಾಡಕ್ಟ್:</b> ${productName}</p><p><b>ಬೆಲೆ:</b> ₹${totalPrice}</p><p><b>ಗ್ರಾಹಕರು:</b> ${custName}, ${custAddress}</p>`;
+      // ಮೇಲೆ ಗ್ರಾಹಕರ ವಿವರಗಳು ಹಾಗೂ ಕೆಳಗೆ ಅಂಗಡಿಯ ವಿವರಗಳು ಬರುವಂತೆ ಫಾರ್ಮ್ಯಾಟ್ ಮಾಡಲಾಗಿದೆ
+      currentShareText = `🧾 *ಆರ್ಡರ್ ವಿವರಗಳು*\n\n` +
+        `👤 *ಗ್ರಾಹಕರ ವಿವರಗಳು:*\n` +
+        `• ಹೆಸರು: ${custName} (${custPhone})\n` +
+        `• ವಿಳಾಸ: ${custAddress}\n\n` +
+        `📦 *ವಸ್ತುವಿನ ವಿವರಗಳು:*\n` +
+        `• ಆರ್ಡರ್ ಐಡಿ: ${orderId}\n` +
+        `• ವಸ್ತು: ${productName}\n` +
+        `• ಬೆಲೆ: ₹${totalPrice}\n\n` +
+        `🏪 *ಅಂಗಡಿಯ ವಿವರಗಳು:*\n` +
+        `• ಅಂಗಡಿ ಹೆಸರು: ${shopOwner.shopName}\n` +
+        `• ತಾಲೂಕು: ${shopOwner.taluk}\n` +
+        `• ಜಿಲ್ಲೆ: ${shopOwner.district}\n` +
+        `• ಪಿನ್ ಕೋಡ್: ${shopOwner.pincode}`;
+
+      document.getElementById('printModalBody').innerHTML = `
+        <div style="text-align:left; line-height:1.4;">
+          <p style="color:#1565c0; font-weight:bold; margin-bottom:4px;">👤 ಗ್ರಾಹಕರ ವಿವರಗಳು:</p>
+          <p><b>ಹೆಸರು:</b> ${custName} (${custPhone})</p>
+          <p><b>ವಿಳಾಸ:</b> ${custAddress}</p>
+          <hr style="margin:8px 0; border:0; border-top:1px dashed #ccc;">
+          <p style="color:#2e7d32; font-weight:bold; margin-bottom:4px;">📦 ವಸ್ತುವಿನ ವಿವರಗಳು:</p>
+          <p><b>ಆರ್ಡರ್ ಐಡಿ:</b> ${orderId}</p>
+          <p><b>ಪ್ರಾಡಕ್ಟ್:</b> ${productName}</p>
+          <p><b>ಬೆಲೆ:</b> ₹${totalPrice}</p>
+          <hr style="margin:8px 0; border:0; border-top:1px dashed #ccc;">
+          <p style="color:#e65100; font-weight:bold; margin-bottom:4px;">🏪 ಅಂಗಡಿಯ ವಿವರಗಳು:</p>
+          <p><b>ಅಂಗಡಿ ಹೆಸರು:</b> ${shopOwner.shopName}</p>
+          <p><b>ತಾಲೂಕು:</b> ${shopOwner.taluk}</p>
+          <p><b>ಜಿಲ್ಲೆ:</b> ${shopOwner.district}</p>
+          <p><b>ಪಿನ್ ಕೋಡ್:</b> ${shopOwner.pincode}</p>
+        </div>
+      `;
       document.getElementById('printModal').style.display = 'flex';
       history.pushState({ page: 'modal' }, '', '');
     }
@@ -1152,11 +1176,11 @@
 
     function renderArchivedOrders(orders) {
       const listDiv = document.getElementById('shopArchivedOrdersList');
-      const archived = orders.filter(o => o.status === 'DELIVERED' || o.status === 'STEP_4' || o.status === 'RETURN_COMPLETED');
+      const archived = orders.filter(o => o.status === 'DELIVERED' || o.status === 'STEP_4' || o.status === 'RETURN_COMPLETED' || o.status === 'STEP_3' || o.status === 'DISPATCHED');
       listDiv.innerHTML = archived.map(o => `
         <div class="order-item archived" style="border-left-color: #ff9800;">
           <p><b>${o.productName}</b> - ₹${o.itemPrice || o.totalPrice}</p>
-          <p style="font-size:0.75rem; color:#e65100; font-weight:bold; margin-top:2px;">✔ ಆರ್ಡರ್ ಪೂರ್ಣಗೊಂಡಿದೆ</p>
+          <p style="font-size:0.75rem; color:#e65100; font-weight:bold; margin-top:2px;">✔ ಪ್ಯಾಕ್ ಮಾಡಿ ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ಕಳಿಸಲಾಗಿದೆ (Pickup OTP: ${o.pickupOtp || '----'})</p>
         </div>
       `).join('') || '<p style="font-size:0.8rem; color:#777;">ಯಾವುದೇ ಹಳೆಯ ಆರ್ಡರ್‌ಗಳಿಲ್ಲ.</p>';
     }
@@ -1166,7 +1190,7 @@
         let updateData = { status: newStatus };
         if (newStatus === 'STEP_3' && existingOtp) updateData.pickupOtp = existingOtp;
         await window.updateDoc(window.doc(window.db, "orders", orderId), updateData);
-        alert("✅ ಯಶಸ್ವಿಯಾಗಿ ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ತಲುಪಿಸಲಾಗಿದೆ!");
+        alert("✅ ಯಶಸ್ವಿಯಾಗಿ ಪ್ಯಾಕ್ ಮಾಡಿ ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ಕಳಿಸಲಾಗಿದೆ!");
       } catch (e) { alert("ದೋಷ: " + e.message); }
     }
 
