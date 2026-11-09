@@ -1031,7 +1031,7 @@
           `;
         }
 
-        // ಇಲ್ಲಿ ಆರ್ಡರ್ ಬಂದ ತಕ್ಷಣ 'ಕನ್ಫರ್ಮ್' ಬಟನ್ ಬರುವಂತೆ (PENDING ಅಥವಾ ಖಾಲಿ ಇದ್ದರೂ ಸಹ) ಸರಿಪಡಿಸಲಾಗಿದೆ
+        // ಇಲ್ಲಿ ಆರ್ಡರ್ ಬಂದ ತಕ್ಷಣ 'ಕನ್ಫರ್ಮ್' ಬಟನ್ ಬರುವಂತೆ ಮತ್ತು ಪ್ಯಾಕಿಂಗ್ ಬಟನ್ ಒತ್ತಿದಾಗ ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ತಕ್ಷಣ ಕಾಣುವಂತೆ ಸರಿಪಡಿಸಲಾಗಿದೆ
         if (orderStatus === 'PENDING' || orderStatus === 'STEP_1' || !o.status || orderStatus === '') {
           actionButtonHTML = `<button onclick="updateOrderStatus('${o.docId}', 'CONFIRMED')" class="btn-confirm">✅ ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಮಾಡಿ</button>`;
         } else if (orderStatus === 'CONFIRMED' || orderStatus === 'STEP_2') {
@@ -1253,11 +1253,12 @@
     async function updateOrderStatus(orderId, newStatus, existingOtp) {
       try {
         let updateData = { status: newStatus };
-        if (newStatus === 'STEP_3' && existingOtp) {
-          updateData.pickupOtp = existingOtp;
+        if (newStatus === 'STEP_3') {
+          updateData.pickupOtp = existingOtp || Math.floor(1000 + Math.random() * 9000).toString();
+          updateData.deliveryStatus = 'PACKED_READY';
         }
         await window.updateDoc(window.doc(window.db, "orders", orderId), updateData);
-        alert("✅ ಯಶಸ್ವಿಯಾಗಿ ಅಪ್‌ಡೇಟ್ ಆಗಿದೆ!");
+        alert("✅ ಯಶಸ್ವಿಯಾಗಿ ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ಕಳುಹಿಸಲಾಗಿದೆ!");
       } catch (e) { alert("ದೋಷ: " + e.message); }
     }
 
