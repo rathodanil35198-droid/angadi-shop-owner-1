@@ -121,8 +121,8 @@
     .stat-box p { font-size: 0.8rem; font-weight: bold; color: #0d47a1; }
 
     .grid-small { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; margin-top: 15px; }
-    .card-small { border: 1px solid #e0e0e0; border-radius: 6px; padding: 6px; background: #fff; text-align: center; }
-    .card-small img { width: 100%; height: 70px; object-fit: cover; border-radius: 4px; }
+    .card-small { border: 1px solid #e0e0e0; border-radius: 6px; padding: 6px; background: #fff; text-align: center; position: relative; }
+    .card-small img { width: 100%; height: 70px; object-fit: cover; border-radius: 4px; cursor: pointer; }
     .card-title-small { font-size: 0.75rem; font-weight: bold; margin: 4px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
     .order-item { border-left: 5px solid var(--primary); background: #f9f9f9; padding: 12px; margin-bottom: 12px; border-radius: 6px; font-size: 0.85rem; border: 1px solid #e0e0e0; border-left-width: 5px; }
@@ -184,6 +184,16 @@
       </div>
     </div>
 
+    <!-- ಫೋಟೋ ವ್ಯೂವರ್ ಮಾಡಲ್ -->
+    <div id="photoViewerModal" class="modal" onclick="closePhotoViewer()">
+      <div class="modal-content-box" onclick="event.stopPropagation()" style="max-width: 320px;">
+        <h3 style="color: var(--primary); margin-bottom: 10px;">🖼️ ಪ್ರಾಡಕ್ಟ್ ಫೋಟೋಗಳು</h3>
+        <div id="photoSliderContainer" style="display:flex; overflow-x:auto; gap:10px; scroll-snap-type:x mandatory; margin-bottom:10px; padding:5px;"></div>
+        <p style="font-size: 0.75rem; color: #666; margin-bottom: 10px;">ಬಲಕ್ಕೆ ಸ್ಲೈಡ್ ಮಾಡಿ ಎಲ್ಲಾ ಫೋಟೋಗಳನ್ನು ನೋಡಬಹುದು.</p>
+        <button class="btn btn-danger" onclick="closePhotoViewer()" style="padding:8px;">ಮುಚ್ಚಿ</button>
+      </div>
+    </div>
+
     <div id="qrModal" class="modal" onclick="closeQrModal()">
       <div class="modal-content-box" onclick="event.stopPropagation()">
         <h3 style="color: var(--primary); margin-bottom: 10px;">📷 ನಿಮ್ಮ ಯುಪಿಐ ಕ್ಯೂಆರ್ ಕೋಡ್ (Scanner)</h3>
@@ -234,13 +244,13 @@
           <label>ಅಂಗಡಿಯ ಪ್ರಕಾರ (ವಿಭಾಗ):</label>
           <select id="shopType" required onchange="renderDynamicUploadForm()">
             <option value="">-- ಆಯ್ಕೆಮಾಡಿ --</option>
-            <option value="ಮೊಬೈಲ್ ಶಾಪ್">ಮೊಬೈಲ್ ಶಾಪ್ (5%)</option>
-            <option value="ಬಟ್ಟೆ ಅಂಗಡಿ">ಬಟ್ಟೆ ಅಂಗಡಿ (12%)</option>
-            <option value="ಚಪ್ಪಲಿ ಅಂಗಡಿ">ಚಪ್ಪಲಿ ಅಂಗಡಿ (10%)</option>
-            <option value="ಕಿರಾಣಿ ಅಂಗಡಿ">ಕಿರಾಣಿ ಅಂಗಡಿ (5%)</option>
-            <option value="ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್">ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್ (8%)</option>
-            <option value="ಗಿಫ್ಟ್ ಸೆಂಟರ್">ಗಿಫ್ಟ್ ಸೆಂಟರ್ (10%)</option>
-            <option value="ಇತರ ಅಂಗಡಿ">ಇತರ ಅಂಗಡಿ (12%)</option>
+            <option value="ಮೊಬೈಲ್ ಶಾಪ್">ಮೊಬೈಲ್ ಶಾಪ್</option>
+            <option value="ಬಟ್ಟೆ ಅಂಗಡಿ">ಬಟ್ಟೆ ಅಂಗಡಿ</option>
+            <option value="ಚಪ್ಪಲಿ ಅಂಗಡಿ">ಚಪ್ಪಲಿ ಅಂಗಡಿ</option>
+            <option value="ಕಿರಾಣಿ ಅಂಗಡಿ">ಕಿರಾಣಿ ಅಂಗಡಿ</option>
+            <option value="ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್">ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್</option>
+            <option value="ಗಿಫ್ಟ್ ಸೆಂಟರ್">ಗಿಫ್ಟ್ ಸೆಂಟರ್</option>
+            <option value="ಇತರ ಅಂಗಡಿ">ಇತರ ಅಂಗಡಿ</option>
           </select>
         </div>
 
@@ -338,9 +348,8 @@
           <div class="form-group" style="background:#fff3e0; padding:10px; border-radius:8px; border:1px solid #ffe0b2; margin-top:10px;">
             <label style="color:#d32f2f;">🔄 ಈ ವಸ್ತುವಿಗೆ ರಿಟರ್ನ್ / ಎಕ್ಸ್ಚೇಂಜ್ ಸೌಲಭ್ಯವಿದೆಯೇ?</label>
             <select id="prodReturnPolicy" required style="font-weight:bold;">
-              <option value="EXCHANGE_ONLY">ಹೌದು, ಎಕ್ಸ್ಚೇಂಜ್ ಮಾತ್ರ ಇದೆ (Exchange Available)</option>
-              <option value="RETURN_AVAILABLE">ಹೌದು, ರಿಟರ್ನ್ & ಎಕ್ಸ್ಚೇಂಜ್ ಇದೆ (Return & Exchange)</option>
               <option value="NO">ಇಲ್ಲ, ರಿಟರ್ನ್ ಇಲ್ಲ (No Return / Final Sale)</option>
+              <option value="RETURN_AVAILABLE">ಹೌದು, ರಿಟರ್ನ್ ಇದೆ (Return Available)</option>
             </select>
           </div>
 
@@ -363,7 +372,7 @@
           <button type="submit" class="btn btn-success" id="btnUploadProd" style="margin-top:10px;">ಅಪ್ಲೋಡ್ ಮಾಡು</button>
         </form>
 
-        <h3 style="font-size:0.9rem; margin-top:20px;">🖼️ ಅಪ್ಲೋಡ್ ಆಗಿರುವ ಫೋಟೋಗಳು</h3>
+        <h3 style="font-size:0.9rem; margin-top:20px;">🖼️ ಅಪ್ಲೋಡ್ ಆಗಿರುವ ಫೋಟೋಗಳು (ಬೆಲೆ ಬದಲಾಯಿಸಿ / ಡಿಲೀಟ್ ಮಾಡಿ)</h3>
         <div id="shopProductsGrid" class="grid-small"></div>
       </div>
 
@@ -400,6 +409,7 @@
     let currentTab = 'upload';
     let isUserPaidMembership = false;
     let tempGpsCoordinates = "";
+    let currentShopCommissionRate = 0.05; // Default 5%
 
     window.initFirebaseShopApp = function() {
       checkAppLiveStatus();
@@ -436,6 +446,7 @@
         const printModal = document.getElementById('printModal');
         const successModal = document.getElementById('successModal');
         const qrModal = document.getElementById('qrModal');
+        const photoModal = document.getElementById('photoViewerModal');
 
         if (printModal && printModal.style.display === 'flex') {
           closePrintModal();
@@ -445,6 +456,9 @@
           history.pushState({ page: 'main' }, '', '');
         } else if (qrModal && qrModal.style.display === 'flex') {
           closeQrModal();
+          history.pushState({ page: 'main' }, '', '');
+        } else if (photoModal && photoModal.style.display === 'flex') {
+          closePhotoViewer();
           history.pushState({ page: 'main' }, '', '');
         } else if (currentTab !== 'upload') {
           showTab('upload');
@@ -555,6 +569,9 @@
           localStorage.setItem('my_shop_owner_session', JSON.stringify(shopOwner));
           
           isUserPaidMembership = shopOwner.isPaid === true;
+          if (shopOwner.commissionRate !== undefined && shopOwner.commissionRate !== null) {
+            currentShopCommissionRate = Number(shopOwner.commissionRate);
+          }
           updateMembershipBadgeUI();
 
           renderIDCard();
@@ -665,13 +682,6 @@
         renderIDCard();
         alert("✅ ನಿಮ್ಮ ಕ್ಯೂಆರ್ ಕೋಡ್ ಯಶಸ್ವಿಯಾಗಿ ಬದಲಾಯಿಸಲಾಗಿದೆ!");
       } catch(e) { alert("ದೋಷ: " + e.message); }
-    }
-
-    function getShopCommissionRate(shopType) {
-      if (shopType === 'ಮೊಬೈಲ್ ಶಾಪ್' || shopType === 'ಕಿರಾಣಿ ಅಂಗಡಿ') return 0.05;
-      if (shopType === 'ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್') return 0.08;
-      if (shopType === 'ಚಪ್ಪಲಿ ಅಂಗಡಿ' || shopType === 'ಗಿಫ್ಟ್ ಸೆಂಟರ್') return 0.10;
-      return 0.12;
     }
 
     function renderDynamicUploadForm() {
@@ -789,7 +799,8 @@
         gpsCoordinates: tempGpsCoordinates || '',
         photo: photoBase64 || 'https://via.placeholder.com/100',
         qrPhoto: qrBase64,
-        isPaid: false
+        isPaid: false,
+        commissionRate: 0.05
       };
 
       try {
@@ -812,6 +823,9 @@
           shopOwner = docSnap.data();
           localStorage.setItem('my_shop_owner_session', JSON.stringify(shopOwner));
           isUserPaidMembership = shopOwner.isPaid === true;
+          if (shopOwner.commissionRate !== undefined && shopOwner.commissionRate !== null) {
+            currentShopCommissionRate = Number(shopOwner.commissionRate);
+          }
           updateMembershipBadgeUI();
           renderIDCard();
           renderDynamicUploadForm();
@@ -868,6 +882,9 @@
           shopOwner = docSnap.data();
           localStorage.setItem('my_shop_owner_session', JSON.stringify(shopOwner));
           isUserPaidMembership = shopOwner.isPaid === true;
+          if (shopOwner.commissionRate !== undefined && shopOwner.commissionRate !== null) {
+            currentShopCommissionRate = Number(shopOwner.commissionRate);
+          }
           updateMembershipBadgeUI();
           renderIDCard();
         }
@@ -886,7 +903,12 @@
         let orders = [];
         snapshot.forEach(docSnap => {
           const o = docSnap.data();
-          if (o.shopId === shopOwner.id) orders.push({ docId: docSnap.id, ...o });
+          if (o.shopId === shopOwner.id) {
+            let hiddenForShops = o.hiddenForShops || [];
+            if (!hiddenForShops.includes(String(shopOwner.id))) {
+              orders.push({ docId: docSnap.id, ...o });
+            }
+          }
         });
         if (orders.length > previousOrdersCount && previousOrdersCount > 0) playAlarmSound6Times();
         previousOrdersCount = orders.length;
@@ -897,7 +919,7 @@
 
     function renderDashboard(orders) {
       const myOrders = orders;
-      const commRate = getShopCommissionRate(shopOwner.shopType);
+      const commRate = currentShopCommissionRate;
       const commPercentageStr = Math.round(commRate * 100) + '%';
       
       document.getElementById('statEarningsTitle').innerText = `ನಿಮ್ಮ ಶುದ್ಧ ಮೊತ್ತ (${commPercentageStr} ಕಡಿತ)`;
@@ -945,18 +967,22 @@
 
         let generatedOtp = o.pickupOtp || Math.floor(1000 + Math.random() * 9000).toString();
 
+        // ಇಲ್ಲಿ ಆರ್ಡರ್ ಬಂದ ತಕ್ಷಣ ಕನ್ಫರ್ಮ್ ಮತ್ತು ಕ್ಯಾನ್ಸಲ್ ಬಟನ್ ನೀಡಲಾಗಿದೆ
         if (orderStatus === 'STEP_1' || orderStatus === 'PENDING') {
-          // ನೇರವಾಗಿ ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ ಬಟನ್ ಅಥವಾ ಕನ್ಫರ್ಮ್ ಬಟನ್ ಒತ್ತುವ ಸೌಲಭ್ಯ
           actionButtonHTML = `
-            <button onclick="updateOrderStatus('${o.docId}', 'STEP_3', '${generatedOtp}')" class="btn-pack">📦 ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (ಲೋಕಲ್ ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ಕಳಿಸಿ)</button>
+            <div style="display:flex; gap:8px; margin-top:8px;">
+              <button onclick="confirmOrder('${o.docId}')" class="btn-confirm" style="flex:1;">✔ ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಮಾಡಿ</button>
+              <button onclick="cancelOrderForShop('${o.docId}')" class="btn-danger" style="flex:1; padding:8px; border-radius:6px; font-weight:bold; font-size:0.8rem; border:none; cursor:pointer; color:#fff;">❌ ಕ್ಯಾನ್ಸಲ್ ಮಾಡಿ</button>
+            </div>
           `;
         } else if (orderStatus === 'CONFIRMED' || orderStatus === 'STEP_2') {
           actionButtonHTML = `
             <button onclick="openPrintModalForOrder('${o.docId}', '${o.orderId}', '${o.productName}', '${o.itemPrice || o.totalPrice}', '${o.customer?.name}', '${o.customer?.phone}', '${o.customer?.village || o.customer?.address}')" class="btn-print">🖨️ ಪ್ರಿಂಟ್ & ಶೇರ್ ಮಾಡಿ</button>
             <button onclick="updateOrderStatus('${o.docId}', 'STEP_3', '${generatedOtp}')" class="btn-pack" style="margin-top:6px;">📦 ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (ಲೋಕಲ್ ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ಕಳಿಸಿ)</button>
+            <button onclick="cancelOrderForShop('${o.docId}')" class="btn-danger" style="margin-top:6px; padding:8px; border-radius:6px; font-weight:bold; font-size:0.8rem; border:none; cursor:pointer; color:#fff; width:100%;">❌ ಕ್ಯಾನ್ಸಲ್ ಮಾಡಿ</button>
           `;
         } else if (orderStatus === 'STEP_3' || orderStatus === 'DELIVERED' || orderStatus === 'STEP_4') {
-          let commRate = getShopCommissionRate(shopOwner.shopType);
+          let commRate = currentShopCommissionRate;
           let itemPriceVal = Number(o.itemPrice || o.totalPrice || 800);
           let netAmtAfterComm = Math.round(itemPriceVal * (1 - commRate));
 
@@ -979,6 +1005,7 @@
         let itemPriceNum = Number(o.itemPrice || o.totalPrice || 800);
         let deliveryFee = 30; 
         let totalCustomerPrice = itemPriceNum + deliveryFee;
+        let quantityCount = o.quantity || 1;
 
         let distanceKm = o.distanceKm || "1.2 ಕಿ.ಮೀ.";
         let mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(custVillage + ' ' + custTaluk + ' ' + custDistrict)}`;
@@ -996,10 +1023,10 @@
               ${paymentModeBadge}
             </div>
             <div style="display:flex; gap:10px; align-items:center;">
-              <img src="${o.productPhoto}" style="width:65px; height:65px; object-fit:cover; border-radius:6px;">
+              <img src="${o.productPhoto}" style="width:65px; height:65px; object-fit:cover; border-radius:6px; cursor:pointer;" onclick="openPhotoViewerModal('${o.productPhoto}')">
               <div>
                 <h4 style="font-size:0.95rem;">${o.productName} ${o.selectedSize ? `[Size: ${o.selectedSize}]` : ''}</h4>
-                <p style="font-size:0.85rem; color:#2e7d32; font-weight:bold;">₹${itemPriceNum} <span style="font-size:0.7rem; color:#555;">(ವಸ್ತುವಿನ ಬೆಲೆ)</span></p>
+                <p style="font-size:0.85rem; color:#2e7d32; font-weight:bold;">₹${itemPriceNum} <span style="font-size:0.7rem; color:#555;">(ಕ್ವಾಂಟಿಟಿ: ${quantityCount} ಪೀಸ್)</span></p>
                 <p style="font-size:0.75rem; color:#0288d1; font-weight:bold;">ಗ್ರಾಹಕರಿಗೆ ಒಟ್ಟು: ₹${totalCustomerPrice}</p>
               </div>
             </div>
@@ -1017,11 +1044,45 @@
               <a href="${mapsUrl}" target="_blank" class="btn-map-loc">🗺️ ಗೂಗಲ್ ಜಿಪಿಎಸ್ ಲೊಕೇಶನ್</a>
             </div>
 
-            <p style="margin-top:6px; font-size:0.75rem; color:#666;"><b>ಪ್ರಸ್ತುತ ಸ್ಥಿತಿ:</b> ಲೋಕಲ್ ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ತಲುಪಿಸಲಾಗಿದೆ</p>
             ${actionButtonHTML}
           </div>
         `;
       }).join('');
+    }
+
+    async function confirmOrder(orderId) {
+      try {
+        await window.updateDoc(window.doc(window.db, "orders", orderId), { status: 'CONFIRMED' });
+        alert("✅ ಆರ್ಡರ್ ಯಶಸ್ವಿಯಾಗಿ ಕನ್ಫರ್ಮ್ ಮಾಡಲಾಗಿದೆ!");
+      } catch(e) { alert("ದೋಷ: " + e.message); }
+    }
+
+    async function cancelOrderForShop(orderId) {
+      if (confirm("ಈ ಆರ್ಡರ್ ಅನ್ನು ನಿಮ್ಮ ಅಂಗಡಿಯಿಂದ ಕ್ಯಾನ್ಸಲ್ ಮಾಡಲು ಬಯಸುವಿರಾ? (ಇದು ಬೇರೆ ಅಂಗಡಿಗಳಿಗೆ ಮಾತ್ರ ಗೋಚರಿಸುತ್ತದೆ)")) {
+        try {
+          const docRef = window.doc(window.db, "orders", orderId);
+          const docSnap = await window.getDoc(docRef);
+          if (docSnap.exists()) {
+            let data = docSnap.data();
+            let hiddenList = data.hiddenForShops || [];
+            if (!hiddenList.includes(String(shopOwner.id))) {
+              hiddenList.push(String(shopOwner.id));
+            }
+            await window.updateDoc(docRef, { hiddenForShops: hiddenList });
+            alert("✅ ಆರ್ಡರ್ ನಿಮ್ಮ ಪ್ಯಾನಲ್‌ನಿಂದ ಕ್ಯಾನ್ಸಲ್ ಮಾಡಲಾಗಿದೆ!");
+          }
+        } catch(e) { alert("ದೋಷ: " + e.message); }
+      }
+    }
+
+    function openPhotoViewerModal(photoUrl) {
+      document.getElementById('photoSliderContainer').innerHTML = `<img src="${photoUrl}" style="width:100%; max-height:280px; object-fit:contain; border-radius:8px;">`;
+      document.getElementById('photoViewerModal').style.display = 'flex';
+      history.pushState({ page: 'modal' }, '', '');
+    }
+
+    function closePhotoViewer() {
+      document.getElementById('photoViewerModal').style.display = 'none';
     }
 
     function renderReturnsList(orders) {
@@ -1170,11 +1231,34 @@
       const grid = document.getElementById('shopProductsGrid');
       grid.innerHTML = products.map(p => `
         <div class="card-small">
-          <img src="${p.photo}">
+          <img src="${p.photo}" onclick="openPhotoViewerModal('${p.photo}')" title="ಫೋಟೋ ವೀಕ್ಷಿಸಲು ಕ್ಲಿಕ್ ಮಾಡಿ">
           <div class="card-title-small">${p.name}</div>
-          <div style="font-size:0.7rem; color:#2e7d32; font-weight:bold;">₹${p.price}</div>
+          <div style="font-size:0.7rem; color:#2e7d32; font-weight:bold;">₹${p.price} (Qty: ${p.quantity || 1})</div>
+          <div style="display:flex; gap:4px; margin-top:4px;">
+            <button onclick="editProductPrice('${p.docId}', ${p.price})" style="flex:1; background:#0288d1; color:#fff; border:none; padding:3px; border-radius:4px; font-size:0.65rem; font-weight:bold; cursor:pointer;">ಬೆಲೆ ಬದಲಾಯಿಸಿ</button>
+            <button onclick="deleteProductItem('${p.docId}')" style="flex:1; background:#e53935; color:#fff; border:none; padding:3px; border-radius:4px; font-size:0.65rem; font-weight:bold; cursor:pointer;">ಡಿಲೀಟ್</button>
+          </div>
         </div>
       `).join('');
+    }
+
+    async function editProductPrice(docId, currentPrice) {
+      let newPrice = prompt("ಹೊಸ ಬೆಲೆ (Price) ನಮೂದಿಸಿ:", currentPrice);
+      if (newPrice !== null && newPrice.trim() !== "") {
+        try {
+          await window.updateDoc(window.doc(window.db, "products", docId), { price: Number(newPrice) });
+          alert("✅ ವಸ್ತುವಿನ ಬೆಲೆ ಯಶಸ್ವಿಯಾಗಿ ಬದಲಾಯಿಸಲಾಗಿದೆ!");
+        } catch(e) { alert("ದೋಷ: " + e.message); }
+      }
+    }
+
+    async function deleteProductItem(docId) {
+      if (confirm("ಈ ವಸ್ತುವನ್ನು ಸಂಪೂರ್ಣವಾಗಿ ಡಿಲೀಟ್ ಮಾಡಲು ಬಯಸುವಿರಾ?")) {
+        try {
+          await window.deleteDoc(window.doc(window.db, "products", docId));
+          alert("✅ ವಸ್ತು ಡಿಲೀಟ್ ಮಾಡಲಾಗಿದೆ!");
+        } catch(e) { alert("ದೋಷ: " + e.message); }
+      }
     }
   </script>
 </body>
