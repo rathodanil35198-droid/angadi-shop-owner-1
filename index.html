@@ -1018,7 +1018,7 @@
       }
 
       listDiv.innerHTML = orders.map(o => {
-        let orderStatus = o.status || 'STEP_1';
+        let orderStatus = o.status || 'PENDING';
         let actionButtonHTML = '';
         let returnAlertBanner = '';
         let otpDisplayBox = '';
@@ -1031,7 +1031,8 @@
           `;
         }
 
-        if (orderStatus === 'STEP_1' || orderStatus === 'PENDING') {
+        // ಇಲ್ಲಿ ಆರ್ಡರ್ ಬಂದ ತಕ್ಷಣ 'ಕನ್ಫರ್ಮ್' ಬಟನ್ ಬರುವಂತೆ (PENDING ಅಥವಾ ಖಾಲಿ ಇದ್ದರೂ ಸಹ) ಸರಿಪಡಿಸಲಾಗಿದೆ
+        if (orderStatus === 'PENDING' || orderStatus === 'STEP_1' || !o.status || orderStatus === '') {
           actionButtonHTML = `<button onclick="updateOrderStatus('${o.docId}', 'CONFIRMED')" class="btn-confirm">✅ ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಮಾಡಿ</button>`;
         } else if (orderStatus === 'CONFIRMED' || orderStatus === 'STEP_2') {
           let generatedOtp = o.pickupOtp || Math.floor(1000 + Math.random() * 9000).toString();
