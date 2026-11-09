@@ -939,9 +939,8 @@
       document.getElementById('statEarnings').innerText = `₹${netEarnings}`;
       document.getElementById('orderCount').innerText = myOrders.length;
 
-      // Active orders shown here are those not yet packed/dispatched to delivery boy
-      const activeOrders = myOrders.filter(o => o.status !== 'DELIVERED' && o.status !== 'STEP_4' && o.status !== 'RETURN_COMPLETED' && o.status !== 'STEP_3' && o.status !== 'DISPATCHED');
-      const archivedOrders = myOrders.filter(o => o.status === 'DELIVERED' || o.status === 'STEP_4' || o.status === 'RETURN_COMPLETED' || o.status === 'STEP_3' || o.status === 'DISPATCHED');
+      const activeOrders = myOrders.filter(o => o.status !== 'DELIVERED' && o.status !== 'STEP_4' && o.status !== 'RETURN_COMPLETED' && o.status !== 'STEP_3');
+      const archivedOrders = myOrders.filter(o => o.status === 'DELIVERED' || o.status === 'STEP_4' || o.status === 'RETURN_COMPLETED' || o.status === 'STEP_3');
 
       renderOrders(activeOrders);
       renderArchivedOrders(archivedOrders);
@@ -984,18 +983,14 @@
         let distanceKm = o.distanceKm || "1.2 ಕಿ.ಮೀ.";
         let mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(custVillage + ' ' + custTaluk + ' ' + custDistrict)}`;
 
-        // Call and GPS buttons visible only before packing/dispatching
-        if (orderStatus === 'STEP_1' || orderStatus === 'PENDING' || orderStatus === 'CONFIRMED' || orderStatus === 'STEP_2') {
+        if (orderStatus === 'STEP_1' || orderStatus === 'PENDING') {
+          // ಆರ್ಡರ್ ಬಂದ ತಕ್ಷಣ ಕನ್ಫರ್ಮ್ ಮತ್ತು ಕ್ಯಾನ್ಸಲ್ ಬಟನ್ ಕಡ್ಡಾಯವಾಗಿ ಇರುತ್ತದೆ
           callAndMapButtons = `
             <div style="display:flex; gap:6px; margin-top:8px;">
               <a href="tel:${custPhone}" class="btn-call-cust">📞 ಕಾಲ್ ಮಾಡಿ</a>
               <a href="${mapsUrl}" target="_blank" class="btn-map-loc">🗺️ ಗೂಗಲ್ ಜಿಪಿಎಸ್ ಲೊಕೇಶನ್</a>
             </div>
           `;
-        }
-
-        if (orderStatus === 'STEP_1' || orderStatus === 'PENDING') {
-          // ಆರ್ಡರ್ ಬಂದ ತಕ್ಷಣ ಕನ್ಫರ್ಮ್ ಮತ್ತು ಕ್ಯಾನ್ಸಲ್ ಬಟನ್ ಮಾತ್ರ
           actionButtonHTML = `
             <div style="display:flex; gap:8px; margin-top:8px;">
               <button onclick="confirmOrder('${o.docId}')" class="btn-confirm" style="flex:1;">✔ ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಮಾಡಿ</button>
@@ -1003,9 +998,9 @@
             </div>
           `;
         } else if (orderStatus === 'CONFIRMED' || orderStatus === 'STEP_2') {
-          // ಕನ್ಫರ್ಮ್ ಆದ ಮೇಲೆ ಕ್ಯಾನ್ಸಲ್ ಮಾಯವಾಗಿ ಪ್ಯಾಕಿಂಗ್ ಬಟನ್ ಬರುತ್ತದೆ
+          // ಕನ್ಫರ್ಮ್ ಆದ ಮೇಲೆ ಕಾಲ್/ಜಿಪಿಎಸ್ ಮರೆಯಾಗಿ ಪ್ಯಾಕಿಂಗ್ ಬಟನ್ ಬರುತ್ತದೆ
           actionButtonHTML = `
-            <button onclick="openPrintModalForOrder('${o.docId}', '${o.orderId}', '${o.productName}', '${o.itemPrice || o.totalPrice}', '${o.customer?.name}', '${o.customer?.phone}', '${o.customer?.village || o.customer?.address}')" class="btn-print">🖨️ ಪ್ರಿಂಟ್ & ಶೇರ್ ಮಾಡಿ</button>
+            <button onclick="openPrintModalForOrder('${o.docId}', '${o.orderId}', '${o.productName}', '${o.itemPrice || o.totalPrice}', '${o.customer?.name}', '${o.customer?.phone}', '${o.customer?.village || o.customer?.address}', '${o.customer?.taluk || ''}', '${o.customer?.district || ''}', '${o.customer?.pincode || ''}')" class="btn-print">🖨️ ಪ್ರಿಂಟ್ & ಶೇರ್ ಮಾಡಿ</button>
             <button onclick="updateOrderStatus('${o.docId}', 'STEP_3', '${generatedOtp}')" class="btn-pack" style="margin-top:6px;">📦 ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (ಲೋಕಲ್ ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ಕಳಿಸಿ)</button>
           `;
         }
@@ -1133,16 +1128,17 @@
       }).join('') || '<p style="font-size:0.8rem; color:#777;">ಯಾವುದೇ ಪೇಮೆಂಟ್ ಹಿಸ್ಟರಿ ಇಲ್ಲ.</p>';
     }
 
-    function openPrintModalForOrder(docId, orderId, productName, totalPrice, custName, custPhone, custAddress) {
-      // ಮೇಲೆ ಗ್ರಾಹಕರ ವಿವರಗಳು ಹಾಗೂ ಕೆಳಗೆ ಅಂಗಡಿಯ ವಿವರಗಳು ಬರುವಂತೆ ಫಾರ್ಮ್ಯಾಟ್ ಮಾಡಲಾಗಿದೆ
-      currentShareText = `🧾 *ಆರ್ಡರ್ ವಿವರಗಳು*\n\n` +
+    function openPrintModalForOrder(docId, orderId, productName, totalPrice, custName, custPhone, custAddress, custTaluk, custDistrict, custPincode) {
+      // ಪ್ರಿಂಟ್ ಬಾಕ್ಸ್‌ನಲ್ಲಿ ಮೊದಲು ಗ್ರಾಹಕರ ವಿವರಗಳು ಚೌಕಾಕಾರದ ಬಾಕ್ಸ್‌ನಲ್ಲಿ ಮತ್ತು ಕೆಳಗೆ ಅಂಗಡಿಯ ವಿವರಗಳು ಬರುವಂತೆ ಸರಿಪಡಿಸಲಾಗಿದೆ ಹಾಗೂ ಕ್ಯಾಶ್ ಆನ್ ಡೆಲಿವರಿ ಸೇರಿಸಲಾಗಿದೆ
+      currentShareText = `🧾 *ಆರ್ಡರ್ ವಿವರಗಳು (ಕ್ಯಾಶ್ ಆನ್ ಡೆಲಿವರಿ)*\n\n` +
         `👤 *ಗ್ರಾಹಕರ ವಿವರಗಳು:*\n` +
         `• ಹೆಸರು: ${custName} (${custPhone})\n` +
-        `• ವಿಳಾಸ: ${custAddress}\n\n` +
+        `• ವಿಳಾಸ: ${custAddress}, ${custTaluk}, ${custDistrict} - ${custPincode}\n\n` +
         `📦 *ವಸ್ತುವಿನ ವಿವರಗಳು:*\n` +
         `• ಆರ್ಡರ್ ಐಡಿ: ${orderId}\n` +
         `• ವಸ್ತು: ${productName}\n` +
-        `• ಬೆಲೆ: ₹${totalPrice}\n\n` +
+        `• ಬೆಲೆ: ₹${totalPrice}\n` +
+        `• ಪಾವತಿ: ಕ್ಯಾಶ್ ಆನ್ ಡೆಲಿವರಿ\n\n` +
         `🏪 *ಅಂಗಡಿಯ ವಿವರಗಳು:*\n` +
         `• ಅಂಗಡಿ ಹೆಸರು: ${shopOwner.shopName}\n` +
         `• ತಾಲೂಕು: ${shopOwner.taluk}\n` +
@@ -1150,17 +1146,20 @@
         `• ಪಿನ್ ಕೋಡ್: ${shopOwner.pincode}`;
 
       document.getElementById('printModalBody').innerHTML = `
-        <div style="text-align:left; line-height:1.4;">
-          <p style="color:#1565c0; font-weight:bold; margin-bottom:4px;">👤 ಗ್ರಾಹಕರ ವಿವರಗಳು:</p>
+        <div style="background:#e8f5e9; border:1px dashed #2e7d32; border-radius:8px; padding:10px; margin-bottom:10px; text-align:left;">
+          <p style="color:#1b5e20; font-weight:bold; margin-bottom:4px;">💵 ಪಾವತಿ: ಕ್ಯಾಶ್ ಆನ್ ಡೆಲಿವರಿ (Cash on Delivery)</p>
+        </div>
+        <div style="border:2px solid #1e88e5; border-radius:10px; padding:12px; background:#f9f9f9; text-align:left; line-height:1.5;">
+          <p style="color:#1565c0; font-weight:bold; border-bottom:1px solid #ddd; padding-bottom:4px; margin-bottom:6px;">📍 ಗ್ರಾಹಕರ ವಿವರಗಳು:</p>
           <p><b>ಹೆಸರು:</b> ${custName} (${custPhone})</p>
-          <p><b>ವಿಳಾಸ:</b> ${custAddress}</p>
-          <hr style="margin:8px 0; border:0; border-top:1px dashed #ccc;">
-          <p style="color:#2e7d32; font-weight:bold; margin-bottom:4px;">📦 ವಸ್ತುವಿನ ವಿವರಗಳು:</p>
+          <p><b>ವಿಳಾಸ:</b> ${custAddress}, ${custTaluk}, ${custDistrict} - ${custPincode}</p>
+          
+          <p style="color:#2e7d32; font-weight:bold; border-bottom:1px solid #ddd; padding-bottom:4px; margin:10px 0 6px 0;">📦 ವಸ್ತುವಿನ ವಿವರಗಳು:</p>
           <p><b>ಆರ್ಡರ್ ಐಡಿ:</b> ${orderId}</p>
           <p><b>ಪ್ರಾಡಕ್ಟ್:</b> ${productName}</p>
           <p><b>ಬೆಲೆ:</b> ₹${totalPrice}</p>
-          <hr style="margin:8px 0; border:0; border-top:1px dashed #ccc;">
-          <p style="color:#e65100; font-weight:bold; margin-bottom:4px;">🏪 ಅಂಗಡಿಯ ವಿವರಗಳು:</p>
+
+          <p style="color:#e65100; font-weight:bold; border-bottom:1px solid #ddd; padding-bottom:4px; margin:10px 0 6px 0;">🏪 ಅಂಗಡಿಯ ವಿವರಗಳು:</p>
           <p><b>ಅಂಗಡಿ ಹೆಸರು:</b> ${shopOwner.shopName}</p>
           <p><b>ತಾಲೂಕು:</b> ${shopOwner.taluk}</p>
           <p><b>ಜಿಲ್ಲೆ:</b> ${shopOwner.district}</p>
@@ -1176,7 +1175,7 @@
 
     function renderArchivedOrders(orders) {
       const listDiv = document.getElementById('shopArchivedOrdersList');
-      const archived = orders.filter(o => o.status === 'DELIVERED' || o.status === 'STEP_4' || o.status === 'RETURN_COMPLETED' || o.status === 'STEP_3' || o.status === 'DISPATCHED');
+      const archived = orders.filter(o => o.status === 'DELIVERED' || o.status === 'STEP_4' || o.status === 'RETURN_COMPLETED' || o.status === 'STEP_3');
       listDiv.innerHTML = archived.map(o => `
         <div class="order-item archived" style="border-left-color: #ff9800;">
           <p><b>${o.productName}</b> - ₹${o.itemPrice || o.totalPrice}</p>
