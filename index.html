@@ -971,10 +971,10 @@
         const custName = o.customer?.name || 'ಗ್ರಾಹಕರು';
         const custPhone = o.customer?.phone || 'ಸಂಖ್ಯೆ ಇಲ್ಲ';
         const custVillage = o.customer?.village || o.customer?.address || 'ವಿಳಾಸ ಲಭ್ಯವಿಲ್ಲ';
-        const custTaluk = o.customer?.taluk || shopOwner.taluk || '';
-        const custDistrict = o.customer?.district || shopOwner.district || '';
+        const custTaluk = o.customer?.taluk || shopOwner.taluk || 'ಜೇವರ್ಗಿ';
+        const custDistrict = o.customer?.district || shopOwner.district || 'ಕಲಬುರ್ಗಿ';
         const custLandmark = o.customer?.landmark ? ` (ಲ್ಯಾಂಡ್‌ಮಾರ್ಕ್: ${o.customer.landmark})` : '';
-        const custPincode = o.customer?.pincode ? ` - ${o.customer.pincode}` : '';
+        const custPincode = o.customer?.pincode || '585287';
 
         let itemPriceNum = Number(o.itemPrice || o.totalPrice || 800);
         let deliveryFee = 30; 
@@ -984,7 +984,6 @@
         let distanceKm = o.distanceKm || "1.2 ಕಿ.ಮೀ.";
         let mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(custVillage + ' ' + custTaluk + ' ' + custDistrict)}`;
 
-        // ಆರ್ಡರ್ ಬಂದ ತಕ್ಷಣ ಕನ್ಫರ್ಮ್, ಕ್ಯಾನ್ಸಲ್, ಕಾಲ್ ಮತ್ತು ಜಿಪಿಎಸ್ ಬಟನ್‌ಗಳು ಇರುತ್ತವೆ
         if (orderStatus === 'STEP_1' || orderStatus === 'PENDING') {
           callAndMapButtons = `
             <div style="display:flex; gap:6px; margin-top:8px;">
@@ -999,7 +998,6 @@
             </div>
           `;
         } else if (orderStatus === 'CONFIRMED' || orderStatus === 'STEP_2') {
-          // ಕನ್ಫರ್ಮ್ ಆದ ಮೇಲೆ ಕಾಲ್/ಜಿಪಿಎಸ್ ಹಾಗೆಯೇ ಇರುತ್ತದೆ, ಕ್ಯಾನ್ಸಲ್ ಮಾಯವಾಗಿ ಪ್ಯಾಕಿಂಗ್ ಬಟನ್ ಬರುತ್ತದೆ
           callAndMapButtons = `
             <div style="display:flex; gap:6px; margin-top:8px;">
               <a href="tel:${custPhone}" class="btn-call-cust">📞 ಕಾಲ್ ಮಾಡಿ</a>
@@ -1007,11 +1005,10 @@
             </div>
           `;
           actionButtonHTML = `
-            <button onclick="openPrintModalForOrder('${o.docId}', '${o.orderId}', '${o.productName}', '${o.itemPrice || o.totalPrice}', '${o.customer?.name}', '${o.customer?.phone}', '${o.customer?.village || o.customer?.address}', '${o.customer?.taluk || ''}', '${o.customer?.district || ''}', '${o.customer?.pincode || ''}')" class="btn-print">🖨️ ಪ್ರಿಂಟ್ & ಶೇರ್ ಮಾಡಿ</button>
+            <button onclick="openPrintModalForOrder('${o.docId}', '${o.orderId}', '${o.productName}', '${o.itemPrice || o.totalPrice}', '${custName}', '${custPhone}', '${custVillage}', '${custTaluk}', '${custDistrict}', '${custPincode}')" class="btn-print">🖨️ ಪ್ರಿಂಟ್ & ಶೇರ್ ಮಾಡಿ</button>
             <button onclick="updateOrderStatus('${o.docId}', 'STEP_3', '${generatedOtp}')" class="btn-pack" style="margin-top:6px;">📦 ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (ಲೋಕಲ್ ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ಕಳಿಸಿ)</button>
           `;
         } else if (orderStatus === 'STEP_3') {
-          // ಪ್ಯಾಕಿಂಗ್ ಆದ ಮೇಲೆ ಒಟಿಪಿ ಮೇಲೆ ಕಾಣಿಸುತ್ತದೆ, ಕಾಲ್/ಜಿಪಿಎಸ್ ಬಟನ್ ಮಾಯವಾಗುತ್ತದೆ
           topOtpDisplay = `
             <div style="background:#e8f5e9; border:1px solid #81c784; padding:6px 10px; border-radius:6px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
               <span style="font-size:0.75rem; color:#2e7d32; font-weight:bold;">🔑 ಡೆಲಿವರಿ ಒಟಿಪಿ:</span>
@@ -1040,10 +1037,14 @@
             </div>
             
             <div class="cust-address-box">
-              <p style="font-weight:bold; font-size:0.9rem; color:#1b5e20;">📍 ಗ್ರಾಹಕರ ಸಂಪೂರ್ಣ ವಿಳಾಸ & ಜಿಪಿಎಸ್:</p>
+              <p style="font-weight:bold; font-size:0.9rem; color:#1b5e20; border-bottom:1px dashed #2e7d32; padding-bottom:4px; margin-bottom:6px;">📍 ಗ್ರಾಹಕರ ಸಂಪೂರ್ಣ ವಿಳಾಸ ವಿವರಗಳು:</p>
               <p><b>ಹೆಸರು:</b> ${custName}</p>
-              <p><b>ಮೊಬೈಲ್:</b> ${custPhone}</p>
-              <p><b>ಸ್ಥಳ/ತಾಲೂಕು/ಜಿಲ್ಲೆ:</b> ${custVillage}, ${custTaluk}, ${custDistrict}${custLandmark}${custPincode}</p>
+              <p><b>ಮೊಬೈಲ್ ನಂಬರ್:</b> ${custPhone}</p>
+              <p><b>ಊರಿನ ಹೆಸರು:</b> ${custVillage}</p>
+              <p><b>ತಾಲೂಕಿನ ಹೆಸರು:</b> ${custTaluk}</p>
+              <p><b>ಜಿಲ್ಲೆಯ ಹೆಸರು:</b> ${custDistrict}</p>
+              <p><b>ಪಿನ್ ಕೋಡ್:</b> ${custPincode}</p>
+              ${custLandmark ? `<p><b>ಲ್ಯಾಂಡ್‌ಮಾರ್ಕ್:</b> ${custLandmark}</p>` : ''}
               <p style="margin-top:4px; color:#0d47a1; font-weight:bold;">📏 GPS ದೂರ: ${distanceKm}</p>
             </div>
 
@@ -1144,12 +1145,15 @@
       }).join('') || '<p style="font-size:0.8rem; color:#777;">ಯಾವುದೇ ಪೇಮೆಂಟ್ ಹಿಸ್ಟರಿ ಇಲ್ಲ.</p>';
     }
 
-    function openPrintModalForOrder(docId, orderId, productName, totalPrice, custName, custPhone, custAddress, custTaluk, custDistrict, custPincode) {
-      // ಪ್ರಿಂಟ್ ಬಾಕ್ಸ್‌ನಲ್ಲಿ ಮೊದಲು ಕ್ಯಾಶ್ ಆನ್ ಡೆಲಿವರಿ, ನಂತರ ಗ್ರಾಹಕರ ವಿವರಗಳು, ಪ್ರಾಡಕ್ಟ್ ವಿವರಗಳು ಮತ್ತು ಕೆಳಭಾಗದಲ್ಲಿ ಅಂಗಡಿಯ ವಿವರಗಳು ಬರುವಂತೆ ಸರಿಪಡಿಸಲಾಗಿದೆ
+    function openPrintModalForOrder(docId, orderId, productName, totalPrice, custName, custPhone, custVillage, custTaluk, custDistrict, custPincode) {
       currentShareText = `🧾 *ಆರ್ಡರ್ ವಿವರಗಳು (ಕ್ಯಾಶ್ ಆನ್ ಡೆಲಿವರಿ)*\n\n` +
         `👤 *ಗ್ರಾಹಕರ ವಿವರಗಳು:*\n` +
-        `• ಹೆಸರು: ${custName} (${custPhone})\n` +
-        `• ವಿಳಾಸ: ${custAddress}, ${custTaluk}, ${custDistrict} - ${custPincode}\n\n` +
+        `• ಹೆಸರು: ${custName}\n` +
+        `• ಮೊಬೈಲ್ ನಂಬರ್: ${custPhone}\n` +
+        `• ಊರಿನ ಹೆಸರು: ${custVillage}\n` +
+        `• ತಾಲೂಕಿನ ಹೆಸರು: ${custTaluk}\n` +
+        `• ಜಿಲ್ಲೆಯ ಹೆಸರು: ${custDistrict}\n` +
+        `• ಪಿನ್ ಕೋಡ್: ${custPincode}\n\n` +
         `📦 *ವಸ್ತುವಿನ ವಿವರಗಳು:*\n` +
         `• ಆರ್ಡರ್ ಐಡಿ: ${orderId}\n` +
         `• ವಸ್ತು: ${productName}\n` +
@@ -1159,16 +1163,21 @@
         `• ಅಂಗಡಿ ಹೆಸರು: ${shopOwner.shopName}\n` +
         `• ತಾಲೂಕು: ${shopOwner.taluk}\n` +
         `• ಜಿಲ್ಲೆ: ${shopOwner.district}\n` +
-        `• ಪಿನ್ ಕೋಡ್: ${shopOwner.pincode}`;
+        `• ಪಿನ್ ಕೋಡ್: ${shopOwner.pincode}\n` +
+        `• ಮೊಬೈಲ್: ${shopOwner.phone}`;
 
       document.getElementById('printModalBody').innerHTML = `
         <div style="background:#e8f5e9; border:1px dashed #2e7d32; border-radius:8px; padding:10px; margin-bottom:10px; text-align:left;">
           <p style="color:#1b5e20; font-weight:bold; margin-bottom:2px;">💵 ಪಾವತಿ: ಕ್ಯಾಶ್ ಆನ್ ಡೆಲಿವರಿ (Cash on Delivery)</p>
         </div>
-        <div style="border:2px solid #1e88e5; border-radius:10px; padding:12px; background:#f9f9f9; text-align:left; line-height:1.5;">
-          <p style="color:#1565c0; font-weight:bold; border-bottom:1px solid #ddd; padding-bottom:4px; margin-bottom:6px;">📍 ಗ್ರಾಹಕರ ವಿವರಗಳು:</p>
-          <p><b>ಹೆಸರು:</b> ${custName} (${custPhone})</p>
-          <p><b>ವಿಳಾಸ:</b> ${custAddress}, ${custTaluk}, ${custDistrict} - ${custPincode}</p>
+        <div style="border:2px solid #1e88e5; border-radius:10px; padding:12px; background:#f9f9f9; text-align:left; line-height:1.6;">
+          <p style="color:#1565c0; font-weight:bold; border-bottom:1px solid #ddd; padding-bottom:4px; margin-bottom:6px;">📍 ಗ್ರಾಹಕರ ಸಂಪೂರ್ಣ ವಿವರಗಳು:</p>
+          <p><b>ಹೆಸರು:</b> ${custName}</p>
+          <p><b>ಮೊಬೈಲ್ ನಂಬರ್:</b> ${custPhone}</p>
+          <p><b>ಊರಿನ ಹೆಸರು:</b> ${custVillage}</p>
+          <p><b>ತಾಲೂಕಿನ ಹೆಸರು:</b> ${custTaluk}</p>
+          <p><b>ಜಿಲ್ಲೆಯ ಹೆಸರು:</b> ${custDistrict}</p>
+          <p><b>ಪಿನ್ ಕೋಡ್:</b> ${custPincode}</p>
           
           <p style="color:#2e7d32; font-weight:bold; border-bottom:1px solid #ddd; padding-bottom:4px; margin:10px 0 6px 0;">📦 ವಸ್ತುವಿನ ವಿವರಗಳು:</p>
           <p><b>ಆರ್ಡರ್ ಐಡಿ:</b> ${orderId}</p>
@@ -1180,6 +1189,7 @@
           <p><b>ತಾಲೂಕು:</b> ${shopOwner.taluk}</p>
           <p><b>ಜಿಲ್ಲೆ:</b> ${shopOwner.district}</p>
           <p><b>ಪಿನ್ ಕೋಡ್:</b> ${shopOwner.pincode}</p>
+          <p><b>ಮೊಬೈಲ್ ನಂಬರ್:</b> ${shopOwner.phone}</p>
         </div>
       `;
       document.getElementById('printModal').style.display = 'flex';
