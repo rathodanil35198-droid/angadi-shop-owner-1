@@ -216,11 +216,12 @@
     <div id="loginSection" style="background:#f1f8e9; padding:15px; border-radius:10px; border:1px solid #c8e6c9;">
       <h2>🔑 ಹಳೆಯ ಐಡಿ ಪಡೆಯಿರಿ / ಲಾಗಿನ್ ಮಾಡಿ</h2>
       
-      <div style="margin-bottom: 15px; background: #e3f2fd; padding: 12px; border-radius: 8px; border: 1px solid #90caf9;">
-        <label style="font-size:0.9rem; color:#1565c0; font-weight:bold; margin-bottom:6px;">ನಿಮ್ಮ 4-ಡಿಜಿಟ್ ನಂಬರ್ ಐಡಿ ಹಾಕಿ:</label>
-        <div style="display:flex; gap:8px;">
-          <input type="number" id="existingIdInput" placeholder="7368" style="flex:1; padding:16px; font-size:1.6rem; font-weight:bold; text-align:center; border:3px solid #1e88e5; border-radius:10px; letter-spacing:4px;" maxlength="4">
-          <button type="button" class="btn btn-warning" style="padding:10px 22px; font-size:1rem; font-weight:bold;" onclick="loginWithExistingId()">ಲಾಗಿನ್</button>
+      <!-- Fixed ID Input Box Styling -->
+      <div style="margin-bottom: 15px; background: #e3f2fd; padding: 14px; border-radius: 8px; border: 1px solid #90caf9;">
+        <label style="font-size:0.9rem; color:#1565c0; font-weight:bold; margin-bottom:6px; display:block;">ನಿಮ್ಮ 4-ಡಿಜಿಟ್ ನಂಬರ್ ಐಡಿ ಹಾಕಿ:</label>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <input type="number" id="existingIdInput" placeholder="ಉದಾ: 4134" style="flex:1; padding:12px; font-size:1.4rem; font-weight:bold; text-align:center; border:2px solid #1e88e5; border-radius:8px; letter-spacing:3px; background:#fff;" maxlength="4">
+          <button type="button" class="btn btn-warning" style="padding:14px 20px; font-size:1rem; font-weight:bold; width:auto;" onclick="loginWithExistingId()">ಲಾಗಿನ್</button>
         </div>
       </div>
 
@@ -248,24 +249,24 @@
 
         <div class="form-group">
           <label>ಪಿನ್ ಕೋಡ್ (Pin Code):</label>
-          <input type="number" id="pincode" required placeholder="ಉದಾ: 585287" maxlength="6" oninput="fetchPincodeAutoDetails(this.value)">
-          <p style="font-size:0.7rem; color:#2e7d32; margin-top:2px;">💡 ಪಿನ್ ಕೋಡ್ ನಮೂದಿಸಿದ ತಕ್ಷಣ ಜಿಲ್ಲೆ, ತಾಲೂಕು ಮತ್ತು ಊರು ಆಟೋಮ್ಯಾಟಿಕ್ ಆಗಿ ತುಂಬಿಕೊಳ್ಳುತ್ತದೆ.</p>
+          <input type="number" id="pincode" required placeholder="ಉದಾ: 585287" maxlength="6">
         </div>
 
+        <!-- Manual Typing Fields for District, Taluk, Village -->
         <div style="display:flex; gap:10px;">
           <div class="form-group" style="flex:1;">
             <label>ಜಿಲ್ಲೆ (District):</label>
-            <input type="text" id="district" placeholder="ಆಟೋ-ಫೆಚ್ ಜಿಲ್ಲೆ" required readonly style="background:#e8f0fe; font-weight:bold;">
+            <input type="text" id="district" placeholder="ಜಿಲ್ಲೆಯ ಹೆಸರು ಬರೆಯಿರಿ" required style="background:#fff; font-weight:bold;">
           </div>
           <div class="form-group" style="flex:1;">
             <label>ತಾಲೂಕು (Taluk):</label>
-            <input type="text" id="taluk" placeholder="ಆಟೋ-ಫೆಚ್ ತಾಲೂಕು" required readonly style="background:#e8f0fe; font-weight:bold;">
+            <input type="text" id="taluk" placeholder="ತಾಲೂಕು ಹೆಸರು ಬರೆಯಿರಿ" required style="background:#fff; font-weight:bold;">
           </div>
         </div>
 
         <div class="form-group">
           <label>ಊರು / ಪೋಸ್ಟ್ ಆಫೀಸ್ (Village/Area):</label>
-          <input type="text" id="villageArea" placeholder="ಆಟೋ-ಫೆಚ್ ಊರು" readonly style="background:#e8f0fe; font-weight:bold;">
+          <input type="text" id="villageArea" placeholder="ಊರು ಅಥವಾ ಪ್ರದೇಶದ ಹೆಸರು ಬರೆಯಿರಿ" required style="background:#fff; font-weight:bold;">
         </div>
 
         <div class="form-group">
@@ -460,55 +461,6 @@
         }
       });
     });
-
-    const placeTranslations = {
-      "yadgir": { kn: "ಯಾದಗಿರಿ", talukKn: "ಯಾದಗಿರಿ" },
-      "shahapur": { kn: "ಶಹಾಪುರ", talukKn: "ಶಹಾಪುರ" },
-      "surpur": { kn: "ಸುರಪುರ", talukKn: "ಸುರಪುರ" },
-      "shorapur": { kn: "ಸುರಪುರ", talukKn: "ಸುರಪುರ" },
-      "bheemarayanagudi": { kn: "ಭೀಮರಾಯನಗುಡಿ", talukKn: "ಶಹಾಪುರ" },
-      "adilapur": { kn: "ಆದಿಲಾಪೂರ", talukKn: "ಶಹಾಪುರ" },
-      "hathigudur": { kn: "ಹತ್ತಿಗುಡೂರ್", talukKn: "ಶಹಾಪುರ" },
-      "doranahalli": { kn: "ದೋರಣಹಳ್ಳಿ", talukKn: "ಶಹಾಪುರ" },
-      "aikur": { kn: "ಐಕುರ್", talukKn: "ಶಹಾಪುರ" },
-      "anabi": { kn: "ಅನಾಬಿ", talukKn: "ಶಹಾಪುರ" }
-    };
-
-    function translateToKannada(name, type) {
-      if (!name) return "";
-      let key = name.toLowerCase().trim();
-      if (placeTranslations[key]) {
-        return type === 'taluk' ? `${placeTranslations[key].talukKn} (${name})` : `${placeTranslations[key].kn} (${name})`;
-      }
-      return name;
-    }
-
-    async function fetchPincodeAutoDetails(pincode) {
-      if (pincode.length !== 6) return;
-      try {
-        let response = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
-        let data = await response.json();
-        if (data[0].Status === "Success") {
-          let details = data[0].PostOffice[0];
-          
-          let villageEng = details.Name || '';
-          let talukEng = details.Taluk || details.District || '';
-          let distEng = details.District || '';
-
-          if (pincode === '585287' || pincode === '585223' || talukEng.toLowerCase() === 'yadgir') {
-            talukEng = 'Shahapur';
-          }
-
-          document.getElementById('villageArea').value = translateToKannada(villageEng, 'village');
-          document.getElementById('taluk').value = translateToKannada(talukEng, 'taluk');
-          document.getElementById('district').value = translateToKannada(distEng, 'district');
-        } else {
-          alert("ದಯವಿಟ್ಟು ಸರಿಯಾದ 6 ಅಂಕಿಯ ಪಿನ್ ಕೋಡ್ ನಮೂದಿಸಿ.");
-        }
-      } catch (e) {
-        console.log("Pincode fetch error:", e);
-      }
-    }
 
     function fetchCurrentGpsLocation() {
       if (navigator.geolocation) {
@@ -864,17 +816,18 @@
     }
 
     async function loginWithExistingId() {
-      const idVal = document.getElementById('existingIdInput').value.trim();
+      let idVal = document.getElementById('existingIdInput').value.trim();
       if (!idVal) { alert("ದಯವಿಟ್ಟು ನಿಮ್ಮ 4-ಡಿಜಿಟ್ ಐಡಿ ನಮೂದಿಸಿ."); return; }
+      idVal = String(idVal);
 
       try {
-        const deletedDoc = await window.getDoc(window.doc(window.db, "deleted_shops", String(idVal)));
+        const deletedDoc = await window.getDoc(window.doc(window.db, "deleted_shops", idVal));
         if (deletedDoc.exists()) {
           alert("❌ ಈ ಐಡಿಯನ್ನು ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್‌ನಿಂದ ಡಿಲೀಟ್ ಮಾಡಲಾಗಿದೆ.");
           return;
         }
 
-        const docRef = window.doc(window.db, "shop_owners", String(idVal));
+        const docRef = window.doc(window.db, "shop_owners", idVal);
         const docSnap = await window.getDoc(docRef);
 
         if (docSnap.exists()) {
@@ -891,7 +844,7 @@
           startRealtimeSync();
           alert("🎉 ನಿಮ್ಮ ಐಡಿ ಯಶಸ್ವಿಯಾಗಿ ಲಾಗಿನ್ ಆಗಿದೆ!");
         } else {
-          alert("ಈ ಐಡಿಗೆ ಸಂಬಂಧಿಸಿದ ಯಾವುದೇ ಅಂಗಡಿ ಕಂಡುಬಂದಿಲ್ಲ.");
+          alert("ಈ ಐಡಿಗೆ ಸಂಬಂಧಿಸಿದ ಯಾವುದೇ ಅಂಗಡಿ ಕಂಡುಬಂದಿಲ್ಲ. ದಯವಿಟ್ಟು ಸರಿಯಾದ ಐಡಿ ನಮೂದಿಸಿ.");
         }
       } catch (err) { alert("ಲಾಗಿನ್ ದೋಷ: " + err.message); }
     }
@@ -1061,7 +1014,6 @@
         const custPincode = o.customer?.pincode ? ` - ${o.customer.pincode}` : '';
 
         let itemPriceNum = Number(o.basePrice || o.itemPrice || o.totalPrice || 800);
-        let deliveryFee = 0; // ಡೆಲಿವರಿ ಚಾರ್ಜ್ ಪ್ರತ್ಯೇಕವಾಗಿದೆ
         let totalCustomerPrice = o.totalPrice ? Number(o.totalPrice) : (itemPriceNum + 100);
 
         let distanceKm = "3.5 ಕಿ.ಮೀ.";
