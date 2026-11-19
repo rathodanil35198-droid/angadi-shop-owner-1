@@ -136,10 +136,40 @@
       background: #e8f5e9; border: 1px dashed #2e7d32; border-radius: 8px; padding: 10px; margin: 8px 0; font-size: 0.85rem; line-height: 1.4; color: #1b5e20;
     }
 
+    .bill-brand-header {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      background: linear-gradient(135deg, #e3f2fd, #e8f5e9);
+      border: 1px solid #90caf9; border-radius: 8px; padding: 8px 10px; margin-bottom: 10px;
+    }
+    .bill-brand-header img {
+      width: 28px; height: 28px; border-radius: 6px; object-fit: cover; border: 1px solid #1e88e5; background: #fff;
+    }
+    .bill-brand-title {
+      font-size: 0.95rem; font-weight: 800; color: #0d47a1; letter-spacing: 0.3px;
+    }
+
+    .bill-payment-badge {
+      display: inline-block; padding: 3px 8px; border-radius: 5px; font-size: 0.8rem; font-weight: bold;
+      background: #fff3e0; color: #e65100; border: 1px solid #ffcc80; margin: 4px 0;
+    }
+
+    .shop-return-address-box {
+      background: #fff8e1; border: 1px dashed #fb8c00; border-radius: 8px; padding: 10px; margin-top: 10px;
+      font-size: 0.82rem; line-height: 1.45; color: #4e342e;
+    }
+
     .modal { display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); text-align: center; padding: 20px; overflow-y: auto; justify-content: center; align-items: center; }
     .modal-content-box { background: #fff; max-width: 380px; margin: auto; padding: 25px; border-radius: 14px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.4); }
 
     #serverDownOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 99999; display: none; justify-content: center; align-items: center; padding: 20px; text-align: center; color: white; }
+
+    @media print {
+      body { background: #fff; padding: 0; }
+      .support-bar, .container, #serverDownOverlay, #splashScreen, #successModal, #qrModal { display: none !important; }
+      #printModal { position: static !important; display: block !important; background: none !important; padding: 0 !important; }
+      .modal-content-box { box-shadow: none !important; max-width: 100% !important; padding: 10px !important; }
+      .btn-print, .btn-share, #printModal .btn-danger { display: none !important; }
+    }
   </style>
 </head>
 <body>
@@ -207,7 +237,11 @@
 
     <div id="printModal" class="modal">
       <div class="modal-content-box" style="text-align: left; max-width: 400px;">
-        <h3 style="color: var(--primary); text-align: center; margin-bottom: 10px;">🧾 ಆರ್ಡರ್ ಪ್ರಿಂಟ್ & ವಿಳಾಸ ವಿವರಗಳು</h3>
+        <div class="bill-brand-header">
+          <img src="logo.png" alt="Namma Ooru Shahapur" onerror="this.src='https://via.placeholder.com/32/1e88e5/ffffff?text=NO'">
+          <span class="bill-brand-title">ನಮ್ಮ ಊರು ಶಹಾಪುರ</span>
+        </div>
+        <h3 style="color: var(--primary); text-align: center; margin-bottom: 10px; font-size: 0.95rem;">🧾 ಆರ್ಡರ್ ಪ್ರಿಂಟ್ & ವಿಳಾಸ ವಿವರಗಳು</h3>
         <div id="printModalBody" style="font-size: 0.85rem; line-height: 1.5; background: #f8f9fa; padding: 12px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 12px;"></div>
         <button class="btn btn-print" onclick="window.print()">🖨️ ಪ್ರಿಂಟ್ ತೆಗೆದುಕೊಳ್ಳಿ (Print)</button>
         <button class="btn btn-share" style="margin-top: 6px;" onclick="shareOrderDetails()">📤 ಎಲ್ಲರಿಗೂ ಶೇರ್ ಮಾಡಿ (Share)</button>
@@ -964,6 +998,17 @@
       renderPaymentsLedger(myOrders, commRate, commPercentageStr);
     }
 
+    function escapeHtmlAttr(str) {
+      return String(str || '').replace(/'/g, "\\'").replace(/"/g, "&quot;");
+    }
+
+    function getPaymentLabelText(paymentMode) {
+      if (!paymentMode || paymentMode === 'COD' || paymentMode === 'CASH_ON_DELIVERY') {
+        return 'Cash on Delivery (ಕ್ಯಾಶ್ ಆನ್ ಡೆಲಿವರಿ)';
+      }
+      return 'ಆನ್ಲೈನ್ ಪಾವತಿ / UPI (' + paymentMode + ')';
+    }
+
     function renderOrders(orders) {
       const listDiv = document.getElementById('shopOrdersList');
       if (orders.length === 0) {
@@ -985,12 +1030,24 @@
           `;
         }
 
+        const safeOrderId = escapeHtmlAttr(o.orderId || 'OD000000');
+        const safeProdName = escapeHtmlAttr(o.productName || 'ವಸ್ತು');
+        const safeBasePrice = escapeHtmlAttr(o.basePrice || o.itemPrice || o.totalPrice || 0);
+        const safeCustName = escapeHtmlAttr(o.customer?.name || 'ಗ್ರಾಹಕರು');
+        const safeCustPhone = escapeHtmlAttr(o.customer?.phone || '');
+        const safeCustVillage = escapeHtmlAttr(o.customer?.village || o.customer?.address || '');
+        const safeCustTaluk = escapeHtmlAttr(o.customer?.taluk || shopOwner.taluk || '');
+        const safeCustDistrict = escapeHtmlAttr(o.customer?.district || shopOwner.district || '');
+        const safeCustPincode = escapeHtmlAttr(o.customer?.pincode || '');
+        const safeCustLandmark = escapeHtmlAttr(o.customer?.landmark || '');
+        const safePayMode = escapeHtmlAttr(o.paymentMode || 'COD');
+
         if (orderStatus === 'STEP_1' || orderStatus === 'PENDING') {
           actionButtonHTML = `<button onclick="updateOrderStatus('${o.docId}', 'CONFIRMED')" class="btn-confirm">✅ ಆರ್ಡರ್ ಕನ್ಫರ್ಮ್ ಮಾಡಿ</button>`;
         } else if (orderStatus === 'CONFIRMED' || orderStatus === 'STEP_2') {
           let generatedOtp = o.pickupOtp || Math.floor(1000 + Math.random() * 9000).toString();
           actionButtonHTML = `
-            <button onclick="openPrintModalForOrder('${o.docId}', '${o.orderId}', '${o.productName}', '${o.basePrice || o.totalPrice}', '${o.customer?.name}', '${o.customer?.phone}', '${o.customer?.village}', '${o.customer?.taluk}', '${o.customer?.district}', '${o.customer?.pincode}', '${o.customer?.landmark}')" class="btn-print">🖨️ ಪ್ರಿಂಟ್ & ಶೇರ್ ಮಾಡಿ</button>
+            <button onclick="openPrintModalForOrder('${o.docId}', '${safeOrderId}', '${safeProdName}', '${safeBasePrice}', '${safeCustName}', '${safeCustPhone}', '${safeCustVillage}', '${safeCustTaluk}', '${safeCustDistrict}', '${safeCustPincode}', '${safeCustLandmark}', '${safePayMode}')" class="btn-print">🖨️ ಪ್ರಿಂಟ್ & ಶೇರ್ ಮಾಡಿ</button>
             <button onclick="updateOrderStatus('${o.docId}', 'STEP_3', '${generatedOtp}')" class="btn-pack" style="margin-top:6px;">📦 ಪ್ಯಾಕಿಂಗ್ ಆಗಿದೆ (ಡೆಲಿವರಿ ಬಾಯ್‌ಗೆ ಕಳಿಸಿ)</button>
           `;
         } else if (orderStatus === 'STEP_3' || orderStatus === 'DELIVERED' || orderStatus === 'STEP_4') {
@@ -1030,9 +1087,9 @@
 
         let mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(custVillage + ' ' + custTaluk + ' ' + custDistrict)}`;
 
-        let paymentModeBadge = o.paymentMode === 'COD' ? 
-          `<span style="background:#ffebee; color:#c62828; padding:2px 6px; border-radius:4px; font-weight:bold;">💵 ಕ್ಯಾಶ್ ಆನ್ ಡೆಲಿವರಿ (COD)</span>` : 
-          `<span style="background:#e8f5e9; color:#2e7d32; padding:2px 6px; border-radius:4px; font-weight:bold;">🟢 UPI ಸ್ಕ್ಯಾನಿಂಗ್ ಪೇಮೆಂಟ್ (₹${totalCustomerPrice})</span>`;
+        let paymentModeBadge = (o.paymentMode && o.paymentMode !== 'COD' && o.paymentMode !== 'CASH_ON_DELIVERY') ?
+          `<span style="background:#e8f5e9; color:#2e7d32; padding:2px 6px; border-radius:4px; font-weight:bold;">🟢 ಆನ್ಲೈನ್ / UPI ಪೇಮೆಂಟ್ (₹${totalCustomerPrice})</span>` :
+          `<span style="background:#ffebee; color:#c62828; padding:2px 6px; border-radius:4px; font-weight:bold;">💵 Cash on Delivery (ಕ್ಯಾಶ್ ಆನ್ ಡೆಲಿವರಿ)</span>`;
 
         return `
           <div class="order-item ${o.isReturnRequested ? 'return-alert' : ''}">
@@ -1180,30 +1237,81 @@
       }).join('') || '<p style="font-size:0.8rem; color:#777;">ಯಾವುದೇ ಪೇಮೆಂಟ್ ಹಿಸ್ಟರಿ ಇಲ್ಲ.</p>';
     }
 
-    function openPrintModalForOrder(docId, orderId, productName, basePrice, custName, custPhone, custVillage, custTaluk, custDistrict, custPincode, custLandmark) {
-      currentShareText = `🧾 ಆರ್ಡರ್ ಐಡಿ: ${orderId}\n📦 ವಸ್ತು: ${productName}\n💰 ಬೆಲೆ: ₹${basePrice}\n👤 ಗ್ರಾಹಕರು: ${custName} (${custPhone})\n📍 ವಿಳಾಸ: ${custVillage}, ${custTaluk}, ${custDistrict} - ${custPincode}`;
-      
+    function openPrintModalForOrder(docId, orderId, productName, basePrice, custName, custPhone, custVillage, custTaluk, custDistrict, custPincode, custLandmark, paymentMode) {
+      const paymentText = getPaymentLabelText(paymentMode);
+      const shopNameVal = shopOwner?.shopName || 'ಅಂಗಡಿ';
+      const ownerNameVal = shopOwner?.name || 'ಮಾಲೀಕರು';
+      const shopPhoneVal = shopOwner?.phone || 'ಲಭ್ಯವಿಲ್ಲ';
+      const shopDistrictVal = shopOwner?.district || 'ಯಾದಗಿರಿ';
+      const shopTalukVal = shopOwner?.taluk || 'ಶಹಾಪುರ';
+      const shopVillageVal = shopOwner?.villageArea || shopTalukVal;
+      const shopPincodeVal = shopOwner?.pincode || '585287';
+
+      const custDistVal = custDistrict || shopDistrictVal;
+      const custTalVal = custTaluk || shopTalukVal;
+      const custVilVal = custVillage || 'ಗ್ರಾಹಕರ ವಿಳಾಸ';
+      const custPinVal = custPincode || '';
+      const custLandVal = custLandmark ? ` (${custLandmark})` : '';
+
+      currentShareText =
+        `📍 *ನಮ್ಮ ಊರು ಶಹಾಪುರ*\n` +
+        `🧾 ಆರ್ಡರ್ ಐಡಿ: ${orderId}\n` +
+        `💳 ಪಾವತಿ ವಿಧಾನ: *${paymentText}*\n` +
+        `📦 ವಸ್ತು: ${productName}\n` +
+        `💰 ಬೆಲೆ: ₹${basePrice}\n\n` +
+        `👤 *ಗ್ರಾಹಕರ ವಿಳಾಸ:*\n` +
+        `ಹೆಸರು: ${custName}\n` +
+        `ಫೋನ್: ${custPhone}\n` +
+        `ಜಿಲ್ಲೆ: ${custDistVal}, ತಾಲೂಕು: ${custTalVal}\n` +
+        `ಊರು: ${custVilVal}${custLandVal}\n` +
+        `ಪಿನ್ ಕೋಡ್: ${custPinVal}\n\n` +
+        `🏪 *ರಿಟರ್ನ್ / ಅಂಗಡಿ ವಿಳಾಸ (ಕೆಳಗೆ):*\n` +
+        `ಅಂಗಡಿ: ${shopNameVal}\n` +
+        `ಮಾಲೀಕರು: ${ownerNameVal}\n` +
+        `ಮೊಬೈಲ್: ${shopPhoneVal}\n` +
+        `ಜಿಲ್ಲೆ: ${shopDistrictVal}, ತಾಲೂಕು: ${shopTalukVal}\n` +
+        `ಊರು: ${shopVillageVal}, ಪಿನ್ ಕೋಡ್: ${shopPincodeVal}`;
+
       document.getElementById('printModalBody').innerHTML = `
-        <div style="background:#e8f5e9; border:1px solid #c8e6c9; padding:10px; border-radius:6px; margin-bottom:10px;">
-          <p style="font-weight:bold; color:#1b5e20; margin-bottom:4px;">📍 ಗ್ರಾಹಕರ ಸಂಪೂರ್ಣ ವಿಳಾಸ:</p>
+        <div class="cust-address-box" style="margin-top:0;">
+          <p style="font-weight:bold; font-size:0.9rem; color:#1b5e20; margin-bottom:4px;">📍 ಗ್ರಾಹಕರ ಸಂಪೂರ್ಣ ವಿಳಾಸ:</p>
           <p><b>ಹೆಸರು:</b> ${custName}</p>
           <p><b>ಫೋನ್:</b> ${custPhone}</p>
-          <p><b>ಜಿಲ್ಲೆ:</b> ${custDistrict || shopOwner.district}</p>
-          <p><b>ತಾಲೂಕು:</b> ${custTaluk || shopOwner.taluk}</p>
-          <p><b>ಊರು:</b> ${custVillage} ${custLandmark ? '('+custLandmark+')' : ''}</p>
-          <p><b>ಪಿನ್ ಕೋಡ್:</b> ${custPincode || ''}</p>
+          <p><b>ಜಿಲ್ಲೆ:</b> ${custDistVal}</p>
+          <p><b>ತಾಲೂಕು:</b> ${custTalVal}</p>
+          <p><b>ಊರು:</b> ${custVilVal}${custLandVal}</p>
+          <p><b>ಪಿನ್ ಕೋಡ್:</b> ${custPinVal}</p>
         </div>
+
         <p><b>ಆರ್ಡರ್ ಐಡಿ:</b> ${orderId}</p>
         <p><b>ಪ್ರಾಡಕ್ಟ್:</b> ${productName}</p>
-        <p><b>ಅಂಗಡಿ ಹೆಸರು:</b> ${shopOwner.shopName}</p>
         <p><b>ಬೆಲೆ:</b> ₹${basePrice}</p>
+        <div class="bill-payment-badge">💳 ಪಾವತಿ: ${paymentText}</div>
+
+        <div class="shop-return-address-box">
+          <p style="font-weight:bold; font-size:0.88rem; color:#bf360c; margin-bottom:4px;">↩️ ರಿಟರ್ನ್ / ಅಂಗಡಿ ಮಾಲೀಕರ ವಿಳಾಸ:</p>
+          <p><b>ಅಂಗಡಿಯ ಹೆಸರು:</b> ${shopNameVal}</p>
+          <p><b>ಮಾಲೀಕರ ಹೆಸರು:</b> ${ownerNameVal}</p>
+          <p><b>ಮೊಬೈಲ್ ನಂಬರ್:</b> ${shopPhoneVal}</p>
+          <p><b>ಜಿಲ್ಲೆ:</b> ${shopDistrictVal}</p>
+          <p><b>ತಾಲೂಕು:</b> ${shopTalukVal}</p>
+          <p><b>ಊರು:</b> ${shopVillageVal}</p>
+          <p><b>ಪಿನ್ ಕೋಡ್:</b> ${shopPincodeVal}</p>
+        </div>
       `;
       document.getElementById('printModal').style.display = 'flex';
       history.pushState({ page: 'modal' }, '', '');
     }
 
     function closePrintModal() { document.getElementById('printModal').style.display = 'none'; }
-    function shareOrderDetails() { navigator.clipboard.writeText(currentShareText); alert("📋 ವಿವರಗಳು ಕಾಪಿ ಆಗಿವೆ!"); }
+    function shareOrderDetails() {
+      if (navigator.share) {
+        navigator.share({ title: 'ನಮ್ಮ ಊರು ಶಹಾಪುರ - ಆರ್ಡರ್ ವಿವರ', text: currentShareText }).catch(() => {});
+      } else {
+        navigator.clipboard.writeText(currentShareText);
+        alert("📋 ವಿವರಗಳು ಕಾಪಿ ಆಗಿವೆ!");
+      }
+    }
 
     function renderArchivedOrders(orders) {
       const listDiv = document.getElementById('shopArchivedOrdersList');
