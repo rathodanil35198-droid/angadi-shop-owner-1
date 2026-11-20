@@ -96,8 +96,44 @@
 
     h2 { font-size: 1rem; margin-bottom: 10px; color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 5px; }
     .form-group { margin-bottom: 12px; }
-    label { display: block; font-size: 0.8rem; font-weight: 700; margin-bottom: 4px; color: #4a5568; }
+    label { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; font-weight: 700; margin-bottom: 5px; color: #2d3748; }
     input, select { width: 100%; padding: 10px; border: 2px solid #cbd5e0; border-radius: 8px; font-size: 0.9rem; background: #fff; }
+
+    /* ಎಲ್ಲಾ ಆಪ್ಷನ್ಸ್ ಮೇಲೆ ಲೋಗೋ ಬ್ಯಾಡ್ಜ್ ಮತ್ತು ಸುಲಭ ಆಯ್ಕೆ ಚಿಪ್ಸ್ */
+    .opt-logo-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 24px; height: 24px; padding: 0 5px; border-radius: 6px;
+      background: linear-gradient(135deg, #1e88e5, #0d47a1);
+      color: #fff; font-size: 0.78rem; font-weight: 800;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.18); flex-shrink: 0;
+    }
+    .opt-logo-badge.green { background: linear-gradient(135deg, #2e7d32, #1b5e20); }
+    .opt-logo-badge.orange { background: linear-gradient(135deg, #ef6c00, #e65100); }
+    .opt-logo-badge.purple { background: linear-gradient(135deg, #7b1fa2, #4a148c); }
+    .opt-logo-badge.red { background: linear-gradient(135deg, #d32f2f, #b71c1c); }
+
+    .logo-chips-strip {
+      display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px;
+      padding: 6px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;
+    }
+    .option-logo-chip {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 5px 8px; border-radius: 7px; border: 1.5px solid #cbd5e1;
+      background: #fff; color: #1e293b; font-size: 0.72rem; font-weight: 700;
+      cursor: pointer; transition: all 0.15s ease;
+    }
+    .option-logo-chip .chip-mini-logo {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 18px; height: 18px; border-radius: 4px;
+      background: #e3f2fd; color: #0d47a1; font-size: 0.7rem; font-weight: 800;
+    }
+    .option-logo-chip.active {
+      background: #1e88e5; color: #fff; border-color: #0d47a1;
+      box-shadow: 0 2px 6px rgba(30, 136, 229, 0.35);
+    }
+    .option-logo-chip.active .chip-mini-logo {
+      background: #fff; color: #1e88e5;
+    }
 
     .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.95rem; color: white; background: var(--primary); }
     .btn-success { background: var(--success); }
@@ -123,10 +159,25 @@
     .stat-box h4 { font-size: 0.65rem; color: #1565c0; margin-bottom: 2px; }
     .stat-box p { font-size: 0.8rem; font-weight: bold; color: #0d47a1; }
 
-    .grid-small { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; margin-top: 15px; }
-    .card-small { border: 1px solid #e0e0e0; border-radius: 6px; padding: 6px; background: #fff; text-align: center; }
-    .card-small img { width: 100%; height: 70px; object-fit: cover; border-radius: 4px; }
-    .card-title-small { font-size: 0.75rem; font-weight: bold; margin: 4px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    /* ಫೋಟೋ ಕಾರ್ಡ್ + ಸೈಡಿಗೆ ಚಿಕ್ಕ ಕಮೆಂಟ್ + ಡಿಲೀಟ್ & ರೇಟ್ ಕಂಟ್ರೋಲ್ */
+    .grid-small { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; }
+    .card-small { border: 1px solid #e0e0e0; border-radius: 8px; padding: 8px; background: #fff; text-align: left; position: relative; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+    .photo-stage-box { position: relative; width: 100%; height: 105px; border-radius: 6px; overflow: hidden; background: #f8f9fa; border: 1px solid #eee; }
+    .photo-stage-box img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .side-mini-comment {
+      position: absolute; top: 6px; right: 4px; max-width: 72%;
+      background: rgba(0, 0, 0, 0.78); color: #ffe500;
+      font-size: 0.62rem; font-weight: 700; line-height: 1.2;
+      padding: 3px 6px; border-radius: 4px; border-left: 2px solid #ffe500;
+      word-break: break-word; pointer-events: none;
+    }
+    .card-title-small { font-size: 0.78rem; font-weight: bold; margin: 6px 0 2px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #222; }
+    .card-meta-small { font-size: 0.68rem; color: #555; margin-bottom: 4px; }
+    .price-edit-row { display: flex; align-items: center; gap: 4px; margin-top: 5px; }
+    .price-step-btn { padding: 3px 7px; border: 1px solid #1e88e5; background: #e3f2fd; color: #0d47a1; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 0.78rem; }
+    .price-num-input { width: 68px !important; padding: 3px 5px !important; font-size: 0.78rem !important; font-weight: bold !important; text-align: center; border: 1.5px solid #1e88e5 !important; border-radius: 4px !important; }
+    .btn-save-rate { padding: 4px 7px; background: #2e7d32; color: #fff; border: none; border-radius: 4px; font-size: 0.7rem; font-weight: bold; cursor: pointer; }
+    .btn-del-prod { width: 100%; margin-top: 6px; padding: 5px; background: #e53935; color: #fff; border: none; border-radius: 5px; font-size: 0.72rem; font-weight: bold; cursor: pointer; }
 
     .order-item { border-left: 5px solid var(--primary); background: #f9f9f9; padding: 12px; margin-bottom: 12px; border-radius: 6px; font-size: 0.85rem; border: 1px solid #e0e0e0; border-left-width: 5px; }
     .order-item.archived { border-left-color: #9e9e9e; background: #f1f1f1; opacity: 0.85; }
@@ -226,7 +277,7 @@
         <p style="font-size: 0.85rem; color: #555; margin-bottom: 10px;">ಗ್ರಾಹಕರು ಅಥವಾ ಡೆಲಿವರಿ ಬಾಯ್ ಇದನ್ನು ಸ್ಕ್ಯಾನ್ ಮಾಡಿ ಪಾವತಿ ಮಾಡಬಹುದು.</p>
         
         <div style="background:#f1f8e9; padding:10px; border-radius:8px; border:1px solid #c8e6c9; margin-bottom:12px; text-align:left;">
-          <label style="font-size:0.75rem; color:#2e7d32; font-weight:bold;">ಕ್ಯೂರ್ ಕೋಡ್ ಬದಲಾಯಿಸಿ (Change QR Code):</label>
+          <label style="font-size:0.75rem; color:#2e7d32; font-weight:bold;"><span class="opt-logo-badge green">QR</span> ಕ್ಯೂರ್ ಕೋಡ್ ಬದಲಾಯಿಸಿ (Change QR Code):</label>
           <input type="file" id="changeQrFileInput" accept="image/*" style="font-size:0.8rem; margin-top:4px; width:100%;">
           <button class="btn btn-success" style="padding:6px; font-size:0.8rem; margin-top:6px;" onclick="updateShopQrCode()">🔄 ಕ್ಯೂಆರ್ ಕೋಡ್ ಬದಲಾಯಿಸಿ</button>
         </div>
@@ -253,9 +304,8 @@
     <div id="loginSection" style="background:#f1f8e9; padding:15px; border-radius:10px; border:1px solid #c8e6c9;">
       <h2>🔑 ಹಳೆಯ ಐಡಿ ಪಡೆಯಿರಿ / ಲಾಗಿನ್ ಮಾಡಿ</h2>
       
-      <!-- Fixed ID Input Box Styling -->
       <div style="margin-bottom: 15px; background: #e3f2fd; padding: 14px; border-radius: 8px; border: 1px solid #90caf9;">
-        <label style="font-size:0.9rem; color:#1565c0; font-weight:bold; margin-bottom:6px; display:block;">ನಿಮ್ಮ 4-ಡಿಜಿಟ್ ನಂಬರ್ ಐಡಿ ಹಾಕಿ:</label>
+        <label style="font-size:0.9rem; color:#1565c0; font-weight:bold; margin-bottom:6px;"><span class="opt-logo-badge">ID</span> ನಿಮ್ಮ 4-ಡಿಜಿಟ್ ನಂಬರ್ ಐಡಿ ಹಾಕಿ:</label>
         <div style="display:flex; gap:10px; align-items:center;">
           <input type="number" id="existingIdInput" placeholder="ಉದಾ: 4134" style="flex:1; padding:12px; font-size:1.4rem; font-weight:bold; text-align:center; border:2px solid #1e88e5; border-radius:8px; letter-spacing:3px; background:#fff;" maxlength="4">
           <button type="button" class="btn btn-warning" style="padding:14px 20px; font-size:1rem; font-weight:bold; width:auto;" onclick="loginWithExistingId()">ಲಾಗಿನ್</button>
@@ -264,45 +314,45 @@
 
       <hr style="margin: 15px 0; border:0; border-top:1px solid #c8e6c9;">
 
-      <h2 style="font-size:0.95rem;">📝 ಹೊಸ ಅಂಗಡಿ ನೋಂದಣಿ (5-6 ಜಿಲ್ಲೆಗಳು & 20+ ತಾಲೂಕುಗಳು)</h2>
+      <h2 style="font-size:0.95rem;">📝 ಹೊಸ ಅಂಗಡಿ ನೋಂದಣಿ</h2>
       <form onsubmit="registerShopOwner(event)">
-        <div class="form-group"><label>ಅಂಗಡಿ ಮಾಲೀಕರ ಹೆಸರು:</label><input type="text" id="ownerName" required placeholder="ನಿಮ್ಮ ಹೆಸರು"></div>
-        <div class="form-group"><label>ಮೊಬೈಲ್ ನಂಬರ್:</label><input type="tel" id="ownerPhone" required placeholder="ಮೊಬೈಲ್ ಸಂಖ್ಯೆ"></div>
-        <div class="form-group"><label>ಅಂಗಡಿಯ ಹೆಸರು:</label><input type="text" id="shopName" required placeholder="ಉದಾ: ಶ್ರೀ ಸೇವಾಲಾಲ್ ಸ್ಟೋರ್ಸ್"></div>
+        <div class="form-group"><label><span class="opt-logo-badge">👤</span> ಅಂಗಡಿ ಮಾಲೀಕರ ಹೆಸರು:</label><input type="text" id="ownerName" required placeholder="ನಿಮ್ಮ ಹೆಸರು"></div>
+        <div class="form-group"><label><span class="opt-logo-badge green">📞</span> ಮೊಬೈಲ್ ನಂಬರ್:</label><input type="tel" id="ownerPhone" required placeholder="ಮೊಬೈಲ್ ಸಂಖ್ಯೆ"></div>
+        <div class="form-group"><label><span class="opt-logo-badge orange">🏪</span> ಅಂಗಡಿಯ ಹೆಸರು:</label><input type="text" id="shopName" required placeholder="ಉದಾ: ಶ್ರೀ ಸೇವಾಲಾಲ್ ಸ್ಟೋರ್ಸ್"></div>
         
         <div class="form-group">
-          <label>ಅಂಗಡಿಯ ಪ್ರಕಾರ (ವಿಭಾಗ):</label>
-          <select id="shopType" required onchange="renderDynamicUploadForm()">
+          <label><span class="opt-logo-badge purple">🏷️</span> ಅಂಗಡಿಯ ಪ್ರಕಾರ (ವಿಭಾಗ):</label>
+          <select id="shopType" required onchange="renderDynamicUploadForm(); syncShopTypeChips();">
             <option value="">-- ಆಯ್ಕೆಮಾಡಿ --</option>
-            <option value="ಮೊಬೈಲ್ ಶಾಪ್">ಮೊಬೈಲ್ ಶಾಪ್ (Mobile Shop - 5%)</option>
-            <option value="ಬಟ್ಟೆ ಅಂಗಡಿ">ಬಟ್ಟೆ ಅಂಗಡಿ (Clothes - 12%)</option>
-            <option value="ಚಪ್ಪಲಿ ಅಂಗಡಿ">ಚಪ್ಪಲಿ ಅಂಗಡಿ (Footwear - 10%)</option>
-            <option value="ಕಿರಾಣಿ ಅಂಗಡಿ">ಕಿರಾಣಿ ಅಂಗಡಿ (Grocery - 5%)</option>
-            <option value="ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್">ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್ (Electronics - 8%)</option>
-            <option value="ಗಿಫ್ಟ್ ಸೆಂಟರ್">ಗಿಫ್ಟ್ ಸೆಂಟರ್ (Gift Shop - 10%)</option>
-            <option value="ಇತರ ಅಂಗಡಿ">ಇತರ ಅಂಗಡಿ (Other - 12%)</option>
+            <option value="ಮೊಬೈಲ್ ಶಾಪ್">📱 ಮೊಬೈಲ್ ಶಾಪ್ (Mobile Shop - 5%)</option>
+            <option value="ಬಟ್ಟೆ ಅಂಗಡಿ">👔 ಬಟ್ಟೆ ಅಂಗಡಿ (Clothes - 12%)</option>
+            <option value="ಚಪ್ಪಲಿ ಅಂಗಡಿ">👟 ಚಪ್ಪಲಿ ಅಂಗಡಿ (Footwear - 10%)</option>
+            <option value="ಕಿರಾಣಿ ಅಂಗಡಿ">🛒 ಕಿರಾಣಿ ಅಂಗಡಿ (Grocery - 5%)</option>
+            <option value="ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್">⚡ ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್ (Electronics - 8%)</option>
+            <option value="ಗಿಫ್ಟ್ ಸೆಂಟರ್">🎁 ಗಿಫ್ಟ್ ಸೆಂಟರ್ (Gift Shop - 10%)</option>
+            <option value="ಇತರ ಅಂಗಡಿ">🏬 ಇತರ ಅಂಗಡಿ (Other - 12%)</option>
           </select>
+          <div id="shopTypeLogoChips" class="logo-chips-strip"></div>
         </div>
 
         <div class="form-group">
-          <label>ಪಿನ್ ಕೋಡ್ (Pin Code):</label>
+          <label><span class="opt-logo-badge">📮</span> ಪಿನ್ ಕೋಡ್ (Pin Code):</label>
           <input type="number" id="pincode" required placeholder="ಉದಾ: 585287" maxlength="6">
         </div>
 
-        <!-- Manual Typing Fields for District, Taluk, Village -->
         <div style="display:flex; gap:10px;">
           <div class="form-group" style="flex:1;">
-            <label>ಜಿಲ್ಲೆ (District):</label>
+            <label><span class="opt-logo-badge green">🏛️</span> ಜಿಲ್ಲೆ (District):</label>
             <input type="text" id="district" placeholder="ಜಿಲ್ಲೆಯ ಹೆಸರು ಬರೆಯಿರಿ" required style="background:#fff; font-weight:bold;">
           </div>
           <div class="form-group" style="flex:1;">
-            <label>ತಾಲೂಕು (Taluk):</label>
+            <label><span class="opt-logo-badge orange">🗺️</span> ತಾಲೂಕು (Taluk):</label>
             <input type="text" id="taluk" placeholder="ತಾಲೂಕು ಹೆಸರು ಬರೆಯಿರಿ" required style="background:#fff; font-weight:bold;">
           </div>
         </div>
 
         <div class="form-group">
-          <label>ಊರು / ಪೋಸ್ಟ್ ಆಫೀಸ್ (Village/Area):</label>
+          <label><span class="opt-logo-badge purple">🏡</span> ಊರು / ಪೋಸ್ಟ್ ಆಫೀಸ್ (Village/Area):</label>
           <input type="text" id="villageArea" placeholder="ಊರು ಅಥವಾ ಪ್ರದೇಶದ ಹೆಸರು ಬರೆಯಿರಿ" required style="background:#fff; font-weight:bold;">
         </div>
 
@@ -312,14 +362,13 @@
         </div>
 
         <div class="form-group">
-          <label>ಅಂಗಡಿಯ ಮುಂಭಾಗದ ಫೋಟೋ:</label>
+          <label><span class="opt-logo-badge">🖼️</span> ಅಂಗಡಿಯ ಮುಂಭಾಗದ ಫೋಟೋ:</label>
           <input type="file" accept="image/*" id="shopPhotoFile">
         </div>
 
         <div class="form-group" style="background:#fff3e0; padding:10px; border-radius:8px; border:1px solid #ffe0b2;">
-          <label style="color:#e65100;">💳 ನಿಮ್ಮ ಯುಪಿಐ ಕ್ಯೂಆರ್ ಕೋಡ್ (UPI QR Code) ಫೋಟೋ ಹಾಕಿ (ಕಡ್ಡಾಯ):</label>
+          <label style="color:#e65100;"><span class="opt-logo-badge red">QR</span> ನಿಮ್ಮ ಯುಪಿಐ ಕ್ಯೂಆರ್ ಕೋಡ್ (UPI QR Code) ಫೋಟೋ ಹಾಕಿ (ಕಡ್ಡಾಯ):</label>
           <input type="file" accept="image/*" id="shopQrFile" required>
-          <p style="font-size:0.75rem; color:#666; margin-top:4px;">(ಈ ಕ್ಯೂಆರ್ ಕೋಡ್ ಎಂದಿಗೂ ಮಾಯವಾಗುವುದಿಲ್ಲ, ಶಾಶ್ವತವಾಗಿ ಸೇವ್ ಆಗಿರುತ್ತದೆ)</p>
         </div>
 
         <button type="submit" class="btn btn-success" id="btnLogin">ಹೊಸ ಖಾತೆ ಪಡೆದುಕೊಳ್ಳಿ (Permanent Account)</button>
@@ -336,7 +385,7 @@
           <p>ಸ್ಥಳ: <span id="displayLocation"></span> | Pin: <span id="displayPincode"></span></p>
           <div style="display:flex; align-items:center; gap:8px; margin-top:4px;">
             <div class="id-number">ID: <span id="displayId">0000</span></div>
-            <div id="smallQrContainer" style="cursor:pointer;" onclick="openBigQrModal()" title="ಕ್ಯೂರ್ ಕೋಡ್ ದೊಡ್ಡದಾಗಿ ನೋಡಲು ಅಥವಾ ಬದಲಾಯಿಸಲು ಕ್ಲಿಕ್ ಮಾಡಿ">
+            <div id="smallQrContainer" style="cursor:pointer;" onclick="openBigQrModal()">
               <img id="displaySmallQr" src="" style="width:36px; height:36px; object-fit:contain; border-radius:4px; border:1.5px solid #fff; background:#fff; display:none;" alt="QR">
             </div>
           </div>
@@ -344,7 +393,6 @@
         </div>
       </div>
 
-      <!-- Membership & Upload Restriction Banner -->
       <div id="membershipBadgeDiv" class="membership-badge">
         <span id="membershipStatusText">ಲೋಡ್ ಆಗುತ್ತಿದೆ...</span>
       </div>
@@ -373,23 +421,29 @@
 
       <!-- ಫೋಟೋ ಅಪ್ಲೋಡ್ -->
       <div id="tabUpload" style="background:#fff; padding:15px; border-radius:10px; border:1px solid #cbd5e0;">
-        <h2>➕ ಹೊಸ ವಸ್ತುವಿನ ವಿವರಗಳು & ರಿಟರ್ನ್/ಎಕ್ಸ್ಚೇಂಜ್ ಆಯ್ಕೆ</h2>
+        <h2>➕ ಹೊಸ ವಸ್ತುವಿನ ವಿವರಗಳು & ಆಟೋ ಸೈಜ್ ಸಿಸ್ಟಮ್</h2>
 
         <form id="addProductForm" onsubmit="saveProduct(event)">
           <div id="dynamicUploadFormFields"></div>
+
+          <div class="form-group" style="background:#e8f5e9; padding:10px; border-radius:8px; border:1px solid #a5d6a7; margin-top:10px;">
+            <label style="color:#1b5e20;"><span class="opt-logo-badge green">💬</span> ಫೋಟೋ ಮೇಲೆ ಕಾಣುವ ಕಿರು ಕಮೆಂಟ್ / ನೋಟ್ (ಸೈಡಿಗೆ ಚಿಕ್ಕದಾಗಿ ಕಾಣುತ್ತದೆ):</label>
+            <input type="text" id="prodSideComment" maxlength="45" placeholder="ಉದಾ: ಸೂಪರ್ ಕ್ವಾಲಿಟಿ / ಹೊಸ ಸ್ಟಾಕ್ / ಫಾಸ್ಟ್">
+          </div>
           
           <div class="form-group" style="background:#fff3e0; padding:10px; border-radius:8px; border:1px solid #ffe0b2; margin-top:10px;">
-            <label style="color:#d32f2f;">🔄 ಈ ವಸ್ತುವಿಗೆ ರಿಟರ್ನ್ / ಎಕ್ಸ್ಚೇಂಜ್ ಸೌಲಭ್ಯವಿದೆಯೇ?</label>
-            <select id="prodReturnPolicy" required style="font-weight:bold;">
-              <option value="EXCHANGE_ONLY">ಹೌದು, ಎಕ್ಸ್ಚೇಂಜ್ ಮಾತ್ರ ಇದೆ (Exchange Available)</option>
-              <option value="RETURN_AVAILABLE">ಹೌದು, ರಿಟರ್ನ್ & ಎಕ್ಸ್ಚೇಂಜ್ ಇದೆ (Return & Exchange)</option>
-              <option value="NO">ಇಲ್ಲ, ರಿಟರ್ನ್ ಇಲ್ಲ (No Return / Final Sale)</option>
+            <label style="color:#d32f2f;"><span class="opt-logo-badge red">🔄</span> ಈ ವಸ್ತುವಿಗೆ ರಿಟರ್ನ್ / ಎಕ್ಸ್ಚೇಂಜ್ ಸೌಲಭ್ಯವಿದೆಯೇ?</label>
+            <select id="prodReturnPolicy" required style="font-weight:bold;" onchange="syncReturnPolicyChips()">
+              <option value="EXCHANGE_ONLY">🔁 ಹೌದು, ಎಕ್ಸ್ಚೇಂಜ್ ಮಾತ್ರ ಇದೆ (Exchange Available)</option>
+              <option value="RETURN_AVAILABLE">↩️ ಹೌದು, ರಿಟರ್ನ್ & ಎಕ್ಸ್ಚೇಂಜ್ ಇದೆ (Return & Exchange)</option>
+              <option value="NO">🚫 ಇಲ್ಲ, ರಿಟರ್ನ್ ಇಲ್ಲ (No Return / Final Sale)</option>
             </select>
+            <div id="returnPolicyLogoChips" class="logo-chips-strip"></div>
           </div>
 
           <div class="form-group" style="margin-top:10px;">
-            <label>ಲಭ್ಯವಿರುವ ಪ್ರಮಾಣ (Quantity - 1 ರಿಂದ 10):</label>
-            <select id="prodQuantity" required>
+            <label><span class="opt-logo-badge orange">📦</span> ಲಭ್ಯವಿರುವ ಪ್ರಮಾಣ (Quantity - 1 ರಿಂದ 10):</label>
+            <select id="prodQuantity" required onchange="syncQtyChips()">
               <option value="1">1 ಪೀಸ್</option>
               <option value="2">2 ಪೀಸ್‌ಗಳು</option>
               <option value="3">3 ಪೀಸ್‌ಗಳು</option>
@@ -401,18 +455,19 @@
               <option value="9">9 ಪೀಸ್‌ಗಳು</option>
               <option value="10">10 ಪೀಸ್‌ಗಳು</option>
             </select>
+            <div id="qtyLogoChips" class="logo-chips-strip"></div>
           </div>
 
           <button type="submit" class="btn btn-success" id="btnUploadProd" style="margin-top:10px;">ಅಪ್ಲೋಡ್ ಮಾಡು</button>
         </form>
 
-        <h3 style="font-size:0.9rem; margin-top:20px;">🖼️ ಅಪ್ಲೋಡ್ ಆಗಿರುವ ಫೋಟೋಗಳು</h3>
+        <h3 style="font-size:0.9rem; margin-top:20px;">🖼️ ಅಪ್ಲೋಡ್ ಆಗಿರುವ ಫೋಟೋಗಳು (ರೇಟ್ ಬದಲಾಯಿಸಿ / ಡಿಲೀಟ್ ಮಾಡಿ)</h3>
         <div id="shopProductsGrid" class="grid-small"></div>
       </div>
 
       <!-- ಆರ್ಡರ್‌ಗಳು -->
       <div id="tabOrders" style="display:none; background:#fff; padding:15px; border-radius:10px; border:1px solid #cbd5e0;">
-        <h2>📦 ಪ್ರಸ್ತುತ ಹೊಸ ಆರ್ಡರ್‌ಗಳು (ನಿಮ್ಮ ಅಂಗಡಿಗೆ ಬಂದವುಗಳು ಮಾತ್ರ)</h2>
+        <h2>📦 ಪ್ರಸ್ತುತ ಹೊಸ ಆರ್ಡರ್‌ಗಳು</h2>
         <div id="shopOrdersList" style="margin-top:10px;"></div>
 
         <h2 style="margin-top:20px; color:#555;">🔒 ಹಳೆಯ ಪೂರ್ಣಗೊಂಡ ಆರ್ಡರ್‌ಗಳು (History)</h2>
@@ -428,7 +483,7 @@
 
       <!-- ಪೇಮೆಂಟ್ಸ್ -->
       <div id="tabPayments" style="display:none; background:#fff; padding:15px; border-radius:10px; border:1px solid #cbd5e0;">
-        <h2>💳 ಪೇಮೆಂಟ್ಸ್ ಮತ್ತು ಲೆಕ್ಕಾಚಾರ (ಕಮಿಷನ್ ಕಟ್ ಆಗಿ, ಡೆಲಿವರಿ ಚಾರ್ಜ್ ಹೊರತುಪಡಿಸಿ)</h2>
+        <h2>💳 ಪೇಮೆಂಟ್ಸ್ ಮತ್ತು ಲೆಕ್ಕಾಚಾರ</h2>
         <div id="paymentLedgerSummary" style="background:#e3f2fd; padding:12px; border-radius:8px; margin-bottom:15px; font-size:0.85rem;"></div>
         <div id="shopPaymentsList" style="margin-top:10px;"></div>
       </div>
@@ -445,8 +500,72 @@
     let isUserPaidMembership = false;
     let tempGpsCoordinates = "";
 
+    /* ಲೋಗೋ ಸಹಿತ ಚಿಪ್ಸ್ ರೆಂಡರ್ & ಸಿಂಕ್ ಹೆಲ್ಪರ್ */
+    function renderLogoChips(containerId, selectId, items, onAfterSelect) {
+      const box = document.getElementById(containerId);
+      const sel = document.getElementById(selectId);
+      if (!box || !sel) return;
+      const curVal = sel.value;
+      box.innerHTML = items.map(it => {
+        const active = (it.value === curVal) ? 'active' : '';
+        return `
+          <button type="button" class="option-logo-chip ${active}" onclick="pickLogoChip('${selectId}', '${escapeHtmlAttr(it.value)}', '${containerId}', ${onAfterSelect ? onAfterSelect : 'null'})">
+            <span class="chip-mini-logo">${it.logo}</span>
+            <span>${it.label}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    window.pickLogoChip = function(selectId, val, containerId, callbackFn) {
+      const sel = document.getElementById(selectId);
+      if (!sel) return;
+      sel.value = val;
+      sel.dispatchEvent(new Event('change'));
+      const box = document.getElementById(containerId);
+      if (box) {
+        box.querySelectorAll('.option-logo-chip').forEach(btn => {
+          btn.classList.remove('active');
+        });
+        const clicked = Array.from(box.querySelectorAll('.option-logo-chip')).find(b => b.getAttribute('onclick')?.includes(`'${val.replace(/'/g, "\\'")}'`));
+        if (clicked) clicked.classList.add('active');
+      }
+      if (typeof callbackFn === 'function') callbackFn();
+    };
+
+    function syncShopTypeChips() {
+      renderLogoChips('shopTypeLogoChips', 'shopType', [
+        { logo: '📱', label: 'ಮೊಬೈಲ್', value: 'ಮೊಬೈಲ್ ಶಾಪ್' },
+        { logo: '👔', label: 'ಬಟ್ಟೆ', value: 'ಬಟ್ಟೆ ಅಂಗಡಿ' },
+        { logo: '👟', label: 'ಚಪ್ಪಲಿ', value: 'ಚಪ್ಪಲಿ ಅಂಗಡಿ' },
+        { logo: '🛒', label: 'ಕಿರಾಣಿ', value: 'ಕಿರಾಣಿ ಅಂಗಡಿ' },
+        { logo: '⚡', label: 'ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್', value: 'ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್' },
+        { logo: '🎁', label: 'ಗಿಫ್ಟ್', value: 'ಗಿಫ್ಟ್ ಸೆಂಟರ್' },
+        { logo: '🏬', label: 'ಇತರ', value: 'ಇತರ ಅಂಗಡಿ' }
+      ]);
+    }
+
+    function syncReturnPolicyChips() {
+      renderLogoChips('returnPolicyLogoChips', 'prodReturnPolicy', [
+        { logo: '🔁', label: 'ಎಕ್ಸ್ಚೇಂಜ್ ಮಾತ್ರ', value: 'EXCHANGE_ONLY' },
+        { logo: '↩️', label: 'ರಿಟರ್ನ್ & ಎಕ್ಸ್ಚೇಂಜ್', value: 'RETURN_AVAILABLE' },
+        { logo: '🚫', label: 'ರಿಟರ್ನ್ ಇಲ್ಲ', value: 'NO' }
+      ]);
+    }
+
+    function syncQtyChips() {
+      const qItems = [];
+      for (let q = 1; q <= 10; q++) {
+        qItems.push({ logo: q + 'x', label: q + ' ಪೀಸ್', value: String(q) });
+      }
+      renderLogoChips('qtyLogoChips', 'prodQuantity', qItems);
+    }
+
     window.initFirebaseShopApp = function() {
       checkAppLiveStatus();
+      syncShopTypeChips();
+      syncReturnPolicyChips();
+      syncQtyChips();
       setTimeout(() => {
         const splash = document.getElementById('splashScreen');
         if(splash) {
@@ -463,6 +582,10 @@
     };
 
     window.addEventListener('DOMContentLoaded', () => {
+      syncShopTypeChips();
+      syncReturnPolicyChips();
+      syncQtyChips();
+
       window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
@@ -677,118 +800,530 @@
     }
 
     function getShopCommissionRate(shopType) {
-      if (shopType === 'ಮೊಬೈಲ್ ಶಾಪ್' || shopType === 'ಕಿರಾಣಿ ಅಂಗಡಿ') return 0.05; // 5%
-      if (shopType === 'ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್') return 0.08; // 8%
-      if (shopType === 'ಚಪ್ಪಲಿ ಅಂಗಡಿ' || shopType === 'ಗಿಫ್ಟ್ ಸೆಂಟರ್') return 0.10; // 10%
-      return 0.12; // ಬಟ್ಟೆ ಅಂಗಡಿ & ಇತರ ಅಂಗಡಿಗಳಿಗೆ 12%
+      if (shopType === 'ಮೊಬೈಲ್ ಶಾಪ್' || shopType === 'ಕಿರಾಣಿ ಅಂಗಡಿ') return 0.05;
+      if (shopType === 'ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್') return 0.08;
+      if (shopType === 'ಚಪ್ಪಲಿ ಅಂಗಡಿ' || shopType === 'ಗಿಫ್ಟ್ ಸೆಂಟರ್') return 0.10;
+      return 0.12;
     }
 
+    /* ಎಲ್ಲಾ ಆಪ್ಷನ್ಸ್ ಮೇಲೆ ಲೋಗೋ ಸಹಿತ ಆಟೋಮೆಟಿಕ್ ಫಾರ್ಮ್ */
     function renderDynamicUploadForm() {
       const container = document.getElementById('dynamicUploadFormFields');
       const shopTypeSelect = document.getElementById('shopType');
       const currentShopType = shopOwner ? shopOwner.shopType : (shopTypeSelect ? shopTypeSelect.value : '');
 
       let specificFields = '';
+
       if (currentShopType === 'ಮೊಬೈಲ್ ಶಾಪ್') {
         specificFields = `
-          <div class="form-group"><label>ಮೊಬೈಲ್ ಹೆಸರು ಮತ್ತು ಮಾಡೆಲ್:</label><input type="text" id="mobModel" required placeholder="ಉದಾ: Vivo T5x 5G / Redmi Note 13"></div>
+          <div class="form-group">
+            <label><span class="opt-logo-badge">📱</span> ಮೊಬೈಲ್ ಕಂಪನಿ ಆಯ್ಕೆಮಾಡಿ (10 ಕಂಪನಿ ಲೋಗೋಗಳು):</label>
+            <select id="mobBrand" required onchange="syncMobBrandChips()">
+              <option value="Samsung">Samsung (ಸ್ಯಾಮ್‌ಸಂಗ್)</option>
+              <option value="Vivo">Vivo (ವಿವೋ)</option>
+              <option value="Redmi / Xiaomi">Redmi / Xiaomi (ರೆಡ್‌ಮಿ)</option>
+              <option value="Realme">Realme (ರಿಯಲ್‌ಮಿ)</option>
+              <option value="Oppo">Oppo (ಒಪ್ಪೋ)</option>
+              <option value="OnePlus">OnePlus (ಒನ್‌ಪ್ಲಸ್)</option>
+              <option value="iQOO">iQOO (ಐಕ್ಯೂ)</option>
+              <option value="Poco">Poco (ಪೋಕೋ)</option>
+              <option value="Motorola">Motorola (ಮೊಟೊರೊಲಾ)</option>
+              <option value="Apple iPhone">Apple iPhone (ಐಫೋನ್)</option>
+            </select>
+            <div id="mobBrandChips" class="logo-chips-strip"></div>
+          </div>
+          <div class="form-group">
+            <label><span class="opt-logo-badge orange">📲</span> ಮೊಬೈಲ್ ಮಾಡೆಲ್ ಹೆಸರು (Model):</label>
+            <input type="text" id="mobModel" required placeholder="ಉದಾ: Galaxy A15 / T3x 5G / Note 13">
+          </div>
           <div style="display:flex; gap:10px;">
-            <div class="form-group" style="flex:1;"><label>RAM ಆಯ್ಕೆ:</label>
-              <select id="mobRam" required>
+            <div class="form-group" style="flex:1;">
+              <label><span class="opt-logo-badge purple">RAM</span> RAM ಆಯ್ಕೆ:</label>
+              <select id="mobRam" required onchange="syncMobRamChips()">
                 <option value="4GB RAM">4GB RAM</option>
                 <option value="6GB RAM">6GB RAM</option>
                 <option value="8GB RAM">8GB RAM</option>
+                <option value="12GB RAM">12GB RAM</option>
+                <option value="16GB RAM">16GB RAM</option>
               </select>
+              <div id="mobRamChips" class="logo-chips-strip"></div>
             </div>
-            <div class="form-group" style="flex:1;"><label>ನೆಟ್‌ವರ್ಕ್ (Network):</label>
-              <select id="mobNetwork" required>
-                <option value="4G">4G</option>
-                <option value="5G">5G</option>
-                <option value="6G">6G</option>
+            <div class="form-group" style="flex:1;">
+              <label><span class="opt-logo-badge green">5G</span> Storage / Network:</label>
+              <select id="mobNetwork" required onchange="syncMobNetChips()">
+                <option value="64GB / 4G">64GB / 4G</option>
+                <option value="128GB / 5G">128GB / 5G</option>
+                <option value="256GB / 5G">256GB / 5G</option>
+                <option value="512GB / 5G">512GB / 5G</option>
               </select>
+              <div id="mobNetChips" class="logo-chips-strip"></div>
             </div>
           </div>
-          <div class="form-group"><label>ವಾರಂಟಿ:</label><input type="text" id="mobWarranty" placeholder="ಉದಾ: 1 Year Brand Warranty"></div>
         `;
-      } else if (currentShopType === 'ಬಟ್ಟೆ ಅಂಗಡಿ') {
+      } else if (currentShopType === 'ಕಿರಾಣಿ ಅಂಗಡಿ') {
         specificFields = `
-          <div class="form-group"><label>ವಸ್ತುವಿನ ಹೆಸರು:</label><input type="text" id="clothType" required placeholder="ಉದಾ: Cotton Saree / Formal Pant"></div>
-          <div class="form-group"><label>ಬಟ್ಟೆ ವಿಭಾಗ:</label>
-            <select id="clothCategory" required onchange="updateClothSizeOptions()">
-              <option value="ಸೀರೆ/ಲುಂಗಿ">ಸೀರೆ / ಲುಂಗಿ / ಬ್ಲೌಸ್ (Sizes 28-38)</option>
-              <option value="ಪ್ಯಾಂಟ್">ಪ್ಯಾಂಟ್ (Sizes 28-42)</option>
-              <option value="ಮಕ್ಕಳ ಡ್ರೆಸ್">ಚಿಕ್ಕ ಮಕ್ಕಳ ಡ್ರೆಸ್ (2 ರಿಂದ 18 ವರ್ಷ)</option>
-              <option value="ಟಿ-ಶರ್ಟ್">ಟಿ-ಶರ್ಟ್ / ಜಾಕೆಟ್ (M, L, XL, XXL)</option>
-            </select>
+          <div class="form-group">
+            <label><span class="opt-logo-badge green">🛒</span> ಕಿರಾಣಿ ವಸ್ತುವಿನ ಹೆಸರು:</label>
+            <input type="text" id="groceryName" required placeholder="ಉದಾ: ಅಕ್ಕಿ / ಗೋಧಿ / ಸಕ್ಕರೆ / ಬೇಳೆ / ಎಣ್ಣೆ">
           </div>
-          <div class="form-group"><label>ಸೈಜ್ ವಿವರಣೆ (Size):</label>
-            <select id="clothSizeDetail" required>
+          <div class="form-group">
+            <label><span class="opt-logo-badge orange">⚖️</span> ಕೆಜಿ ಲೆಕ್ಕ ಆಯ್ಕೆಮಾಡಿ (0.5 KG ರಿಂದ 10 KG ಲೋಗೋಗಳು):</label>
+            <select id="groceryWeight" required onchange="syncGroceryWtChips()">
+              <option value="0.5 KG (ಅರ್ಧ ಕೆಜಿ)">0.5 KG (ಅರ್ಧ ಕೆಜಿ)</option>
+              <option value="1 KG">1 KG (1 ಕೆಜಿ)</option>
+              <option value="2 KG">2 KG (2 ಕೆಜಿ)</option>
+              <option value="3 KG">3 KG (3 ಕೆಜಿ)</option>
+              <option value="4 KG">4 KG (4 ಕೆಜಿ)</option>
+              <option value="5 KG">5 KG (5 ಕೆಜಿ)</option>
+              <option value="6 KG">6 KG (6 ಕೆಜಿ)</option>
+              <option value="7 KG">7 KG (7 ಕೆಜಿ)</option>
+              <option value="8 KG">8 KG (8 ಕೆಜಿ)</option>
+              <option value="9 KG">9 KG (9 ಕೆಜಿ)</option>
+              <option value="10 KG">10 KG (10 ಕೆಜಿ)</option>
             </select>
+            <div id="groceryWtChips" class="logo-chips-strip"></div>
           </div>
         `;
       } else if (currentShopType === 'ಚಪ್ಪಲಿ ಅಂಗಡಿ') {
-        let footwearSizeOptions = '';
-        for(let i=5; i<=14; i++) {
-          footwearSizeOptions += `<option value="${i} No">${i} ನಂಬರ್ (Size ${i})</option>`;
-        }
         specificFields = `
-          <div class="form-group"><label>ಚಪ್ಪಲಿ / ಶೂ ಹೆಸರು:</label><input type="text" id="footwearName" required placeholder="ಉದಾ: Men Leather Sandals / Running Shoes"></div>
-          <div class="form-group"><label>ಚಪ್ಪಲಿ/ಶೂ ಸೈಜ್ ಆಯ್ಕೆ (5 ರಿಂದ 14 ನಂಬರ್):</label>
-            <select id="footwearSize" required>
-              ${footwearSizeOptions}
+          <div class="form-group">
+            <label><span class="opt-logo-badge orange">🩴</span> ಚಪ್ಪಲಿ / ಶೂ ಹೆಸರು:</label>
+            <input type="text" id="footwearName" required placeholder="ಉದಾ: ಚಪ್ಪಲಿ / ಶೂ / ಸ್ಯಾಂಡಲ್">
+          </div>
+          <div class="form-group">
+            <label><span class="opt-logo-badge">👟</span> ಚಿಕ್ಕ ಮಕ್ಕಳ ಸೈಜಾ ಅಥವಾ ದೊಡ್ಡವರ ಸೈಜಾ?</label>
+            <select id="footwearAgeGroup" required onchange="updateFootwearSizeSelect(); syncFootwearAgeChips();">
+              <option value="CHILD">ಚಿಕ್ಕ ಮಕ್ಕಳು (2 ರಿಂದ 8 ನಂಬರ್)</option>
+              <option value="ADULT">ದೊಡ್ಡವರು (8 ರಿಂದ 12 ನಂಬರ್)</option>
             </select>
+            <div id="footwearAgeChips" class="logo-chips-strip"></div>
+          </div>
+          <div class="form-group">
+            <label><span class="opt-logo-badge green">#</span> ನಂಬರ್ / ಸೈಜ್ ಆಯ್ಕೆ:</label>
+            <select id="footwearSize" required onchange="syncFootwearNumChips()"></select>
+            <div id="footwearNumChips" class="logo-chips-strip"></div>
+          </div>
+        `;
+      } else if (currentShopType === 'ಬಟ್ಟೆ ಅಂಗಡಿ') {
+        specificFields = `
+          <div class="form-group">
+            <label><span class="opt-logo-badge">👔</span> ಗಂಡು ಮಕ್ಕಳಾ ಅಥವಾ ಲೇಡೀಸ್ (ಹೆಣ್ಣು ಮಕ್ಕಳ) ಬಟ್ಟೆಯೇ?</label>
+            <select id="clothGender" required onchange="renderClothSubOptions(); syncClothGenderChips();">
+              <option value="BOYS_MEN">ಗಂಡು ಮಕ್ಕಳು / ಪುರುಷರು</option>
+              <option value="LADIES">ಲೇಡೀಸ್ (ಹೆಣ್ಣು ಮಕ್ಕಳು)</option>
+            </select>
+            <div id="clothGenderChips" class="logo-chips-strip"></div>
+          </div>
+          <div id="clothSubOptionsContainer"></div>
+        `;
+      } else if (currentShopType === 'ಗಿಫ್ಟ್ ಸೆಂಟರ್') {
+        specificFields = `
+          <div class="form-group">
+            <label><span class="opt-logo-badge purple">🎁</span> ಗಿಫ್ಟ್ ಐಟಂ ವಿಧ ಆಯ್ಕೆಮಾಡಿ:</label>
+            <select id="giftType" required onchange="syncGiftTypeChips()">
+              <option value="ಗಿಫ್ಟ್ ಬಾಕ್ಸ್ (Gift Box)">ಗಿಫ್ಟ್ ಬಾಕ್ಸ್ (Gift Box)</option>
+              <option value="ಮಕ್ಕಳ ಆಟಿಕೆ / ಟಾಯ್ಸ್ (Toys)">ಮಕ್ಕಳ ಆಟಿಕೆ / ಟಾಯ್ಸ್ (Toys)</option>
+              <option value="ಕೈ ಗಡಿಯಾರ / ವಾಚ್ (Watch)">ಕೈ ಗಡಿಯಾರ / ವಾಚ್ (Watch)</option>
+              <option value="ಪರ್ಫ್ಯೂಮ್ (Perfume)">ಪರ್ಫ್ಯೂಮ್ (Perfume)</option>
+              <option value="ಫೋಟೋ ಫ್ರೇಮ್ (Photo Frame)">ಫೋಟೋ ಫ್ರೇಮ್ (Photo Frame)</option>
+              <option value="ಕಪ್ & ಮಗ್ ಸೆಟ್ (Cup/Mug)">ಕಪ್ & ಮಗ್ ಸೆಟ್ (Cup/Mug)</option>
+              <option value="ಗೋಡೆ ಗಡಿಯಾರ (Wall Clock)">ಗೋಡೆ ಗಡಿಯಾರ (Wall Clock)</option>
+              <option value="ಬೊಂಬೆ / ಡಾಲ್ (Doll)">ಬೊಂಬೆ / ಡಾಲ್ (Doll)</option>
+            </select>
+            <div id="giftTypeChips" class="logo-chips-strip"></div>
+          </div>
+          <div class="form-group">
+            <label><span class="opt-logo-badge orange">🎀</span> ಗಿಫ್ಟ್ ಹೆಸರು & ಸೈಜ್:</label>
+            <input type="text" id="giftName" required placeholder="ಉದಾ: Birthday Gift Box - Medium Size">
+          </div>
+        `;
+      } else if (currentShopType === 'ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್') {
+        specificFields = `
+          <div class="form-group">
+            <label><span class="opt-logo-badge orange">⚡</span> ಎಲೆಕ್ಟ್ರಿಕಲ್ / ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್ ವಸ್ತು ಆಯ್ಕೆಮಾಡಿ:</label>
+            <select id="elecItemType" required onchange="updateElecSizeOptions(); syncElecTypeChips();">
+              <option value="ಫ್ರಿಡ್ಜ್ (Fridge)">ಫ್ರಿಡ್ಜ್ (Fridge)</option>
+              <option value="ಟೇಬಲ್ & ಚೇರ್ / ಟೇಬಲ್ ಲ್ಯಾಂಪ್ (Table)">ಟೇಬಲ್ (Table)</option>
+              <option value="ಟಿವಿ (TV)">ಟಿವಿ (TV)</option>
+              <option value="ವಾಷಿಂಗ್ ಮಷಿನ್ (Washing Machine)">ವಾಷಿಂಗ್ ಮಷಿನ್ (Washing Machine)</option>
+              <option value="ಫ್ಯಾನ್ (Fan)">ಫ್ಯಾನ್ (Fan)</option>
+              <option value="ಏರ್ ಕೂಲರ್ (Air Cooler)">ಏರ್ ಕೂಲರ್ (Air Cooler)</option>
+              <option value="ಮಿಕ್ಸರ್ ಗ್ರೈಂಡರ್ (Mixer)">ಮಿಕ್ಸರ್ ಗ್ರೈಂಡರ್ (Mixer)</option>
+              <option value="ಐರನ್ ಬಾಕ್ಸ್ (Iron Box)">ಐರನ್ ಬಾಕ್ಸ್ (Iron Box)</option>
+            </select>
+            <div id="elecTypeChips" class="logo-chips-strip"></div>
+          </div>
+          <div class="form-group">
+            <label><span class="opt-logo-badge">📐</span> ಸೈಜ್ / ಕೆಪಾಸಿಟಿ ಆಯ್ಕೆ:</label>
+            <select id="elecSizeOpt" required onchange="syncElecSizeChips()"></select>
+            <div id="elecSizeChips" class="logo-chips-strip"></div>
+          </div>
+          <div class="form-group">
+            <label><span class="opt-logo-badge green">🏭</span> ಕಂಪನಿ & ಮಾಡೆಲ್ ಹೆಸರು:</label>
+            <input type="text" id="elecModelName" required placeholder="ಉದಾ: LG / Whirlpool / Bajaj">
           </div>
         `;
       } else {
-        specificFields = `<div class="form-group"><label>ವಸ್ತುವಿನ ಹೆಸರು & ವಿವರಣೆ:</label><input type="text" id="generalName" required placeholder="ವಸ್ತುವಿನ ಹೆಸರು ಬರೆಯಿರಿ"></div>`;
+        specificFields = `<div class="form-group"><label><span class="opt-logo-badge">📦</span> ವಸ್ತುವಿನ ಹೆಸರು & ವಿವರಣೆ:</label><input type="text" id="generalName" required placeholder="ವಸ್ತುವಿನ ಹೆಸರು ಬರೆಯಿರಿ"></div>`;
       }
 
       container.innerHTML = `
         ${specificFields}
         <div style="display:flex; gap:10px;">
-          <div class="form-group" style="flex:1;"><label>ಹಳೆಯ ರೇಟು (₹):</label><input type="number" id="prodOldPrice" placeholder="999"></div>
-          <div class="form-group" style="flex:1;"><label>ಈಗಿನ ರೇಟು (₹ - ಕೇವಲ ವಸ್ತುವಿನ ಬೆಲೆ):</label><input type="number" id="prodPrice" required placeholder="800"></div>
+          <div class="form-group" style="flex:1;"><label><span class="opt-logo-badge red">₹</span> ಹಳೆಯ ರೇಟು (₹):</label><input type="number" id="prodOldPrice" placeholder="999"></div>
+          <div class="form-group" style="flex:1;"><label><span class="opt-logo-badge green">₹</span> ಈಗಿನ ರೇಟು (₹):</label><input type="number" id="prodPrice" required placeholder="800"></div>
         </div>
 
         <div style="background:#f8f9fa; padding:10px; border-radius:8px; border:1px solid #e2e8f0; margin-bottom:10px;">
-          <label style="color:#1e88e5; font-weight:bold;">📸 4 ಫೋಟೋಗಳನ್ನು ಅಪ್ಲೋಡ್ ಮಾಡಿ:</label>
-          <div style="margin-top:6px;"><label style="font-size:0.75rem;">ಫೋಟೋ 1:</label><input type="file" accept="image/*" id="c1_p1" required></div>
-          <div style="margin-top:6px;"><label style="font-size:0.75rem;">ಫೋಟೋ 2:</label><input type="file" accept="image/*" id="c1_p2"></div>
-          <div style="margin-top:6px;"><label style="font-size:0.75rem;">ಫೋಟೋ 3:</label><input type="file" accept="image/*" id="c1_p3"></div>
-          <div style="margin-top:6px;"><label style="font-size:0.75rem;">ಫೋಟೋ 4:</label><input type="file" accept="image/*" id="c1_p4"></div>
+          <label style="color:#1e88e5; font-weight:bold;"><span class="opt-logo-badge">📸</span> ಫೋಟೋಗಳನ್ನು ಅಪ್ಲೋಡ್ ಮಾಡಿ:</label>
+          <div style="margin-top:6px;"><label style="font-size:0.75rem;"><span class="opt-logo-badge green">P1</span> ಫೋಟೋ 1 (ಕಡ್ಡಾಯ):</label><input type="file" accept="image/*" id="c1_p1" required></div>
+          <div style="margin-top:6px;"><label style="font-size:0.75rem;"><span class="opt-logo-badge">P2</span> ಫೋಟೋ 2:</label><input type="file" accept="image/*" id="c1_p2"></div>
+          <div style="margin-top:6px;"><label style="font-size:0.75rem;"><span class="opt-logo-badge">P3</span> ಫೋಟೋ 3:</label><input type="file" accept="image/*" id="c1_p3"></div>
+          <div style="margin-top:6px;"><label style="font-size:0.75rem;"><span class="opt-logo-badge">P4</span> ಫೋಟೋ 4:</label><input type="file" accept="image/*" id="c1_p4"></div>
         </div>
       `;
 
+      if (currentShopType === 'ಮೊಬೈಲ್ ಶಾಪ್') {
+        syncMobBrandChips();
+        syncMobRamChips();
+        syncMobNetChips();
+      }
+      if (currentShopType === 'ಕಿರಾಣಿ ಅಂಗಡಿ') {
+        syncGroceryWtChips();
+      }
+      if (currentShopType === 'ಚಪ್ಪಲಿ ಅಂಗಡಿ') {
+        updateFootwearSizeSelect();
+        syncFootwearAgeChips();
+        syncFootwearNumChips();
+      }
       if (currentShopType === 'ಬಟ್ಟೆ ಅಂಗಡಿ') {
-        updateClothSizeOptions();
+        renderClothSubOptions();
+        syncClothGenderChips();
+      }
+      if (currentShopType === 'ಗಿಫ್ಟ್ ಸೆಂಟರ್') {
+        syncGiftTypeChips();
+      }
+      if (currentShopType === 'ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್') {
+        updateElecSizeOptions();
+        syncElecTypeChips();
+        syncElecSizeChips();
       }
     }
 
-    function updateClothSizeOptions() {
-      const catSelect = document.getElementById('clothCategory');
-      const sizeSelect = document.getElementById('clothSizeDetail');
-      if (!catSelect || !sizeSelect) return;
-      
-      const val = catSelect.value;
-      let html = '';
-      if (val === 'ಸೀರೆ/ಲುಂಗಿ') {
-        [28, 30, 32, 34, 36, 38].forEach(s => {
-          html += `<option value="${s} Size">${s} Size</option>`;
-        });
-      } else if (val === 'ಪ್ಯಾಂಟ್') {
-        for(let i=28; i<=42; i+=2) {
-          html += `<option value="${i} Size">${i} Size (ಪ್ಯಾಂಟ್)</option>`;
+    function syncMobBrandChips() {
+      renderLogoChips('mobBrandChips', 'mobBrand', [
+        { logo: 'SM', label: 'Samsung', value: 'Samsung' },
+        { logo: 'VV', label: 'Vivo', value: 'Vivo' },
+        { logo: 'RD', label: 'Redmi', value: 'Redmi / Xiaomi' },
+        { logo: 'RL', label: 'Realme', value: 'Realme' },
+        { logo: 'OP', label: 'Oppo', value: 'Oppo' },
+        { logo: '1+', label: 'OnePlus', value: 'OnePlus' },
+        { logo: 'IQ', label: 'iQOO', value: 'iQOO' },
+        { logo: 'PC', label: 'Poco', value: 'Poco' },
+        { logo: 'MT', label: 'Motorola', value: 'Motorola' },
+        { logo: '', label: 'iPhone', value: 'Apple iPhone' }
+      ]);
+    }
+
+    function syncMobRamChips() {
+      renderLogoChips('mobRamChips', 'mobRam', [
+        { logo: '4G', label: '4GB', value: '4GB RAM' },
+        { logo: '6G', label: '6GB', value: '6GB RAM' },
+        { logo: '8G', label: '8GB', value: '8GB RAM' },
+        { logo: '12G', label: '12GB', value: '12GB RAM' },
+        { logo: '16G', label: '16GB', value: '16GB RAM' }
+      ]);
+    }
+
+    function syncMobNetChips() {
+      renderLogoChips('mobNetChips', 'mobNetwork', [
+        { logo: '4G', label: '64GB/4G', value: '64GB / 4G' },
+        { logo: '5G', label: '128GB/5G', value: '128GB / 5G' },
+        { logo: '5G', label: '256GB/5G', value: '256GB / 5G' },
+        { logo: '5G', label: '512GB/5G', value: '512GB / 5G' }
+      ]);
+    }
+
+    function syncGroceryWtChips() {
+      const weights = [
+        { logo: '0.5', label: '0.5 KG', value: '0.5 KG (ಅರ್ಧ ಕೆಜಿ)' },
+        { logo: '1K', label: '1 KG', value: '1 KG' },
+        { logo: '2K', label: '2 KG', value: '2 KG' },
+        { logo: '3K', label: '3 KG', value: '3 KG' },
+        { logo: '4K', label: '4 KG', value: '4 KG' },
+        { logo: '5K', label: '5 KG', value: '5 KG' },
+        { logo: '6K', label: '6 KG', value: '6 KG' },
+        { logo: '7K', label: '7 KG', value: '7 KG' },
+        { logo: '8K', label: '8 KG', value: '8 KG' },
+        { logo: '9K', label: '9 KG', value: '9 KG' },
+        { logo: '10K', label: '10 KG', value: '10 KG' }
+      ];
+      renderLogoChips('groceryWtChips', 'groceryWeight', weights);
+    }
+
+    function syncFootwearAgeChips() {
+      renderLogoChips('footwearAgeChips', 'footwearAgeGroup', [
+        { logo: '👶', label: 'ಚಿಕ್ಕ ಮಕ್ಕಳು (2-8)', value: 'CHILD' },
+        { logo: '🧑', label: 'ದೊಡ್ಡವರು (8-12)', value: 'ADULT' }
+      ], syncFootwearNumChips);
+    }
+
+    function syncFootwearNumChips() {
+      const sel = document.getElementById('footwearSize');
+      if (!sel) return;
+      const items = Array.from(sel.options).map(o => ({
+        logo: '#' + o.value.replace(' No', ''),
+        label: o.value,
+        value: o.value
+      }));
+      renderLogoChips('footwearNumChips', 'footwearSize', items);
+    }
+
+    function syncClothGenderChips() {
+      renderLogoChips('clothGenderChips', 'clothGender', [
+        { logo: '👦', label: 'ಗಂಡು ಮಕ್ಕಳು / ಪುರುಷರು', value: 'BOYS_MEN' },
+        { logo: '👩', label: 'ಲೇಡೀಸ್ (ಹೆಣ್ಣು ಮಕ್ಕಳು)', value: 'LADIES' }
+      ]);
+    }
+
+    function renderClothSubOptions() {
+      const gender = document.getElementById('clothGender')?.value;
+      const subBox = document.getElementById('clothSubOptionsContainer');
+      if (!subBox) return;
+
+      if (gender === 'BOYS_MEN') {
+        let kidAges = '';
+        for (let a = 5; a <= 18; a++) {
+          kidAges += `<option value="${a} ವರ್ಷ (Kids Age ${a})">${a} ವರ್ಷ (Age ${a})</option>`;
         }
-      } else if (val === 'ಮಕ್ಕಳ ಡ್ರೆಸ್') {
-        for(let i=2; i<=18; i++) {
-          html += `<option value="${i} Years">${i} ವರ್ಷದ ಮಕ್ಕಳಿಗೆ (${i} Years)</option>`;
+        let pantSizes = '';
+        for (let p = 28; p <= 46; p += 2) {
+          pantSizes += `<option value="Pant ${p}">ಪ್ಯಾಂಟ್ ಸೈಜ್ ${p}</option>`;
         }
+        subBox.innerHTML = `
+          <div class="form-group">
+            <label><span class="opt-logo-badge">👥</span> ಗಂಡು ಮಕ್ಕಳಲ್ಲಿ ಚಿಕ್ಕ ಮಕ್ಕಳಾ ಅಥವಾ ದೊಡ್ಡವರಾ?</label>
+            <select id="boyAgeCategory" required onchange="toggleBoySizeFields(); syncBoyCatChips();">
+              <option value="KIDS">ಚಿಕ್ಕ ಮಕ್ಕಳು (5 ರಿಂದ 18 ವರ್ಷ)</option>
+              <option value="ADULT">ದೊಡ್ಡವರು (ಪ್ಯಾಂಟ್ 28-46 & ಶರ್ಟ್)</option>
+            </select>
+            <div id="boyCatChips" class="logo-chips-strip"></div>
+          </div>
+          <div class="form-group">
+            <label><span class="opt-logo-badge orange">👕</span> ವಸ್ತುವಿನ ಹೆಸರು:</label>
+            <input type="text" id="clothType" required placeholder="ಉದಾ: ಪ್ಯಾಂಟ್ / ಶರ್ಟ್ / ಟಿ-ಶರ್ಟ್">
+          </div>
+          <div id="boyKidsAgeField" class="form-group">
+            <label><span class="opt-logo-badge green">🎂</span> ವಯಸ್ಸು ಆಯ್ಕೆ (5 ರಿಂದ 18 ವರ್ಷ):</label>
+            <select id="boyKidAgeSelect" onchange="syncBoyKidAgeChips()">${kidAges}</select>
+            <div id="boyKidAgeChips" class="logo-chips-strip"></div>
+          </div>
+          <div id="boyAdultSizeFields" style="display:none;">
+            <div class="form-group">
+              <label><span class="opt-logo-badge">👖</span> ಪ್ಯಾಂಟ್ ಸೈಜ್ (28 ರಿಂದ 46):</label>
+              <select id="boyPantSizeSelect" onchange="syncBoyPantChips()">${pantSizes}</select>
+              <div id="boyPantChips" class="logo-chips-strip"></div>
+            </div>
+            <div class="form-group">
+              <label><span class="opt-logo-badge purple">👔</span> ಶರ್ಟ್ / ಅಂಗಿ ಸೈಜ್:</label>
+              <select id="boyShirtSizeSelect" onchange="syncBoyShirtChips()">
+                <option value="Shirt S">S Size</option>
+                <option value="Shirt M">M Size</option>
+                <option value="Shirt L">L Size</option>
+                <option value="Shirt XL">XL Size</option>
+                <option value="Shirt XXL">XXL Size</option>
+              </select>
+              <div id="boyShirtChips" class="logo-chips-strip"></div>
+            </div>
+          </div>
+        `;
+        syncBoyCatChips();
+        syncBoyKidAgeChips();
+        syncBoyPantChips();
+        syncBoyShirtChips();
       } else {
-        ['M Size', 'L Size', 'XL Size', 'XXL Size'].forEach(s => {
-          html += `<option value="${s}">${s}</option>`;
-        });
+        subBox.innerHTML = `
+          <div class="form-group">
+            <label><span class="opt-logo-badge purple">👗</span> ಲೇಡೀಸ್ ಐಟಂ ಆಯ್ಕೆಮಾಡಿ (10 ಲೋಗೋಗಳು):</label>
+            <select id="ladiesItemType" required onchange="updateLadiesSizeOptions(); syncLadiesItemChips(); syncLadiesSizeChips();">
+              <option value="ಸೀರೆ (Saree)">ಸೀರೆ (Saree)</option>
+              <option value="ಡ್ರೆಸ್ (Dress)">ಡ್ರೆಸ್ (Dress)</option>
+              <option value="ಕುರ್ತಾ (Kurta)">ಕುರ್ತಾ (Kurta)</option>
+              <option value="ಪಂಜಾಬಿ ಡ್ರೆಸ್ (Punjabi)">ಪಂಜಾಬಿ ಡ್ರೆಸ್ (Punjabi)</option>
+              <option value="ಲೆಹೆಂಗಾ (Lehenga)">ಲೆಹೆಂಗಾ (Lehenga)</option>
+              <option value="ಟಾಪ್ (Top)">ಟಾಪ್ (Top)</option>
+              <option value="ಸ್ಕರ್ಟ್ (Skirt)">ಸ್ಕರ್ಟ್ (Skirt)</option>
+              <option value="ನೈಟಿ (Nighty)">ನೈಟಿ (Nighty)</option>
+              <option value="ದುಪಟ್ಟಾ (Dupatta)">ದುಪಟ್ಟಾ (Dupatta)</option>
+              <option value="ಬ್ಲೌಸ್ (Blouse)">ಬ್ಲೌಸ್ (Blouse)</option>
+            </select>
+            <div id="ladiesItemChips" class="logo-chips-strip"></div>
+          </div>
+          <div class="form-group">
+            <label><span class="opt-logo-badge green">📏</span> ಲೇಡೀಸ್ ಬಟ್ಟೆ ಸೈಜ್ / ವಿವರ:</label>
+            <select id="ladiesSizeOpt" required onchange="syncLadiesSizeChips()"></select>
+            <div id="ladiesSizeChips" class="logo-chips-strip"></div>
+          </div>
+          <div class="form-group">
+            <label><span class="opt-logo-badge orange">✨</span> ಹೆಚ್ಚುವರಿ ಹೆಸರು / ವಿವರ:</label>
+            <input type="text" id="clothType" required placeholder="ಉದಾ: Silk Saree / Cotton Kurti">
+          </div>
+        `;
+        updateLadiesSizeOptions();
+        syncLadiesItemChips();
+        syncLadiesSizeChips();
       }
-      sizeSelect.innerHTML = html;
+    }
+
+    function syncBoyCatChips() {
+      renderLogoChips('boyCatChips', 'boyAgeCategory', [
+        { logo: '🧒', label: 'ಚಿಕ್ಕ ಮಕ್ಕಳು (5-18)', value: 'KIDS' },
+        { logo: '🧔', label: 'ದೊಡ್ಡವರು (28-46)', value: 'ADULT' }
+      ]);
+    }
+
+    function syncBoyKidAgeChips() {
+      const sel = document.getElementById('boyKidAgeSelect');
+      if (!sel) return;
+      const items = Array.from(sel.options).map(o => ({
+        logo: o.value.split(' ')[0] + 'y',
+        label: o.value.split(' (')[0],
+        value: o.value
+      }));
+      renderLogoChips('boyKidAgeChips', 'boyKidAgeSelect', items);
+    }
+
+    function syncBoyPantChips() {
+      const sel = document.getElementById('boyPantSizeSelect');
+      if (!sel) return;
+      const items = Array.from(sel.options).map(o => ({
+        logo: o.value.replace('Pant ', ''),
+        label: o.value.replace('Pant ', 'Size '),
+        value: o.value
+      }));
+      renderLogoChips('boyPantChips', 'boyPantSizeSelect', items);
+    }
+
+    function syncBoyShirtChips() {
+      renderLogoChips('boyShirtChips', 'boyShirtSizeSelect', [
+        { logo: 'S', label: 'S', value: 'Shirt S' },
+        { logo: 'M', label: 'M', value: 'Shirt M' },
+        { logo: 'L', label: 'L', value: 'Shirt L' },
+        { logo: 'XL', label: 'XL', value: 'Shirt XL' },
+        { logo: 'XXL', label: 'XXL', value: 'Shirt XXL' }
+      ]);
+    }
+
+    function syncLadiesItemChips() {
+      renderLogoChips('ladiesItemChips', 'ladiesItemType', [
+        { logo: '🥻', label: 'ಸೀರೆ', value: 'ಸೀರೆ (Saree)' },
+        { logo: '👗', label: 'ಡ್ರೆಸ್', value: 'ಡ್ರೆಸ್ (Dress)' },
+        { logo: '👘', label: 'ಕುರ್ತಾ', value: 'ಕುರ್ತಾ (Kurta)' },
+        { logo: '👚', label: 'ಪಂಜಾಬಿ', value: 'ಪಂಜಾಬಿ ಡ್ರೆಸ್ (Punjabi)' },
+        { logo: '💃', label: 'ಲೆಹೆಂಗಾ', value: 'ಲೆಹೆಂಗಾ (Lehenga)' },
+        { logo: '👕', label: 'ಟಾಪ್', value: 'ಟಾಪ್ (Top)' },
+        { logo: '🩱', label: 'ಸ್ಕರ್ಟ್', value: 'ಸ್ಕರ್ಟ್ (Skirt)' },
+        { logo: '🛌', label: 'ನೈಟಿ', value: 'ನೈಟಿ (Nighty)' },
+        { logo: '🧣', label: 'ದುಪಟ್ಟಾ', value: 'ದುಪಟ್ಟಾ (Dupatta)' },
+        { logo: '🦺', label: 'ಬ್ಲೌಸ್', value: 'ಬ್ಲೌಸ್ (Blouse)' }
+      ]);
+    }
+
+    function syncLadiesSizeChips() {
+      const sel = document.getElementById('ladiesSizeOpt');
+      if (!sel) return;
+      const items = Array.from(sel.options).map(o => ({
+        logo: o.value.slice(0, 3),
+        label: o.value,
+        value: o.value
+      }));
+      renderLogoChips('ladiesSizeChips', 'ladiesSizeOpt', items);
+    }
+
+    function syncGiftTypeChips() {
+      renderLogoChips('giftTypeChips', 'giftType', [
+        { logo: '🎁', label: 'ಗಿಫ್ಟ್ ಬಾಕ್ಸ್', value: 'ಗಿಫ್ಟ್ ಬಾಕ್ಸ್ (Gift Box)' },
+        { logo: '🧸', label: 'ಟಾಯ್ಸ್', value: 'ಮಕ್ಕಳ ಆಟಿಕೆ / ಟಾಯ್ಸ್ (Toys)' },
+        { logo: '⌚', label: 'ವಾಚ್', value: 'ಕೈ ಗಡಿಯಾರ / ವಾಚ್ (Watch)' },
+        { logo: '🧴', label: 'ಪರ್ಫ್ಯೂಮ್', value: 'ಪರ್ಫ್ಯೂಮ್ (Perfume)' },
+        { logo: '🖼️', label: 'ಫ್ರೇಮ್', value: 'ಫೋಟೋ ಫ್ರೇಮ್ (Photo Frame)' },
+        { logo: '☕', label: 'ಕಪ್/ಮಗ್', value: 'ಕಪ್ & ಮಗ್ ಸೆಟ್ (Cup/Mug)' },
+        { logo: '🕰️', label: 'ಗಡಿಯಾರ', value: 'ಗೋಡೆ ಗಡಿಯಾರ (Wall Clock)' },
+        { logo: '🪆', label: 'ಬೊಂಬೆ', value: 'ಬೊಂಬೆ / ಡಾಲ್ (Doll)' }
+      ]);
+    }
+
+    function syncElecTypeChips() {
+      renderLogoChips('elecTypeChips', 'elecItemType', [
+        { logo: '🧊', label: 'ಫ್ರಿಡ್ಜ್', value: 'ಫ್ರಿಡ್ಜ್ (Fridge)' },
+        { logo: '🪑', label: 'ಟೇಬಲ್', value: 'ಟೇಬಲ್ & ಚೇರ್ / ಟೇಬಲ್ ಲ್ಯಾಂಪ್ (Table)' },
+        { logo: '📺', label: 'ಟಿವಿ', value: 'ಟಿವಿ (TV)' },
+        { logo: '🧺', label: 'ವಾಷಿಂಗ್ ಮಷಿನ್', value: 'ವಾಷಿಂಗ್ ಮಷಿನ್ (Washing Machine)' },
+        { logo: '🌀', label: 'ಫ್ಯಾನ್', value: 'ಫ್ಯಾನ್ (Fan)' },
+        { logo: '❄️', label: 'ಕೂಲರ್', value: 'ಏರ್ ಕೂಲರ್ (Air Cooler)' },
+        { logo: '🫙', label: 'ಮಿಕ್ಸರ್', value: 'ಮಿಕ್ಸರ್ ಗ್ರೈಂಡರ್ (Mixer)' },
+        { logo: '♨️', label: 'ಐರನ್ ಬಾಕ್ಸ್', value: 'ಐರನ್ ಬಾಕ್ಸ್ (Iron Box)' }
+      ]);
+    }
+
+    function syncElecSizeChips() {
+      const sel = document.getElementById('elecSizeOpt');
+      if (!sel) return;
+      const items = Array.from(sel.options).map(o => ({
+        logo: '⚡',
+        label: o.value,
+        value: o.value
+      }));
+      renderLogoChips('elecSizeChips', 'elecSizeOpt', items);
+    }
+
+    function toggleBoySizeFields() {
+      const cat = document.getElementById('boyAgeCategory')?.value;
+      const kidsDiv = document.getElementById('boyKidsAgeField');
+      const adultDiv = document.getElementById('boyAdultSizeFields');
+      if (cat === 'KIDS') {
+        if (kidsDiv) kidsDiv.style.display = 'block';
+        if (adultDiv) adultDiv.style.display = 'none';
+      } else {
+        if (kidsDiv) kidsDiv.style.display = 'none';
+        if (adultDiv) adultDiv.style.display = 'block';
+      }
+    }
+
+    function updateLadiesSizeOptions() {
+      const item = document.getElementById('ladiesItemType')?.value || '';
+      const sel = document.getElementById('ladiesSizeOpt');
+      if (!sel) return;
+      if (item.includes('ಸೀರೆ') || item.includes('ದುಪಟ್ಟಾ')) {
+        sel.innerHTML = `
+          <option value="Free Size (5.5m)">Free Size (5.5m)</option>
+          <option value="6.3m with Blouse">6.3m with Blouse</option>
+        `;
+      } else {
+        sel.innerHTML = `
+          <option value="S">S Size</option>
+          <option value="M">M Size</option>
+          <option value="L">L Size</option>
+          <option value="XL">XL Size</option>
+          <option value="XXL">XXL Size</option>
+          <option value="Free Size">Free Size</option>
+        `;
+      }
+    }
+
+    function updateElecSizeOptions() {
+      const item = document.getElementById('elecItemType')?.value || '';
+      const sel = document.getElementById('elecSizeOpt');
+      if (!sel) return;
+      if (item.includes('ಫ್ರಿಡ್ಜ್')) {
+        sel.innerHTML = `<option value="185L Single Door">185L Single Door</option><option value="240L Double Door">240L Double Door</option><option value="300L+">300L+</option>`;
+      } else if (item.includes('ಟೇಬಲ್')) {
+        sel.innerHTML = `<option value="Small Table">Small Table</option><option value="Medium Table">Medium Table</option><option value="Large Table">Large Table</option>`;
+      } else if (item.includes('ಟಿವಿ')) {
+        sel.innerHTML = `<option value="32 Inch">32 Inch</option><option value="43 Inch">43 Inch</option><option value="55 Inch">55 Inch</option>`;
+      } else {
+        sel.innerHTML = `<option value="Standard">Standard</option><option value="Medium">Medium</option><option value="Large">Large</option>`;
+      }
     }
 
     function convertFileToBase64(file) {
@@ -1058,9 +1593,9 @@
 
           otpDisplayBox = `
             <div style="background:#e3f2fd; border:2px solid #1e88e5; border-radius:8px; padding:10px; margin-top:8px; text-align:center;">
-              <p style="font-size:0.8rem; color:#1565c0; font-weight:bold;">🔑 ಡೆಲಿವರಿ ಪಿಕಪ್ ಒಟಿಪಿ (Pickup OTP - ಶಾಶ್ವತವಾಗಿ ಲಭ್ಯ):</p>
+              <p style="font-size:0.8rem; color:#1565c0; font-weight:bold;">🔑 ಡೆಲಿವರಿ ಪಿಕಪ್ ಒಟಿಪಿ (Pickup OTP):</p>
               <div style="font-size:1.5rem; font-weight:bold; color:#0d47a1; letter-spacing:3px; margin:4px 0;">${generatedOtp}</div>
-              <p style="font-size:0.75rem; color:#333; margin-top:4px; font-weight:bold;">ಡೆಲಿವರಿ ಬಾಯ್ ಪಿಕಪ್ ಮಾಡುವಾಗ ಕಮಿಷನ್ ಕಟ್ ಆಗಿ ಉಳಿಯುವ ಶುದ್ಧ ಮೊತ್ತ: ₹${netAmtAfterComm}</p>
+              <p style="font-size:0.75rem; color:#333; margin-top:4px; font-weight:bold;">ಕಮಿಷನ್ ಕಟ್ ಆಗಿ ಉಳಿಯುವ ಶುದ್ಧ ಮೊತ್ತ: ₹${netAmtAfterComm}</p>
             </div>
           `;
         }
@@ -1102,7 +1637,7 @@
               <img src="${o.productPhoto}" style="width:65px; height:65px; object-fit:cover; border-radius:6px;">
               <div>
                 <h4 style="font-size:0.95rem;">${o.productName} ${o.selectedSize ? `[Size: ${o.selectedSize}]` : ''}</h4>
-                <p style="font-size:0.85rem; color:#2e7d32; font-weight:bold;">₹${itemPriceNum} <span style="font-size:0.7rem; color:#555;">(ವಸ್ತುವಿನ ಬೆಲೆ - ಡೆಲಿವರಿ ಚಾರ್ಜ್ ಹೊರತುಪಡಿಸಿ)</span></p>
+                <p style="font-size:0.85rem; color:#2e7d32; font-weight:bold;">₹${itemPriceNum} <span style="font-size:0.7rem; color:#555;">(ವಸ್ತುವಿನ ಬೆಲೆ)</span></p>
                 <p style="font-size:0.75rem; color:#0288d1; font-weight:bold;">ಗ್ರಾಹಕರಿಗೆ ಕಾಣುವ ಒಟ್ಟು ಮೊತ್ತ: ₹${totalCustomerPrice}</p>
               </div>
             </div>
@@ -1220,9 +1755,9 @@
       summaryDiv.innerHTML = `
         <p><b>ಅಂಗಡಿ ಯುಪಿಐ (ನಿಮ್ಮ ಕ್ಯೂಆರ್ ಕೋಡ್):</b> <span style="color:#1565c0; font-weight:bold;">ಆಟೋ ಸ್ಕ್ಯಾನ್ ಪೇಮೆಂಟ್ ಸಕ್ರಿಯವಾಗಿದೆ (ಶಾಶ್ವತ)</span></p>
         <p><b>ಅಂಗಡಿ ವಿಭಾಗ:</b> <span style="color:#e65100; font-weight:bold;">${shopOwner.shopType} (${commPercentageStr} ಕಮಿಷನ್)</span></p>
-        <p><b>ಒಟ್ಟು ಡೆಲಿವರಿ ಆದ ಮಾರಾಟ (ಡೆಲಿವರಿ ಚಾರ್ಜ್ ಹೊರತುಪಡಿಸಿ):</b> ₹${totalSales}</p>
+        <p><b>ಒಟ್ಟು ಡೆಲಿವರಿ ಆದ ಮಾರಾಟ:</b> ₹${totalSales}</p>
         <p><b>ರಿಟರ್ನ್ ಮೈನಸ್ ಆಗಿರುವ ಮೊತ್ತ:</b> <span style="color:#d32f2f;">- ₹${totalReturned}</span></p>
-        <p><b>ಮಾಸ್ಟರ್ ಪ್ಯಾನಲ್ ಕಮಿಷನ್ ಕಟ್ (${commPercentageStr}) ಹೋಗಿ ಉಳಿದ ಶುದ್ಧ ಮೊತ್ತ:</b> <span style="color:#2e7d32; font-weight:bold; font-size:1.1rem;">₹${netPayable}</span></p>
+        <p><b>ಕಮಿಷನ್ ಕಟ್ (${commPercentageStr}) ಹೋಗಿ ಉಳಿದ ಶುದ್ಧ ಮೊತ್ತ:</b> <span style="color:#2e7d32; font-weight:bold; font-size:1.1rem;">₹${netPayable}</span></p>
       `;
 
       listDiv.innerHTML = delivered.map(o => {
@@ -1345,20 +1880,75 @@
       }
 
       const returnPolicy = document.getElementById('prodReturnPolicy').value;
-      const footwearSize = document.getElementById('footwearSize')?.value || '';
-      const mobRamStorage = document.getElementById('mobRam')?.value || '';
-      const clothSizeDetail = document.getElementById('clothSizeDetail')?.value || '';
-      
+      const sideComment = (document.getElementById('prodSideComment')?.value || '').trim();
       const shopTypeVal = shopOwner.shopType || 'ಇತರ ಅಂಗಡಿ';
-      let autoCategory = 'ಇತರ';
-      if (shopTypeVal.includes('ಬಟ್ಟೆ')) autoCategory = 'ಬಟ್ಟೆ';
-      else if (shopTypeVal.includes('ಚಪ್ಪಲಿ')) autoCategory = 'ಚಪ್ಪಲಿ';
-      else if (shopTypeVal.includes('ಮೊಬೈಲ್')) autoCategory = 'ಮೊಬೈಲ್';
-      else if (shopTypeVal.includes('ಕಿರಾಣಿ')) autoCategory = 'ಕಿರಾಣಿ';
-      else if (shopTypeVal.includes('ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್')) autoCategory = 'ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್';
-      else if (shopTypeVal.includes('ಗಿಫ್ಟ್')) autoCategory = 'ಗಿಫ್ಟ್';
 
-      const finalName = document.getElementById('mobModel')?.value || document.getElementById('clothType')?.value || document.getElementById('footwearName')?.value || document.getElementById('generalName')?.value || 'Item';
+      let autoCategory = 'ಇತರ';
+      let finalName = 'Item';
+      let collectedVariants = [];
+      let ramVal = '';
+      let storageVal = '';
+
+      if (shopTypeVal === 'ಮೊಬೈಲ್ ಶಾಪ್') {
+        autoCategory = 'ಮೊಬೈಲ್';
+        const brand = document.getElementById('mobBrand')?.value || '';
+        const model = document.getElementById('mobModel')?.value || '';
+        ramVal = document.getElementById('mobRam')?.value || '';
+        storageVal = document.getElementById('mobNetwork')?.value || '';
+        finalName = `${brand} ${model}`.trim();
+        collectedVariants = [ramVal, storageVal].filter(Boolean);
+      } else if (shopTypeVal === 'ಕಿರಾಣಿ ಅಂಗಡಿ') {
+        autoCategory = 'ಕಿರಾಣಿ';
+        const gName = document.getElementById('groceryName')?.value || '';
+        const gWt = document.getElementById('groceryWeight')?.value || '';
+        finalName = `${gName} (${gWt})`.trim();
+        collectedVariants = [gWt].filter(Boolean);
+      } else if (shopTypeVal === 'ಚಪ್ಪಲಿ ಅಂಗಡಿ') {
+        autoCategory = 'ಚಪ್ಪಲಿ';
+        const fName = document.getElementById('footwearName')?.value || '';
+        const fSize = document.getElementById('footwearSize')?.value || '';
+        const fGrp = document.getElementById('footwearAgeGroup')?.value === 'CHILD' ? 'ಮಕ್ಕಳು' : 'ದೊಡ್ಡವರು';
+        finalName = `${fName} [${fGrp}]`.trim();
+        collectedVariants = [fSize].filter(Boolean);
+      } else if (shopTypeVal === 'ಬಟ್ಟೆ ಅಂಗಡಿ') {
+        autoCategory = 'ಬಟ್ಟೆ';
+        const cName = document.getElementById('clothType')?.value || '';
+        const gender = document.getElementById('clothGender')?.value;
+        if (gender === 'BOYS_MEN') {
+          const bCat = document.getElementById('boyAgeCategory')?.value;
+          if (bCat === 'KIDS') {
+            const ageS = document.getElementById('boyKidAgeSelect')?.value || '';
+            finalName = `${cName} (${ageS})`;
+            collectedVariants = [ageS];
+          } else {
+            const pS = document.getElementById('boyPantSizeSelect')?.value || '';
+            const sS = document.getElementById('boyShirtSizeSelect')?.value || '';
+            finalName = `${cName}`;
+            collectedVariants = [pS, sS].filter(Boolean);
+          }
+        } else {
+          const lType = document.getElementById('ladiesItemType')?.value || '';
+          const lSize = document.getElementById('ladiesSizeOpt')?.value || '';
+          finalName = `${lType} - ${cName}`.trim();
+          collectedVariants = [lSize].filter(Boolean);
+        }
+      } else if (shopTypeVal === 'ಗಿಫ್ಟ್ ಸೆಂಟರ್') {
+        autoCategory = 'ಗಿಫ್ಟ್';
+        const gType = document.getElementById('giftType')?.value || '';
+        const gName = document.getElementById('giftName')?.value || '';
+        finalName = `${gType} - ${gName}`.trim();
+        collectedVariants = [gType].filter(Boolean);
+      } else if (shopTypeVal === 'ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್') {
+        autoCategory = 'ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್';
+        const eType = document.getElementById('elecItemType')?.value || '';
+        const eSize = document.getElementById('elecSizeOpt')?.value || '';
+        const eModel = document.getElementById('elecModelName')?.value || '';
+        finalName = `${eType} - ${eModel}`.trim();
+        collectedVariants = [eSize].filter(Boolean);
+      } else {
+        finalName = document.getElementById('generalName')?.value || 'Item';
+      }
+
       const price = document.getElementById('prodPrice').value.trim() || '800';
       const oldPrice = document.getElementById('prodOldPrice')?.value.trim() || '';
       const quantity = document.getElementById('prodQuantity').value;
@@ -1377,8 +1967,10 @@
         pincode: shopOwner.pincode || '585287',
         category: autoCategory,
         name: finalName,
-        variants: [footwearSize, clothSizeDetail].filter(Boolean),
-        ram: mobRamStorage,
+        sideComment: sideComment,
+        variants: collectedVariants.length > 0 ? collectedVariants : ['Standard'],
+        ram: ramVal,
+        storage: storageVal,
         price: Number(price),
         oldPrice: oldPrice ? Number(oldPrice) : null,
         quantity: quantity,
@@ -1393,20 +1985,76 @@
         alert("🎉 ವಸ್ತು ಮತ್ತು ವಿವರಗಳು ಯಶಸ್ವಿಯಾಗಿ ಗ್ರಾಹಕರ ಆಪ್‌ಗೆ ಅಪ್ಲೋಡ್ ಆಗಿದೆ!");
         document.getElementById('addProductForm').reset();
         renderDynamicUploadForm();
+        syncReturnPolicyChips();
+        syncQtyChips();
       } catch (err) {
         alert("ಅಪ್ಲೋಡ್ ದೋಷ: " + err.message);
       }
     }
 
+    function stepProductPrice(docId, delta) {
+      const inp = document.getElementById('rateInput_' + docId);
+      if (!inp) return;
+      let curr = Number(inp.value || 0);
+      let next = Math.max(1, curr + delta);
+      inp.value = next;
+    }
+
+    async function saveProductPriceChange(docId) {
+      const inp = document.getElementById('rateInput_' + docId);
+      if (!inp) return;
+      let newRate = Number(inp.value);
+      if (!newRate || newRate < 1) {
+        alert("ದಯವಿಟ್ಟು ಸರಿಯಾದ ರೇಟು ನಮೂದಿಸಿ.");
+        return;
+      }
+      try {
+        await window.updateDoc(window.doc(window.db, "products", docId), {
+          price: newRate
+        });
+        alert(`✅ ರೇಟು ₹${newRate} ಗೆ ಅಪ್‌ಡೇಟ್ ಆಗಿದೆ!`);
+      } catch (err) {
+        alert("ರೇಟು ಬದಲಾಯಿಸಲು ದೋಷ: " + err.message);
+      }
+    }
+
+    async function deleteShopProduct(docId, prodName) {
+      if (!confirm(`"${prodName}" ವಸ್ತುವನ್ನು ಸಂಪೂರ್ಣವಾಗಿ ಡಿಲೀಟ್ ಮಾಡಲು ಖಚಿತವೇ? (ಗ್ರಾಹಕರ ಆಪ್‌ನಿಂದಲೂ ಡಿಲೀಟ್ ಆಗುತ್ತದೆ)`)) return;
+      try {
+        await window.deleteDoc(window.doc(window.db, "products", docId));
+        alert("🗑️ ವಸ್ತು ಯಶಸ್ವಿಯಾಗಿ ಡಿಲೀಟ್ ಆಗಿದೆ!");
+      } catch (err) {
+        alert("ಡಿಲೀಟ್ ದೋಷ: " + err.message);
+      }
+    }
+
     function renderProducts(products) {
       const grid = document.getElementById('shopProductsGrid');
-      grid.innerHTML = products.map(p => `
-        <div class="card-small">
-          <img src="${p.photo}">
-          <div class="card-title-small">${p.name}</div>
-          <div style="font-size:0.7rem; color:#2e7d32; font-weight:bold;">₹${p.price} ${p.footwearSize ? `[${p.footwearSize}]` : ''} ${p.ramStorage ? `[${p.ramStorage}]` : ''} ${p.clothSizeDetail ? `[${p.clothSizeDetail}]` : ''}</div>
-        </div>
-      `).join('');
+      if (!products || products.length === 0) {
+        grid.innerHTML = `<p style="grid-column:span 2; text-align:center; color:#777; font-size:0.8rem; padding:12px;">ಇನ್ನೂ ಯಾವುದೇ ಫೋಟೋ ಅಪ್ಲೋಡ್ ಮಾಡಿಲ್ಲ.</p>`;
+        return;
+      }
+      grid.innerHTML = products.map(p => {
+        const varText = (p.variants && p.variants.length > 0) ? p.variants.join(', ') : '';
+        const commentBadge = p.sideComment ? `<div class="side-mini-comment">${p.sideComment}</div>` : '';
+        return `
+          <div class="card-small">
+            <div class="photo-stage-box">
+              <img src="${p.photo}" alt="${p.name}">
+              ${commentBadge}
+            </div>
+            <div class="card-title-small">${p.name}</div>
+            ${varText ? `<div class="card-meta-small">📏 ${varText}</div>` : ''}
+            <div class="price-edit-row">
+              <button type="button" class="price-step-btn" onclick="stepProductPrice('${p.docId}', -10)">-</button>
+              <input type="number" id="rateInput_${p.docId}" class="price-num-input" value="${p.price}">
+              <button type="button" class="price-step-btn" onclick="stepProductPrice('${p.docId}', 10)">+</button>
+              <button type="button" class="btn-save-rate" onclick="saveProductPriceChange('${p.docId}')">ಸೇವ್</button>
+            </div>
+            <button type="button" class="btn-del-prod" onclick="deleteShopProduct('${p.docId}', '${escapeHtmlAttr(p.name)}')">🗑️ ಡಿಲೀಟ್</button>
+          </div>
+        `;
+      }).join('');
     }
   </script>
 </body>
